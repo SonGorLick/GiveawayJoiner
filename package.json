@@ -9,8 +9,8 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.2"
   },
-  "author": "Linux",
-  "license": "GNU",
+  "author": "pumPCin",
+  "license": "MIT",
   "devDependencies": {
     "electron": "^2.0.14",
     "electron-builder": "^20",
