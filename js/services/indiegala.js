@@ -20,9 +20,9 @@ class IndieGala extends Seeker {
 			dataType: 'json',
 			success: function (data) {
 				if( data.steamnick )
-					callback(1);
+				callback(1);
 				else
-					callback(0);
+				callback(0);
 			},
 			error: function () {
 				callback(-1);
@@ -61,10 +61,10 @@ class IndieGala extends Seeker {
 		let page  = 1;
 
 		let callback = function() {
-            page++;
+			page++;
 
 			if ( page <= _this.getConfig('pages', 1) )
-				_this.enterOnPage(page, callback);
+			_this.enterOnPage(page, callback);
 		};
 
 		this.enterOnPage(page, callback);
@@ -76,7 +76,7 @@ class IndieGala extends Seeker {
 		$.get('https://www.indiegala.com/giveaways/get_user_level_and_coins', function(data){
 			data = JSON.parse(data);
 			if(data.status !== 'ok')
-				return;
+			return;
 			let user_level = data.current_level;
 
 			$.get('https://www.indiegala.com/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=all', function(data){
@@ -87,31 +87,31 @@ class IndieGala extends Seeker {
 				function giveawayEnter(){
 					if( tickets.length <= curr_ticket || !_this.started ){
 
-                        if(callback)
-                            callback();
+						if(callback)
+						callback();
 
 						return;
-                    }
+					}
 
 					let next_after = _this.interval();
 					let ticket = tickets.eq(curr_ticket),
-						id     = ticket.find('.ticket-right .relative').attr('rel'),
-						price  = ticket.find('.ticket-price strong').text(),
-						level  = parseInt(ticket.find('.type-level span').text().replace('+', '')),
-						name   = ticket.find('h2 a').text(),
-						single = ticket.find('.extra-type .fa-clone').length === 0,
-						entered  = false,
-						enterTimes = 0;
+					id     = ticket.find('.ticket-right .relative').attr('rel'),
+					price  = ticket.find('.ticket-price strong').text(),
+					level  = parseInt(ticket.find('.type-level span').text().replace('+', '')),
+					name   = ticket.find('h2 a').text(),
+					single = ticket.find('.extra-type .fa-clone').length === 0,
+					entered  = false,
+					enterTimes = 0;
 
 					if( single )
-						entered = ticket.find('.giv-coupon').length === 0;
+					entered = ticket.find('.giv-coupon').length === 0;
 					else {
 						enterTimes = parseInt(ticket.find('.giv-coupon .palette-color-11').text());
 						entered = enterTimes > 0;
 					}
 
 					if( entered || user_level < level )
-						next_after = 50;
+					next_after = 50;
 					else
 					{
 						$.ajax({

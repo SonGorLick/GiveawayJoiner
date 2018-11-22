@@ -26,16 +26,16 @@ $(function(){
 	if( Lang.count() <= 1 ){
 		lang_select.remove();
 		$('.no-available-langs').css('display', 'block')
-			.next().css('display', 'none');
+		.next().css('display', 'none');
 	}
 	else{
 		for(let lang in lang_list){
 			let option = $(document.createElement('option'))
-				.attr('id', lang_list[lang].lang_culture)
-				.val(lang).text('[' + lang_list[lang].lang_culture + '] ' + lang_list[lang].lang_name);
+			.attr('id', lang_list[lang].lang_culture)
+			.val(lang).text('[' + lang_list[lang].lang_culture + '] ' + lang_list[lang].lang_name);
 
 			if( Lang.current() === lang )
-				option.prop('selected', true);
+			option.prop('selected', true);
 
 			lang_select.append(option);
 		}

@@ -50,10 +50,10 @@ class SteamGifts extends Seeker {
 
 		let callback = function() {
 			if( _this.getConfig('wishlist_only') )
-				return;
+			return;
 
 			if ( page <= _this.getConfig('pages', 1) )
-				_this.enterByUrl('https://www.steamgifts.com/giveaways/search?page=' + page, callback);
+			_this.enterByUrl('https://www.steamgifts.com/giveaways/search?page=' + page, callback);
 
 			page++;
 		};
@@ -84,20 +84,20 @@ class SteamGifts extends Seeker {
 				if( giveaways.length <= curr_giveaway || !_this.started ){
 
 					if(callback)
-						callback();
+					callback();
 
 					return;
 				}
 
 				let next_after = _this.interval();
 				let giveaway = giveaways.eq(curr_giveaway),
-					pinned   = giveaway.closest('.pinned-giveaways__outer-wrap').length > 0,
-					link     = 'https://www.steamgifts.com' + giveaway.find('a.giveaway__heading__name').attr('href'),
-					code     = link.match(/away\/(.*)\//)[1],
-					name     = giveaway.find('a.giveaway__heading__name').text(),
-					level    = giveaway.find('.giveaway__column--contributor-level').length > 0 ? parseInt(giveaway.find('.giveaway__column--contributor-level').text().replace('+', '').replace('Level ', '')) : 0,
-					cost     = parseInt(giveaway.find('a.giveaway__icon[rel]').prev().text().replace('(','').replace('P)', '')),
-					entered  = giveaway.find('.giveaway__row-inner-wrap.is-faded').length > 0;
+				pinned   = giveaway.closest('.pinned-giveaways__outer-wrap').length > 0,
+				link     = 'https://www.steamgifts.com' + giveaway.find('a.giveaway__heading__name').attr('href'),
+				code     = link.match(/away\/(.*)\//)[1],
+				name     = giveaway.find('a.giveaway__heading__name').text(),
+				level    = giveaway.find('.giveaway__column--contributor-level').length > 0 ? parseInt(giveaway.find('.giveaway__column--contributor-level').text().replace('+', '').replace('Level ', '')) : 0,
+				cost     = parseInt(giveaway.find('a.giveaway__icon[rel]').prev().text().replace('(','').replace('P)', '')),
+				entered  = giveaway.find('.giveaway__row-inner-wrap.is-faded').length > 0;
 
 				//_this.log(name + ', level - ' + level + ', cost - ' + cost + ', wishlist - ' + wishlist + ', pinned - ' + pinned);
 
@@ -128,7 +128,7 @@ class SteamGifts extends Seeker {
 					});
 				}
 				else
-					next_after = 50;
+				next_after = 50;
 
 				curr_giveaway++;
 				setTimeout(giveawayEnter, next_after);

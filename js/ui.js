@@ -30,25 +30,25 @@ $(function(){
 
 		switch(item.attr('type')){
 			case 'checkbox':
-				item.prop('checked', Config.get(item.attr('id')));
-				break;
+			item.prop('checked', Config.get(item.attr('id')));
+			break;
 		}
 	});
 
 	// Переключение типа отображения иконок сервисов
 	let menu_switcher = $('.list_type');
 	if( Config.get("menu_as_list") )
-		menu_switcher.addClass('state');
+	menu_switcher.addClass('state');
 
 
 	// Смена окон по окончании рендеринга
 	authWindow.hide();
-    mainWindow.show();
+	mainWindow.show();
 
 	if( Config.get('start_minimized') )
-        mainWindow.hide();
-    else
-        mainWindow.focus();
+	mainWindow.hide();
+	else
+	mainWindow.focus();
 
 
 	// EVENTS
@@ -65,7 +65,7 @@ $(function(){
 		let newTop = top + scroll;
 
 		if( scroll > 0 && newTop <= maxTop || scroll < 0 && newTop >= minTop )
-			top = newTop;
+		top = newTop;
 
 		icons.css('top', top + 'px');
 	});
@@ -90,7 +90,7 @@ $(function(){
 	$(document).on('click', '.service-panel > ul li', function() {
 		$('.service-panel > ul li, .in-service-panel').removeClass('active');
 		$('.in-service-panel[data-id="' + $(this).attr('data-id') + '"]')
-			.add('.service-panel > ul li[data-id="' + $(this).attr('data-id') + '"]').addClass('active');
+		.add('.service-panel > ul li[data-id="' + $(this).attr('data-id') + '"]').addClass('active');
 	});
 
 	// Клик по кнопке выхода из авторизованного аккаунта
@@ -104,7 +104,7 @@ $(function(){
 				mainWindow.hide();
 				mainWindow.loadURL(__dirname + '/blank.html');
 
-                ipc.send('save-user', null);
+				ipc.send('save-user', null);
 				authWindow.show();
 			},
 			error: function () {
@@ -121,8 +121,8 @@ $(function(){
 
 		switch(changed.attr('type')){
 			case 'checkbox':
-				value = changed.prop('checked');
-				break;
+			value = changed.prop('checked');
+			break;
 		}
 
 		if( changed.attr('id') === 'lang' ){
@@ -151,7 +151,7 @@ function intervalSchedules(){
 			dataType: 'json',
 			success: function(data){
 				if( data.response )
-					renderUser(data.response);
+				renderUser(data.response);
 			}
 		});
 	}
@@ -179,15 +179,15 @@ function profileSection() {
 
 	// Наполняем языковой селект, либо удаляем его
 	if( Lang.count() <= 1 )
-		lang_select.remove();
+	lang_select.remove();
 	else{
 		for(let lang in lang_list){
 			let option = $(document.createElement('option'))
-				.attr('id', lang_list[lang].lang_culture)
-				.val(lang).text('[' + lang_list[lang].lang_culture + '] ' + lang_list[lang].lang_name);
+			.attr('id', lang_list[lang].lang_culture)
+			.val(lang).text('[' + lang_list[lang].lang_culture + '] ' + lang_list[lang].lang_name);
 
 			if( Config.get('lang') === lang )
-				option.prop('selected', true);
+			option.prop('selected', true);
 
 			lang_select.append(option);
 		}
@@ -202,6 +202,6 @@ function renderUser(userData) {
 function openWebsite(url){
 	Browser.loadURL(url);
 	Browser.setTitle('GJ браузер - ' + Lang.get('auth.browser_loading'));
-	
-    Browser.show();
+
+	Browser.show();
 }

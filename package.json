@@ -12,7 +12,7 @@
   "author": "Linux",
   "license": "GNU",
   "devDependencies": {
-    "electron": "^2.0.13",
+    "electron": "^2.0.14",
     "electron-builder": "^20",
     "postinstall": "electron-builder install-app-deps"
   }

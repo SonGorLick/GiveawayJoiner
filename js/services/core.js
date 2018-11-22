@@ -38,31 +38,31 @@ class Seeker {
 		this.updateCookies();
 
 		if( Config.get('autostart') )
-			this.startSeeker(true);
+		this.startSeeker(true);
 	}
 
 	addIcon(){
 		this.icon = $(document.createElement('div'))
-			.addClass('service-icon')
-			.appendTo('.services-icons');
+		.addClass('service-icon')
+		.appendTo('.services-icons');
 
 		$(document.createElement('div')).addClass('bg')
-			.css({'background-image': "url('images/services/" + this.constructor.name + ".png')"})
-			.appendTo(this.icon);
+		.css({'background-image': "url('images/services/" + this.constructor.name + ".png')"})
+		.appendTo(this.icon);
 
 		this.statusIcon = $(document.createElement('div'))
-			.addClass('service-status')
-			.attr('data-status', 'normal')
-			.html(
-				'<span class="fa fa-play"></span>' +
-				'<span class="fa fa-pause"></span>'
-			)
-			.appendTo(this.icon);
+		.addClass('service-status')
+		.attr('data-status', 'normal')
+		.html(
+			'<span class="fa fa-play"></span>' +
+			'<span class="fa fa-pause"></span>'
+		)
+		.appendTo(this.icon);
 
 		$(document.createElement('span'))
-			.addClass('service-name')
-			.text(this.constructor.name)
-			.appendTo(this.icon);
+		.addClass('service-name')
+		.text(this.constructor.name)
+		.appendTo(this.icon);
 
 		this.icon.on('click', () => {
 			this.setActive();
@@ -71,93 +71,93 @@ class Seeker {
 
 	addPanel(){
 		this.panel = $(document.createElement('div'))
-			.addClass('service-panel')
-			.attr('id', this.constructor.name.toLowerCase())
-			.appendTo('.services-panels');
+		.addClass('service-panel')
+		.attr('id', this.constructor.name.toLowerCase())
+		.appendTo('.services-panels');
 
 		$('<ul>' +
-			'<li class="active" data-id="logs" data-lang="service.logs">' + Lang.get('service.logs') +'</li>' +
-			'<li data-id="settings" data-lang="service.settings">' + Lang.get('service.settings') + '</li>' +
-			'</ul>')
-			.appendTo(this.panel);
+		'<li class="active" data-id="logs" data-lang="service.logs">' + Lang.get('service.logs') +'</li>' +
+		'<li data-id="settings" data-lang="service.settings">' + Lang.get('service.settings') + '</li>' +
+		'</ul>')
+		.appendTo(this.panel);
 
 		this.logWrap = $(document.createElement('div'))
-			.addClass('service-logs in-service-panel styled-scrollbar active')
-			.attr('data-id', 'logs')
-			.appendTo(this.panel);
+		.addClass('service-logs in-service-panel styled-scrollbar active')
+		.attr('data-id', 'logs')
+		.appendTo(this.panel);
 
 		this.logField = $(document.createElement('div'))
-			.appendTo(this.logWrap);
+		.appendTo(this.logWrap);
 
 		$(document.createElement('span'))
-			.addClass('clear-log')
-			.text(Lang.get('service.clear_log'))
-			.attr('data-lang', 'service.clear_log')
-			.click(() => {
-				this.clearLog();
-			})
-			.appendTo(this.logWrap);
+		.addClass('clear-log')
+		.text(Lang.get('service.clear_log'))
+		.attr('data-lang', 'service.clear_log')
+		.click(() => {
+			this.clearLog();
+		})
+		.appendTo(this.logWrap);
 
 		this.settingsPanel = $(document.createElement('div'))
-			.addClass('service-settings in-service-panel')
-			.attr('data-id', 'settings')
-			.appendTo(this.panel);
+		.addClass('service-settings in-service-panel')
+		.attr('data-id', 'settings')
+		.appendTo(this.panel);
 
 		this.settingsNums = $(document.createElement('div'))
-			.addClass('settings-numbers').appendTo(this.settingsPanel);
+		.addClass('settings-numbers').appendTo(this.settingsPanel);
 
 		this.settingsChecks = $(document.createElement('div'))
-			.addClass('settings-checkbox').appendTo(this.settingsPanel);
+		.addClass('settings-checkbox').appendTo(this.settingsPanel);
 
 		this.userPanel = $(document.createElement('div'))
-			.addClass('service-user-panel')
-			.appendTo(this.panel);
+		.addClass('service-user-panel')
+		.appendTo(this.panel);
 
 		this.userInfo = $(document.createElement('div'))
-			.addClass('user-info no-selectable')
-			.html('<div class="avatar"></div>' +
-				'<span class="username"></span>')
-			.appendTo(this.userPanel);
+		.addClass('user-info no-selectable')
+		.html('<div class="avatar"></div>' +
+		'<span class="username"></span>')
+		.appendTo(this.userPanel);
 
 		if( this.withValue ){
 			let value = $(document.createElement('span'))
-				.addClass('value')
-				.html('<span data-lang="' + this.transPath('value_label') + '">' + this.trans('value_label') + '</span>: ')
-				.appendTo(this.userInfo);
+			.addClass('value')
+			.html('<span data-lang="' + this.transPath('value_label') + '">' + this.trans('value_label') + '</span>: ')
+			.appendTo(this.userInfo);
 
 			this.value_label = $(document.createElement('span'))
-				.text(this.curr_value)
-				.appendTo(value);
+			.text(this.curr_value)
+			.appendTo(value);
 		}
 
 		$(document.createElement('button'))
-			.addClass('open-website')
-			.attr('data-lang', 'service.open_website')
-			.text(Lang.get("service.open_website"))
-			.attr('data-link', this.websiteUrl)
-			.appendTo(this.userPanel);
+		.addClass('open-website')
+		.attr('data-lang', 'service.open_website')
+		.text(Lang.get("service.open_website"))
+		.attr('data-link', this.websiteUrl)
+		.appendTo(this.userPanel);
 
 		this.mainButton = $('<button>' + Lang.get('service.btn_start') + '</button>')
-			.addClass('seeker-button start-button')
-			.hover(() => {
-				this.mainButton.addClass('hovered');
-				if( this.started )
-					this.buttonState(Lang.get('service.btn_stop'));
-			}, () => {
-				this.mainButton.removeClass('hovered');
-				if( this.started )
-					this.buttonState(window.timeToStr(this.doTimer() - this.totalTicks % this.doTimer()));
-			})
-			.click(() => {
-				if(this.mainButton.hasClass('disabled'))
-					return;
+		.addClass('seeker-button start-button')
+		.hover(() => {
+			this.mainButton.addClass('hovered');
+			if( this.started )
+			this.buttonState(Lang.get('service.btn_stop'));
+		}, () => {
+			this.mainButton.removeClass('hovered');
+			if( this.started )
+			this.buttonState(window.timeToStr(this.doTimer() - this.totalTicks % this.doTimer()));
+		})
+		.click(() => {
+			if(this.mainButton.hasClass('disabled'))
+			return;
 
-				if( !this.started )
-					this.startSeeker();
-				else
-					this.stopSeeker();
-			})
-			.appendTo(this.userPanel);
+			if( !this.started )
+			this.startSeeker();
+			else
+			this.stopSeeker();
+		})
+		.appendTo(this.userPanel);
 	}
 
 	setActive(){
@@ -176,9 +176,9 @@ class Seeker {
 			timeout: this.getTimeout,
 			success: function (html) {
 				if( html.indexOf( authContent ) >= 0 )
-					callback(1);
+				callback(1);
 				else
-					callback(0);
+				callback(0);
 			},
 			error: function () {
 				callback(-1);
@@ -188,7 +188,7 @@ class Seeker {
 
 	startSeeker(autostart){
 		if( this.started )
-			return false;
+		return false;
 
 		this.buttonState(Lang.get('service.btn_checking'), 'disabled');
 
@@ -224,7 +224,7 @@ class Seeker {
 						}
 					});
 
-					Browser.setTitle('GS Browser - ' + Lang.get('auth.browser_loading'));
+					Browser.setTitle('GJ браузер - ' + Lang.get('auth.browser_loading'));
 					Browser.loadURL(this.authLink);
 
 					Browser.once('close', () => {
@@ -233,9 +233,9 @@ class Seeker {
 						this.waitAuth = false;
 						this.authCheck((authState) => {
 							if ( authState === 1)
-								this.runTimer();
+							this.runTimer();
 							else
-								this.buttonState(Lang.get('service.btn_start'));
+							this.buttonState(Lang.get('service.btn_start'));
 						});
 					});
 					Browser.show();
@@ -247,7 +247,7 @@ class Seeker {
 	stopSeeker(bad){
 		let status = bad ? 'bad' : 'normal';
 		if( !this.started )
-			return false;
+		return false;
 
 		this.started = false;
 		this.setStatus(status);
@@ -261,21 +261,21 @@ class Seeker {
 		this.totalTicks = 0;
 		this.started = true;
 
-        this.setStatus('good');
+		this.setStatus('good');
 		this.log( Lang.get('service.started') );
 
 		this.updateUserInfo();
 
 		if( this.intervalVar )
-			clearInterval(this.intervalVar);
+		clearInterval(this.intervalVar);
 
 		this.intervalVar = setInterval(() => {
 			if( !this.started )
-				clearInterval(this.intervalVar);
+			clearInterval(this.intervalVar);
 
 			// Обновление инфы о пользователе
 			if( this.totalTicks !== 0 && this.totalTicks % this.usrUpdTimer === 0 )
-				this.updateUserInfo();
+			this.updateUserInfo();
 
 			// Выполнение основного действия
 			if( this.totalTicks % this.doTimer() === 0 ) {
@@ -296,7 +296,7 @@ class Seeker {
 			}
 
 			if( !this.mainButton.hasClass('hovered') )
-				this.buttonState(window.timeToStr(this.doTimer() - this.totalTicks % this.doTimer()));
+			this.buttonState(window.timeToStr(this.doTimer() - this.totalTicks % this.doTimer()));
 
 			this.totalTicks++;
 		}, 1000);
@@ -310,7 +310,7 @@ class Seeker {
 					this.userInfo.find('.username').text(userData.username);
 
 					if( this.withValue )
-						this.setValue(userData.value);
+					this.setValue(userData.value);
 
 					this.userInfo.addClass('visible');
 				})
@@ -324,153 +324,153 @@ class Seeker {
 
 			switch(input.type){
 				case 'number':
-					if(input.default < input.min) {
-						input.default = input.min;
-						this.setConfig(control, input.default);
+				if(input.default < input.min) {
+					input.default = input.min;
+					this.setConfig(control, input.default);
+				}
+				else if( input.default > input.max ){
+					input.default = input.max;
+					this.setConfig(control, input.default);
+				}
+
+				let numberWrap = $(document.createElement('div'))
+				.addClass('input-wrap number no-selectable')
+				.attr('data-control', this.constructor.name.toLowerCase() + '.' + control)
+				.appendTo(this.settingsNums);
+
+				numberWrap.html(
+					'<div class="button btn-down"><span class="fa fa-minus"></span></div>' +
+					'<div class="value-label">' + input.default + '</div>' +
+					'<div class="button btn-up"><span class="fa fa-plus"></span></div>' +
+					'<div class="label" title="' + Lang.get(input.trans + '_title') + '" data-lang-title="' + input.trans + '_title" data-lang="' + input.trans + '">' + Lang.get(input.trans) + '</div>'
+				);
+
+				let _this  = this;
+				let vLabel = numberWrap.find('.value-label');
+				let btnUp  = numberWrap.find('.btn-up');
+				let btnDn  = numberWrap.find('.btn-down');
+
+				if( input.default === input.max ) btnUp.addClass('disabled');
+				if( input.default === input.min ) btnDn.addClass('disabled');
+
+				let pressTimeout = undefined;
+				let iterations   = 0;
+
+				let up = function(){
+					let val = parseFloat(vLabel.text());
+					if (val < input.max){
+						val++;
+						btnDn.removeClass('disabled');
 					}
-					else if( input.default > input.max ){
-						input.default = input.max;
-						this.setConfig(control, input.default);
+
+					if( val === input.max )
+					btnUp.addClass('disabled');
+
+					vLabel.text(val);
+					_this.setConfig(control, val);
+
+					switch(control){
+						case 'interval_from':
+						_this.settings.interval_to.min = val;
+						_this.reinitNumber('interval_to');
+						break;
+						case 'interval_to':
+						_this.settings.interval_from.max = val;
+						_this.reinitNumber('interval_from');
+						break;
+					}
+				};
+
+				let dn = function(){
+					let val = parseFloat(vLabel.text());
+					if (val > input.min){
+						val--;
+						btnUp.removeClass('disabled');
 					}
 
-					let numberWrap = $(document.createElement('div'))
-						.addClass('input-wrap number no-selectable')
-						.attr('data-control', this.constructor.name.toLowerCase() + '.' + control)
-						.appendTo(this.settingsNums);
+					if( val === input.min )
+					btnDn.addClass('disabled');
 
-					numberWrap.html(
-						'<div class="button btn-down"><span class="fa fa-minus"></span></div>' +
-						'<div class="value-label">' + input.default + '</div>' +
-						'<div class="button btn-up"><span class="fa fa-plus"></span></div>' +
-						'<div class="label" title="' + Lang.get(input.trans + '_title') + '" data-lang-title="' + input.trans + '_title" data-lang="' + input.trans + '">' + Lang.get(input.trans) + '</div>'
-					);
+					vLabel.text(val);
+					_this.setConfig(control, val);
 
-					let _this  = this;
-					let vLabel = numberWrap.find('.value-label');
-					let btnUp  = numberWrap.find('.btn-up');
-					let btnDn  = numberWrap.find('.btn-down');
+					switch(control){
+						case 'interval_from':
+						_this.settings.interval_to.min = val;
+						_this.reinitNumber('interval_to');
+						break;
+						case 'interval_to':
+						_this.settings.interval_from.max = val;
+						_this.reinitNumber('interval_from');
+						break;
+					}
+				};
 
-					if( input.default === input.max ) btnUp.addClass('disabled');
-					if( input.default === input.min ) btnDn.addClass('disabled');
+				btnUp.on('mousedown', () =>{
+					let func = function(){
+						iterations++;
+						up();
 
-					let pressTimeout = undefined;
-					let iterations   = 0;
-
-					let up = function(){
-						let val = parseFloat(vLabel.text());
-						if (val < input.max){
-							val++;
-							btnDn.removeClass('disabled');
-						}
-
-						if( val === input.max )
-							btnUp.addClass('disabled');
-
-						vLabel.text(val);
-						_this.setConfig(control, val);
-
-						switch(control){
-							case 'interval_from':
-								_this.settings.interval_to.min = val;
-								_this.reinitNumber('interval_to');
-								break;
-							case 'interval_to':
-								_this.settings.interval_from.max = val;
-								_this.reinitNumber('interval_from');
-								break;
-						}
+						pressTimeout = setTimeout(func, 200 / ( iterations / 2 ));
 					};
+					func();
+				})
+				.on('mouseup mouseleave', () => {
+					iterations = 0;
+					clearTimeout(pressTimeout);
+				});
 
-					let dn = function(){
-						let val = parseFloat(vLabel.text());
-						if (val > input.min){
-							val--;
-							btnUp.removeClass('disabled');
-						}
+				btnDn.on('mousedown', () =>{
+					let func = function(){
+						iterations++;
+						dn();
 
-						if( val === input.min )
-							btnDn.addClass('disabled');
-
-						vLabel.text(val);
-						_this.setConfig(control, val);
-
-						switch(control){
-							case 'interval_from':
-								_this.settings.interval_to.min = val;
-								_this.reinitNumber('interval_to');
-								break;
-							case 'interval_to':
-								_this.settings.interval_from.max = val;
-								_this.reinitNumber('interval_from');
-								break;
-						}
+						pressTimeout = setTimeout(func, 200 / ( iterations / 2 ));
 					};
+					func();
+				})
+				.on('mouseup mouseleave', () => {
+					iterations = 0;
+					clearTimeout(pressTimeout);
+				});
 
-					btnUp.on('mousedown', () =>{
-							let func = function(){
-								iterations++;
-								up();
-
-								pressTimeout = setTimeout(func, 200 / ( iterations / 2 ));
-							};
-							func();
-						})
-						.on('mouseup mouseleave', () => {
-							iterations = 0;
-							clearTimeout(pressTimeout);
-						});
-
-					btnDn.on('mousedown', () =>{
-						let func = function(){
-							iterations++;
-							dn();
-
-							pressTimeout = setTimeout(func, 200 / ( iterations / 2 ));
-						};
-						func();
-					})
-					.on('mouseup mouseleave', () => {
-						iterations = 0;
-						clearTimeout(pressTimeout);
-					});
-
-					break;
+				break;
 				case 'checkbox':
-					let checkboxWrap = $(document.createElement('div'))
-						.addClass('input-wrap checkbox no-selectable')
-						.appendTo(this.settingsChecks);
+				let checkboxWrap = $(document.createElement('div'))
+				.addClass('input-wrap checkbox no-selectable')
+				.appendTo(this.settingsChecks);
 
-					checkboxWrap.html(
-						'<label title="' + input.trans + '_title' + '" data-lang-title="' + input.trans + '_title">' +
-							'<input type="checkbox"/>' +
-							'<span data-lang="' + input.trans + '">' +
-								Lang.get(input.trans) +
-							'</span>' +
-						'</label>'
-					);
+				checkboxWrap.html(
+					'<label title="' + input.trans + '_title' + '" data-lang-title="' + input.trans + '_title">' +
+					'<input type="checkbox"/>' +
+					'<span data-lang="' + input.trans + '">' +
+					Lang.get(input.trans) +
+					'</span>' +
+					'</label>'
+				);
 
-					let checkbox = checkboxWrap.find('input').prop('checked', input.default);
+				let checkbox = checkboxWrap.find('input').prop('checked', input.default);
 
-					checkbox.change(() => {
-						this.setConfig(control, checkbox.prop('checked'));
-					});
+				checkbox.change(() => {
+					this.setConfig(control, checkbox.prop('checked'));
+				});
 
-					break;
+				break;
 			}
 		}
 	}
 
 	reinitNumber(control){
 		let wrap = $('[data-control="' + this.constructor.name.toLowerCase() + '.' + control + '"]'),
-			val  = parseInt(wrap.find('.value-label').text());
+		val  = parseInt(wrap.find('.value-label').text());
 
 		wrap.find('.button').removeClass('disabled');
 
 		if( val <= this.settings[control].min )
-			wrap.find('.btn-down').addClass('disabled');
+		wrap.find('.btn-down').addClass('disabled');
 
 		if( val >= this.settings[control].max )
-			wrap.find('.btn-up').addClass('disabled');
+		wrap.find('.btn-up').addClass('disabled');
 	}
 
 	logLink(address, anchor){
@@ -483,7 +483,7 @@ class Seeker {
 
 			for( let one in cookies ){
 				if(newCookies.length !== 0)
-					newCookies += '; ';
+				newCookies += '; ';
 
 				newCookies += cookies[one].name + '=' + cookies[one].value;
 			}
@@ -511,7 +511,7 @@ class Seeker {
 	buttonState(text, className){
 		this.mainButton.removeClass('disabled').text(text);
 		if( className )
-			this.mainButton.addClass(className);
+		this.mainButton.addClass(className);
 	}
 
 	setValue(new_value){
@@ -523,7 +523,7 @@ class Seeker {
 
 	getConfig(key, def){
 		if( def === undefined )
-			def = this.settings[key].default;
+		def = this.settings[key].default;
 
 		return Config.get(this.constructor.name.toLowerCase() + '_' + key, def);
 	}
@@ -532,13 +532,13 @@ class Seeker {
 		return Config.set(this.constructor.name.toLowerCase() + '_' + key, val);
 	}
 
-    transPath(key){
-        return ('service.' + this.constructor.name.toLowerCase() + '.' + key);
-    }
+	transPath(key){
+		return ('service.' + this.constructor.name.toLowerCase() + '.' + key);
+	}
 
-    trans(key){
-        return Lang.get('service.' + this.constructor.name.toLowerCase() + '.' + key);
-    }
+	trans(key){
+		return Lang.get('service.' + this.constructor.name.toLowerCase() + '.' + key);
+	}
 
 	clearLog(){
 		this.logField.html('<div><span class="time">' + timeStr() + ':</span>' + Lang.get('service.log_cleared') + '</div>');

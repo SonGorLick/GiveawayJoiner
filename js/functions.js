@@ -9,17 +9,17 @@ window.timeStr = function () {
 window.timeToStr = function (time) {
 	let str = '';
 	let h = Math.floor(time / 60 / 60),
-		i = Math.floor(( time - (h*60) ) / 60),
-		s = time % 60;
+	i = Math.floor(( time - (h*60) ) / 60),
+	s = time % 60;
 
 	if( h > 0 )
-		str += h + ':';
+	str += h + ':';
 
 	if( i > 0 )
-		str += i + ':';
+	str += i + ':';
 
 	if( s < 9 )
-		s = '0' + s;
+	s = '0' + s;
 
 	str += s;
 
