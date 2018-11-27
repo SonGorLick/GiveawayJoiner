@@ -1,19 +1,13 @@
 'use strict';
-
 class IndieGala extends Seeker {
-
 	constructor() {
 		super();
-
 		this.authContent = "My Libraries";
-
-		this.websiteUrl  = "https://www.indiegala.com";
-		this.authLink    = "https://www.indiegala.com/login";
-		this.wonsUrl     = "https://www.indiegala.com/profile";
-
+		this.websiteUrl = "https://www.indiegala.com";
+		this.authLink = "https://www.indiegala.com/login";
+		this.wonsUrl = "https://www.indiegala.com/profile";
 		super.init();
 	}
-
 	authCheck(callback){
 		$.ajax({
 			url: 'https://www.indiegala.com/get_user_info',
@@ -29,14 +23,12 @@ class IndieGala extends Seeker {
 			}
 		});
 	}
-
 	getUserInfo(callback){
 		let userData = {
 			avatar: 'https://www.indiegala.com/favicon.ico',
 			username: 'IG User',
 			value: 0
 		};
-
 		$.ajax({
 			url: 'https://www.indiegala.com/get_user_info',
 			data: {
@@ -45,71 +37,56 @@ class IndieGala extends Seeker {
 			},
 			dataType: 'json',
 			success: function(data){
-				userData.avatar   = data.steamavatar;
+				userData.avatar = data.steamavatar;
 				userData.username = data.steamnick;
-				userData.value    = data.silver_coins_tot;
-
+				userData.value = data.silver_coins_tot;
 			},
 			complete: function(){
 				callback(userData);
 			}
 		});
 	}
-
 	seekService(){
 		let _this = this;
-		let page  = 1;
-
+		let page = 1;
 		let callback = function() {
 			page++;
-
 			if ( page <= _this.getConfig('pages', 1) )
 			_this.enterOnPage(page, callback);
 		};
-
 		this.enterOnPage(page, callback);
 	}
-
 	enterOnPage(page, callback){
 		let _this = this;
-
 		$.get('https://www.indiegala.com/giveaways/get_user_level_and_coins', function(data){
 			data = JSON.parse(data);
 			if(data.status !== 'ok')
 			return;
 			let user_level = data.current_level;
-
 			$.get('https://www.indiegala.com/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=all', function(data){
 				let tickets = $(JSON.parse(data).content).find('.tickets-col');
-
 				let curr_ticket = 0;
-
 				function giveawayEnter(){
 					if( tickets.length <= curr_ticket || !_this.started ){
-
 						if(callback)
 						callback();
-
 						return;
 					}
-
 					let next_after = _this.interval();
 					let ticket = tickets.eq(curr_ticket),
-					id     = ticket.find('.ticket-right .relative').attr('rel'),
-					price  = ticket.find('.ticket-price strong').text(),
-					level  = parseInt(ticket.find('.type-level span').text().replace('+', '')),
-					name   = ticket.find('h2 a').text(),
+					id = ticket.find('.ticket-right .relative').attr('rel'),
+					price = ticket.find('.ticket-price strong').text(),
+					level = parseInt(ticket.find('.type-level span').text().replace('+', '')),
+					name = ticket.find('h2 a').text(),
 					single = ticket.find('.extra-type .fa-clone').length === 0,
-					entered  = false,
+					entered = false,
 					enterTimes = 0;
-
 					if( single )
 					entered = ticket.find('.giv-coupon').length === 0;
 					else {
 						enterTimes = parseInt(ticket.find('.giv-coupon .palette-color-11').text());
 						entered = enterTimes > 0;
 					}
-
 					if( entered || user_level < level )
 					next_after = 50;
 					else
@@ -128,15 +105,11 @@ class IndieGala extends Seeker {
 							}
 						});
 					}
-
 					curr_ticket++;
 					setTimeout(giveawayEnter, next_after);
 				}
-
 				giveawayEnter();
 			});
-
 		});
 	}
-
 }

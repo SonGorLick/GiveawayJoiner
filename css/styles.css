@@ -1,11 +1,12 @@
 html { position: absolute; top:0; left:0; width:100%; height:100%; }
 body { -webkit-user-select: none; overflow: hidden; font-family: 'Noto Sans', sans-serif; font-size: 12px; color:#b9c2c7; position: relative; width: 100%; height: 100%; border: 1px solid #222d32; border-top: none; box-sizing: border-box; }
 * { font-family: inherit; margin:0; padding:0; outline: none; box-sizing: inherit; }
-.no-selectable {  -webkit-user-select: none; cursor: default; }
+.no-selectable { -webkit-user-select: none; cursor: default; }
 a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
-.styled-scrollbar::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(90,101,106,1); border-radius: 10px; background-color: transparent; }
-.styled-scrollbar::-webkit-scrollbar { width: 8px; background-color: transparent; }
-.styled-scrollbar::-webkit-scrollbar-thumb { border-radius: 3px; -webkit-box-shadow: inset 0 0 6px rgba(90,101,106,1); background-color: #29353b; }
+.styled-scrollbar::-webkit-scrollbar-track { width: 8px; background-color: #29353b; }
+.styled-scrollbar::-webkit-scrollbar { width: 8px; background-color: #29353b; }
+.styled-scrollbar::-webkit-scrollbar-thumb { width: 8px; background-color: #5a656a; }
+.styled-scrollbar::-webkit-scrollbar-thumb:hover { width: 8px; background-color: #788388; }
 #head { position: relative; z-index: 10; background-color: #263238; height: 80px; border-bottom: 1px solid #222d32; -webkit-app-region: drag; }
 #head_decor { height: 10px; width: 540px; background-color: #222d33; position: absolute; left: 0; right: 0; margin: 0 auto; top: 0; border-radius: 0 0 3px 3px; }
 #head_decor:before,
@@ -18,11 +19,11 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 #head .menu li.active span { color: #4db6ac; text-shadow: 0 0 15px #4db6ac; }
 #head .menu li span:hover { color: #00bcd4; text-shadow: 0 0 15px #00bcd4; }
 .window-buttons { cursor: default; font-size: 0; z-index: 999; position: absolute; top: 10px; right: 10px; height: 14px; line-height: 14px; text-align: right; -webkit-app-region: no-drag; }
-.window-buttons span { cursor: pointer;  font-size: 12px; display: inline-block; vertical-align: middle; width: 14px; height: inherit; line-height: inherit; margin-left: 6px; }
+.window-buttons span { cursor: pointer; font-size: 12px; display: inline-block; vertical-align: middle; width: 14px; height: inherit; line-height: inherit; margin-left: 6px; }
 .window-buttons span:hover { color: #00bcd4 }
 .window-buttons span.closer { font-size: 14px; }
 #content { height: 420px; border-bottom: 1px solid #222d32; background: #263238; }
-.content-item { position: relative;  width: 100%; height: 100%; display: none; }
+.content-item { position: relative; width: 100%; height: 100%; display: none; }
 .content-item.active { display: block; }
 .content-item[data-id=profile] .info { position: absolute; left: 0; top: 0; height: 100%; width: calc(100% - 250px); padding: 10px; }
 .content-item[data-id=profile] .info .avatar { position: absolute; left: 10px; top: 10px; width: 150px; height: 150px; border-radius: 3px; background: center/contain no-repeat; }
@@ -36,7 +37,7 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .services-icons { padding-top: 4px; position: absolute; z-index: 1; width: 100%; top: 34px; left: 0; }
 .service-icon { border: 1px solid transparent; cursor: pointer; position: relative; width: 80px; height: 80px; margin: 0 auto 10px; font-size: 12px; }
 .service-icon.active { border-color: #29353b; background: rgba(77,182,172,0.7); }
-.service-icon:hover:not(.active) {  background: rgba(0,188,212,0.7); border-color: #29353b; }
+.service-icon:hover:not(.active) { background: rgba(0,188,212,0.7); border-color: #29353b; }
 .service-icon .bg { margin: 10px auto 0; width: 42px; height: 42px; background: center center/contain no-repeat; }
 .service-icon .service-name { display: block; text-align: center; }
 .service-icon .service-status { width: 16px; height: 16px; line-height: 16px; text-align: center; font-size: 16px; position: absolute; right: 2px; bottom: 2px; background: center/contain no-repeat; }
@@ -55,9 +56,9 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .list_type.state + .services-icons .service-icon { width: 90px; height: 20px; margin: 0 auto 5px; }
 .list_type.state + .services-icons .service-icon .bg { display: none; /*width: 18px; height: 18px; display: inline-block; vertical-align: middle; margin: 0 4px 0 2px;*/ }
 .list_type.state + .services-icons .service-icon .service-name { left: 22px; top: 0; line-height: 20px; display: inline-block; vertical-align: middle; }
-.list_type.state + .services-icons .service-icon:hover { color: #00bcd4;  border-color: transparent; background: transparent; }
-.list_type.state + .services-icons .service-icon.active { color: #4db6ac;  border-color: transparent; background: transparent; }
-.list_type.state + .services-icons .service-icon.active:hover { color: #00bcd4;  border-color: transparent; background: transparent; }
+.list_type.state + .services-icons .service-icon:hover { color: #00bcd4; border-color: transparent; background: transparent; }
+.list_type.state + .services-icons .service-icon.active { color: #4db6ac; border-color: transparent; background: transparent; }
+.list_type.state + .services-icons .service-icon.active:hover { color: #00bcd4; border-color: transparent; background: transparent; }
 .list_type.state + .services-icons .service-icon .service-status { font-size: 14px; position: absolute; right: 0; bottom: 0; }
 .services-panels { padding: 6px 15px 10px; position: absolute; left: 100px; top: 0; width: 630px; height: 100%; overflow: hidden; }
 .service-panel { display: none; }

@@ -5,15 +5,22 @@
   "description": "Autojoin to steam game giveaways",
   "main": "giveawayjoiner.js",
   "dependencies": {
-    "electron-json-storage": "^4.1.4",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.2"
+    "electron-json-storage": "latest",
+    "request": "latest",
+    "request-promise": "latest"
   },
   "author": "pumPCin",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^2",
-    "electron-builder": "^20",
-    "postinstall": "electron-builder install-app-deps"
+    "electron": "^2.0.14",
+    "electron-builder": "latest",
+    "postinstall": "install-app-deps"
+  },
+  "build": {
+    "appId": "com.giveawayjoiner.app",
+    "linux": {
+      "target": "dir",
+      "icon": "icon.png"
+    }
   }
 }
