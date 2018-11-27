@@ -19,3 +19,6 @@ electron-builder -l --dir
 
 
 4. App build will be in 'sources folder'/distr/linux-unpacked
+
+
+P.S.: libgconf-2-4 must be installed in your system!
