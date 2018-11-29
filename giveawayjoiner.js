@@ -21,7 +21,7 @@ if (mainWindow.isMinimized())
 mainWindow.restore();
 if( !mainWindow.isVisible() )
 mainWindow.show();
-mainWindow.focus()
+mainWindow.focus();
 }
 });
 if ( isSecondInstance ){
@@ -221,7 +221,7 @@ return;
 storage.getMany(lng_to_load, function(error, langs){
 if(error) throw new Error(`Can't load selected translation`);
 let lng;
-for(lng in langs.lang ){
+for(lng in langs.lang){
 _this.langsCount++;
 }
 if( langs.lang[Config.get('lang', _this.default)] === undefined ){

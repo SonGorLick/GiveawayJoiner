@@ -254,7 +254,7 @@ this.userInfo.find('.username').text(userData.username);
 if( this.withValue )
 this.setValue(userData.value);
 this.userInfo.addClass('visible');
-})
+});
 }
 });
 }

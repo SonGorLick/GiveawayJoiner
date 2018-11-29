@@ -71,12 +71,12 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-panel > ul li+li { margin-left: 6px; }
 .in-service-panel { font-size: 14px; display: none; background: rgba(47,61,68,1); height: 340px; padding: 5px; border-radius: 2px; border: 1px solid rgba(33,43,48,1); }
 .in-service-panel.active { display: block; }
-.service-logs { font-size: 13px; overflow-x: auto; }
+.service-logs { font-size: 12px; overflow-x: auto; }
 .service-logs .warn { color: lightcoral; }
 .service-logs span.time { color: #4db6ac; padding-right: 6px; }
 .service-logs span.open-website { cursor: pointer; text-decoration: underline; }
 .service-logs { -webkit-user-select: text; }
-.service-logs .clear-log { position: absolute; right: 18px; top: 10px; font-size: 12px; color: #4db6ac; cursor: pointer; }
+.service-logs .clear-log { position: absolute; right: 18px; top: 10px; font-size: 12px; font-weight: bold; color: #4db6ac; cursor: pointer; }
 .service-logs .clear-log:hover { color: #00bcd4; }
 .service-settings { }
 .service-settings .input-wrap { display: inline-block; position: relative; }
@@ -100,7 +100,7 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-user-panel .user-info.visible { display: block; }
 .service-user-panel .user-info .avatar { width: 40px; height: 40px; background: center/contain transparent no-repeat; border-radius: 1px; float: left; margin-right: 10px; }
 .service-user-panel .user-info > span { display: block; }
-button.open-website { font-size: inherit; font-weight: inherit; background: transparent; cursor: pointer; border: none; text-decoration: underline; color: #4db6ac; }
+button.open-website { font-size: 12px; font-weight: bold; background: transparent; cursor: pointer; border: none; text-decoration: underline; color: #4db6ac; }
 button.open-website:hover { color: #00bcd4; }
 .service-user-panel button.open-website { position: absolute; right: 140px; bottom: 10px; }
 .input-wrap { position: relative; line-height: 20px; }
@@ -109,3 +109,4 @@ button.open-website:hover { color: #00bcd4; }
 .input-wrap.checkbox label:hover { color: #00bcd4 }
 input-wrap.checkbox input[disabled] { cursor: default; }
 .input-wrap.checkbox input[disabled] + label { cursor: default; color: #2c383e; }
+.fa { -moz-osx-font-smoothing: grayscale; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; } .fa-ellipsis-v:before { content: "\f142"; } .fa-globe:before { content: "\f0ac"; } .fa-list-ul:before { content: "\f0ca"; } .fa-minus:before { content: "\f068"; } .fa-pause:before { content: "\f04c"; } .fa-play:before { content: "\f04b"; } .fa-plus:before { content: "\f067"; } .fa-times:before { content: "\f00d"; } .fa-window-minimize:before { content: "\f2d1"; } .fa { font-family: 'Font Awesome 5 Free'; font-weight: 900; } @font-face { font-family: 'Font Awesome 5 Free'; font-style: normal; font-weight: 900; src: url("fa.woff2") format("woff2"); }

@@ -31,7 +31,7 @@ userData.value = data.find('.nav__points').text();
 complete: function () {
 callback(userData);
 }
-})
+});
 }
 seekService(){
 let _this = this;
