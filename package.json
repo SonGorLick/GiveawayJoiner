@@ -1,26 +1,26 @@
 {
-  "name": "GiveawayJoiner",
-  "productName": "GiveawayJoiner",
-  "version": "1.0.5",
-  "description": "Autojoin to steam game giveaways",
-  "main": "giveawayjoiner.js",
-  "dependencies": {
-    "electron-json-storage": "latest",
-    "request": "latest",
-    "request-promise": "latest"
-  },
-  "author": "pumPCin",
-  "license": "MIT",
-  "devDependencies": {
-    "electron": "^2",
-    "electron-builder": "latest",
-    "postinstall": "install-app-deps"
-  },
-  "build": {
-    "appId": "com.giveawayjoiner.app",
-    "linux": {
-      "target": "dir",
-      "icon": "icon.png"
-    }
-  }
+"name": "GiveawayJoiner",
+"productName": "GiveawayJoiner",
+"version": "1.0.5",
+"description": "Autojoin to steam game giveaways",
+"main": "giveawayjoiner.js",
+"dependencies": {
+"electron-json-storage": "latest",
+"request": "latest",
+"request-promise": "latest"
+},
+"author": "pumPCin",
+"license": "MIT",
+"devDependencies": {
+"electron": "^2",
+"electron-builder": "latest",
+"postinstall": "install-app-deps"
+},
+"build": {
+"appId": "com.giveawayjoiner.app",
+"linux": {
+"target": "dir",
+"icon": "icon.png"
+}
+}
 }
