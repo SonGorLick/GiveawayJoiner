@@ -12,15 +12,15 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 #head_decor:before,
 #head_decor:after { content: ''; display: block; background-color: inherit; height: 20px; width: 30px; position: absolute; left: -22px; bottom: 7px; transform: rotate(30deg); }
 #head_decor:after { left: auto; right: -22px; bottom: 7px; transform: rotate(-30deg); }
-#head .logo { background: url('../icon.png') 20px center/55% no-repeat; width: 100px; position: absolute; z-index: 5; left: 0; top: 0; height: 80px; -webkit-app-region: no-drag; }
+#head .logo { background: url('../icon.png') 20px center/55% no-repeat; width: 110px; position: absolute; z-index: 5; left: 0; top: 0; height: 80px; -webkit-app-region: no-drag; }
 #head .menu { position: relative; z-index: 1; list-style: none; display: block; width: 630px; margin-left: 100px; height: 80px; }
-#head .menu li { line-height: 80px; display: inline-block; padding: 0 10px; text-transform: uppercase; font-size: 18px; }
+#head .menu li { line-height: 80px; display: inline-block; padding: 0 10px; text-transform: uppercase; font-size: 18px; font-weight: bold; }
 #head .menu li span { -webkit-app-region: no-drag; color: #5a646a; height: 20px; line-height: 20px; cursor: pointer; display: inline-block; vertical-align: middle; }
 #head .menu li.active span { color: #4db6ac; text-shadow: 0 0 15px #4db6ac; }
 #head .menu li span:hover { color: #00bcd4; text-shadow: 0 0 15px #00bcd4; }
 .window-buttons { cursor: default; font-size: 0; z-index: 999; position: absolute; top: 10px; right: 10px; height: 14px; line-height: 14px; text-align: right; -webkit-app-region: no-drag; }
 .window-buttons span { cursor: pointer; font-size: 12px; display: inline-block; vertical-align: middle; width: 14px; height: inherit; line-height: inherit; margin-left: 6px; }
-.window-buttons span:hover { color: #00bcd4 }
+.window-buttons span:hover { color: #00bcd4; }
 .window-buttons span.closer { font-size: 14px; }
 #content { height: 420px; border-bottom: 1px solid #222d32; background: #263238; }
 .content-item { position: relative; width: 100%; height: 100%; display: none; }
@@ -38,8 +38,8 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-icon { border: 1px solid transparent; cursor: pointer; position: relative; width: 80px; height: 80px; margin: 0 auto 10px; font-size: 12px; }
 .service-icon.active { border-color: #29353b; background: rgba(77,182,172,0.7); }
 .service-icon:hover:not(.active) { background: rgba(0,188,212,0.7); border-color: #29353b; }
-.service-icon .bg { margin: 10px auto 0; width: 42px; height: 42px; background: center center/contain no-repeat; }
-.service-icon .service-name { display: block; text-align: center; }
+.service-icon .bg { margin: 10px auto 0; width: 32px; height: 32px; background: center center/contain no-repeat; }
+.service-icon .service-name { display: block; font-size: 12px; font-weight: bold; text-align: center; }
 .service-icon .service-status { width: 16px; height: 16px; line-height: 16px; text-align: center; font-size: 16px; position: absolute; right: 2px; bottom: 2px; background: center/contain no-repeat; }
 .service-icon .service-status span { display: none; color: #b8c1c6; }
 .service-icon .service-status[data-status=good] span:first-child { display: inline; color: lightgreen; }
@@ -84,7 +84,7 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-settings .input-wrap.number { text-align: center; width: 20%; margin-bottom: 10px; vertical-align: top; }
 .service-settings .input-wrap.number .value-label,
 .service-settings .input-wrap.number .button { display: inline-block; vertical-align: middle; }
-.service-settings .input-wrap.number .value-label { min-width: 20px; text-align: center; font-size: 15px; font-weight: bold; }
+.service-settings .input-wrap.number .value-label { min-width: 20px; text-align: center; font-size: 16px; }
 .service-settings .input-wrap.number .button { width: 20px; cursor: pointer; color: #4db6ac; font-weight: bold; text-align: center; font-size: 14px; }
 .service-settings .input-wrap.number .button:hover { color: #00bcd4; }
 .service-settings .input-wrap.number .button.disabled { cursor: default; color: #2c383e; }
@@ -106,7 +106,18 @@ button.open-website:hover { color: #00bcd4; }
 .input-wrap { position: relative; line-height: 20px; }
 .input-wrap.checkbox input,
 .input-wrap.checkbox label { display: inline-block; vertical-align: middle; cursor: pointer; color: #4db6ac; font-size: 12px; }
-.input-wrap.checkbox label:hover { color: #00bcd4 }
+.input-wrap.checkbox label:hover { color: #00bcd4; }
 input-wrap.checkbox input[disabled] { cursor: default; }
 .input-wrap.checkbox input[disabled] + label { cursor: default; color: #2c383e; }
-.fa { -moz-osx-font-smoothing: grayscale; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; } .fa-ellipsis-v:before { content: "\f142"; } .fa-globe:before { content: "\f0ac"; } .fa-list-ul:before { content: "\f0ca"; } .fa-minus:before { content: "\f068"; } .fa-pause:before { content: "\f04c"; } .fa-play:before { content: "\f04b"; } .fa-plus:before { content: "\f067"; } .fa-times:before { content: "\f00d"; } .fa-window-minimize:before { content: "\f2d1"; } .fa { font-family: 'Font Awesome 5 Free'; font-weight: 900; } @font-face { font-family: 'Font Awesome 5 Free'; font-style: normal; font-weight: 900; src: url("fa.woff2") format("woff2"); }
+.fa { -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; }
+.fa-ellipsis-v:before { content: "\f142"; }
+.fa-globe:before { content: "\f57d"; }
+.fa-list-ul:before { content: "\f0c9"; }
+.fa-minus:before { content: "\f053"; }
+.fa-pause:before { content: "\f04c"; }
+.fa-play:before { content: "\f111"; }
+.fa-plus:before { content: "\f054"; }
+.fa-times:before { content: "\f00d"; }
+.fa-window-minimize:before { content: "\f2d1"; }
+.fa { font-family: 'Font Awesome 5 Free'; font-weight: 900; }
+@font-face { font-family: 'Font Awesome 5 Free'; font-style: normal; font-weight: 900; src: url("fa.woff2") format("woff2"); }
