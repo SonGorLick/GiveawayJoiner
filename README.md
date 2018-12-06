@@ -1,13 +1,9 @@
-You can build own binaries:
+To build own binaries:
 
 
 1. Install Node.js (from your distro repositories or from Node.js official site)
-
-
 2. Download GiveawayJoiner sources
-
-
-3. Open terminal and in sources folder do this commands:
+3. Open terminal in sources folder and do this commands:
 
 npm install electron@2
 
