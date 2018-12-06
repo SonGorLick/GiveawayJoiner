@@ -18,7 +18,7 @@ npm install electron-builder
 electron-builder -l --dir
 
 
-4. GiveawayJoiner build will be in 'sources folder'/distr/linux-unpacked
+4. GiveawayJoiner build will be in 'sources folder'/dist/linux-unpacked
 
 
 P.S.: To run GiveawayJoiner you need package 'libgconf-2-4' to be installed in your OS
