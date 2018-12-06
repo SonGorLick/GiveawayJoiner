@@ -184,7 +184,7 @@ this.waitAuth = false;
 });
 }
 });
-Browser.setTitle('GJ браузер - ' + Lang.get('auth.browser_loading'));
+Browser.setTitle('GiveawayJoiner - ' + Lang.get('auth.browser_loading'));
 Browser.loadURL(this.authLink);
 Browser.once('close', () => {
 Browser.webContents.removeAllListeners('did-finish-load');
@@ -446,7 +446,7 @@ seekService(){}
 getUserInfo(callback){
 callback({
 avatar: 'http://giftseeker.ru/favicon.ico',
-username: 'GS User',
+username: 'GJ User',
 value: 0
 });
 }

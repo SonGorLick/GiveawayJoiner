@@ -124,7 +124,7 @@ function profileSection() {
 renderUser(GJuser);
 $('.build .version').text(currentBuild);
 let lang_select = $('select#lang');
-let lang_list	= Lang.list();
+let lang_list = Lang.list();
 if( Lang.count() <= 1 )
 lang_select.remove();
 else{
@@ -144,6 +144,6 @@ $('.content-item .info .username').html(userData.username);
 }
 function openWebsite(url){
 Browser.loadURL(url);
-Browser.setTitle('GJ браузер - ' + Lang.get('auth.browser_loading'));
+Browser.setTitle('GiveawayJoiner - ' + Lang.get('auth.browser_loading'));
 Browser.show();
 }

@@ -19,7 +19,7 @@ const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) 
 if (mainWindow) {
 if (mainWindow.isMinimized())
 mainWindow.restore();
-if( !mainWindow.isVisible() )
+if ( !mainWindow.isVisible() )
 mainWindow.show();
 mainWindow.focus();
 }
@@ -81,7 +81,7 @@ mainWindow.webContents.openDevTools();
 Browser = new BrowserWindow({
 parent: mainWindow,
 icon: __dirname + '/icon.png',
-title: 'GJ браузер',
+title: 'GiveawayJoiner',
 width: 1024,
 height: 600,
 minWidth: 600,

@@ -13,7 +13,7 @@ reloadLangStrings();
 });
 reloadLangStrings();
 let lang_select = $('select#lang');
-let lang_list	= Lang.list();
+let lang_list = Lang.list();
 if( Lang.count() <= 1 ){
 lang_select.remove();
 $('.no-available-langs').css('display', 'block')
@@ -36,7 +36,7 @@ $('#auth_button').click(function(e){
 e.preventDefault();
 Browser.loadURL('http://giftseeker.ru/logIn');
 Browser.show();
-Browser.setTitle('GJ браузер - ' + Lang.get('auth.browser_loading'));
+Browser.setTitle('GiveawayJoiner - ' + Lang.get('auth.browser_loading'));
 Browser.webContents.on('did-finish-load', () => {
 if( Browser.getURL() === 'http://giftseeker.ru/'){
 Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML', (body) => {

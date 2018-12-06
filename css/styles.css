@@ -72,7 +72,7 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .in-service-panel { font-size: 14px; display: none; background: url('../images/teams/BlueTeam.png') no-repeat; height: 340px; padding: 15px; border-radius: 2px; border: 1px solid rgba(33,43,48,1); }
 .in-service-panel.active { display: block; }
 .service-logs { font-size: 12px; overflow-x: auto; background: url('../images/teams/GreenTeam.png') no-repeat; }
-.service-logs .warn { color: lightcoral; background: url('../images/teams/RedTeam.png') no-repeat; }
+.service-logs .warn { color: lightcoral; }
 .service-logs span.time { color: #4db6ac; padding-right: 6px; }
 .service-logs span.open-website { cursor: pointer; text-decoration: underline; }
 .service-logs { -webkit-user-select: text; }
