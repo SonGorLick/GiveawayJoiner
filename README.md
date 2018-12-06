@@ -6,11 +6,8 @@ To build own binaries:
 3. Open terminal in sources folder and do this commands:
 
 npm install electron@2
-
 npm update
-
 npm install electron-builder
-
 electron-builder -l --dir
 
 
