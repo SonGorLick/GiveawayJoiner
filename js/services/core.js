@@ -103,8 +103,7 @@ this.value_label = $(document.createElement('span'))
 }
 $(document.createElement('button'))
 .addClass('open-website')
-.attr('data-lang', 'service.open_website')
-.text(Lang.get("service.open_website"))
+.html('<div class="fab fa-chrome" data-lang-title="service.open_website"></div>')
 .attr('data-link', this.websiteUrl)
 .appendTo(this.userPanel);
 this.mainButton = $('<button>' + Lang.get('service.btn_start') + '</button>')

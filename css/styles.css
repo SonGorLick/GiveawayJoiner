@@ -13,11 +13,11 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 #head_decor:after { content: ''; display: block; background-color: inherit; height: 20px; width: 30px; position: absolute; left: -22px; bottom: 7px; transform: rotate(30deg); }
 #head_decor:after { left: auto; right: -22px; bottom: 7px; transform: rotate(-30deg); }
 #head .logo { background: url('../icon.png') 20px center/55% no-repeat; width: 110px; position: absolute; z-index: 5; left: 0; top: 0; height: 80px; -webkit-app-region: no-drag; }
-#head .menu { position: relative; z-index: 1; list-style: none; display: block; width: 630px; margin-left: 100px; height: 80px; }
-#head .menu li { line-height: 80px; display: inline-block; padding: 0 10px; text-transform: uppercase; font-size: 18px; font-weight: bold; }
+#head .menu { position: relative; z-index: 1; list-style: none; display: block; width: 630px; margin-left: 350px; height: 80px; }
+#head .menu li { line-height: 80px; display: inline-block; padding: 0 10px; font-size: 34px; }
 #head .menu li span { -webkit-app-region: no-drag; color: #5a646a; height: 20px; line-height: 20px; cursor: pointer; display: inline-block; vertical-align: middle; }
-#head .menu li.active span { color: #4db6ac; text-shadow: 0 0 15px #4db6ac; }
-#head .menu li span:hover { color: #00bcd4; text-shadow: 0 0 15px #00bcd4; }
+#head .menu li.active span { color: #4db6ac; }
+#head .menu li span:hover { color: #00bcd4; }
 .window-buttons { cursor: default; font-size: 0; z-index: 999; position: absolute; top: 10px; right: 10px; height: 14px; line-height: 14px; text-align: right; -webkit-app-region: no-drag; }
 .window-buttons span { cursor: pointer; font-size: 12px; display: inline-block; vertical-align: middle; width: 14px; height: inherit; line-height: inherit; margin-left: 6px; }
 .window-buttons span:hover { color: #00bcd4; }
@@ -64,7 +64,7 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-panel { display: none; }
 .service-panel.active { display: block; }
 .service-panel > ul { list-style: none; font-size: 0; padding-left: 10px; padding-top: 2px; }
-.service-panel > ul li { border-radius: 2px 2px 0 0; color: #5a646a; cursor: pointer; display: inline-block; font-size: 12px; line-height: 14px; height: 18px; vertical-align: middle; padding: 4px 12px; background: rgba(34,45,50,1); }
+.service-panel > ul li { border-radius: 2px 2px 0 0; color: #5a646a; cursor: pointer; display: inline-block; font-size: 14px; line-height: 14px; height: 18px; vertical-align: middle; padding: 3px 12px; background: rgba(34,45,50,1); }
 .service-panel > ul li:hover { color: #00bcd4; }
 .service-panel > ul li.active { color: #b9c2c7; }
 .service-panel > ul li.active:hover { color: #00bcd4; }
@@ -76,7 +76,7 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-logs span.time { color: #4db6ac; padding-right: 6px; }
 .service-logs span.open-website { cursor: pointer; text-decoration: underline; }
 .service-logs { -webkit-user-select: text; }
-.service-logs .clear-log { position: absolute; right: 18px; top: 10px; font-size: 12px; color: #4db6ac; cursor: pointer; }
+.service-logs .clear-log { position: absolute; right: 18px; top: 4px; font-size: 16px; color: #4db6ac; cursor: pointer; }
 .service-logs .clear-log:hover { color: #00bcd4; }
 .service-settings { }
 .service-settings .input-wrap { display: inline-block; position: relative; }
@@ -110,6 +110,7 @@ button.open-website:hover { color: #00bcd4; }
 input-wrap.checkbox input[disabled] { cursor: default; }
 .input-wrap.checkbox input[disabled] + label { cursor: default; color: #2c383e; }
 .fa, .fab { -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; }
+.fa-chrome:before { content: "\f268"; }
 .fa-database:before { content: "\f1c0"; }
 .fa-ellipsis-v:before { content: "\f142"; }
 .fa-globe:before { content: "\f57d"; }
