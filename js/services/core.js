@@ -59,8 +59,8 @@ this.panel = $(document.createElement('div'))
 .attr('id', this.constructor.name.toLowerCase())
 .appendTo('.services-panels');
 $('<ul>' +
-'<li class="active" data-id="logs" data-lang="service.logs">' + Lang.get('service.logs') +'</li>' +
-'<li data-id="settings" data-lang="service.settings">' + Lang.get('service.settings') + '</li>' +
+'<li class="active fa fa-history" data-id="logs" data-lang-title="service.logs">' + '</li>' +
+'<li class="active fa fa-wrench" data-id="settings" data-lang-title="service.settings">' + '</li>' +
 '</ul>')
 .appendTo(this.panel);
 this.logWrap = $(document.createElement('div'))
@@ -71,8 +71,7 @@ this.logField = $(document.createElement('div'))
 .appendTo(this.logWrap);
 $(document.createElement('span'))
 .addClass('clear-log')
-.text(Lang.get('service.clear_log'))
-.attr('data-lang', 'service.clear_log')
+.html('<div class="fa fa-trash-alt" data-lang-title="service.clear_log"></div>')
 .click(() => {
 this.clearLog();
 })
