@@ -40,7 +40,7 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-icon:hover:not(.active) { background: rgba(0,188,212,0.7); border-color: #29353b; }
 .service-icon .bg { margin: 10px auto 0; width: 32px; height: 32px; background: center center/contain no-repeat; }
 .service-icon .service-name { display: block; font-size: 12px; font-weight: bold; text-align: center; }
-.service-icon .service-status { width: 16px; height: 16px; line-height: 16px; text-align: center; font-size: 16px; position: absolute; right: 2px; bottom: 2px; background: center/contain no-repeat; }
+.service-icon .service-status { width: 16px; height: 16px; line-height: 16px; text-align: center; font-size: 14px; position: absolute; right: 2px; bottom: 2px; background: center/contain no-repeat; }
 .service-icon .service-status span { display: none; color: #b8c1c6; }
 .service-icon .service-status[data-status=good] span:first-child { display: inline; color: lightgreen; }
 .service-icon .service-status[data-status=normal] span + span { display: inline; }
@@ -54,12 +54,12 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .list_type.state span+span:hover { color: #00bcd4; }
 .list_type.state + .services-icons { padding-top: 0; }
 .list_type.state + .services-icons .service-icon { width: 90px; height: 20px; margin: 0 auto 5px; }
-.list_type.state + .services-icons .service-icon .bg { display: none; /*width: 18px; height: 18px; display: inline-block; vertical-align: middle; margin: 0 4px 0 2px;*/ }
+.list_type.state + .services-icons .service-icon .bg { display: none; }
 .list_type.state + .services-icons .service-icon .service-name { left: 22px; top: 0; line-height: 20px; display: inline-block; vertical-align: middle; }
 .list_type.state + .services-icons .service-icon:hover { color: #00bcd4; border-color: transparent; background: transparent; }
 .list_type.state + .services-icons .service-icon.active { color: #4db6ac; border-color: transparent; background: transparent; }
 .list_type.state + .services-icons .service-icon.active:hover { color: #00bcd4; border-color: transparent; background: transparent; }
-.list_type.state + .services-icons .service-icon .service-status { font-size: 14px; position: absolute; right: 0; bottom: 0; }
+.list_type.state + .services-icons .service-icon .service-status { position: absolute; right: 0; bottom: 0; font-size: 14px; }
 .services-panels { padding: 6px 15px 10px; position: absolute; left: 100px; top: 0; width: 630px; height: 100%; overflow: hidden; }
 .service-panel { display: none; }
 .service-panel.active { display: block; }
@@ -100,9 +100,9 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-user-panel .user-info.visible { display: block; }
 .service-user-panel .user-info .avatar { width: 40px; height: 40px; background: center/contain transparent no-repeat; border-radius: 1px; float: left; margin-right: 10px; }
 .service-user-panel .user-info > span { display: block; }
-button.open-website { font-size: 12px; font-weight: bold; background: transparent; cursor: pointer; border: none; text-decoration: underline; color: #4db6ac; }
+button.open-website { font-size: 26px; background: transparent; cursor: pointer; border: none; color: #4db6ac; }
 button.open-website:hover { color: #00bcd4; }
-.service-user-panel button.open-website { position: absolute; right: 140px; bottom: 10px; }
+.service-user-panel button.open-website { position: absolute; right: 140px; bottom: 7px; }
 .input-wrap { position: relative; line-height: 20px; }
 .input-wrap.checkbox input,
 .input-wrap.checkbox label { display: inline-block; vertical-align: middle; cursor: pointer; color: #4db6ac; font-size: 12px; }
