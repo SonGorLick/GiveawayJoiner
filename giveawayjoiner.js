@@ -162,7 +162,7 @@ appLoaded = true;
 }
 class LanguageClass {
 constructor(){
-this.default = 'ru_RU';
+this.default = 'en_US';
 this.languages = {};
 this.langsCount = 0;
 Request({uri: 'http://0.0.0.0/api/langs_new', json: true})

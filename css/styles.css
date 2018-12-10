@@ -64,9 +64,9 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-panel { display: none; }
 .service-panel.active { display: block; }
 .service-panel > ul { list-style: none; font-size: 0; padding-left: 10px; padding-top: 2px; }
-.service-panel > ul li { border-radius: 2px 2px 0 0; color: #5a646a; cursor: pointer; display: inline-block; font-size: 14px; line-height: 14px; height: 18px; vertical-align: middle; padding: 3px 12px; background: rgba(34,45,50,1); }
+.service-panel > ul li { border-radius: 2px 2px 0 0; color: #b9c2c7; cursor: pointer; display: inline-block; font-size: 14px; line-height: 14px; height: 18px; vertical-align: middle; padding: 3px 12px; background: rgba(34,45,50,1); }
 .service-panel > ul li:hover { color: #00bcd4; }
-.service-panel > ul li.active { color: #b9c2c7; }
+.service-panel > ul li.active { color: #4db6ac; }
 .service-panel > ul li.active:hover { color: #00bcd4; }
 .service-panel > ul li+li { margin-left: 6px; }
 .in-service-panel { font-size: 14px; display: none; background: url('../images/teams/BlueTeam.png') no-repeat; height: 340px; padding: 15px; border-radius: 2px; border: 1px solid rgba(33,43,48,1); }
@@ -91,9 +91,9 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-settings .input-wrap .label { padding: 0 5px; font-size: 12px; color: #b8c1c6; }
 .service-settings .input-wrap.checkbox { padding-left: 5px; line-height: 20px; width: 90%; }
 .service-settings .input-wrap.checkbox input { margin-right: 3px; }
-.seeker-button { color: #81c4bf; cursor: pointer; width: 125px; height: 30px; text-align: center; line-height: 26px; font-size: 14px; font-weight: bold; background-color: #304247; border: 2px solid #263238; box-sizing: border-box; }
-.seeker-button:not(.disabled):hover { background-color: #415a60; }
-.seeker-button.disabled { cursor: default; color: #b8c1c6; opacity: 0.8; pointer-events: none; }
+.seeker-button { color: #4db6ac; cursor: pointer; width: 125px; height: 30px; text-align: center; line-height: 26px; font-size: 14px; font-weight: bold; background: transparent; border: none; }
+.seeker-button:not(.disabled):hover { color: #00bcd4; }
+.seeker-button.disabled { cursor: default; color: #b9c2c7; pointer-events: none; }
 .service-user-panel { position: relative; padding: 7px 0; height: 52px; }
 .service-user-panel .seeker-button { position: absolute; right: 0; bottom: 10px; }
 .service-user-panel .user-info { display: none; line-height: 16px; }
@@ -109,18 +109,23 @@ button.open-website:hover { color: #00bcd4; }
 .input-wrap.checkbox label:hover { color: #00bcd4; }
 input-wrap.checkbox input[disabled] { cursor: default; }
 .input-wrap.checkbox input[disabled] + label { cursor: default; color: #2c383e; }
-.fa, .fab { -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; }
+.fa, .fab { -webkit-font-smoothing: subpixel-antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: optimizeLegibility; line-height: 1; }
 .fa-chrome:before { content: "\f268"; }
 .fa-database:before { content: "\f1c0"; }
+.fa-dot-circle:before { content: "\f192"; }
 .fa-ellipsis-v:before { content: "\f142"; }
 .fa-globe:before { content: "\f57d"; }
 .fa-history:before { content: "\f1da"; }
 .fa-list-ul:before { content: "\f0c9"; }
 .fa-minus:before { content: "\f053"; }
 .fa-pause:before { content: "\f04c"; }
+.fa-pause-circle:before { content: "\f28b"; }
 .fa-play:before { content: "\f111"; }
+.fa-play-circle:before { content: "\f144"; }
 .fa-plus:before { content: "\f054"; }
+.fa-sign-out-alt:before { content: "\f2f5"; }
 .fa-steam:before { content: "\f3f6"; }
+.fa-stop-circle:before { content: "\f28d"; }
 .fa-times:before { content: "\f00d"; }
 .fa-trash-alt:before { content: "\f2ed"; }
 .fa-user-cog:before { content: "\f4fe"; }

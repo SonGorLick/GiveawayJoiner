@@ -10,7 +10,7 @@ body { background-color: #263238; }
 #content { position: relative; padding-top: 50px; height: auto; border: none; z-index: 2; }
 #content .status-text { font-size: 14px; color: #b9c2c7; position: absolute; left: 0; top: 0; padding: 0 50px; text-align: center; width: 100%; }
 #choice-lang { text-align: center; padding-top: 140px; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #263238; z-index: 4; display: none; }
-#choice-lang.visible { display: block; color: b8c1c6; font-size: 16px; }
+#choice-lang.visible { display: block; color: #b8c1c6; font-size: 16px; }
 #choice-lang .no-available-langs { display: none; }
 #choice-lang .label { color: #4db6ac; font-size: 16px; }
 #choice-lang .input-wrap { position: relative; line-height: 20px; padding: 15px 0; }
