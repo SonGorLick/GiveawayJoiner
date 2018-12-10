@@ -151,7 +151,7 @@ callback(-1);
 startSeeker(autostart){
 if( this.started )
 return false;
-this.buttonState(Lang.get('service.btn_checking'), 'disabled');
+this.buttonState(Lang.get('service.btn_start'), 'disabled');
 this.authCheck( (authState) => {
 if ( authState === 1) {
 this.runTimer();
@@ -170,7 +170,7 @@ this.buttonState(Lang.get('service.btn_start'));
 this.log(Lang.get('service.cant_start'), true);
 }
 else{
-this.buttonState(Lang.get('service.btn_awaiting'), 'disabled');
+this.buttonState(Lang.get('service.btn_start'), 'disabled');
 this.waitAuth = true;
 Browser.webContents.on('did-finish-load', () => {
 if( this.waitAuth && Browser.getURL().indexOf(this.websiteUrl) >= 0 ){

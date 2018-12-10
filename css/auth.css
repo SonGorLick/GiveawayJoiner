@@ -1,7 +1,7 @@
 body { background-color: #263238; }
 #head { border: none; height: 110px; line-height: 110px; position: relative; z-index: 5; }
 #head_decor { height: 6px; width: 150px; z-index: 6; }
-#head .logo { position: relative; z-index: 1; height: inherit; line-height: inherit; width: 100%; -webkit-app-region: drag; text-align: center; font-size: 32px; font-weight: bold; text-shadow: 0 0 15px #00bcd4; -webkit-text-fill-color: transparent; background: linear-gradient(to bottom, #05aac0, #00bcd4); -webkit-background-clip: text; color: #05aac0; }
+#head .logo { position: relative; z-index: 1; height: inherit; line-height: inherit; width: 100%; -webkit-app-region: drag; text-align: center; font-size: 32px; font-weight: bold; -webkit-text-fill-color: transparent; background: linear-gradient(to bottom, #05aac0, #00bcd4); -webkit-background-clip: text; color: #05aac0; }
 .window-buttons { width: 100%; top: 0; right: 0; height: auto; padding: 10px 10px 0; -webkit-app-region: drag; }
 .window-buttons span { float: left; font-size: 16px !important; -webkit-app-region: no-drag; margin: 0; }
 .window-buttons span.language { float: left; }
