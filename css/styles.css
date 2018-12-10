@@ -124,7 +124,7 @@ input-wrap.checkbox input[disabled] { cursor: default; }
 .fa-play-circle:before { content: "\f144"; }
 .fa-plus:before { content: "\f054"; }
 .fa-sign-out-alt:before { content: "\f2f5"; }
-.fa-steam:before { content: "\f3f6"; }
+.fa-steam:before { content: "\f1b6"; }
 .fa-stop-circle:before { content: "\f28d"; }
 .fa-times:before { content: "\f00d"; }
 .fa-trash-alt:before { content: "\f2ed"; }
