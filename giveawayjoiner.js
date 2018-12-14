@@ -122,7 +122,7 @@ mainWindow = null;
 });
 tray = new Tray(nativeImage.createFromPath(__dirname + '/tray.png'));
 const trayMenu = Menu.buildFromTemplate([
-{ label: 'Выход', type: 'normal', role: 'quit' }
+{ label: 'Exit', type: 'normal', role: 'quit' }
 ]);
 tray.setToolTip("GiveawayJoiner");
 tray.setContextMenu(trayMenu);
