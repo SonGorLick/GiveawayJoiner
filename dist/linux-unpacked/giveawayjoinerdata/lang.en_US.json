@@ -65,7 +65,7 @@
 			"ending_title": "Don't join giveaways before the end of which more than the specified time. 0 - without any restrictions",
 			"chance": "Chance",
 			"sort_by_chance": "Sort by winning chance",
-			"min_chance": "Min. chance(%)",
+			"min_chance": "Min. chance (%)",
 			"min_chance_title": "Min. chance to participate in giveaways. 0 - Don't consider a chance",
 			"min_level": "Min. level",
 			"min_level_title": "Do not enter in giveaways where required level less than the selected",
