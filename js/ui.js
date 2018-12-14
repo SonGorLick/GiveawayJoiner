@@ -1,16 +1,14 @@
 'use strict';
 const remote = require('electron').remote;
 const ipc = require("electron").ipcRenderer;
-const Request = remote.getGlobal('Request');
-const devMode = remote.getGlobal('devMode');
-let Config = remote.getGlobal('Config');
-let Lang = remote.getGlobal('Lang');
+const shared = remote.getGlobal('sharedData');
+const Request = shared.Request;
+let Config = shared.Config;
+let Lang = shared.Lang;
 let GJuser = remote.getGlobal('user');
-let TrayIcon = remote.getGlobal('TrayIcon');
-let shell = remote.getGlobal('shell');
-let Browser = remote.getGlobal('Browser');
-let authWindow = remote.getGlobal('authWindow');
-let mainWindow = remote.getGlobal('mainWindow');
+let Browser = shared.Browser;
+let authWindow = shared.authWindow;
+let mainWindow = shared.mainWindow;
 let intervalTicks = 0;
 $(function(){
 setInterval(intervalSchedules, 1000);
@@ -132,7 +130,7 @@ for(let lang in lang_list){
 let option = $(document.createElement('option'))
 .attr('id', lang_list[lang].lang_culture)
 .val(lang).text('[' + lang_list[lang].lang_culture + '] ' + lang_list[lang].lang_name);
-if( Config.get('lang') === lang )
+if( Lang.current() === lang )
 option.prop('selected', true);
 lang_select.append(option);
 }

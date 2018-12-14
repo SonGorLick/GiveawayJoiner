@@ -1,14 +1,14 @@
 'use strict';
 const remote = require('electron').remote;
 const ipc = require("electron").ipcRenderer;
-let Lang = remote.getGlobal('Lang');
-let authWindow = remote.getGlobal('authWindow');
-let mainWindow = remote.getGlobal('mainWindow');
-let Browser = remote.getGlobal('Browser');
+const shared = remote.getGlobal('sharedData');
+let Lang = shared.Lang;
+let mainWindow = shared.mainWindow;
+let Browser = shared.Browser;
 let status = $('.status-text');
 let buttons = $('#content .seeker-button');
 $(function(){
-remote.getGlobal('ipcMain').on('change-lang', function() {
+shared.ipcMain.on('change-lang', function() {
 reloadLangStrings();
 });
 reloadLangStrings();
@@ -68,17 +68,17 @@ ipc.send('save-user', data.response);
 status.text(Lang.get('auth.session') + data.response.username);
 loadProgram();
 },
-error: function(error){
+error: () => {
 status.text(Lang.get('auth.connection_error'));
 buttons.removeClass('disabled');
 }
 });
 }
 function loadProgram(){
-mainWindow.loadURL('file://' + __dirname + '/index.html');
+mainWindow.loadFile('index.html');
 }
 function reloadLangStrings() {
-$('[data-lang]').each(function(item, index){
+$('[data-lang]').each(function(){
 $(this).html(Lang.get($(this).attr('data-lang')));
 });
 $('[data-lang-title]').each(function(){

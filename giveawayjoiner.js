@@ -1,9 +1,9 @@
 'use strict';
-const {app, nativeImage, shell, Menu, session, Tray, BrowserWindow, ipcMain, ipcRenderer} = require('electron');
+const { app, nativeImage, shell, Menu, session, Tray, BrowserWindow, ipcMain, ipcRenderer } = require('electron');
 const storage = require('electron-json-storage');
 const fs = require('fs');
 const Request = require('request-promise');
-const devMode = app.getVersion() === '2.0.14';
+const devMode = app.getVersion() === '2.0.15';
 let appLoaded = false;
 let authWindow = null;
 let mainWindow = null;
@@ -19,7 +19,7 @@ const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) 
 if (mainWindow) {
 if (mainWindow.isMinimized())
 mainWindow.restore();
-if ( !mainWindow.isVisible() )
+if( !mainWindow.isVisible() )
 mainWindow.show();
 mainWindow.focus();
 }
@@ -40,7 +40,7 @@ if (process.platform !== 'darwin') {
 app.quit();
 }
 });
-app.on('ready', function() {
+app.on('ready', () => {
 Config = new ConfigClass();
 Lang = new LanguageClass();
 _session = session.fromPartition('persist:GiveawayJoiner');
@@ -95,29 +95,29 @@ session: _session,
 devTools: false
 }
 });
-Browser.loadURL('file://' + __dirname + '/blank.html');
+Browser.loadFile('blank.html');
 Browser.setMenu(null);
 Browser.on('close', (e) => {
 e.preventDefault();
-Browser.loadURL('file://' + __dirname + '/blank.html');
+Browser.loadFile('blank.html');
 Browser.hide();
 if(mainWindow.hidden)
 authWindow.focus();
 else
 mainWindow.focus();
 });
-authWindow.on('close', function(e){
+authWindow.on('close', () => {
 authWindow.removeAllListeners('close');
 mainWindow.close();
 });
-mainWindow.on('close', function(e){
+mainWindow.on('close', () => {
 mainWindow.removeAllListeners('close');
 authWindow.close();
 });
-authWindow.on('closed', function(e) {
+authWindow.on('closed', () => {
 authWindow = null;
 });
-mainWindow.on('closed', function(e) {
+mainWindow.on('closed', () => {
 mainWindow = null;
 });
 tray = new Tray(nativeImage.createFromPath(__dirname + '/tray.png'));
@@ -132,23 +132,24 @@ authWindow.isVisible() ? authWindow.hide() : authWindow.show();
 else
 mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
 });
-global.authWindow = authWindow;
-global.mainWindow = mainWindow;
-global.Browser = Browser;
-global.storage = storage;
-global.Config = Config;
-global.Lang = Lang;
-global.ipcMain = ipcMain;
-global.TrayIcon = tray;
-global.shell = shell;
-global.Request = Request;
-global.devMode = devMode;
+global.sharedData = {
+devMode: devMode,
+shell: shell,
+TrayIcon: tray,
+ipcMain: ipcMain,
+Lang: Lang,
+Config: Config,
+Browser: Browser,
+authWindow: authWindow,
+mainWindow: mainWindow,
+Request: Request
+};
 });
 function startApp(){
 if( appLoaded )
 return;
 let afterLangs = function(){
-authWindow.loadURL('file://' + __dirname + '/auth.html');
+authWindow.loadFile('auth.html');
 authWindow.on('ready-to-show', function() {
 authWindow.show();
 if( Config.get('start_minimized') )
@@ -180,7 +181,7 @@ fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => { });
 })
 .finally(() => {
 checked++;
-if( checked === data.length || name.indexOf(Lang.current()) >= 0 )
+if( checked >= data.length )
 startApp();
 });
 };
@@ -221,9 +222,8 @@ return;
 storage.getMany(lng_to_load, function(error, langs){
 if(error) throw new Error(`Can't load selected translation`);
 let lng;
-for(lng in langs.lang){
+for(lng in langs.lang )
 _this.langsCount++;
-}
 if( langs.lang[Config.get('lang', _this.default)] === undefined ){
 _this.default = lng;
 Config.set('lang', _this.default);
