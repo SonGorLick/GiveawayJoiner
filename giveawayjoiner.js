@@ -3,7 +3,7 @@ const { app, nativeImage, shell, Menu, session, Tray, BrowserWindow, ipcMain, ip
 const storage = require('electron-json-storage');
 const fs = require('fs');
 const Request = require('request-promise');
-const devMode = app.getVersion() === '2.0.15';
+const devMode = app.getVersion() === '2.0.17';
 let appLoaded = false;
 let authWindow = null;
 let mainWindow = null;
@@ -13,6 +13,7 @@ let Config = null;
 let Lang = null;
 let tray = null;
 let user = null;
+app.setPath('userData', process.execPath + 'data');
 app.disableHardwareAcceleration();
 storage.setDataPath(process.execPath + 'data');
 const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {

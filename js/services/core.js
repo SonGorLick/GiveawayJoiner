@@ -16,10 +16,10 @@ this.withValue = true;
 this.curr_value = 0;
 this.getTimeout = 15000;
 this.settings = {
-timer: { type: 'number', trans: 'service.timer', min: 5, max: 60, default: this.getConfig('timer', 10) },
+timer: { type: 'number', trans: 'service.timer', min: 5, max: 1440, default: this.getConfig('timer', 10) },
 interval_from: { type: 'number', trans: 'service.interval_from', min: 0, max: this.getConfig('interval_to', 5), default: this.getConfig('interval_from', 3) },
 interval_to: { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 3), max: 60, default: this.getConfig('interval_to', 5) },
-pages: { type: 'number', trans: 'service.pages', min: 1, max: 10, default: this.getConfig('pages', 1) }
+pages: { type: 'number', trans: 'service.pages', min: 1, max: 15, default: this.getConfig('pages', 1) }
 };
 }
 init(){
