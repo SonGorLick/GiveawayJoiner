@@ -2,7 +2,7 @@
 window.timeStr = function () {
 let date = new Date();
 let h = date.getHours(), i = date.getMinutes(), s = date.getSeconds();
-return (h > 9 ? h : '0' + h ) + ":" + (i > 9 ? i : '0' + i ) + ":" + (s > 9 ? s : '0' + s );
+return (h < 10 ? h : '0' + h ) + ":" + (i < 10 ? i : '0' + i ) + ":" + (s < 10 ? s : '0' + s );
 };
 window.timeToStr = function (time) {
 let str = '';
@@ -13,7 +13,7 @@ if( h > 0 )
 str += h + ':';
 if( i > 0 )
 str += i + ':';
-if( s < 9 )
+if( s < 10 )
 s = '0' + s;
 str += s;
 return str;
