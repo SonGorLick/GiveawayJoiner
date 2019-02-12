@@ -16,7 +16,7 @@ username: 'Follx User',
 value: 0
 };
 $.ajax({
-url: 'https://follx.com/users/' + GSuser.steamid,
+url: 'https://follx.com/users/' + GJuser.steamid,
 success: function(data){
 let html = $(data);
 userData.avatar = html.find('.card-cover img').attr('src');
