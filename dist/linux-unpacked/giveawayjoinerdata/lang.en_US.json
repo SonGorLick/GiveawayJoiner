@@ -7,9 +7,7 @@
 		"ses_not_found": "Session not fond",
 		"connection_error": "Connection error",
 		"browser_loading": "loading",
-		"or": "or",
 		"steam_login": "Login via Steam",
-		"enter_cookies": "Enter Cookies",
 		"lng_choice_title": "Change translation",
 		"choose_lang": "Choose language",
 		"no_avail_trans": "Another translations not available",
@@ -18,9 +16,7 @@
 	"ui": {
 		"menu1": "Services",
 		"menu2": "Profile",
-		"list_type_sw": "Change the type of display",
-		"upd_progress": "Downloading update",
-		"upd_downloaded": "Updates has been downloaded and will be installed after application closing"
+		"list_type_sw": "Change the type of display"
 	},
 	"service": {
 		"started": "Bot is running",
@@ -39,8 +35,10 @@
 		"connection_lost": "Connection lost",
 		"timer": "Timer (minutes)",
 		"timer_title": "Interval obtain a list of hands in minutes",
-		"interval": "Interval (seconds)",
-		"interval_title": "The delay between entry into giveaways in seconds",
+		"timer_from": "Min timer (minutes)",
+		"timer_from_title": "Min Interval obtain a list of hands in minutes",
+		"timer_to": "Max timer (minutes)",
+		"timer_to_title": "Max Interval obtain a list of hands in minutes",
 		"interval_from": "Min interval (seconds)",
 		"interval_from_title": "Minimum delay between entry into giveaways in seconds",
 		"interval_to": "Max interval (seconds)",
@@ -85,11 +83,8 @@
 	},
 	"profile": {
 		"logout_btn": "Logout",
-		"start_with_os": "Run at startup",
 		"start_minimized": "Minimize at startup",
 		"autostart": "Autostart of services",
-		"donation": "Donation",
-		"forum": "Forum",
-		"build_version": "Build ver."
+		"build_version": "Build version"
 	}
 }
