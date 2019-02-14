@@ -36,10 +36,9 @@ ipcMain.on('change-lang', function(event, data) {
 Lang.change(data);
 event.sender.send('change-lang', data);
 });
-app.on('window-all-closed', function() {
-if (process.platform !== 'darwin') {
+app.on('window-all-closed', () => {
+if (process.platform !== 'darwin')
 app.quit();
-}
 });
 app.on('ready', () => {
 Config = new ConfigClass();
@@ -125,7 +124,7 @@ tray = new Tray(nativeImage.createFromPath(__dirname + '/tray.png'));
 const trayMenu = Menu.buildFromTemplate([
 { label: 'Exit', type: 'normal', role: 'quit' }
 ]);
-tray.setToolTip("GiveawayJoiner");
+tray.setToolTip("GiveawayJoiner " + app.getVersion());
 tray.setContextMenu(trayMenu);
 tray.on('click', () => {
 if( user === null )
