@@ -17,7 +17,8 @@ GiveawayJoiner (Fork of GiftSeeker) for GNU/Linux. App for automatically partici
  7. Removed functions 'auto update' and 'startup with os' in the app
  8. New display timer with fixes (now showing in 00:00:00 format)
  9. Translations changes and fixes
- 9. Code optimizations and bugfixes for Linux compatibility
+10. Code optimizations and bugfixes for Linux compatibility
+11. New version Electron 2.x at the moment of build
 
 
 
