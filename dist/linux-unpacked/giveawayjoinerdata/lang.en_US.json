@@ -4,7 +4,7 @@
 	"auth": {
 		"check": "Looking for session...",
 		"session": "Session - ",
-		"ses_not_found": "Session not fond",
+		"ses_not_found": "Session not found",
 		"connection_error": "Connection error",
 		"browser_loading": "loading",
 		"steam_login": "Login via Steam",
