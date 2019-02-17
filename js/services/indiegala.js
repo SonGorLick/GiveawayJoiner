@@ -3,7 +3,7 @@ class IndieGala extends Seeker {
 constructor() {
 super();
 this.authContent = "My Libraries";
-this.websiteUrl = "https://www.indiegala.com";
+this.websiteUrl = "https://www.indiegala.com/giveaways/get_user_level_and_coins";
 this.authLink = "https://www.indiegala.com/login";
 this.wonsUrl = "https://www.indiegala.com/profile";
 super.init();
@@ -25,7 +25,7 @@ callback(-1);
 }
 getUserInfo(callback){
 let userData = {
-avatar: 'https://www.indiegala.com/favicon.ico',
+avatar: __dirname + '/images/IndieGala.png',
 username: 'IG User',
 value: 0
 };
@@ -61,7 +61,7 @@ let _this = this;
 $.get('https://www.indiegala.com/giveaways/get_user_level_and_coins', function(data){
 data = JSON.parse(data);
 if(data.status !== 'ok')
-return;
+callback(-1);
 let user_level = data.current_level;
 $.get('https://www.indiegala.com/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=all', function(data){
 let tickets = $(JSON.parse(data).content).find('.tickets-col');

@@ -35,7 +35,7 @@ this.icon = $(document.createElement('div'))
 .addClass('service-icon')
 .appendTo('.services-icons');
 $(document.createElement('div')).addClass('bg')
-.css({'background-image': "url('images/services/" + this.constructor.name + ".png')"})
+.css({'background-image': "url('images/" + this.constructor.name + ".png')"})
 .appendTo(this.icon);
 this.statusIcon = $(document.createElement('div'))
 .addClass('service-status')
@@ -212,6 +212,8 @@ this.buttonState(Lang.get('service.btn_start'));
 runTimer(){
 this.totalTicks = 0;
 this.started = true;
+let atimer = this.getConfig('timer', 10);
+this.stimer = atimer;
 this.setStatus('good');
 this.log( Lang.get('service.started') );
 this.updateUserInfo();
@@ -225,6 +227,9 @@ this.updateUserInfo();
 if( this.totalTicks % this.doTimer() === 0 ) {
 this.authCheck((authState) => {
 if(authState === 1) {
+this.log(Lang.get('service.connection_good'));
+let atimer = this.getConfig('timer', 10);
+this.stimer = atimer;
 this.updateCookies();
 this.seekService();
 }
@@ -234,7 +239,7 @@ this.stopSeeker(true);
 }
 else{
 this.log(Lang.get('service.connection_lost'), true);
-this.stopSeeker(true);
+this.stimer = 5;
 }
 });
 }
@@ -425,7 +430,7 @@ let max = this.getConfig('interval_to', this.settings.interval_to.default) + 1;
 return ( Math.floor(Math.random() * (max - min)) + min ) * 1000;
 }
 doTimer(){
-return this.getConfig('timer', 10) * 60;
+return this.stimer * 60;
 }
 setStatus(status){
 this.statusIcon.attr('data-status', status);

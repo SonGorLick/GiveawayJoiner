@@ -27,7 +27,7 @@ callback(-1);
 }
 getUserInfo(callback){
 let userData = {
-avatar: 'http://tf2r.com/favicon.ico',
+avatar: __dirname + '/images/TF2R.png',
 username: 'TF2R user'
 };
 this.ajaxReq('http://tf2r.com/notifications.html', (response) => {

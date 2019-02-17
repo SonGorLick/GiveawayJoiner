@@ -15,7 +15,7 @@ this.log('currently program let join to free giveaways');
 }
 getUserInfo(callback){
 let userData = {
-avatar: 'http://www.opiumpulses.com/assets/272b1d8c/v2/img/logo-fixed.png',
+avatar: __dirname + '/images/OpiumPulses.png',
 username: 'OP user',
 value: 0
 };

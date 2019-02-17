@@ -22,7 +22,7 @@ super.init();
 }
 getUserInfo(callback){
 let userData = {
-avatar: 'https://cdn.steamgifts.com/img/favicon.ico',
+avatar: __dirname + '/images/SteamGifts.png',
 username: 'SG User',
 value: 0
 };

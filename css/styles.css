@@ -25,7 +25,7 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 #content { height: 420px; border-bottom: 1px solid #222d32; background: #263238; }
 .content-item { position: relative; width: 100%; height: 100%; display: none; }
 .content-item.active { display: block; }
-.content-item[data-id=profile] .info { position: absolute; left: 0; top: 0; background: url('../images/teams/PurpleTeam.png') no-repeat; height: 100%; width: calc(100% - 250px); padding: 10px; }
+.content-item[data-id=profile] .info { position: absolute; left: 0; top: 0; height: 100%; width: calc(100% - 250px); padding: 10px; }
 .content-item[data-id=profile] .info .avatar { position: absolute; left: 10px; top: 10px; width: 150px; height: 150px; border-radius: 3px; background: center/contain no-repeat; }
 .content-item[data-id=profile] .info .username { position: absolute; left: 170px; top: 10px; color: #00bcd4; font-size: 20px; font-weight: bold; }
 .content-item[data-id=profile] .info-links { position: absolute; left: 10px; bottom: 10px; line-height: 16px; }
@@ -59,19 +59,19 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .list_type.state + .services-icons .service-icon:hover { color: #00bcd4; border-color: transparent; background: transparent; }
 .list_type.state + .services-icons .service-icon.active { color: #4db6ac; border-color: transparent; background: transparent; }
 .list_type.state + .services-icons .service-icon.active:hover { color: #00bcd4; border-color: transparent; background: transparent; }
-.list_type.state + .services-icons .service-icon .service-status { position: absolute; right: 0; bottom: 0; font-size: 14px; }
+.list_type.state + .services-icons .service-icon .service-status { font-size: 14px; position: absolute; right: 0; bottom: 0; }
 .services-panels { padding: 6px 15px 10px; position: absolute; left: 100px; top: 0; width: 630px; height: 100%; overflow: hidden; }
 .service-panel { display: none; }
 .service-panel.active { display: block; }
 .service-panel > ul { list-style: none; font-size: 0; padding-left: 10px; padding-top: 2px; }
-.service-panel > ul li { border-radius: 2px 2px 0 0; color: #b9c2c7; cursor: pointer; display: inline-block; font-size: 14px; line-height: 14px; height: 18px; vertical-align: middle; padding: 3px 12px; background: rgba(34,45,50,1); }
+.service-panel > ul li { border-radius: 2px 2px 0 0; color: #5a646a; cursor: pointer; display: inline-block; font-size: 14px; line-height: 14px; height: 18px; vertical-align: middle; padding: 3px 12px; background: rgba(34,45,50,1); }
 .service-panel > ul li:hover { color: #00bcd4; }
-.service-panel > ul li.active { color: #4db6ac; }
+.service-panel > ul li.active { color: #b9c2c7; }
 .service-panel > ul li.active:hover { color: #00bcd4; }
 .service-panel > ul li+li { margin-left: 6px; }
-.in-service-panel { font-size: 14px; display: none; background: url('../images/teams/BlueTeam.png') no-repeat; height: 340px; padding: 15px; border-radius: 2px; border: 1px solid rgba(33,43,48,1); }
+.in-service-panel { font-size: 14px; display: none; background: rgba(47,61,68,1); height: 340px; padding: 15px; border-radius: 2px; border: 1px solid rgba(33,43,48,1); }
 .in-service-panel.active { display: block; }
-.service-logs { font-size: 12px; overflow-x: auto; background: url('../images/teams/GreenTeam.png') no-repeat; }
+.service-logs { font-size: 12px; overflow-x: auto; }
 .service-logs .warn { color: lightcoral; }
 .service-logs span.time { color: #4db6ac; padding-right: 6px; }
 .service-logs span.open-website { cursor: pointer; text-decoration: underline; }

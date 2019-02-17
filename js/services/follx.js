@@ -11,7 +11,7 @@ super.init();
 }
 getUserInfo(callback){
 let userData = {
-avatar: 'https://follx.com/favicon.ico',
+avatar: __dirname + '/images/Follx.png',
 username: 'Follx User',
 value: 0
 };
