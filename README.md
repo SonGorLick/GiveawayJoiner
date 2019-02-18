@@ -16,8 +16,7 @@
 11. Fresh Electron 2.x at the moment of app build
 
 
-!!!! GiveawayJoiner need 'libgconf-2-4' lib to be installed in your Linux distro
-!!!! Recommended 'Noto' fonts to be installed too
+!!!! GiveawayJoiner need 'libgconf-2-4' lib to be installed in your Linux distro, recommended 'Noto' fonts to be installed too
 
 
 To build own binaries:
