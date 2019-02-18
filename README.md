@@ -1,6 +1,3 @@
-GiveawayJoiner (Fork of GiftSeeker) for GNU/Linux. App for automatically participate in raffles on SteamGifts, IndieGala, Follx, OpiumPulses, TF2R giveaway websites.
-
-
  Differences from the GiftSeeker:
 
 
