@@ -8,7 +8,7 @@
  5. Completely portable app (all user data and options storied in app subdirectory 'giveawayjoinerdata'. You can use multiple 
     copies of the app with different accounts and options, just make copies of app with different name app directory 
     like 'giveawayjoiner1', 'giveawayjoiner2' for example)
- 6. Indiegala service fixed working (17.02.19)
+ 6. Indiegala service working fixed (17.02.19)
  7. Removed functions 'auto update' and 'startup with os' in the app
  8. New display timer with fixes (now showing in 00:00:00 format)
  9. Translations changes and fixes
