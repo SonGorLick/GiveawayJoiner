@@ -1,8 +1,6 @@
 GiveawayJoiner (Fork of GiftSeeker) for GNU/Linux. App for automatically participate in raffles on SteamGifts, IndieGala, Follx, OpiumPulses, TF2R giveaway websites.
 
 
-
-
  Differences from the GiftSeeker:
 
 
@@ -18,10 +16,7 @@ GiveawayJoiner (Fork of GiftSeeker) for GNU/Linux. App for automatically partici
  8. New display timer with fixes (now showing in 00:00:00 format)
  9. Translations changes and fixes
 10. Code optimizations and bugfixes for Linux compatibility
-11. New version Electron 2.x at the moment of app build
-
-
-
+11. Fresh Electron 2.x at the moment of app build
 
 
 To build own binaries:
