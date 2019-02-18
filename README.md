@@ -31,5 +31,5 @@ electron-builder -l --dir
 
 4. GiveawayJoiner build will be in sources subdirectory '/dist/linux-unpacked'
 5. Recommended 'Noto' fonts to be installed in your OS
-6: Need 'libgconf-2-4' lib to be installed in your OS
+6. Need 'libgconf-2-4' lib to be installed in your OS
 7. To run GiveawayJoiner, open terminal in app directory enter and run this command './giveawayjoiner'
