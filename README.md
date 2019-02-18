@@ -17,7 +17,7 @@
 
 
 !!!! GiveawayJoiner need 'libgconf-2-4' lib to be installed in your Linux distro
-P.S. Recommended 'Noto' fonts to be installed too
+!!!! Recommended 'Noto' fonts to be installed too
 
 
 To build own binaries:
