@@ -9,9 +9,9 @@ this.wonsUrl = "http://www.opiumpulses.com/user/giveawaykeys";
 delete this.settings.pages;
 super.init();
 if(Lang.current() === 'ru_RU')
-this.log('В данный момент программа присоединяется только к бесплатным раздачам');
+this.log('Программа присоединяется только к <everyone> раздачам!');
 else
-this.log('currently program let join to free giveaways');
+this.log('Program let join only for <everyone> giveaways!');
 }
 getUserInfo(callback){
 let userData = {
@@ -36,6 +36,7 @@ seekService(){
 let _this = this;
 $.get('http://www.opiumpulses.com/giveaway/filterGiveaways?source=gf&pageSize=240&jointypes=everyone&status=active&ajax=1', function(){
 $.get('http://www.opiumpulses.com/giveaways', function(data){
+let user_points = $(data).find('.points-items li a').first().text().replace('Points:', '').trim();
 let found_games = $(data).find('.giveaways-page-item');
 let curr_giveaway = 0;
 function giveawayEnter(){
@@ -48,10 +49,10 @@ eLink = giveaway.find('.giveaways-page-item-img-btn-enter').attr('href'),
 link = giveaway.find('.giveaways-page-item-img-btn-more').attr('href'),
 cost = parseInt(giveaway.find('.giveaways-page-item-header-points').text().replace('points', '').trim()),
 free = isNaN(cost);
-if( !free )
-next_after = 50;
-else
-{
+if( free ) {
+cost = 0;
+};
+if ( user_points >= cost ) {
 $.get("http://www.opiumpulses.com" + link, function(data){
 let entered = data.indexOf("entered this giveaway") >= 0;
 if( entered )
