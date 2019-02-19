@@ -5,8 +5,8 @@
  3. Increased Pages check to 30 (in test mode)
  4. Added retry connect to services in 5 minutes if the network is offline (in test mode)
  5. Completely portable app (all user data and options storied in app subdirectory 'giveawayjoinerdata'. You can use multiple 
-    copies of the app with different accounts and options, just make copies of app with different name app directory 
-    like 'giveawayjoiner1', 'giveawayjoiner2' for example)
+    copies of the app with different accounts and options, just make copies of app with different appname directories 
+    like 'giveawayjoiner1', 'giveawayjoiner2', etc. For example)
  6. The Indiegala service working fixed (17.02.19. Login in app to IndieGala then click 'Visit open web site' to solve the         captcha, close app browser and then click on 'start' service)
  7. The OpiumPulses service enter in 'cost' giveaways too, only using filter for 'everyone'  
  8. Removed functions 'auto update' and 'startup with os' in the app
