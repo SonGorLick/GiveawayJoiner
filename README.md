@@ -1,6 +1,5 @@
  Differences from the GiftSeeker:
 
-
  1. Changed color design, icons, font in the app (like Adapta-Nokto theme)
  2. Increased Timer to max 1440 minutes (24 hours) (in test mode)
  3. Increased Pages check to 30 (in test mode)
@@ -15,12 +14,10 @@
 10. Code optimizations and bugfixes for Linux compatibility
 11. Fresh Electron 2.x at the moment of app build
 
-
 !!!! GiveawayJoiner need 'libgconf-2-4' lib to be installed in your Linux distro, recommended 'Noto' fonts to be installed too
 
 
 To build own binaries:
-
 
 1. Install Node.js (from your distro repositories or from Node.js official site)
 2. Download GiveawayJoiner sources
@@ -30,7 +27,6 @@ npm install electron@2
 npm update                                 
 npm install electron-builder                   
 electron-builder -l --dir                              
-
 
 4. GiveawayJoiner build will be in sources subdirectory '/dist/linux-unpacked'
 5. Copy directory 'giveawayjoinerdata' from sources to app directory
