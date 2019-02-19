@@ -13,9 +13,10 @@ let Config = null;
 let Lang = null;
 let tray = null;
 let user = null;
-app.setPath('userData', process.execPath + 'data');
+let udata = process.execPath;
+app.setPath('userData', udata + 'data');
 app.disableHardwareAcceleration();
-storage.setDataPath(process.execPath + 'data');
+storage.setDataPath(udata + 'data');
 const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
 if (mainWindow) {
 if (mainWindow.isMinimized())

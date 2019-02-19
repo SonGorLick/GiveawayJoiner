@@ -24,7 +24,7 @@ url: 'http://www.opiumpulses.com/user/account',
 success: function(data){
 data = $(data);
 userData.username = data.find('#User_username').val();
-userData.avatar = data.find('img.img-thumbnail').attr('src');
+userData.avatar = "http://www.opiumpulses.com" + data.find('img.img-thumbnail').attr('src');
 userData.value = data.find('.points-items li a').first().text().replace('Points:', '').trim();
 },
 complete: function () {
