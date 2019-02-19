@@ -1,8 +1,8 @@
  Differences from the GiftSeeker:
 
  1. Changed color design, icons, font in the app (like Adapta-Nokto theme)
- 2. Increased Timer to max 1440 minutes (24 hours)
- 3. Increased Pages check to 30 (in test mode)
+ 2. Increased Timer to max. 1440 minutes (24 hours)
+ 3. Increased Pages number to check, max. 30 pages now
  4. Added retry connect to services in 5 minutes if the network is offline
  5. Completely portable app (all user data and options storied in app subdirectory 'giveawayjoinerdata'. You can use multiple 
     copies of the app with different accounts and options, just make copies of app with different appname directories 
