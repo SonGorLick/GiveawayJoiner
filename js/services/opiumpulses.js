@@ -9,9 +9,9 @@ this.wonsUrl = "http://www.opiumpulses.com/user/giveawaykeys";
 delete this.settings.pages;
 super.init();
 if(Lang.current() === 'ru_RU')
-this.log('Программа присоединяется только к <everyone> раздачам!');
+this.log('Программа присоединяется только к -everyone- раздачам!');
 else
-this.log('Program let join only for <everyone> giveaways!');
+this.log('Program let join only for -everyone- giveaways!');
 }
 getUserInfo(callback){
 let userData = {
