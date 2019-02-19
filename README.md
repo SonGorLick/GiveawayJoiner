@@ -7,12 +7,13 @@
  5. Completely portable app (all user data and options storied in app subdirectory 'giveawayjoinerdata'. You can use multiple 
     copies of the app with different accounts and options, just make copies of app with different name app directory 
     like 'giveawayjoiner1', 'giveawayjoiner2' for example)
- 6. Indiegala service working fixed (17.02.19. Login in app to IndieGala then click 'Visit open web site' to solve the captcha,         close app browser and then click on 'start' service)
- 7. Removed functions 'auto update' and 'startup with os' in the app
- 8. New display timer with fixes (now showing in 00:00:00 format)
- 9. Translations changes and fixes
-10. Code optimizations and bugfixes for Linux compatibility
-11. Fresh Electron 2.x at the moment of app build
+ 6. The Indiegala service working fixed (17.02.19. Login in app to IndieGala then click 'Visit open web site' to solve the         captcha, close app browser and then click on 'start' service)
+ 7. The OpiumPulses service enter in 'cost' giveaways too, only using filter for 'everyone'  
+ 8. Removed functions 'auto update' and 'startup with os' in the app
+ 9. New display timer with fixes (now showing in 00:00:00 format)
+10. Translations changes and fixes
+11. Code optimizations and bugfixes for Linux compatibility
+12. Latest Electron 2.x tree at the moment of app build
 
 !!!! GiveawayJoiner need 'libgconf-2-4' lib to be installed in your Linux distro, recommended 'Noto' fonts to be installed too
 
