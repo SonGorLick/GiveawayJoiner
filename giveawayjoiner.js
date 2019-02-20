@@ -13,9 +13,24 @@ let Config = null;
 let Lang = null;
 let tray = null;
 let user = null;
+let _bmd = 'true';
+let _bfr = 'false';
+let _icn = __dirname + '/icon.png';
+let _itr = __dirname + '/tray.png';
 let udata = process.execPath;
-app.setPath('userData', udata + 'data');
 app.disableHardwareAcceleration();
+if (process.platform === 'win32') {
+_icn = __dirname + '/icon.ico';
+_itr = _icn;
+udata = (udata.slice(0, -4)).toLowerCase();
+}
+if (process.platform === 'darwin') {
+app.dock.hide();
+_bmd = 'false';
+_bfr = 'true';
+udata = (udata.slice(0, -34)).toLowerCase();
+}
+app.setPath('userData', udata + 'data');
 storage.setDataPath(udata + 'data');
 const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
 if (mainWindow) {
@@ -38,7 +53,6 @@ Lang.change(data);
 event.sender.send('change-lang', data);
 });
 app.on('window-all-closed', () => {
-if (process.platform !== 'darwin')
 app.quit();
 });
 app.on('ready', () => {
@@ -49,8 +63,9 @@ _session.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML
 authWindow = new BrowserWindow({
 width: 280,
 height: 340,
+skipTaskbar: true,
 title: 'GiveawayJoiner',
-icon: __dirname + '/icon.png',
+icon: _icn,
 show: false,
 center: true,
 resizable: false,
@@ -64,8 +79,9 @@ authWindow.setMenu(null);
 mainWindow = new BrowserWindow({
 width: 730,
 height: 500,
+skipTaskbar: true,
 title: 'GiveawayJoiner',
-icon: __dirname + '/icon.png',
+icon: _icn,
 show: false,
 center: true,
 resizable: false,
@@ -81,13 +97,14 @@ mainWindow.webContents.openDevTools();
 }
 Browser = new BrowserWindow({
 parent: mainWindow,
-icon: __dirname + '/icon.png',
+icon: _icn,
 title: 'GiveawayJoiner',
 width: 1024,
 height: 600,
 minWidth: 600,
 minHeight: 500,
-modal: true,
+modal: _bmd,
+frame: _bfr,
 show: false,
 center: true,
 webPreferences: {
@@ -121,12 +138,11 @@ authWindow = null;
 mainWindow.on('closed', () => {
 mainWindow = null;
 });
-tray = new Tray(nativeImage.createFromPath(__dirname + '/tray.png'));
+tray = new Tray(nativeImage.createFromPath(_itr));
 const trayMenu = Menu.buildFromTemplate([
 { label: 'Exit', type: 'normal', role: 'quit' }
 ]);
 tray.setToolTip("GiveawayJoiner " + app.getVersion());
-tray.setContextMenu(trayMenu);
 tray.on('click', () => {
 if( user === null )
 authWindow.isVisible() ? authWindow.hide() : authWindow.show();
@@ -167,7 +183,7 @@ constructor(){
 this.default = 'en_US';
 this.languages = {};
 this.langsCount = 0;
-Request({uri: 'http://0.0.0.0/api/langs_new', json: true})
+Request({uri: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/all.json', json: true})
 .then((data) => {
 if(data.response !== false){
 data = JSON.parse(data.response).langs;
@@ -176,7 +192,7 @@ for(let one in data){
 let name = data[one].name;
 let size = data[one].size;
 let loadLang = () => {
-Request( { uri: 'http://0.0.0.0/trans/' + name } )
+Request( { uri: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/' + name } )
 .then(( lang ) => {
 fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => { });
 })

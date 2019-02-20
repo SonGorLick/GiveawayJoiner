@@ -1,7 +1,7 @@
 {
   "name": "GiveawayJoiner",
   "productName": "GiveawayJoiner",
-  "version": "1.1.2b",
+  "version": "1.1.2c",
   "description": "Autojoin to steam game giveaways",
   "main": "giveawayjoiner.js",
   "dependencies": {
@@ -16,11 +16,22 @@
     "electron-builder": "latest",
     "postinstall": "install-app-deps"
   },
+  "scripts": {
+    "pack": "electron-builder --dir"
+  },
   "build": {
     "appId": "com.giveawayjoiner.app",
     "linux": {
       "target": "dir",
       "icon": "icon.png"
+    },
+    "mac": {
+      "target": "dir",
+      "icon": "icon.icns"
+    },
+    "win": {
+      "target": "dir",
+      "icon": "icon.ico"
     }
   }
 }
