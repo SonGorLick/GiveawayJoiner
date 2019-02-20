@@ -27,5 +27,4 @@ To build own binaries:
   >npm install electron-builder                   
   >electron-builder -l --dir                              
 4. GiveawayJoiner build will be in sources subdirectory '/dist/linux-unpacked'
-5. Copy directory 'giveawayjoinerdata' from sources to app directory
-6. To run GiveawayJoiner open terminal in app directory enter and run this command './giveawayjoiner'
+5. To run GiveawayJoiner open terminal in app directory enter and run this command './giveawayjoiner'
