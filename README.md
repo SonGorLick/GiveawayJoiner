@@ -17,16 +17,19 @@
 11. Code optimizations and bugfixes for Linux compatibility
 12. Latest Electron 2.x tree at the moment of app build
 
-!!!! GiveawayJoiner need 'libgconf-2-4' lib to be installed in your Linux distro, recommended 'Noto' fonts to be installed too
+  To build own binaries:
 
-To build own binaries:
+  1. Download and install Node.js
+  2. Download GiveawayJoiner sources
 
-1. Download and install Node.js
-2. Download GiveawayJoiner sources
-3. Open terminal in sources directory and run this commands:
+  3. Open Terminal program (cmd.exe as administrator on Windows) in sources folder and run this commands:
   >npm install electron@2                                  
   >npm update                                 
   >npm install electron-builder                   
   >electron-builder --dir                              
-4. GiveawayJoiner build will be in sources subdirectory '/dist/linux-unpacked'
-5. To run GiveawayJoiner open terminal in app directory enter and run this command './giveawayjoiner'
+  
+  GiveawayJoiner build will be in sources subfolder 'dist'
+  
+  (p.s. for Linux: GiveawayJoiner need 'libgconf-2-4' lib to be installed in your distro)
+  
+  Recommended 'Noto' fonts family installed
