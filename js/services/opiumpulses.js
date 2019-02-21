@@ -51,7 +51,7 @@ cost = parseInt(giveaway.find('.giveaways-page-item-header-points').text().repla
 free = isNaN(cost);
 if( free ) {
 cost = 0;
-};
+}
 if ( user_points >= cost ) {
 $.get("http://www.opiumpulses.com" + link, function(data){
 let entered = data.indexOf("entered this giveaway") >= 0;
