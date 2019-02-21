@@ -28,3 +28,5 @@ To build own binaries:
   >electron-builder --dir                              
 4. GiveawayJoiner build will be in sources subdirectory '/dist/linux-unpacked'
 5. To run GiveawayJoiner open terminal in app directory enter and run this command './giveawayjoiner'
+
+[![DeepScan grade](https://deepscan.io/api/teams/2928/projects/4373/branches/35596/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=2928&pid=4373&bid=35596)
