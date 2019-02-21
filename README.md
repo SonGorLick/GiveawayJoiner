@@ -1,6 +1,6 @@
 [![DeepScan grade](https://deepscan.io/api/teams/2928/projects/4373/branches/35596/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=2928&pid=4373&bid=35596)
-[![DepShield Badge](https://depshield.sonatype.org/badges/owner/repository/depshield.svg)]
-(https://depshield.github.io)
+
+[![DepShield Badge](https://depshield.sonatype.org/badges/owner/repository/depshield.svg)](https://depshield.github.io)
  
  Differences from the GiftSeeker:
 
