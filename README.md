@@ -17,6 +17,7 @@
 11. Code optimizations and bugfixes for Linux compatibility
 12. Latest Electron 2.x tree at the moment of app build
 
+
   To build own binaries:
 
   1. Download and install Node.js
@@ -29,7 +30,6 @@
   >electron-builder --dir                              
   
   GiveawayJoiner build will be in sources subfolder 'dist'
-  
   (p.s. for Linux: GiveawayJoiner need 'libgconf-2-4' lib to be installed in your distro)
   
   Recommended 'Noto' fonts family installed
