@@ -140,9 +140,6 @@ mainWindow.on('closed', () => {
 mainWindow = null;
 });
 tray = new Tray(nativeImage.createFromPath(_itr));
-const trayMenu = Menu.buildFromTemplate([
-{ label: 'Exit', type: 'normal', role: 'quit' }
-]);
 tray.setToolTip("GiveawayJoiner " + app.getVersion());
 tray.on('click', () => {
 if( user === null )
