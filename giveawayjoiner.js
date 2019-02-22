@@ -13,24 +13,24 @@ let Config = null;
 let Lang = null;
 let tray = null;
 let user = null;
-let _itr = null;
+let _icn = null;
 let _bmd = 'true';
 let _bfr = 'false';
-let _icn = __dirname + '/icon.png';
+let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
 app.disableHardwareAcceleration();
 if (process.platform === 'win32') {
-_icn = __dirname + '/icon.ico';
+_itr = __dirname + '/icons/icon.ico'
 udata = (udata.slice(0, -4)).toLowerCase();
 }
-_itr = _icn;
 if (process.platform === 'darwin') {
 app.dock.hide();
 _bmd = 'false';
 _bfr = 'true';
-_itr = __dirname + '/tray.png'
+_itr = __dirname + '/icons/trayTemplate.png';
 udata = (udata.slice(0, -34)).toLowerCase();
 }
+_icn = _itr;
 app.setPath('userData', udata + 'data');
 storage.setDataPath(udata + 'data');
 const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
