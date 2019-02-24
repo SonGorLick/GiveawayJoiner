@@ -6,7 +6,6 @@ this.websiteUrl = 'http://www.opiumpulses.com';
 this.authContent = 'site/logout';
 this.authLink = "https://www.opiumpulses.com/site/login";
 this.wonsUrl = "http://www.opiumpulses.com/user/giveawaykeys";
-this.opium_user = 0;
 delete this.settings.pages;
 super.init();
 if(Lang.current() === 'ru_RU')
@@ -20,9 +19,6 @@ avatar: __dirname + '/images/OpiumPulses.png',
 username: 'OP user',
 value: 0
 };
-if (this.opium_user === 1) {
-callback(userData);
-};
 $.ajax({
 url: 'http://www.opiumpulses.com/user/account',
 success: function(data){
@@ -30,7 +26,6 @@ data = $(data);
 userData.username = data.find('#User_username').val();
 userData.avatar = "http://www.opiumpulses.com" + data.find('img.img-thumbnail').attr('src');
 userData.value = data.find('.points-items li a').first().text().replace('Points:', '').trim();
-this.opium_user = 1;
 },
 complete: function () {
 callback(userData);
@@ -39,7 +34,6 @@ callback(userData);
 }
 seekService(){
 let _this = this;
-this.opium_user = 0;
 $.get('http://www.opiumpulses.com/giveaway/filterGiveaways?source=gf&pageSize=240&jointypes=everyone&status=active&ajax=1', function(){
 $.get('http://www.opiumpulses.com/giveaways', function(data){
 let user_points = $(data).find('.points-items li a').first().text().replace('Points:', '').trim();
@@ -67,6 +61,7 @@ $.get("http://www.opiumpulses.com" + eLink, function(){
 _this.log(Lang.get('service.entered_in') + _this.logLink("http://www.opiumpulses.com" + link, name));
 });
 });
+next_after = 50;
 }
 curr_giveaway++;
 setTimeout(giveawayEnter, next_after);

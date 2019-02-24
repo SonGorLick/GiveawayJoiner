@@ -3,7 +3,7 @@ class Seeker {
 constructor() {
 this.intervalVar = undefined;
 this.totalTicks = 0;
-this.usrUpdTimer = 119;
+this.usrUpdTimer = 59;
 this.started = false;
 this.waitAuth = false;
 this.cookies = '';
