@@ -1,9 +1,9 @@
 body { background-color: #263238; }
 #head { border: none; height: 110px; line-height: 110px; position: relative; z-index: 5; }
 #head_decor { height: 6px; width: 150px; z-index: 6; }
-#head .logo { position: relative; z-index: 1; height: inherit; line-height: inherit; width: 100%; -webkit-app-region: drag; text-align: center; font-size: 32px; font-weight: bold; -webkit-text-fill-color: transparent; background: linear-gradient(to bottom, #05aac0, #00bcd4); -webkit-background-clip: text; color: #05aac0; }
+#head .logo { position: relative; z-index: 1; height: inherit; line-height: inherit; width: 100%; -webkit-app-region: drag; text-align: center; font-size: 30px; font-weight: bold; -webkit-text-fill-color: transparent; background: linear-gradient(to bottom, #05aac0, #00bcd4); -webkit-background-clip: text; color: #05aac0; }
 .window-buttons { width: 100%; top: 0; right: 0; height: auto; padding: 10px 10px 0; -webkit-app-region: drag; }
-.window-buttons span { float: left; font-size: 16px !important; -webkit-app-region: no-drag; margin: 0; }
+.window-buttons span { float: left; font-size: 14px; -webkit-app-region: no-drag; margin: 0; }
 .window-buttons span.language { float: left; }
 .window-buttons span.closer { float: right; }
 .seeker-button { display: block; margin: 0 auto 0 auto; width: 96px; height: 96px; font-size: 72px; }
@@ -12,6 +12,6 @@ body { background-color: #263238; }
 #choice-lang { text-align: center; padding-top: 140px; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #263238; z-index: 4; display: none; }
 #choice-lang.visible { display: block; color: #b8c1c6; font-size: 16px; }
 #choice-lang .no-available-langs { display: none; }
-#choice-lang .label { color: #4db6ac; font-size: 16px; }
+#choice-lang .label { color: #4db6ac; font-size: 14px; }
 #choice-lang .input-wrap { position: relative; line-height: 20px; padding: 15px 0; }
 #choice-lang .input-wrap .setter { height: 30px; line-height: 30px; text-align: center; padding: 0 10px; }
