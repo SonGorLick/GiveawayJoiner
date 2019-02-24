@@ -3,7 +3,7 @@ class Seeker {
 constructor() {
 this.intervalVar = undefined;
 this.totalTicks = 0;
-this.usrUpdTimer = 60;
+this.usrUpdTimer = 119;
 this.started = false;
 this.waitAuth = false;
 this.cookies = '';
@@ -470,7 +470,7 @@ this.logWrap.scrollTop(this.logWrap[0].scrollHeight);
 seekService(){}
 getUserInfo(callback){
 callback({
-avatar: 'http://giftseeker.ru/favicon.ico',
+avatar: __dirname + '/icons/icon.png',
 username: 'GJ User',
 value: 0
 });
