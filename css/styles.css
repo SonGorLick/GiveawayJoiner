@@ -32,7 +32,7 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .content-item[data-id=profile] .settings { position: absolute; right: 0; top: 0; height: 100%; width: 250px; background: rgba(34,45,50,1); border-left: 1px solid #222d32; padding: 10px; }
 .content-item[data-id=profile] .settings .setter#lang { width: 100%; cursor: pointer; margin-bottom: 5px; height: 24px; }
 .content-item[data-id=profile] .settings .build { width: 100%; position: absolute; bottom: 10px; left: 0; text-align: center; }
-.content-item[data-id=profile] .seeker-button.logout { position: absolute; right: 0px; bottom: 20px; }
+.content-item[data-id=profile] .seeker-button.logout { position: absolute; right: 15px; bottom: 15px;  text-align: right; }
 .services_switcher { background-color: #29353b; width: 100px; height: 100%; position: absolute; left: 0; top: 0; border-right: 1px solid #222d32; overflow: hidden; }
 .services-icons { padding-top: 4px; position: absolute; z-index: 1; width: 100%; top: 34px; left: 0; }
 .service-icon { border: 1px solid transparent; cursor: pointer; position: relative; width: 80px; height: 80px; margin: 0 auto 10px; font-size: 12px; }
