@@ -52,7 +52,9 @@
 			"value_label": "Energy"
 		},
 		"indiegala": {
-			"value_label": "GalaCoins"
+			"value_label": "GalaCoins",
+			"max_level": "Max. level",
+			"max_level_title": "Do not enter in giveaways where required level more than the selected"
 		},
 		"opiumpulses": {
 			"value_label": "Points"
