@@ -21,7 +21,7 @@
 15. Latest Electron 2.x tree at the moment of app build.
 
 
-  To build own binaries:
+  To build latest version from source:
 
   1. Download and install Node.js
   2. Download GiveawayJoiner sources
