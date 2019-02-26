@@ -3,6 +3,7 @@ class Seeker {
 constructor() {
 this.intervalVar = undefined;
 this.totalTicks = 0;
+this.usrUpdTimer = 60;
 this.started = false;
 this.waitAuth = false;
 this.cookies = '';
@@ -215,11 +216,14 @@ let atimer = this.getConfig('timer', 10);
 this.stimer = atimer;
 this.setStatus('good');
 this.log( Lang.get('service.started') );
+this.updateUserInfo();
 if( this.intervalVar )
 clearInterval(this.intervalVar);
 this.intervalVar = setInterval(() => {
 if( !this.started )
 clearInterval(this.intervalVar);
+if( this.totalTicks !== 0 && this.totalTicks % this.usrUpdTimer === 0 )
+this.updateUserInfo();
 if( this.totalTicks % this.doTimer() === 0 ) {
 this.authCheck((authState) => {
 if(authState === 1) {
@@ -227,7 +231,6 @@ this.log(Lang.get('service.connection_good'));
 let atimer = this.getConfig('timer', 10);
 this.stimer = atimer;
 this.updateCookies();
-this.updateUserInfo();
 this.seekService();
 }
 else if(authState === 0) {
@@ -246,12 +249,16 @@ this.totalTicks++;
 }, 1000);
 }
 updateUserInfo(){
+this.authCheck((authState) => {
+if(authState === 1){
 this.getUserInfo((userData) => {
 this.userInfo.find('.avatar').css('background-image', "url('" + userData.avatar + "')");
 this.userInfo.find('.username').text(userData.username);
 if( this.withValue )
 this.setValue(userData.value);
 this.userInfo.addClass('visible');
+});
+}
 });
 }
 renderSettings(){
