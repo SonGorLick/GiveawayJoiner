@@ -6,12 +6,7 @@ this.websiteUrl = 'http://www.opiumpulses.com';
 this.authContent = 'site/logout';
 this.authLink = "https://www.opiumpulses.com/site/login";
 this.wonsUrl = "http://www.opiumpulses.com/user/giveawaykeys";
-delete this.settings.pages;
 super.init();
-if(Lang.current() === 'ru_RU')
-this.log('Программа присоединяется только к -everyone- раздачам!');
-else
-this.log('Program let join only for -everyone- giveaways!');
 }
 getUserInfo(callback){
 let userData = {
@@ -34,14 +29,26 @@ callback(userData);
 }
 seekService(){
 let _this = this;
-$.get('http://www.opiumpulses.com/giveaway/filterGiveaways?source=gf&pageSize=240&jointypes=everyone&status=active&ajax=1', function(){
-$.get('http://www.opiumpulses.com/giveaways', function(data){
+let page = 1;
+let callback = function() {
+page++;
+if ( page <= _this.getConfig('pages', 1) )
+_this.enterOnPage(page, callback);
+};
+this.enterOnPage(page, callback);
+}
+enterOnPage(page, callback){
+let _this = this;
+$.get('http://www.opiumpulses.com/giveaways?Giveaway_page=' + page, function(data){
 let user_points = $(data).find('.points-items li a').first().text().replace('Points:', '').trim();
 let found_games = $(data).find('.giveaways-page-item');
 let curr_giveaway = 0;
 function giveawayEnter(){
-if( found_games.length <= curr_giveaway || !_this.started )
+if( found_games.length <= curr_giveaway || !_this.started || user_points === 0) {
+if(callback)
+callback();
 return;
+}
 let next_after = _this.interval();
 let giveaway = found_games.eq(curr_giveaway),
 name = giveaway.find('.giveaways-page-item-footer-name').text().trim(),
@@ -56,18 +63,19 @@ if ( user_points >= cost ) {
 $.get("http://www.opiumpulses.com" + link, function(data){
 let entered = data.indexOf("entered this giveaway") >= 0;
 if( entered )
-return;
+next_after = 50;
+else
+{
 $.get("http://www.opiumpulses.com" + eLink, function(){
 _this.log(Lang.get('service.entered_in') + _this.logLink("http://www.opiumpulses.com" + link, name));
 });
+}
 });
-next_after = 50;
 }
 curr_giveaway++;
 setTimeout(giveawayEnter, next_after);
 }
 giveawayEnter();
-});
 });
 }
 }

@@ -3,9 +3,11 @@ class IndieGala extends Seeker {
 constructor() {
 super();
 this.authContent = "My Libraries";
-this.websiteUrl = "https://www.indiegala.com/giveaways/get_user_level_and_coins";
+this.websiteUrl = "https://www.indiegala.com/giveaways";
 this.authLink = "https://www.indiegala.com/login";
 this.wonsUrl = "https://www.indiegala.com/profile";
+this.settings.max_level = { type: 'number', trans: this.transPath('max_level'), min: 0, max: 8, default: this.getConfig('max_level', 0) };
+this.settings.max_cost = { type: 'number', trans: this.transPath('max_cost'), min: 1, max: 240, default: this.getConfig('max_cost', 15) };
 super.init();
 }
 authCheck(callback){
@@ -58,16 +60,14 @@ this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback){
 let _this = this;
-$.get('https://www.indiegala.com/giveaways/get_user_level_and_coins', function(data){
-data = JSON.parse(data);
-if(data.status !== 'ok')
-callback(-1);
-let user_level = data.current_level;
+let user_level = this.getConfig('max_level', 0);
+let user_cost = this.getConfig('max_cost', 15);
 $.get('https://www.indiegala.com/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=all', function(data){
 let tickets = $(JSON.parse(data).content).find('.tickets-col');
 let curr_ticket = 0;
 function giveawayEnter(){
-if( tickets.length <= curr_ticket || !_this.started ){
+let user_coins = _this.curr_value;
+if( tickets.length <= curr_ticket || !_this.started || user_coins === 0){
 if(callback)
 callback();
 return;
@@ -87,7 +87,7 @@ else {
 enterTimes = parseInt(ticket.find('.giv-coupon .palette-color-11').text());
 entered = enterTimes > 0;
 }
-if( entered || user_level < level )
+if( entered || user_level < level || user_coins < price || price > user_cost )
 next_after = 50;
 else
 {
@@ -100,7 +100,7 @@ data: JSON.stringify({ giv_id: id, ticket_price: price }),
 success: function(data){
 if( data.status === 'ok' ){
 _this.setValue(data.new_amount);
-_this.log(Lang.get('service.entered_in') + name);
+_this.log(Lang.get('service.entered_in') + name + '. ' + _this.trans('cost') + ' - ' + price);
 }
 }
 });
@@ -109,7 +109,6 @@ curr_ticket++;
 setTimeout(giveawayEnter, next_after);
 }
 giveawayEnter();
-});
 });
 }
 }
