@@ -50,15 +50,15 @@ _this.stopSeeker(true);
 return;
 }
 let found_games = html.find('.giveaway_card');
-let curr_giveaway = 0;
+let curr_fxga = 0;
 function giveawayEnter(){
-if( found_games.length <= curr_giveaway || !_this.started ) {
+if( found_games.length <= curr_fxga || !_this.started ) {
 if(callback)
 callback();
 return;
 }
 let next_after = _this.interval();
-let card = found_games.eq(curr_giveaway),
+let card = found_games.eq(curr_fxga),
 link = card.find('.head_info a').attr('href'),
 name = card.find('.head_info').attr('title'),
 have = card.find('.giveaway-indicators > .have').length > 0,
@@ -88,7 +88,7 @@ _this.log(Lang.get('service.entered_in') + _this.logLink(link, name));
 }
 });
 }
-curr_giveaway++;
+curr_fxga++;
 setTimeout(giveawayEnter, next_after);
 }
 giveawayEnter();

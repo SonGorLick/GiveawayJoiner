@@ -50,24 +50,24 @@ callback(userData);
 }
 seekService(){
 let _this = this;
-let page = 1;
+let gpage = 1;
 let callback = function() {
-page++;
-if ( page <= _this.getConfig('pages', 1) )
-_this.enterOnPage(page, callback);
+gpage++;
+if ( gpage <= _this.getConfig('pages', 1) )
+_this.enterOnPage(gpage, callback);
 };
-this.enterOnPage(page, callback);
+this.enterOnPage(gpage, callback);
 }
-enterOnPage(page, callback){
+enterOnPage(gpage, callback){
 let _this = this;
-let user_level = this.getConfig('max_level', 0);
-let user_cost = this.getConfig('max_cost', 15);
-$.get('https://www.indiegala.com/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=all', function(data){
+let user_lvl = this.getConfig('max_level', 0);
+let user_mcst = this.getConfig('max_cost', 15);
+$.get('https://www.indiegala.com/giveaways/ajax_data/list?page_param=' + gpage + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=all', function(data){
 let tickets = $(JSON.parse(data).content).find('.tickets-col');
 let curr_ticket = 0;
 function giveawayEnter(){
-let user_coins = _this.curr_value;
-if( tickets.length <= curr_ticket || !_this.started || user_coins === 0){
+let user_gcns = _this.curr_value;
+if( tickets.length <= curr_ticket || !_this.started || user_gcns === 0){
 if(callback)
 callback();
 return;
@@ -87,7 +87,7 @@ else {
 enterTimes = parseInt(ticket.find('.giv-coupon .palette-color-11').text());
 entered = enterTimes > 0;
 }
-if( entered || user_level < level || user_coins < price || price > user_cost )
+if( entered || user_lvl < level || user_gcns < price || price > user_mcst )
 next_after = 50;
 else
 {

@@ -29,28 +29,28 @@ callback(userData);
 }
 seekService(){
 let _this = this;
-let page = 1;
+let opage = 1;
 let callback = function() {
-page++;
-if ( page <= _this.getConfig('pages', 1) )
-_this.enterOnPage(page, callback);
+opage++;
+if ( opage <= _this.getConfig('pages', 1) )
+_this.enterOnPage(opage, callback);
 };
-this.enterOnPage(page, callback);
+this.enterOnPage(opage, callback);
 }
-enterOnPage(page, callback){
+enterOnPage(opage, callback){
 let _this = this;
-$.get('http://www.opiumpulses.com/giveaways?Giveaway_page=' + page, function(data){
-let user_points = $(data).find('.points-items li a').first().text().replace('Points:', '').trim();
+$.get('http://www.opiumpulses.com/giveaways?Giveaway_page=' + opage, function(data){
+let user_opnts = $(data).find('.points-items li a').first().text().replace('Points:', '').trim();
 let found_games = $(data).find('.giveaways-page-item');
-let curr_giveaway = 0;
+let curr_opga = 0;
 function giveawayEnter(){
-if( found_games.length <= curr_giveaway || !_this.started || user_points === 0) {
+if( found_games.length <= curr_opga || !_this.started || user_opnts === 0) {
 if(callback)
 callback();
 return;
 }
 let next_after = _this.interval();
-let giveaway = found_games.eq(curr_giveaway),
+let giveaway = found_games.eq(curr_opga),
 name = giveaway.find('.giveaways-page-item-footer-name').text().trim(),
 eLink = giveaway.find('.giveaways-page-item-img-btn-enter').attr('href'),
 link = giveaway.find('.giveaways-page-item-img-btn-more').attr('href'),
@@ -59,7 +59,7 @@ free = isNaN(cost);
 if( free ) {
 cost = 0;
 }
-if ( user_points >= cost ) {
+if ( user_opnts >= cost ) {
 $.get("http://www.opiumpulses.com" + link, function(data){
 let entered = data.indexOf("entered this giveaway") >= 0;
 if( entered )
@@ -67,12 +67,12 @@ next_after = 50;
 else
 {
 $.get("http://www.opiumpulses.com" + eLink, function(){
-_this.log(Lang.get('service.entered_in') + _this.logLink("http://www.opiumpulses.com" + link, name));
+_this.log(Lang.get('service.entered_in') + _this.logLink("http://www.opiumpulses.com" + link, name + '. ' + _this.trans('cost') + ' - ' + cost));
 });
 }
 });
 }
-curr_giveaway++;
+curr_opga++;
 setTimeout(giveawayEnter, next_after);
 }
 giveawayEnter();
