@@ -6,9 +6,13 @@ this.websiteUrl = 'http://www.opiumpulses.com';
 this.authContent = 'site/logout';
 this.authLink = "https://www.opiumpulses.com/site/login";
 this.wonsUrl = "http://www.opiumpulses.com/user/giveawaykeys";
+this.oupd = 0;
 super.init();
 }
 getUserInfo(callback){
+if ( _this.oupd === 1 ) {
+callback(userData);
+}
 let userData = {
 avatar: __dirname + '/images/OpiumPulses.png',
 username: 'OP user',
@@ -23,11 +27,13 @@ userData.avatar = "http://www.opiumpulses.com" + data.find('img.img-thumbnail').
 userData.value = data.find('.points-items li a').first().text().replace('Points:', '').trim();
 },
 complete: function () {
+_this.oupd = 1;
 callback(userData);
 }
 });
 }
 seekService(){
+_this.oupd = 0;
 let _this = this;
 let opage = 1;
 let callback = function() {

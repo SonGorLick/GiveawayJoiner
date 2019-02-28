@@ -20,7 +20,7 @@ let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
 app.disableHardwareAcceleration();
 if (process.platform === 'win32') {
-_itr = __dirname + '/icons/icon.ico'
+_itr = __dirname + '/icons/icon.ico';
 udata = (udata.slice(0, -4)).toLowerCase();
 }
 if (process.platform === 'darwin') {
@@ -73,7 +73,9 @@ resizable: false,
 frame: false,
 webPreferences: {
 session: _session,
-devTools: devMode
+devTools: devMode,
+webgl: false,
+webaudio: false
 }
 });
 authWindow.setMenu(null);
@@ -89,7 +91,9 @@ resizable: false,
 frame: false,
 webPreferences: {
 session: _session,
-devTools: devMode
+devTools: devMode,
+webgl: false,
+webaudio: false
 }
 });
 mainWindow.setMenu(null);
@@ -111,7 +115,9 @@ center: true,
 webPreferences: {
 nodeIntegration: false,
 session: _session,
-devTools: false
+devTools: false,
+webgl: false,
+webaudio: false
 }
 });
 Browser.loadFile('blank.html');
