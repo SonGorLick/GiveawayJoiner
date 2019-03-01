@@ -74,7 +74,6 @@ frame: false,
 webPreferences: {
 session: _session,
 devTools: devMode,
-webgl: false,
 webaudio: false
 }
 });
@@ -92,7 +91,6 @@ frame: false,
 webPreferences: {
 session: _session,
 devTools: devMode,
-webgl: false,
 webaudio: false
 }
 });
@@ -116,7 +114,6 @@ webPreferences: {
 nodeIntegration: false,
 session: _session,
 devTools: false,
-webgl: false,
 webaudio: false
 }
 });

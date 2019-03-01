@@ -13,6 +13,9 @@ getUserInfo(callback){
 if ( _this.oupd === 1 ) {
 callback(userData);
 }
+else {
+_this.oupd = 1;
+}
 let userData = {
 avatar: __dirname + '/images/OpiumPulses.png',
 username: 'OP user',
@@ -27,36 +30,35 @@ userData.avatar = "http://www.opiumpulses.com" + data.find('img.img-thumbnail').
 userData.value = data.find('.points-items li a').first().text().replace('Points:', '').trim();
 },
 complete: function () {
-_this.oupd = 1;
 callback(userData);
 }
 });
 }
 seekService(){
-_this.oupd = 0;
 let _this = this;
-let opage = 1;
+let page = 1;
 let callback = function() {
-opage++;
-if ( opage <= _this.getConfig('pages', 1) )
-_this.enterOnPage(opage, callback);
+page++;
+if ( page <= _this.getConfig('pages', 1) )
+_this.enterOnPage(page, callback);
 };
-this.enterOnPage(opage, callback);
+_this.enterOnPage(page, callback);
 }
-enterOnPage(opage, callback){
+enterOnPage(page, callback){
 let _this = this;
-$.get('http://www.opiumpulses.com/giveaways?Giveaway_page=' + opage, function(data){
-let user_opnts = $(data).find('.points-items li a').first().text().replace('Points:', '').trim();
+_this.oupd = 0;
+$.get('http://www.opiumpulses.com/giveaways?Giveaway_page=' + page, function(data){
+let user_points = $(data).find('.points-items li a').first().text().replace('Points:', '').trim();
 let found_games = $(data).find('.giveaways-page-item');
-let curr_opga = 0;
+let curr_giveaway = 0;
 function giveawayEnter(){
-if( found_games.length <= curr_opga || !_this.started || user_opnts === 0) {
+if( found_games.length <= curr_giveaway || !_this.started || user_points === 0) {
 if(callback)
 callback();
 return;
 }
 let next_after = _this.interval();
-let giveaway = found_games.eq(curr_opga),
+let giveaway = found_games.eq(curr_giveaway),
 name = giveaway.find('.giveaways-page-item-footer-name').text().trim(),
 eLink = giveaway.find('.giveaways-page-item-img-btn-enter').attr('href'),
 link = giveaway.find('.giveaways-page-item-img-btn-more').attr('href'),
@@ -65,7 +67,7 @@ free = isNaN(cost);
 if( free ) {
 cost = 0;
 }
-if ( user_opnts >= cost ) {
+if ( user_points >= cost ) {
 $.get("http://www.opiumpulses.com" + link, function(data){
 let entered = data.indexOf("entered this giveaway") >= 0;
 if( entered )
@@ -78,7 +80,7 @@ _this.log(Lang.get('service.entered_in') + _this.logLink("http://www.opiumpulses
 }
 });
 }
-curr_opga++;
+curr_giveaway++;
 setTimeout(giveawayEnter, next_after);
 }
 giveawayEnter();
