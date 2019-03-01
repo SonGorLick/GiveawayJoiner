@@ -2,20 +2,13 @@
 class OpiumPulses extends Seeker {
 constructor() {
 super();
-this.websiteUrl = 'http://www.opiumpulses.com';
+this.websiteUrl = "http://www.opiumpulses.com";
 this.authContent = 'site/logout';
 this.authLink = "https://www.opiumpulses.com/site/login";
 this.wonsUrl = "http://www.opiumpulses.com/user/giveawaykeys";
-this.oupd = 0;
 super.init();
 }
 getUserInfo(callback){
-if ( _this.oupd === 1 ) {
-callback(userData);
-}
-else {
-_this.oupd = 1;
-}
 let userData = {
 avatar: __dirname + '/images/OpiumPulses.png',
 username: 'OP user',
@@ -42,17 +35,15 @@ page++;
 if ( page <= _this.getConfig('pages', 1) )
 _this.enterOnPage(page, callback);
 };
-_this.enterOnPage(page, callback);
+this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback){
 let _this = this;
-_this.oupd = 0;
 $.get('http://www.opiumpulses.com/giveaways?Giveaway_page=' + page, function(data){
-let user_points = $(data).find('.points-items li a').first().text().replace('Points:', '').trim();
 let found_games = $(data).find('.giveaways-page-item');
 let curr_giveaway = 0;
 function giveawayEnter(){
-if( found_games.length <= curr_giveaway || !_this.started || user_points === 0) {
+if( found_games.length <= curr_giveaway || !_this.started || _this.curr_value === 0) {
 if(callback)
 callback();
 return;
@@ -67,7 +58,7 @@ free = isNaN(cost);
 if( free ) {
 cost = 0;
 }
-if ( user_points >= cost ) {
+if ( _this.curr_value >= cost ) {
 $.get("http://www.opiumpulses.com" + link, function(data){
 let entered = data.indexOf("entered this giveaway") >= 0;
 if( entered )
@@ -77,6 +68,8 @@ else
 $.get("http://www.opiumpulses.com" + eLink, function(){
 _this.log(Lang.get('service.entered_in') + _this.logLink("http://www.opiumpulses.com" + link, name + '. ' + _this.trans('cost') + ' - ' + cost));
 });
+_this.curr_value = _this.curr_value - cost;
+_this.setValue(data.new_amount);
 }
 });
 }

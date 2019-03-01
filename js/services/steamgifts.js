@@ -2,6 +2,7 @@
 class SteamGifts extends Seeker {
 constructor() {
 super();
+this.settings.timer.min = 5;
 this.websiteUrl = 'https://www.steamgifts.com';
 this.authContent = 'Account';
 this.authLink = "https://www.steamgifts.com/?login";

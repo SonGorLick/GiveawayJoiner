@@ -2,7 +2,6 @@
 class Follx extends Seeker {
 constructor() {
 super();
-this.settings.timer.min = 5;
 this.websiteUrl = 'https://follx.com';
 this.authLink = 'https://follx.com/logIn';
 this.wonsUrl = 'https://follx.com/giveaways/won';
