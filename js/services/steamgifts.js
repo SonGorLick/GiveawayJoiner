@@ -133,14 +133,16 @@ return;
 }
 let next_after = _this.interval();
 let GA = _this.giveaways[curr_giveaway],
-ignoreForWishlist = wishlist && _this.getConfig('ignore_on_wish');
+ignoreForWishlist = wishlist && _this.getConfig('ignore_on_wish'),
+reserveForWishlist = wishlist && _this.getConfig('reserve_on_wish');
 if(
 ( !wishlist || !GA.pinned ) &&
-_this.curr_value >= GA.cost &&
+( _this.curr_value >= GA.cost ) &&
+( _this.getConfig('ending', 0) === 0 || GA.left <= _this.getConfig('ending', 0) ) &&
 ( ignoreForWishlist || _this.getConfig('min_level') === 0 || GA.level >= _this.getConfig('min_level') ) &&
 ( ignoreForWishlist || GA.cost >= _this.getConfig('min_cost') ) &&
 ( ignoreForWishlist || _this.getConfig('max_cost') === 0 || GA.cost <= _this.getConfig('max_cost') ) &&
-( ( wishlist && _this.getConfig('reserve_on_wish') ) || _this.getConfig('points_reserve') === 0 || ( (_this.curr_value - GA.cost) >= _this.getConfig('points_reserve') ) )
+( ignoreForWishlist || reserveForWishlist || _this.getConfig('points_reserve') === 0 || ( (_this.curr_value - GA.cost) >= _this.getConfig('points_reserve') ) )
 )
 {
 $.ajax({

@@ -2,7 +2,7 @@
 class OpiumPulses extends Seeker {
 constructor() {
 super();
-this.websiteUrl = "http://www.opiumpulses.com";
+this.websiteUrl = 'http://www.opiumpulses.com';
 this.authContent = 'site/logout';
 this.authLink = "https://www.opiumpulses.com/site/login";
 this.wonsUrl = "http://www.opiumpulses.com/user/giveawaykeys";
