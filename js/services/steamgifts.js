@@ -46,6 +46,7 @@ this.giveaways = [];
 let processCommon = () => {
 if( !this.started )
 return;
+this.wishlist = 0;
 if ( page <= this.getConfig('pages', 1) )
 this.giveawaysFromUrl('https://www.steamgifts.com/giveaways/search?page=' + page, processCommon);
 else
@@ -53,7 +54,8 @@ this.giveawaysEnter();
 page++;
 };
 this.giveawaysFromUrl('https://www.steamgifts.com/giveaways/search?type=wishlist', () => {
-this.giveawaysEnter(true);
+this.wishlist = 1;
+this.giveawaysEnter();
 if( this.getConfig('wishlist_only') )
 return;
 this.giveaways = [];
@@ -118,7 +120,7 @@ callback();
 }
 });
 }
-giveawaysEnter(wishlist, callback){
+giveawaysEnter(callback){
 let _this = this;
 let curr_giveaway = 0;
 if( this.getConfig('sort_by_chance', false) )
@@ -132,17 +134,14 @@ callback(false);
 return;
 }
 let next_after = _this.interval();
-let GA = _this.giveaways[curr_giveaway],
-ignoreForWishlist = wishlist && _this.getConfig('ignore_on_wish'),
-reserveForWishlist = wishlist && _this.getConfig('reserve_on_wish');
+let GA = _this.giveaways[curr_giveaway];
 if(
-( !wishlist || !GA.pinned ) &&
+( _this.wishlist === 0 || !GA.pinned ) &&
 ( _this.curr_value >= GA.cost ) &&
-( _this.getConfig('ending', 0) === 0 || GA.left <= _this.getConfig('ending', 0) ) &&
-( ignoreForWishlist || _this.getConfig('min_level') === 0 || GA.level >= _this.getConfig('min_level') ) &&
-( ignoreForWishlist || GA.cost >= _this.getConfig('min_cost') ) &&
-( ignoreForWishlist || _this.getConfig('max_cost') === 0 || GA.cost <= _this.getConfig('max_cost') ) &&
-( ignoreForWishlist || reserveForWishlist || _this.getConfig('points_reserve') === 0 || ( (_this.curr_value - GA.cost) >= _this.getConfig('points_reserve') ) )
+( _this.wishlist === 1 && _this.getConfig('ignore_on_wish') || _this.getConfig('min_level') === 0 || GA.level >= _this.getConfig('min_level') ) &&
+( _this.wishlist === 1 && _this.getConfig('ignore_on_wish') || GA.cost >= _this.getConfig('min_cost') ) &&
+( _this.wishlist === 1 && _this.getConfig('ignore_on_wish') || _this.getConfig('max_cost') === 0 || GA.cost <= _this.getConfig('max_cost') ) &&
+( _this.wishlist === 1 && _this.getConfig('reserve_on_wish') || _this.getConfig('points_reserve') === 0 || ( (_this.curr_value - GA.cost) >= _this.getConfig('points_reserve') ) )
 )
 {
 $.ajax({
