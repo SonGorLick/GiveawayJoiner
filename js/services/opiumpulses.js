@@ -67,9 +67,9 @@ else
 {
 $.get("http://www.opiumpulses.com" + eLink, function(){
 _this.log(Lang.get('service.entered_in') + _this.logLink("http://www.opiumpulses.com" + link, name + '. ' + _this.trans('cost') + ' - ' + cost));
-});
 _this.curr_value = _this.curr_value - cost;
-_this.setValue(data.new_amount);
+_this.setValue(_this.curr_value);
+});
 }
 });
 }
