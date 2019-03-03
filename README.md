@@ -9,7 +9,7 @@
  5. The Indiegala service new option functions added: max. cost, max. level to enter giveaway.
  6. The OpiumPulses service working fixed (26.02.19.).
  7. The OpiumPulses service enter all giveaways (in test mode).
- 8. The SteamGifts service bugfix when 
+ 8. The SteamGifts service bug fixed when service after join to the giveaway from wishlist and continuing join to the normal     giveaways by ignoring options like 'min. & max. cost', 'points to reserve', 'min. level' to join.
  9. The OpiumPulses service new option functions added: pages to check giveaways.
 10. Added retry connect to services in 5 minutes if the app can't connect to the service.
 11. Completely portable app (all user data and options storied in app subdirectory 'giveawayjoinerdata'. You can use multiple 
