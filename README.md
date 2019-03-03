@@ -1,6 +1,6 @@
 [![DeepScan grade](https://deepscan.io/api/teams/2928/projects/4373/branches/35596/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=2928&pid=4373&bid=35596)
 
- Differences from the GiftSeeker:
+ Differences from the GiftSeeker version 1.1.0:
 
  1. Changed color design, icons, font in the app like Adapta-Nokto theme.
  2. Increased Timer to max. 1440 minutes (24 hours).
