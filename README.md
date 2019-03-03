@@ -9,16 +9,17 @@
  5. The Indiegala service new option functions added: max. cost, max. level to enter giveaway.
  6. The OpiumPulses service working fixed (26.02.19.).
  7. The OpiumPulses service enter all giveaways (in test mode).
- 8. The OpiumPulses service new option functions added: pages to check giveaways.
- 9. Added retry connect to services in 5 minutes if the app can't connect to the service.
-10. Completely portable app (all user data and options storied in app subdirectory 'giveawayjoinerdata'. You can use multiple 
+ 8. The SteamGifts service bugfix when 
+ 9. The OpiumPulses service new option functions added: pages to check giveaways.
+10. Added retry connect to services in 5 minutes if the app can't connect to the service.
+11. Completely portable app (all user data and options storied in app subdirectory 'giveawayjoinerdata'. You can use multiple 
     copies of the app with different accounts and options, just make copies of app with different appname directories 
     like 'giveawayjoiner1', 'giveawayjoiner2', etc. For example).
-11. Removed functions 'auto update' and 'startup with os' in the app.
-12. New display timer with fixes (now showing in hh:mm:ss format).
-13. Translations changes and fixes.
-14. Code optimizations and bugfixes for Linux and Mac OS compatibility.
-15. Latest Electron 2.x tree at the moment of app build.
+12. Removed functions 'auto update' and 'startup with os' in the app.
+13. New display timer with fixes (now showing in hh:mm:ss format).
+14. Translations changes and fixes.
+15. Code optimizations and bugfixes for Linux and Mac OS compatibility.
+16. Latest Electron 2.x tree at the moment of app build.
 
 
   To build latest version from source:
@@ -33,6 +34,7 @@
   >electron-builder --dir                              
   
   GiveawayJoiner build will be in sources subfolder 'dist'
-  (p.s. for Linux: GiveawayJoiner need 'libgconf-2-4' lib to be installed in your distro)
+  p.s. for Linux: GiveawayJoiner need 'libgconf-2-4' lib to be installed in your distro, for Ubuntu users in terminal enter command:
+  >sudo apt-get install gconf2
   
   Recommended 'Noto' fonts family installed
