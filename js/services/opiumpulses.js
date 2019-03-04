@@ -1,5 +1,5 @@
 'use strict';
-class OpiumPulses extends Seeker {
+class OpiumPulses extends Joiner {
 constructor() {
 super();
 this.websiteUrl = 'http://www.opiumpulses.com';

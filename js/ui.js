@@ -58,7 +58,7 @@ $('.service-panel > ul li, .in-service-panel').removeClass('active');
 $('.in-service-panel[data-id="' + $(this).attr('data-id') + '"]')
 .add('.service-panel > ul li[data-id="' + $(this).attr('data-id') + '"]').addClass('active');
 });
-$('.seeker-button.logout').click(function () {
+$('.joiner-button.logout').click(function () {
 let clicked = $(this).addClass('disabled');
 $.ajax({
 method: 'get',

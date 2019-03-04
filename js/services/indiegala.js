@@ -1,5 +1,5 @@
 'use strict';
-class IndieGala extends Seeker {
+class IndieGala extends Joiner {
 constructor() {
 super();
 this.authContent = "My Libraries";

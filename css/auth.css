@@ -6,7 +6,7 @@ body { background-color: #263238; }
 .window-buttons span { float: left; font-size: 14px; -webkit-app-region: no-drag; margin: 0; }
 .window-buttons span.language { float: left; }
 .window-buttons span.closer { float: right; }
-.seeker-button { display: block; margin: 0 auto 0 auto; width: 96px; height: 96px; font-size: 72px; }
+.joiner-button { display: block; margin: 0 auto 0 auto; width: 96px; height: 96px; font-size: 72px; }
 #content { position: relative; padding-top: 50px; height: auto; border: none; z-index: 2; }
 #content .status-text { font-size: 14px; color: #b9c2c7; position: absolute; left: 0; top: 0; padding: 0 50px; text-align: center; width: 100%; }
 #choice-lang { text-align: center; padding-top: 140px; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #263238; z-index: 4; display: none; }

@@ -1,5 +1,5 @@
 'use strict';
-class Seeker {
+class Joiner {
 constructor() {
 this.intervalVar = undefined;
 this.totalTicks = 0;
@@ -28,7 +28,7 @@ this.addPanel();
 this.renderSettings();
 this.updateCookies();
 if( Config.get('autostart') )
-this.startSeeker(true);
+this.startJoiner(true);
 }
 addIcon(){
 this.icon = $(document.createElement('div'))
@@ -107,7 +107,7 @@ $(document.createElement('button'))
 .attr('data-link', this.websiteUrl)
 .appendTo(this.userPanel);
 this.mainButton = $('<button>' + Lang.get('service.btn_start') + '</button>')
-.addClass('seeker-button start-button')
+.addClass('joiner-button start-button')
 .hover(() => {
 this.mainButton.addClass('hovered');
 if( this.started )
@@ -115,15 +115,15 @@ this.buttonState(Lang.get('service.btn_stop'));
 }, () => {
 this.mainButton.removeClass('hovered');
 if( this.started )
-this.buttonState(window.timeToStr(this.doTimer() - this.totalTicks % this.doTimer()));
+this.buttonState(Lang.get('service.btn_work'));
 })
 .click(() => {
 if(this.mainButton.hasClass('disabled'))
 return;
 if( !this.started )
-this.startSeeker();
+this.startJoiner();
 else
-this.stopSeeker();
+this.stopJoiner();
 })
 .appendTo(this.userPanel);
 }
@@ -148,7 +148,7 @@ callback(-1);
 }
 });
 }
-startSeeker(autostart){
+startJoiner(autostart){
 if( this.started )
 return false;
 this.buttonState(Lang.get('service.btn_checking'), 'disabled');
@@ -199,7 +199,7 @@ Browser.show();
 }
 });
 }
-stopSeeker(bad){
+stopJoiner(bad){
 let status = bad ? 'bad' : 'normal';
 if( !this.started )
 return false;
@@ -235,7 +235,7 @@ this.seekService();
 }
 else if(authState === 0) {
 this.log(Lang.get('service.session_expired'), true);
-this.stopSeeker(true);
+this.stopJoiner(true);
 }
 else{
 this.log(Lang.get('service.connection_lost'), true);
@@ -244,7 +244,7 @@ this.stimer = 5;
 });
 }
 if( !this.mainButton.hasClass('hovered') )
-this.buttonState(window.timeToStr(this.doTimer() - this.totalTicks % this.doTimer()));
+this.buttonState(Lang.get('service.btn_work'));
 this.totalTicks++;
 }, 1000);
 }

@@ -1,5 +1,5 @@
 'use strict';
-class SteamGifts extends Seeker {
+class SteamGifts extends Joiner {
 constructor() {
 super();
 this.settings.timer.min = 5;
@@ -71,7 +71,7 @@ data = $('<div>' + data + '</div>');
 this.token = data.find('input[name="xsrf_token"]').val();
 if( this.token.length < 10 ){
 this.log(this.trans('token_error'), true);
-this.stopSeeker(true);
+this.stopJoiner(true);
 return;
 }
 data.find('.giveaway__row-outer-wrap').each((index, item) => {

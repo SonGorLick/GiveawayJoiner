@@ -1,5 +1,5 @@
 'use strict';
-class TF2R extends Seeker {
+class TF2R extends Joiner {
 constructor() {
 super();
 this.domain = 'tf2r.com';

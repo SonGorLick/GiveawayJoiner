@@ -6,7 +6,7 @@ let Lang = shared.Lang;
 let mainWindow = shared.mainWindow;
 let Browser = shared.Browser;
 let status = $('.status-text');
-let buttons = $('#content .seeker-button');
+let buttons = $('#content .joiner-button');
 $(function(){
 shared.ipcMain.on('change-lang', function() {
 reloadLangStrings();

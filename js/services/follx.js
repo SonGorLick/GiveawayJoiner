@@ -1,5 +1,5 @@
 'use strict';
-class Follx extends Seeker {
+class Follx extends Joiner {
 constructor() {
 super();
 this.websiteUrl = 'https://follx.com';
@@ -45,7 +45,7 @@ html = $('<div>' + html + '</div>');
 CSRF = html.find('meta[name="csrf-token"]').attr('content');
 if( CSRF.length < 10 ){
 _this.log(this.trans('token_error'), true);
-_this.stopSeeker(true);
+_this.stopJoiner(true);
 return;
 }
 let found_games = html.find('.giveaway_card');
