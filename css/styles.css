@@ -28,7 +28,7 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .content-item[data-id=profile] .info { position: absolute; left: 0; top: 0; height: 100%; width: calc(100% - 250px); padding: 10px; }
 .content-item[data-id=profile] .info .avatar { position: absolute; left: 10px; top: 10px; width: 150px; height: 150px; border-radius: 3px; background: center/contain no-repeat; }
 .content-item[data-id=profile] .info .username { position: absolute; left: 170px; top: 10px; color: #00bcd4; font-size: 20px; font-weight: bold; }
-.content-item[data-id=profile] .info-links { position: absolute; left: 10px; bottom: 10px; line-height: 16px; }
+.content-item[data-id=profile] .info-links { position: absolute; left: 10px; bottom: 8px; line-height: 16px; }
 .content-item[data-id=profile] .settings { position: absolute; right: 0; top: 0; height: 100%; width: 250px; background: rgba(34,45,50,1); border-left: 1px solid #222d32; padding: 10px; }
 .content-item[data-id=profile] .settings .setter#lang { width: 100%; cursor: pointer; margin-bottom: 5px; height: 24px; }
 .content-item[data-id=profile] .settings .build { width: 100%; position: absolute; bottom: 10px; left: 0; text-align: center; }

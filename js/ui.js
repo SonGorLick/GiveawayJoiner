@@ -135,6 +135,12 @@ option.prop('selected', true);
 lang_select.append(option);
 }
 }
+let info_links = $('.content-item .info-links');
+$(document.createElement('button'))
+.addClass('open-website')
+.html('<div class="fab fa-steam" title="Steam"></div>')
+.attr('data-link', 'https://store.steampowered.com/login')
+.appendTo(info_links);
 }
 function renderUser(userData) {
 $('.content-item .info .avatar').css({'background-image': 'url("' + userData.avatar + '")'});

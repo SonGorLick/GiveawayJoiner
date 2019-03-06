@@ -8,6 +8,7 @@ this.authLink = "https://www.indiegala.com/login";
 this.wonsUrl = "https://www.indiegala.com/profile";
 this.settings.max_level = { type: 'number', trans: this.transPath('max_level'), min: 0, max: 8, default: this.getConfig('max_level', 0) };
 this.settings.max_cost = { type: 'number', trans: this.transPath('max_cost'), min: 1, max: 240, default: this.getConfig('max_cost', 15) };
+this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 super.init();
 }
 authCheck(callback){
@@ -51,6 +52,10 @@ callback(userData);
 seekService(){
 let _this = this;
 let page = 1;
+$.get('https://store.steampowered.com/dynamicstore/userdata/?v=', function(data){
+_this.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
+_this.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
+});
 let callback = function() {
 page++;
 if ( page <= _this.getConfig('pages', 1) )
@@ -90,6 +95,23 @@ if( entered || user_level < level || _this.curr_value < price || price > user_co
 next_after = 50;
 else
 {
+$.get('https://www.indiegala.com/giveaways/detail/' + id, function(data){
+let steamlink = $(data).find('.info-row a').attr('href');
+_this.appid = 0;
+_this.subid = 0;
+if( !steamlink.includes('/sub/') )
+_this.appid = parseInt(steamlink.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
+if( !steamlink.includes('/app/') )
+_this.subid = parseInt(steamlink.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
+});
+let owned = 0;
+if( _this.getConfig('check_in_steam') ) {
+if( GJuser.ownapps.includes(',' + _this.appid + ',') && _this.appid > 0 )
+owned = 1;
+if( GJuser.ownsubs.includes(',' + _this.subid + ',') && _this.subid > 0 )
+owned = 1;
+}
+if( owned === 0 ) {
 $.ajax({
 type: "POST",
 url: 'https://www.indiegala.com/giveaways/new_entry',
@@ -103,6 +125,9 @@ _this.log(Lang.get('service.entered_in') + name + '. ' + _this.trans('cost') + '
 }
 }
 });
+}
+else
+next_after = 50;
 }
 curr_ticket++;
 setTimeout(giveawayEnter, next_after);

@@ -6,6 +6,7 @@ this.websiteUrl = 'http://www.opiumpulses.com';
 this.authContent = 'site/logout';
 this.authLink = "https://www.opiumpulses.com/site/login";
 this.wonsUrl = "http://www.opiumpulses.com/user/giveawaykeys";
+this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 super.init();
 }
 getUserInfo(callback){
@@ -60,16 +61,34 @@ cost = 0;
 }
 if ( _this.curr_value >= cost ) {
 $.get("http://www.opiumpulses.com" + link, function(data){
+let steamlink = $(data).find('.giveaways-single-sponsored h1 a').attr('href');
 let entered = data.indexOf("entered this giveaway") >= 0;
 if( entered )
 next_after = 50;
 else
 {
+_this.appid = 0;
+_this.subid = 0;
+if( !steamlink.includes('/sub/') )
+_this.appid = parseInt(steamlink.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
+if( !steamlink.includes('/app/') )
+_this.subid = parseInt(steamlink.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
+let owned = 0;
+if( _this.getConfig('check_in_steam') ) {
+if( GJuser.ownapps.includes(',' + _this.appid + ',') && _this.appid > 0 )
+owned = 1;
+if( GJuser.ownsubs.includes(',' + _this.subid + ',') && _this.subid > 0 )
+owned = 1;
+}
+if( owned === 0 ) {
 $.get("http://www.opiumpulses.com" + eLink, function(){
-_this.log(Lang.get('service.entered_in') + _this.logLink("http://www.opiumpulses.com" + link, name + '. ' + _this.trans('cost') + ' - ' + cost));
+_this.log(Lang.get('service.entered_in') + _this.logLink("http://www.opiumpulses.com" + link, name) + '. ' + _this.trans('cost') + ' - ' + cost);
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
 });
+}
+else
+next_after = 50;
 }
 });
 }
