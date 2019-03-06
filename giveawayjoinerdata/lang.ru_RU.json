@@ -55,8 +55,8 @@
 		"indiegala": {
 			"value_label": "GalaCoins",
 			"cost": "Стоимость",
-			"check_in_steam": "Проверять в Steam",
-			"check_in_steam_title": "Не вступать в проверенные раздачи при их наличии на аккаунте",
+			"check_in_steam": "Проверять наличие в Steam",
+			"check_in_steam_title": "Не вступать в раздачи игр при их наличии на аккаунте",
 			"max_level": "Макс. уровень",
 			"max_level_title": "Не вступать в раздачи с требуемым уровнем, выше установленного",
 			"max_cost": "Макс. стоимость",
@@ -65,8 +65,8 @@
 		"opiumpulses": {
 			"value_label": "Points",
 			"cost": "Стоимость",
-			"check_in_steam": "Проверять в Steam",
-			"check_in_steam_title": "Не вступать в проверенные раздачи при их наличии на аккаунте"
+			"check_in_steam": "Проверять наличие в Steam",
+			"check_in_steam_title": "Не вступать в раздачи игр при их наличии на аккаунте"
 		},
 		"steamgifts": {
 			"value_label": "Points",
@@ -90,7 +90,9 @@
 			"reserve_on_wish": "Тратить резерв на список желаемого",
 			"reserve_on_wish_title": "Использовать зарезервированные очки для раздачи из списка желаемого",
 			"wishlist_only": "Только список желаемого",
-			"wishlist_only_title": "Вступать в раздачи игр которые в вашем списке желаемого"
+			"wishlist_only_title": "Вступать в раздачи игр которые в вашем списке желаемого",
+			"check_in_steam": "Проверять наличие в Steam",
+			"check_in_steam_title": "Не вступать в раздачи игр при их наличии на аккаунте"
 		}
 	},
 	"profile": {

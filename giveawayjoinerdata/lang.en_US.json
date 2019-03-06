@@ -55,8 +55,8 @@
 		"indiegala": {
 			"value_label": "GalaCoins",
 			"cost": "Cost",
-			"check_in_steam": "Check on Steam",
-			"check_in_steam_title": "Don't enter checked giveaways if they owned on account",
+			"check_in_steam": "Check owned on Steam",
+			"check_in_steam_title": "Don't enter if the giveaway games owned on account",
 			"max_level": "Max. level",
 			"max_level_title": "Don't enter giveaways where required level more than the selected",
 			"max_cost": "Max. Cost",
@@ -65,8 +65,8 @@
 		"opiumpulses": {
 			"value_label": "Points",
 			"cost": "Cost",
-			"check_in_steam": "Check on Steam",
-			"check_in_steam_title": "Don't enter checked giveaways if they owned on account"
+			"check_in_steam": "Check owned on Steam",
+			"check_in_steam_title": "Don't enter if the giveaway games owned on account"
 		},
 		"steamgifts": {
 			"value_label": "Points",
@@ -90,7 +90,9 @@
 			"reserve_on_wish": "Spend reserve on wishlist",
 			"reserve_on_wish_title": "Spend reserved points on games in the wishlist",
 			"wishlist_only": "Wishlist only",
-			"wishlist_only_title": "Participate in giveaways only from the wishlist"
+			"wishlist_only_title": "Participate in giveaways only from the wishlist",
+			"check_in_steam": "Check owned on Steam",
+			"check_in_steam_title": "Don't enter if the giveaway games owned on account"
 		}
 	},
 	"profile": {
