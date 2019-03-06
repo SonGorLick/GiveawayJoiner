@@ -56,7 +56,7 @@
 			"value_label": "GalaCoins",
 			"cost": "Cost",
 			"check_in_steam": "Check on Steam",
-			"check_in_steam_title": "Don't enter checked giveaways if it's own on account",
+			"check_in_steam_title": "Don't enter checked giveaways if they owned on account",
 			"max_level": "Max. level",
 			"max_level_title": "Don't enter giveaways where required level more than the selected",
 			"max_cost": "Max. Cost",
@@ -66,7 +66,7 @@
 			"value_label": "Points",
 			"cost": "Cost",
 			"check_in_steam": "Check on Steam",
-			"check_in_steam_title": "Don't enter checked giveaways if it's own on account"
+			"check_in_steam_title": "Don't enter checked giveaways if they owned on account"
 		},
 		"steamgifts": {
 			"value_label": "Points",
