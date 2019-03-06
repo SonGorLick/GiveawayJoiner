@@ -52,10 +52,6 @@ callback(userData);
 seekService(){
 let _this = this;
 let page = 1;
-$.get('https://store.steampowered.com/dynamicstore/userdata/?v=', function(data){
-_this.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
-_this.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
-});
 let callback = function() {
 page++;
 if ( page <= _this.getConfig('pages', 1) )
