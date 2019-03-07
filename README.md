@@ -5,21 +5,20 @@
  1. Changed color design, icons, font in the app like Adapta-Nokto theme.
  2. Increased Timer to max. 1440 minutes (24 hours).
  3. Increased Pages number to check, max. 30 pages now.
- 4. The SteamGifts service bug fixed when service after join to the giveaway from wishlist and continuing join to the normal     giveaways by ignoring options like 'min. & max. cost', 'points to reserve', 'min. level' to join.
- 5. The Indiegala service working fixed (26.02.19.) Login in app to IndieGala then click 'Visit open web site' to solve the       captcha, close app browser and then click on 'start' service.
+ 4. The SteamGifts service bug fixed when service after join to the giveaway from wishlist and continuing join to the normal         giveaways by ignoring options like 'min. & max. cost', 'points to reserve', 'min. level' to join.
+ 5. The Indiegala service working fixed (26.02.19.) Login in app to IndieGala then click 'Visit open web site' to solve the         captcha, close app browser and then click on 'start' service.
  6. The Indiegala service new option functions added: max. cost, max. level to enter giveaway.
  7. The OpiumPulses service working fixed (26.02.19.).
  8. The OpiumPulses service join to the all giveaways that you can enter.
  9. The OpiumPulses service new option functions added: pages to check giveaways.
 10. Added retry connect to services in 5 minutes if the app can't connect to the service.
-11. Completely portable app (all user data and options storied in app subdirectory 'giveawayjoinerdata'. You can use multiple 
+11. Added 'Check owned on Steam' (default on) option for SteamGifts, Indiegala, OpiumPulses services to skip games that you         owned on Steam account. Need to be logined on Steam in 'Profile' section you can check if you press 'Steam' button. 
+12. Completely portable app (all user data and options storied in app subdirectory 'giveawayjoinerdata'. You can use multiple 
     copies of the app with different accounts and options, just make copies of app with different appname directories 
     like 'giveawayjoiner1', 'giveawayjoiner2', etc. For example).
-12. Removed functions 'auto update' and 'startup with os' in the app.
-13. New display timer with fixes (now showing in hh:mm:ss format).
+13. Removed functions 'auto update' and 'startup with os' in the app.
 14. Translations changes and fixes.
 15. Code optimizations and bugfixes for Linux and Mac OS compatibility.
-16. App build with latest version of Electron 2.x tree.
 
 
   To build latest version from source:
