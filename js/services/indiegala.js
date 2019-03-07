@@ -63,7 +63,7 @@ enterOnPage(page, callback){
 let _this = this;
 let user_level = this.getConfig('max_level', 0);
 let user_cost = this.getConfig('max_cost', 15);
-$.get('https://www.indiegala.com/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=all', function(data){
+$.get('https://www.indiegala.com/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=all', (data) => {
 let tickets = $(JSON.parse(data).content).find('.tickets-col');
 let curr_ticket = 0;
 function giveawayEnter(){
@@ -91,7 +91,7 @@ if( entered || user_level < level || _this.curr_value < price || price > user_co
 next_after = 50;
 else
 {
-$.get('https://www.indiegala.com/giveaways/detail/' + id, function(data){
+$.get('https://www.indiegala.com/giveaways/detail/' + id, (data) => {
 let steamlink = $(data).find('.info-row a').attr('href');
 _this.appid = 0;
 _this.subid = 0;

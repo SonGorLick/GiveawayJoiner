@@ -40,7 +40,7 @@ this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback){
 let _this = this;
-$.get('http://www.opiumpulses.com/giveaways?Giveaway_page=' + page, function(data){
+$.get('http://www.opiumpulses.com/giveaways?Giveaway_page=' + page, (data) => {
 let found_games = $(data).find('.giveaways-page-item');
 let curr_giveaway = 0;
 function giveawayEnter(){
@@ -60,7 +60,7 @@ if( free ) {
 cost = 0;
 }
 if ( _this.curr_value >= cost ) {
-$.get("http://www.opiumpulses.com" + link, function(data){
+$.get("http://www.opiumpulses.com" + link, (data) => {
 let steamlink = $(data).find('.giveaways-single-sponsored h1 a').attr('href');
 let entered = data.indexOf("entered this giveaway") >= 0;
 if( entered )
