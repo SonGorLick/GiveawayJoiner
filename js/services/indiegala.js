@@ -93,25 +93,25 @@ else
 {
 $.get('https://www.indiegala.com/giveaways/detail/' + id, (data) => {
 let igsteam = $(data).find('.info-row a').attr('href');
-let appid = 0;
-let subid = 0;
+let igapp = 0;
+let igsub = 0;
 let igid = '';
 if( !igsteam.includes('sub/') ) {
-appid = parseInt(igsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
-igid = '[app/' + appid + ']';
+igapp = parseInt(igsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
+igid = '[app/' + igapp + ']';
 }
 if( !igsteam.includes('app/') ) {
-subid = parseInt(igsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
-igid = '[sub/' + subid + ']';
+igsub = parseInt(igsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
+igid = '[sub/' + igsub + ']';
 }
-let owned = 0;
+let igown = 0;
 if( _this.getConfig('check_in_steam') ) {
-if( GJuser.ownapps.includes(',' + appid + ',') && appid > 0 )
-owned = 1;
-if( GJuser.ownsubs.includes(',' + subid + ',') && subid > 0 )
-owned = 1;
+if( GJuser.ownapps.includes(',' + igapp + ',') && igapp > 0 )
+igown = 1;
+if( GJuser.ownsubs.includes(',' + igsub + ',') && igsub > 0 )
+igown = 1;
 }
-if( owned === 0 ) {
+if( igown === 0 ) {
 $.ajax({
 type: "POST",
 url: 'https://www.indiegala.com/giveaways/new_entry',

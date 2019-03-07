@@ -66,27 +66,27 @@ if( entered )
 next_after = 50;
 else
 {
-let appid = 0;
-let subid = 0;
-let igid = '';
+let opapp = 0;
+let opsub = 0;
+let opid = '';
 if( !opsteam.includes('sub/') ) {
-appid = parseInt(opsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
-igid = '[app/' + appid + ']';
+opapp = parseInt(opsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
+opid = '[app/' + opapp + ']';
 }
-if( !steamlink.includes('app/') ) {
-subid = parseInt(opsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
-igid = '[sub/' + subid + ']';
+if( !opsteam.includes('app/') ) {
+opsub = parseInt(opsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
+opid = '[sub/' + opsub + ']';
 }
-let owned = 0;
+let opown = 0;
 if( _this.getConfig('check_in_steam') ) {
-if( GJuser.ownapps.includes(',' + appid + ',') && appid > 0 )
-owned = 1;
-if( GJuser.ownsubs.includes(',' + subid + ',') && subid > 0 )
-owned = 1;
+if( GJuser.ownapps.includes(',' + opapp + ',') && opapp > 0 )
+opown = 1;
+if( GJuser.ownsubs.includes(',' + opsub + ',') && opsub > 0 )
+opown = 1;
 }
-if( owned === 0 ) {
+if( opown === 0 ) {
 $.get("http://www.opiumpulses.com" + eLink, function(){
-_this.log(Lang.get('service.entered_in') + _this.logLink("http://www.opiumpulses.com" + link, name) + ' ' + _this.logLink(opsteam, igid) + '. ' + _this.trans('cost') + ' - ' + cost);
+_this.log(Lang.get('service.entered_in') + _this.logLink("http://www.opiumpulses.com" + link, name) + ' ' + _this.logLink(opsteam, opid) + '. ' + _this.trans('cost') + ' - ' + cost);
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
 });

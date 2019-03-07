@@ -260,12 +260,6 @@ if( this.withValue )
 this.setValue(userData.value);
 this.userInfo.addClass('visible');
 });
-$.get('https://store.steampowered.com/dynamicstore/userdata/?v=', function(data){
-if( JSON.stringify(data.rgOwnedPackages) !== '[]' ) {
-GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
-GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
-}
-});
 }
 });
 }
@@ -430,6 +424,12 @@ newCookies += '; ';
 newCookies += cookies[one].name + '=' + cookies[one].value;
 }
 this.cookies = newCookies;
+});
+$.get('https://store.steampowered.com/dynamicstore/userdata/?v=', function(data){
+if( JSON.stringify(data.rgOwnedPackages) !== '[]' ) {
+GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
+GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
+}
 });
 }
 interval(){

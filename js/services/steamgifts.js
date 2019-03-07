@@ -137,26 +137,26 @@ return;
 }
 let next_after = _this.interval();
 let GA = _this.giveaways[curr_giveaway];
-let appid = 0;
-let subid = 0;
-let igid = '';
+let sgapp = 0;
+let sgsub = 0;
+let sgid = '';
 if( !GA.sgsteam.includes('sub/') ) {
-let appid = parseInt(GA.sgsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
-igid = '[app/' + appid + ']';
+let sgapp = parseInt(GA.sgsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
+sgid = '[app/' + sgapp + ']';
 }
 if( !GA.sgsteam.includes('app/') ) {
-subid = parseInt(GA.sgsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
-igid = '[sub/' + subid + ']';
+sgsub = parseInt(GA.sgsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
+sgid = '[sub/' + sgsub + ']';
 }
-let owned = 0;
+let sgown = 0;
 if( _this.getConfig('check_in_steam') ) {
-if( GJuser.ownapps.includes(',' + appid + ',') && appid > 0 )
-owned = 1;
-if( GJuser.ownsubs.includes(',' + subid + ',') && subid > 0 )
-owned = 1;
+if( GJuser.ownapps.includes(',' + sgapp + ',') && sgapp > 0 )
+sgown = 1;
+if( GJuser.ownsubs.includes(',' + sgsub + ',') && sgsub > 0 )
+sgown = 1;
 }
 if(
-( owned === 0 ) &&
+( sgown === 0 ) &&
 ( _this.wishlist === 0 || !GA.pinned ) &&
 ( _this.curr_value >= GA.cost ) &&
 ( _this.wishlist === 1 && _this.getConfig('ignore_on_wish') || _this.getConfig('min_level') === 0 || GA.level >= _this.getConfig('min_level') ) &&
@@ -176,7 +176,7 @@ code: GA.code
 },
 success: function(data){
 if(data.type === 'success'){
-_this.log(Lang.get('service.entered_in') + _this.logLink(GA.link, GA.name) + ' ' + _this.logLink(GA.sgsteam, igid) + '. ' + _this.trans('cost') + ' - ' + GA.cost + ', ' + _this.trans('chance') + ' - ' + GA.chance + '%');
+_this.log(Lang.get('service.entered_in') + _this.logLink(GA.link, GA.name) + ' ' + _this.logLink(GA.sgsteam, sgid) + '. ' + _this.trans('cost') + ' - ' + GA.cost + ', ' + _this.trans('chance') + ' - ' + GA.chance + '%');
 _this.setValue(data.points);
 }
 }
