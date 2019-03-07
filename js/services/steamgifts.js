@@ -104,7 +104,7 @@ name: giveaway.find('a.giveaway__heading__name').text(),
 level: giveaway.find('.giveaway__column--contributor-level').length > 0 ? parseInt(giveaway.find('.giveaway__column--contributor-level').text().replace('+', '').replace('Level ', '')) : 0,
 levelPass: giveaway.find('.giveaway__column--contributor-level--negative').length === 0,
 cost: parseInt( giveaway.find('a.giveaway__icon[rel]').prev().text().replace(/[^0-9]/g, '') ),
-steamlink: giveaway.find('a.giveaway__icon').attr('href'),
+sgsteam: giveaway.find('a.giveaway__icon').attr('href'),
 entered: giveaway.find('.giveaway__row-inner-wrap.is-faded').length > 0
 };
 if(
@@ -137,17 +137,22 @@ return;
 }
 let next_after = _this.interval();
 let GA = _this.giveaways[curr_giveaway];
-_this.appid = 0;
-_this.subid = 0;
-if( !GA.steamlink.includes('/sub/') )
-_this.appid = parseInt(GA.steamlink.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
-if( !GA.steamlink.includes('/app/') )
-_this.subid = parseInt(GA.steamlink.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
+let appid = 0;
+let subid = 0;
+let igid = '';
+if( !GA.sgsteam.includes('sub/') ) {
+let appid = parseInt(GA.sgsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
+igid = '[app/' + appid + ']';
+}
+if( !GA.sgsteam.includes('app/') ) {
+subid = parseInt(GA.sgsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
+igid = '[sub/' + subid + ']';
+}
 let owned = 0;
 if( _this.getConfig('check_in_steam') ) {
-if( GJuser.ownapps.includes(',' + _this.appid + ',') && _this.appid > 0 )
+if( GJuser.ownapps.includes(',' + appid + ',') && appid > 0 )
 owned = 1;
-if( GJuser.ownsubs.includes(',' + _this.subid + ',') && _this.subid > 0 )
+if( GJuser.ownsubs.includes(',' + subid + ',') && subid > 0 )
 owned = 1;
 }
 if(
@@ -171,7 +176,7 @@ code: GA.code
 },
 success: function(data){
 if(data.type === 'success'){
-_this.log(Lang.get('service.entered_in') + _this.logLink(GA.link, GA.name) + '. ' + _this.trans('cost') + ' - ' + GA.cost + ', ' + _this.trans('chance') + ' - ' + GA.chance + '%');
+_this.log(Lang.get('service.entered_in') + _this.logLink(GA.link, GA.name) + ' ' + _this.logLink(GA.sgsteam, igid) + '. ' + _this.trans('cost') + ' - ' + GA.cost + ', ' + _this.trans('chance') + ' - ' + GA.chance + '%');
 _this.setValue(data.points);
 }
 }

@@ -92,19 +92,23 @@ next_after = 50;
 else
 {
 $.get('https://www.indiegala.com/giveaways/detail/' + id, (data) => {
-let steamlink = $(data).find('.info-row a').attr('href');
-_this.appid = 0;
-_this.subid = 0;
-if( !steamlink.includes('/sub/') )
-_this.appid = parseInt(steamlink.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
-if( !steamlink.includes('/app/') )
-_this.subid = parseInt(steamlink.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
-});
+let igsteam = $(data).find('.info-row a').attr('href');
+let appid = 0;
+let subid = 0;
+let igid = '';
+if( !igsteam.includes('sub/') ) {
+appid = parseInt(igsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
+igid = '[app/' + appid + ']';
+}
+if( !igsteam.includes('app/') ) {
+subid = parseInt(igsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
+igid = '[sub/' + subid + ']';
+}
 let owned = 0;
 if( _this.getConfig('check_in_steam') ) {
-if( GJuser.ownapps.includes(',' + _this.appid + ',') && _this.appid > 0 )
+if( GJuser.ownapps.includes(',' + appid + ',') && appid > 0 )
 owned = 1;
-if( GJuser.ownsubs.includes(',' + _this.subid + ',') && _this.subid > 0 )
+if( GJuser.ownsubs.includes(',' + subid + ',') && subid > 0 )
 owned = 1;
 }
 if( owned === 0 ) {
@@ -117,13 +121,14 @@ data: JSON.stringify({ giv_id: id, ticket_price: price }),
 success: function(data){
 if( data.status === 'ok' ){
 _this.setValue(data.new_amount);
-_this.log(Lang.get('service.entered_in') + name + '. ' + _this.trans('cost') + ' - ' + price);
+_this.log(Lang.get('service.entered_in') + name + ' ' + _this.logLink(igsteam, igid) + '. ' + _this.trans('cost') + ' - ' + price);
 }
 }
 });
 }
 else
 next_after = 50;
+});
 }
 curr_ticket++;
 setTimeout(giveawayEnter, next_after);

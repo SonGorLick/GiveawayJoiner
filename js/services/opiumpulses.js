@@ -18,10 +18,9 @@ value: 0
 $.ajax({
 url: 'http://www.opiumpulses.com/user/account',
 success: function(data){
-data = $(data);
-userData.username = data.find('#User_username').val();
-userData.avatar = "http://www.opiumpulses.com" + data.find('img.img-thumbnail').attr('src');
-userData.value = data.find('.points-items li a').first().text().replace('Points:', '').trim();
+userData.username = $(data).find('#User_username').val();
+userData.avatar = "http://www.opiumpulses.com" + $(data).find('img.img-thumbnail').attr('src');
+userData.value = $(data).find('.points-items li a').first().text().replace('Points:', '').trim();
 },
 complete: function () {
 callback(userData);
@@ -61,28 +60,33 @@ cost = 0;
 }
 if ( _this.curr_value >= cost ) {
 $.get("http://www.opiumpulses.com" + link, (data) => {
-let steamlink = $(data).find('.giveaways-single-sponsored h1 a').attr('href');
+let opsteam = $(data).find('.giveaways-single-sponsored h1 a').attr('href');
 let entered = data.indexOf("entered this giveaway") >= 0;
 if( entered )
 next_after = 50;
 else
 {
-_this.appid = 0;
-_this.subid = 0;
-if( !steamlink.includes('/sub/') )
-_this.appid = parseInt(steamlink.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
-if( !steamlink.includes('/app/') )
-_this.subid = parseInt(steamlink.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
+let appid = 0;
+let subid = 0;
+let igid = '';
+if( !opsteam.includes('sub/') ) {
+appid = parseInt(opsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
+igid = '[app/' + appid + ']';
+}
+if( !steamlink.includes('app/') ) {
+subid = parseInt(opsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
+igid = '[sub/' + subid + ']';
+}
 let owned = 0;
 if( _this.getConfig('check_in_steam') ) {
-if( GJuser.ownapps.includes(',' + _this.appid + ',') && _this.appid > 0 )
+if( GJuser.ownapps.includes(',' + appid + ',') && appid > 0 )
 owned = 1;
-if( GJuser.ownsubs.includes(',' + _this.subid + ',') && _this.subid > 0 )
+if( GJuser.ownsubs.includes(',' + subid + ',') && subid > 0 )
 owned = 1;
 }
 if( owned === 0 ) {
 $.get("http://www.opiumpulses.com" + eLink, function(){
-_this.log(Lang.get('service.entered_in') + _this.logLink("http://www.opiumpulses.com" + link, name) + '. ' + _this.trans('cost') + ' - ' + cost);
+_this.log(Lang.get('service.entered_in') + _this.logLink("http://www.opiumpulses.com" + link, name) + ' ' + _this.logLink(opsteam, igid) + '. ' + _this.trans('cost') + ' - ' + cost);
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
 });
