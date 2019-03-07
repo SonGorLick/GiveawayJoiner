@@ -1,6 +1,6 @@
 [![DeepScan grade](https://deepscan.io/api/teams/2928/projects/4373/branches/35596/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=2928&pid=4373&bid=35596)
 
- Differences from the GiftSeeker version 1.1.0:
+ Differences from the original GiftSeeker version 1.1.0:
 
  1. Changed color design, icons, font in the app like Adapta-Nokto theme.
  2. Increased Timer to max. 1440 minutes (24 hours).
@@ -12,7 +12,7 @@
  8. The OpiumPulses service join to the all giveaways that you can enter.
  9. The OpiumPulses service new option functions added: pages to check giveaways.
 10. Added retry connect to services in 5 minutes if the app can't connect to the service.
-11. Added 'Check owned on Steam' (default on) option for SteamGifts, Indiegala, OpiumPulses services to skip games that you         owned on Steam account. Need to be logined on Steam in 'Profile' section you can check if you press 'Steam' button. 
+11. Added 'Check owned on Steam' (default on) option for SteamGifts, Indiegala, OpiumPulses services to skip giveaways games         that owned on Steam account. Need to be logined on Steam, in 'Profile' section you can check if you press 'Steam' button. 
 12. Completely portable app (all user data and options storied in app subdirectory 'giveawayjoinerdata'. You can use multiple 
     copies of the app with different accounts and options, just make copies of app with different appname directories 
     like 'giveawayjoiner1', 'giveawayjoiner2', etc. For example).
