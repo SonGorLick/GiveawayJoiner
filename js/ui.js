@@ -10,6 +10,8 @@ let Browser = shared.Browser;
 let authWindow = shared.authWindow;
 let mainWindow = shared.mainWindow;
 let intervalTicks = 0;
+GJuser.ownapps = '[]';
+GJuser.ownsubs = '[]';
 $(function(){
 setInterval(intervalSchedules, 1000);
 reloadLangStrings();
@@ -105,6 +107,19 @@ dataType: 'json',
 success: function(data){
 if( data.response )
 renderUser(data.response);
+}
+});
+}
+if( intervalTicks % 600 === 0 ){
+$.ajax({
+url: 'https://store.steampowered.com/dynamicstore/userdata/?v=',
+dataType: 'json',
+success: function(data){
+if( JSON.stringify(data.rgOwnedPackages) !== '[]' ) {
+GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
+GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
+Config.set('ownsubs', GJuser.ownsubs);
+}
 }
 });
 }

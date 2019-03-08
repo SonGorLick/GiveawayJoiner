@@ -1,8 +1,6 @@
 'use strict';
 class Joiner {
 constructor() {
-GJuser.ownapps ='[]';
-GJuser.ownsubs ='[]';
 this.intervalVar = undefined;
 this.totalTicks = 0;
 this.usrUpdTimer = 60;
@@ -424,12 +422,6 @@ newCookies += '; ';
 newCookies += cookies[one].name + '=' + cookies[one].value;
 }
 this.cookies = newCookies;
-});
-$.get('https://store.steampowered.com/dynamicstore/userdata/?v=', function(data){
-if( JSON.stringify(data.rgOwnedPackages) !== '[]' ) {
-GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
-GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
-}
 });
 }
 interval(){
