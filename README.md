@@ -25,7 +25,6 @@
 
   1. Download and install Node.js
   2. Download GiveawayJoiner sources
-
   3. Open Terminal program (cmd.exe as administrator on Windows) in sources folder and run this commands:
   >npm install electron@2                                  
   >npm update                                 
