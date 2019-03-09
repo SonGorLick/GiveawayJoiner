@@ -68,6 +68,14 @@
 			"check_in_steam": "Проверять наличие в Steam",
 			"check_in_steam_title": "Не вступать в раздачи игр при их наличии на аккаунте"
 		},
+		"oyunkeyi": {
+			"value_label": "Points",
+			"cost": "Стоимость",
+			"check_in_steam": "Проверять наличие в Steam",
+			"check_in_steam_title": "Не вступать в раздачи игр при их наличии на аккаунте",
+			"max_cost": "Макс. стоимость",
+			"max_cost_title": "Не вступать в раздачи со стоимостью выше установленной. 0 - вступать в любые"
+		},
 		"steamgifts": {
 			"value_label": "Points",
 			"cost": "Стоимость",
