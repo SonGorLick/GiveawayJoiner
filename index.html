@@ -81,6 +81,7 @@ const currentBuild = require('electron').remote.app.getVersion();
 <script src="./js/services/steamgifts.js"></script>
 <script src="./js/services/indiegala.js"></script>
 <script src="./js/services/opiumpulses.js"></script>
+<script src="./js/services/oyunkeyi.js"></script>
 <script src="./js/services/follx.js"></script>
 <script src="./js/services/tf2r.js"></script>
 <script>
@@ -88,6 +89,7 @@ window.services = {
 steamgifts: new SteamGifts(),
 indiegala: new IndieGala(),
 opiumpulses: new OpiumPulses(),
+oyunkeyi: new OyunKeyi(),
 follx: new Follx(),
 tf2r: new TF2R()
 };

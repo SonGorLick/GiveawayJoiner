@@ -40,7 +40,7 @@ this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback){
 let _this = this;
-$.get('https://www.opiumpulses.com/giveaways?Giveaway_page=' + page, (data) => {
+$.get('https://www.opiumpulses.com/giveaways?ajax=giveawaylistview&Giveaway_page=' + page, (data) => {
 let found_games = $(data).find('.giveaways-page-item');
 let curr_giveaway = 0;
 function giveawayEnter(){
@@ -67,18 +67,20 @@ next_after = 50;
 else
 {
 let opsteam = $(data).find('.giveaways-single-sponsored h1 a').attr('href');
+if( opsteam === undefined )
+opsteam = $(data).find('.giveaways-single-sponsored h4 a').attr('href');
+let opown = 0;
 let opapp = 0;
 let opsub = 0;
 let opid = '';
-if( !opsteam.includes('sub/') ) {
+if( opsteam.includes('app/') ) {
 opapp = parseInt(opsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
 opid = '[app/' + opapp + ']';
 }
-if( !opsteam.includes('app/') ) {
+if( opsteam.includes('sub/') ) {
 opsub = parseInt(opsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
 opid = '[sub/' + opsub + ']';
 }
-let opown = 0;
 if( _this.getConfig('check_in_steam') ) {
 if( GJuser.ownapps.includes(',' + opapp + ',') && opapp > 0 )
 opown = 1;

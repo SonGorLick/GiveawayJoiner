@@ -93,18 +93,18 @@ else
 {
 $.get('https://www.indiegala.com/giveaways/detail/' + id, (data) => {
 let igsteam = $(data).find('.info-row a').attr('href');
+let igown = 0;
 let igapp = 0;
 let igsub = 0;
 let igid = '';
-if( !igsteam.includes('sub/') ) {
+if( igsteam.includes('app/') ) {
 igapp = parseInt(igsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
 igid = '[app/' + igapp + ']';
 }
-if( !igsteam.includes('app/') ) {
+if( igsteam.includes('sub/') ) {
 igsub = parseInt(igsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
 igid = '[sub/' + igsub + ']';
 }
-let igown = 0;
 if( _this.getConfig('check_in_steam') ) {
 if( GJuser.ownapps.includes(',' + igapp + ',') && igapp > 0 )
 igown = 1;

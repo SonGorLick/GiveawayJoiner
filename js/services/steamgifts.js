@@ -137,18 +137,18 @@ return;
 }
 let next_after = _this.interval();
 let GA = _this.giveaways[curr_giveaway];
+let sgown = 0;
 let sgapp = 0;
 let sgsub = 0;
 let sgid = '';
-if( !GA.sgsteam.includes('sub/') ) {
+if( GA.sgsteam.includes('app/') ) {
 let sgapp = parseInt(GA.sgsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
 sgid = '[app/' + sgapp + ']';
 }
-if( !GA.sgsteam.includes('app/') ) {
+if( GA.sgsteam.includes('sub/') ) {
 sgsub = parseInt(GA.sgsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
 sgid = '[sub/' + sgsub + ']';
 }
-let sgown = 0;
 if( _this.getConfig('check_in_steam') ) {
 if( GJuser.ownapps.includes(',' + sgapp + ',') && sgapp > 0 )
 sgown = 1;
