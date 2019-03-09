@@ -7,7 +7,7 @@ this.websiteUrl = "https://www.indiegala.com/giveaways";
 this.authLink = "https://www.indiegala.com/login";
 this.wonsUrl = "https://www.indiegala.com/profile";
 this.settings.max_level = { type: 'number', trans: this.transPath('max_level'), min: 0, max: 8, default: this.getConfig('max_level', 0) };
-this.settings.max_cost = { type: 'number', trans: this.transPath('max_cost'), min: 1, max: 240, default: this.getConfig('max_cost', 15) };
+this.settings.max_cost = { type: 'number', trans: this.transPath('max_cost'), min: 0, max: 240, default: this.getConfig('max_cost', 15) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 super.init();
 }
@@ -87,7 +87,7 @@ else {
 enterTimes = parseInt(ticket.find('.giv-coupon .palette-color-11').text());
 entered = enterTimes > 0;
 }
-if( entered || user_level < level || _this.curr_value < price || price > user_cost )
+if( entered || user_level < level || _this.curr_value < price || price > user_cost && user_cost > 0 )
 next_after = 50;
 else
 {

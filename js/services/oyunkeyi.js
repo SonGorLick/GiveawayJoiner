@@ -55,7 +55,11 @@ let next_after = _this.interval();
 let giveaway = found_games.eq(curr_giveaway),
 link = giveaway.find('.card-body a').attr('href'),
 cost = parseInt(giveaway.find('.card-body a').text().split("(")[1].split("P)")[0]);
-if( _this.curr_value >= cost || cost <= user_cost && user_cost > 0 ) {
+if( _this.curr_value < cost || cost > user_cost && user_cost > 0 ) {
+next_after = 50;
+}
+else
+{
 let oksteam = giveaway.find('.card-body a').eq(2).attr('href'),
 name = giveaway.find('.card-body a').text().split("(")[0],
 eLink = link.replace('cekilis', 'katil');
@@ -93,10 +97,6 @@ _this.setValue(_this.curr_value);
 });
 }
 else
-next_after = 50;
-}
-else
-{
 next_after = 50;
 }
 curr_giveaway++;
