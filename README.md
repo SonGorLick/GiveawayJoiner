@@ -19,7 +19,7 @@
 13. Removed functions 'auto update' and 'startup with os' in the app.
 14. Translations changes and fixes.
 15. Code optimizations and bugfixes for Linux and Mac OS compatibility.
-
+16. Added new giveaways service 'OyunKeyi' (v1.1.6)
 
   To build latest version from source:
 
