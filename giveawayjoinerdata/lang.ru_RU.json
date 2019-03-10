@@ -50,7 +50,9 @@
 		"pages_title": "Количество страниц на которых проверять раздачи",
 		"cant_start": "Автостарт невозможен - сессия не найдена",
 		"follx": {
-			"value_label": "Energy"
+			"value_label": "Energy",
+			"check_in_steam": "Проверять наличие в Steam",
+			"check_in_steam_title": "Не вступать в раздачи игр при их наличии на аккаунте"
 		},
 		"indiegala": {
 			"value_label": "GalaCoins",

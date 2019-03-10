@@ -50,7 +50,9 @@
 		"pages_title": "How many first pages should be checked for the available giveaways",
 		"cant_start": "Can't autostart - session not found",
 		"follx": {
-			"value_label": "Energy"
+			"value_label": "Energy",
+			"check_in_steam": "Check owned on Steam",
+			"check_in_steam_title": "Don't enter if the giveaway games owned on account"
 		},
 		"indiegala": {
 			"value_label": "GalaCoins",
