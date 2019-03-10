@@ -58,7 +58,6 @@ headers: {
 'Accept': 'application/json, text/javascript, */*; q=0.01',
 'X-Requested-With': 'XMLHttpRequest',
 },
-method: 'POST',
 dataType: 'json'
 });
 let found_games = html.find('.giveaway_card');
