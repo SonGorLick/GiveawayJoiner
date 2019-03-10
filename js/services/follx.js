@@ -49,6 +49,18 @@ _this.log(this.trans('token_error'), true);
 _this.stopJoiner(true);
 return;
 }
+$.ajax({
+url: 'https://follx.com/ajax/syncAccount',
+method: 'POST',
+headers: {
+'X-CSRF-TOKEN': CSRF,
+'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+'Accept': 'application/json, text/javascript, */*; q=0.01',
+'X-Requested-With': 'XMLHttpRequest',
+},
+method: 'POST',
+dataType: 'json'
+});
 let found_games = html.find('.giveaway_card');
 let curr_giveaway = 0;
 function giveawayEnter(){
