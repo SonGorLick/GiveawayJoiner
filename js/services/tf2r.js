@@ -69,7 +69,7 @@ Cookie: _this.cookies
 },
 json: true
 })
-.then(function (body) {
+.then( (body) => {
 if(body.status === "ok")
 _this.log(Lang.get('service.entered_in') + _this.logLink(link, name));
 });

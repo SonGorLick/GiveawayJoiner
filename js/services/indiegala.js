@@ -7,7 +7,9 @@ this.websiteUrl = "https://www.indiegala.com/giveaways";
 this.authLink = "https://www.indiegala.com/login";
 this.wonsUrl = "https://www.indiegala.com/profile";
 this.settings.max_level = { type: 'number', trans: this.transPath('max_level'), min: 0, max: 8, default: this.getConfig('max_level', 0) };
-this.settings.max_cost = { type: 'number', trans: this.transPath('max_cost'), min: 0, max: 240, default: this.getConfig('max_cost', 15) };
+this.settings.min_cost = { type: 'number', trans: this.transPath('min_cost'), min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
+this.settings.min_cost = { type: 'number', trans: this.transPath('min_cost'), min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
+this.settings.max_cost = { type: 'number', trans: this.transPath('max_cost'), min: this.getConfig('min_cost', 0), max: 240, default: this.getConfig('max_cost', 0) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 super.init();
 }
@@ -61,8 +63,9 @@ _this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback){
 let _this = this;
-let user_level = this.getConfig('max_level', 0);
-let user_cost = this.getConfig('max_cost', 15);
+let user_level = this.getConfig('max_level', 0),
+user_min = this.getConfig('min_cost', 0),
+user_max = this.getConfig('max_cost', 0);
 $.get('https://www.indiegala.com/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=all', (data) => {
 let tickets = $(JSON.parse(data).content).find('.tickets-col');
 let curr_ticket = 0;
@@ -74,10 +77,8 @@ return;
 }
 let next_after = _this.interval();
 let ticket = tickets.eq(curr_ticket),
-id = ticket.find('.ticket-right .relative').attr('rel'),
 price = ticket.find('.ticket-price strong').text(),
 level = parseInt(ticket.find('.type-level span').text().replace('+', '')),
-name = ticket.find('h2 a').text(),
 single = ticket.find('.extra-type .fa-clone').length === 0,
 entered = false,
 enterTimes = 0;
@@ -87,16 +88,20 @@ else {
 enterTimes = parseInt(ticket.find('.giv-coupon .palette-color-11').text());
 entered = enterTimes > 0;
 }
-if( entered || user_level < level || _this.curr_value < price || price > user_cost && user_cost > 0 )
+if( entered || user_level < level || _this.curr_value < price || price < user_min || price > user_max && user_max > 0 )
 next_after = 50;
 else
 {
-$.get('https://www.indiegala.com/giveaways/detail/' + id, (data) => {
-let igsteam = $(data).find('.info-row a').attr('href');
-let igown = 0;
-let igapp = 0;
-let igsub = 0;
-let igid = '';
+let id = ticket.find('.ticket-right .relative').attr('rel'),
+name = ticket.find('h2 a').text(),
+link = 'https://www.indiegala.com/giveaways/detail/' + id;
+$.get(link, (data) => {
+data = data.replace(/<img/gi, '<noload');
+let igsteam = $(data).find('.info-row a').attr('href'),
+igown = 0,
+igapp = 0,
+igsub = 0,
+igid = '';
 if( igsteam.includes('app/') ) {
 igapp = parseInt(igsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
 igid = '[app/' + igapp + ']';
@@ -121,13 +126,14 @@ data: JSON.stringify({ giv_id: id, ticket_price: price }),
 success: function(data){
 if( data.status === 'ok' ){
 _this.setValue(data.new_amount);
-_this.log(Lang.get('service.entered_in') + name + ' ' + _this.logLink(igsteam, igid) + '. ' + _this.trans('cost') + ' - ' + price);
+_this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + ' ' + _this.logLink(igsteam, igid) + '. ' + _this.trans('cost') + ' - ' + price);
 }
 }
 });
 }
-else
+else {
 next_after = 50;
+}
 });
 }
 curr_ticket++;

@@ -2,7 +2,7 @@
 class OpiumPulses extends Joiner {
 constructor() {
 super();
-this.websiteUrl = 'https://www.opiumpulses.com/giveaways';
+this.websiteUrl = 'https://www.opiumpulses.com/user/account';
 this.authContent = 'site/logout';
 this.authLink = "https://www.opiumpulses.com/site/login";
 this.wonsUrl = "https://www.opiumpulses.com/user/giveawaykeys";
@@ -19,8 +19,8 @@ $.ajax({
 url: 'https://www.opiumpulses.com/user/account',
 success: function(data){
 data = $(data);
-userData.username = data.find('#User_username').val();
-userData.avatar = "https://www.opiumpulses.com" + data.find('img.img-thumbnail').attr('src');
+userData.username = data.find('.page-header__nav-func-user-wrapper a').text().split("Account")[0].trim();
+userData.avatar = 'https://www.opiumpulses.com' + data.find('.input-group img').attr('src');
 userData.value = data.find('.points-items li a').first().text().replace('Points:', '').trim();
 },
 complete: function () {
@@ -41,6 +41,7 @@ this.enterOnPage(page, callback);
 enterOnPage(page, callback){
 let _this = this;
 $.get('https://www.opiumpulses.com/giveaways?ajax=giveawaylistview&Giveaway_page=' + page, (data) => {
+data = data.replace(/<img/gi, '<noload');
 let found_games = $(data).find('.giveaways-page-item');
 let curr_giveaway = 0;
 function giveawayEnter(){
@@ -51,28 +52,28 @@ return;
 }
 let next_after = _this.interval();
 let giveaway = found_games.eq(curr_giveaway),
-name = giveaway.find('.giveaways-page-item-footer-name').text().trim(),
-eLink = giveaway.find('.giveaways-page-item-img-btn-enter').attr('href'),
-link = giveaway.find('.giveaways-page-item-img-btn-more').attr('href'),
-cost = parseInt(giveaway.find('.giveaways-page-item-header-points').text().replace('points', '').trim()),
-free = isNaN(cost);
-if( free ) {
+entered = giveaway.find('.giveaways-page-item-img-btn-wrapper').text(),
+cost = parseInt(giveaway.find('.giveaways-page-item-header-points').text().replace('points', '').trim());
+if( isNaN(cost) ) {
 cost = 0;
 }
-if ( _this.curr_value >= cost ) {
-$.get("https://www.opiumpulses.com" + link, (data) => {
-let entered = data.indexOf("entered this giveaway") >= 0;
-if( entered )
+if ( _this.curr_value < cost|| entered.includes('ENTERED') )
 next_after = 50;
 else
 {
+let link = giveaway.find('.giveaways-page-item-img-btn-more').attr('href'),
+name = giveaway.find('.giveaways-page-item-footer-name').text().trim(),
+eLink = giveaway.find('.giveaways-page-item-img-btn-enter').attr('href');
+$.get("https://www.opiumpulses.com" + link, (data) => {
+data = data.replace(/<img/gi, '<noload');
 let opsteam = $(data).find('.giveaways-single-sponsored h1 a').attr('href');
-if( opsteam === undefined )
+if( opsteam === undefined ) {
 opsteam = $(data).find('.giveaways-single-sponsored h4 a').attr('href');
-let opown = 0;
-let opapp = 0;
-let opsub = 0;
-let opid = '';
+}
+let opown = 0,
+opapp = 0,
+opsub = 0,
+opid = '';
 if( opsteam.includes('app/') ) {
 opapp = parseInt(opsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
 opid = '[app/' + opapp + ']';
@@ -88,13 +89,14 @@ if( GJuser.ownsubs.includes(',' + opsub + ',') && opsub > 0 )
 opown = 1;
 }
 if( opown === 0 ) {
-$.get("https://www.opiumpulses.com" + eLink, function(){
+$.get("https://www.opiumpulses.com" + eLink, (data) => {
+data = data.replace(/<img/gi, '<noload');
 _this.log(Lang.get('service.entered_in') + _this.logLink("https://www.opiumpulses.com" + link, name) + ' ' + _this.logLink(opsteam, opid) + '. ' + _this.trans('cost') + ' - ' + cost);
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
 });
 }
-else
+else {
 next_after = 50;
 }
 });

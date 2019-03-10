@@ -91,7 +91,7 @@ return;
 }
 Config.set(changed.attr('id'), value);
 });
-ipc.on('change-lang', function(){
+ipc.on('change-lang', () =>{
 reloadLangStrings();
 });
 $(document).on('click', '.open-website[data-link]', function(){

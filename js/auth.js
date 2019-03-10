@@ -8,7 +8,7 @@ let Browser = shared.Browser;
 let status = $('.status-text');
 let buttons = $('#content .joiner-button');
 $(function(){
-shared.ipcMain.on('change-lang', function() {
+shared.ipcMain.on('change-lang', () => {
 reloadLangStrings();
 });
 reloadLangStrings();

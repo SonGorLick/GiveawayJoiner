@@ -136,11 +136,11 @@ callback(false);
 return;
 }
 let next_after = _this.interval();
-let GA = _this.giveaways[curr_giveaway];
-let sgown = 0;
-let sgapp = 0;
-let sgsub = 0;
-let sgid = '';
+let GA = _this.giveaways[curr_giveaway],
+sgown = 0,
+sgapp = 0,
+sgsub = 0,
+sgid = '';
 if( GA.sgsteam.includes('app/') ) {
 let sgapp = parseInt(GA.sgsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
 sgid = '[app/' + sgapp + ']';

@@ -6,6 +6,7 @@ this.websiteUrl = 'https://follx.com/account/sync';
 this.authLink = 'https://follx.com/logIn';
 this.wonsUrl = 'https://follx.com/giveaways/won';
 this.authContent = '/account';
+this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 super.init();
 }
 getUserInfo(callback){
@@ -17,10 +18,10 @@ value: 0
 $.ajax({
 url: 'https://follx.com/users/' + GJuser.steamid,
 success: function(data){
-let html = $(data);
-userData.avatar = html.find('.card-cover img').attr('src');
-userData.username = html.find('.username').first().text();
-userData.value = html.find('.user .energy span').first().text();
+data = $(data);
+userData.avatar = data.find('.card-cover img').attr('src');
+userData.username = data.find('.username').first().text();
+userData.value = data.find('.user .energy span').first().text();
 },
 complete: function(){
 callback(userData);
@@ -40,8 +41,8 @@ this.enterOnPage(page, callback);
 enterOnPage(page, callback){
 let _this = this;
 let CSRF = '';
-$.get('https://follx.com/giveaways?page=' + page, function (html) {
-html = $('<div>' + html + '</div>');
+$.get('https://follx.com/giveaways?page=' + page, (html) => {
+html = $('<div>' + html.replace(/<img/gi, '<noload') + '</div>');
 CSRF = html.find('meta[name="csrf-token"]').attr('content');
 if( CSRF.length < 10 ){
 _this.log(this.trans('token_error'), true);
@@ -66,7 +67,31 @@ if( have || entered )
 next_after = 50;
 else
 {
-$.get(link, function (html) {
+let fxsteam = card.find('.head_info').attr('style'),
+fxown = 0,
+fxapp = 0,
+fxsub = 0,
+fxid = '',
+fxstm = '';
+if( fxsteam.includes('apps/') ) {
+fxapp = parseInt(fxsteam.split("apps/")[1].split("/")[0].split("?")[0].split("#")[0]);
+fxid = '[app/' + fxapp + ']';
+fxstm = 'https://store.steampowered.com/app/' + fxapp;
+}
+if( fxsteam.includes('sub/') ) {
+fxsub = parseInt(fxsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
+fxid = '[sub/' + fxsub + ']';
+fxstm = 'https://store.steampowered.com/sub/' + fxsub;
+}
+if( _this.getConfig('check_in_steam') ) {
+if( GJuser.ownapps.includes(',' + fxapp + ',') && fxapp > 0 )
+fxown = 1;
+if( GJuser.ownsubs.includes(',' + fxsub + ',') && fxsub > 0 )
+fxown = 1;
+}
+if( fxown === 0 ) {
+$.get(link, (html) => {
+html = html.replace(/<img/gi, '<noload');
 if( html.indexOf('data-action="enter"') > 0 ){
 $.ajax({
 method: 'post',
@@ -80,12 +105,16 @@ headers: {
 success: function (data) {
 if(data.response){
 _this.setValue(data.points);
-_this.log(Lang.get('service.entered_in') + _this.logLink(link, name));
+_this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + ' ' + _this.logLink(fxstm, fxid));
 }
-}
-})
 }
 });
+}
+});
+}
+else {
+next_after = 50;
+}
 }
 curr_giveaway++;
 setTimeout(giveawayEnter, next_after);

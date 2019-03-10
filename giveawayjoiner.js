@@ -49,7 +49,7 @@ ipcMain.on('save-user', function(event, data) {
 user = data;
 global.user = data;
 });
-ipcMain.on('change-lang', function(event, data) {
+ipcMain.on('change-lang', (event, data) => {
 Lang.change(data);
 event.sender.send('change-lang', data);
 });
@@ -168,7 +168,7 @@ if( appLoaded )
 return;
 let afterLangs = function(){
 authWindow.loadFile('auth.html');
-authWindow.on('ready-to-show', function() {
+authWindow.on('ready-to-show', () => {
 authWindow.show();
 if( Config.get('start_minimized') )
 authWindow.hide();
