@@ -118,7 +118,6 @@ success: function(data){
 if( JSON.stringify(data.rgOwnedPackages) !== '[]' ) {
 GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
 GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
-Config.set('ownsubs', GJuser.ownsubs);
 }
 }
 });
