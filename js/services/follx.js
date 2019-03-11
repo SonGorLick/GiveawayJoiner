@@ -2,7 +2,7 @@
 class Follx extends Joiner {
 constructor() {
 super();
-this.websiteUrl = 'https://follx.com/account/sync';
+this.websiteUrl = 'https://follx.com/account';
 this.authLink = 'https://follx.com/logIn';
 this.wonsUrl = 'https://follx.com/giveaways/won';
 this.authContent = '/account';
