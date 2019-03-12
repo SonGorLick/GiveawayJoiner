@@ -2,7 +2,7 @@
 class OpiumPulses extends Joiner {
 constructor() {
 super();
-this.websiteUrl = 'https://www.opiumpulses.com/user/account';
+this.websiteUrl = 'https://www.opiumpulses.com';
 this.authContent = 'site/logout';
 this.authLink = "https://www.opiumpulses.com/site/login";
 this.wonsUrl = "https://www.opiumpulses.com/user/giveawaykeys";
@@ -41,8 +41,8 @@ this.enterOnPage(page, callback);
 enterOnPage(page, callback){
 let _this = this;
 $.get('https://www.opiumpulses.com/giveaways?ajax=giveawaylistview&Giveaway_page=' + page, (data) => {
-data = data.replace(/<img/gi, '<noload');
-let found_games = $(data).find('.giveaways-page-item');
+data = $(data.replace(/<img/gi, '<noload'));
+let found_games = data.find('.giveaways-page-item');
 let curr_giveaway = 0;
 function giveawayEnter(){
 if( found_games.length <= curr_giveaway || !_this.started || _this.curr_value === 0) {
