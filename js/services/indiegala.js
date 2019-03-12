@@ -93,22 +93,22 @@ next_after = 50;
 else
 {
 let id = ticket.find('.ticket-right .relative').attr('rel'),
+igsteam = ticket.find('.giv-game-img').attr('data-src'),
 name = ticket.find('h2 a').text(),
-link = 'https://www.indiegala.com/giveaways/detail/' + id;
-$.get(link, (data) => {
-data = data.replace(/<img/gi, '<noload');
-let igsteam = $(data).find('.info-row a').attr('href'),
 igown = 0,
 igapp = 0,
 igsub = 0,
-igid = '';
-if( igsteam.includes('app/') ) {
-igapp = parseInt(igsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
+igid = '',
+igstm = '';
+if( igsteam.includes('apps/') ) {
+igapp = parseInt(igsteam.split("apps/")[1].split("/")[0].split("?")[0].split("#")[0]);
 igid = '[app/' + igapp + ']';
+igstm = 'https://store.steampowered.com/app/' + igapp;
 }
 if( igsteam.includes('sub/') ) {
 igsub = parseInt(igsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
 igid = '[sub/' + igsub + ']';
+igstm = 'https://store.steampowered.com/sub/' + igsub;
 }
 if( _this.getConfig('check_in_steam') ) {
 if( GJuser.ownapps.includes(',' + igapp + ',') && igapp > 0 )
@@ -126,7 +126,7 @@ data: JSON.stringify({ giv_id: id, ticket_price: price }),
 success: function(data){
 if( data.status === 'ok' ){
 _this.setValue(data.new_amount);
-_this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + ' ' + _this.logLink(igsteam, igid) + '. ' + _this.trans('cost') + ' - ' + price);
+_this.log(Lang.get('service.entered_in') + _this.logLink('https://www.indiegala.com/giveaways/detail/' + id, name) + ' ' + _this.logLink(igstm, igid) + '. ' + _this.trans('cost') + ' - ' + price);
 }
 }
 });
@@ -134,7 +134,6 @@ _this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + ' ' + _th
 else {
 next_after = 50;
 }
-});
 }
 curr_ticket++;
 setTimeout(giveawayEnter, next_after);
