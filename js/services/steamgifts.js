@@ -5,8 +5,8 @@ super();
 this.settings.timer.min = 5;
 this.websiteUrl = 'https://www.steamgifts.com';
 this.authContent = 'Account';
-this.authLink = "https://www.steamgifts.com/?login";
-this.wonsUrl = "https://www.steamgifts.com/giveaways/won";
+this.authLink = 'https://www.steamgifts.com/?login';
+this.wonsUrl = 'https://www.steamgifts.com/giveaways/won';
 this.settings.points_reserve = { type: 'number', trans: this.transPath('points_reserve'), min: 0, max: 500, default: this.getConfig('points_reserve', 0) };
 this.settings.ending = { type: 'number', trans: this.transPath('ending'), min: 0, max: 500, default: this.getConfig('ending', 0) };
 this.settings.min_chance = { type: 'float_number', trans: this.transPath('min_chance'), min: 0, max: 100, default: this.getConfig('min_chance', 0) };
@@ -142,7 +142,7 @@ sgapp = 0,
 sgsub = 0,
 sgid = '';
 if( GA.sgsteam.includes('app/') ) {
-let sgapp = parseInt(GA.sgsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
+sgapp = parseInt(GA.sgsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
 sgid = '[app/' + sgapp + ']';
 }
 if( GA.sgsteam.includes('sub/') ) {
