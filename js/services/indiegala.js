@@ -2,10 +2,10 @@
 class IndieGala extends Joiner {
 constructor() {
 super();
-this.authContent = "My Libraries";
-this.websiteUrl = "https://www.indiegala.com/giveaways";
-this.authLink = "https://www.indiegala.com/login";
-this.wonsUrl = "https://www.indiegala.com/profile";
+this.authContent = 'My Libraries';
+this.websiteUrl = 'https://www.indiegala.com/giveaways';
+this.authLink = 'https://www.indiegala.com/login';
+this.wonsUrl = 'https://www.indiegala.com/profile';
 this.settings.max_level = { type: 'number', trans: this.transPath('max_level'), min: 0, max: 8, default: this.getConfig('max_level', 0) };
 this.settings.min_cost = { type: 'number', trans: this.transPath('min_cost'), min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
 this.settings.min_cost = { type: 'number', trans: this.transPath('min_cost'), min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };

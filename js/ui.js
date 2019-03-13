@@ -115,7 +115,7 @@ $.ajax({
 url: 'https://store.steampowered.com/dynamicstore/userdata/?v=',
 dataType: 'json',
 success: function(data){
-if( JSON.stringify(data.rgOwnedPackages) !== '[]' ) {
+if( JSON.stringify(data.rgOwnedApps) !== '[]' ) {
 GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
 GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
 }

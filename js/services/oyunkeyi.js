@@ -4,8 +4,8 @@ constructor() {
 super();
 this.websiteUrl = 'https://www.oyunkeyi.com';
 this.authContent = '/profil';
-this.authLink = "https://www.oyunkeyi.com/auth/steam";
-this.wonsUrl = "https://www.oyunkeyi.com/kazandiklarim";
+this.authLink = 'https://www.oyunkeyi.com/auth/steam';
+this.wonsUrl = 'https://www.oyunkeyi.com/kazandiklarim';
 this.settings.min_cost = { type: 'number', trans: this.transPath('min_cost'), min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
 this.settings.max_cost = { type: 'number', trans: this.transPath('max_cost'), min: this.getConfig('min_cost', 0), max: 200, default: this.getConfig('max_cost', 0) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };

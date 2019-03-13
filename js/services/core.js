@@ -138,7 +138,7 @@ $.ajax({
 url: this.websiteUrl,
 timeout: this.getTimeout,
 success: function (html) {
-html = html.replace(/<img/gi, '<noload');
+html = html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload');
 if( html.indexOf( authContent ) >= 0 )
 callback(1);
 else
