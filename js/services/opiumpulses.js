@@ -2,7 +2,7 @@
 class OpiumPulses extends Joiner {
 constructor() {
 super();
-this.websiteUrl = 'https://www.opiumpulses.com';
+this.websiteUrl = 'https://www.opiumpulses.com/user/account';
 this.authContent = 'site/logout';
 this.authLink = "https://www.opiumpulses.com/site/login";
 this.wonsUrl = "https://www.opiumpulses.com/user/giveawaykeys";
@@ -18,9 +18,9 @@ value: 0
 $.ajax({
 url: 'https://www.opiumpulses.com/user/account',
 success: function(data){
-data = $(data);
+data = $(data.replace(/<img/gi, '<noload'));
 userData.username = data.find('.page-header__nav-func-user-wrapper a').text().split("Account")[0].trim();
-userData.avatar = 'https://www.opiumpulses.com' + data.find('.input-group img').attr('src');
+userData.avatar = 'https://www.opiumpulses.com' + data.find('.input-group noload').attr('src');
 userData.value = data.find('.points-items li a').first().text().replace('Points:', '').trim();
 },
 complete: function () {

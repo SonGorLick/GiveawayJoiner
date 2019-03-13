@@ -31,7 +31,7 @@ value: 0
 $.ajax({
 url: 'https://www.steamgifts.com/account/settings/profile',
 success: function(data){
-data = $(data);
+data = $(data.replace(/<img/gi, '<noload'));
 userData.avatar = data.find('.nav__avatar-inner-wrap').attr('style').replace('background-image:url(', '').replace(');', '');
 userData.username = data.find('input[name=username]').val();
 userData.value = data.find('.nav__points').text();

@@ -3,9 +3,9 @@ class OyunKeyi extends Joiner {
 constructor() {
 super();
 this.websiteUrl = 'https://www.oyunkeyi.com';
-this.authContent = '/satin-aldiklarim';
+this.authContent = '/profil';
 this.authLink = "https://www.oyunkeyi.com/auth/steam";
-this.wonsUrl = "https://www.oyunkeyi.com/katildiklarim";
+this.wonsUrl = "https://www.oyunkeyi.com/kazandiklarim";
 this.settings.min_cost = { type: 'number', trans: this.transPath('min_cost'), min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
 this.settings.max_cost = { type: 'number', trans: this.transPath('max_cost'), min: this.getConfig('min_cost', 0), max: 200, default: this.getConfig('max_cost', 0) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
@@ -20,9 +20,9 @@ value: 0
 $.ajax({
 url: 'https://www.oyunkeyi.com/profil/' + GJuser.steamid,
 success: function(data){
-data = $(data);
+data = $(data.replace(/<img/gi, '<noload'));
 userData.username = data.find('.col-md-9 h3').text();
-userData.avatar = data.find('.dropdown-toggle img').attr('src');
+userData.avatar = data.find('.dropdown-toggle noload').attr('src');
 userData.value = data.find('.dropdown-toggle span').text().replace('(Point: ', '').replace(')', '');
 },
 complete: function () {
@@ -85,9 +85,7 @@ if( GJuser.ownsubs.includes(',' + oksub + ',') && oksub > 0 )
 okown = 1;
 }
 if( okown === 0 ) {
-$.get(eLink, (data) => {
-data = data.replace(/<img/gi, '<noload');
-});
+$.get(eLink);
 _this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + ' ' + _this.logLink(oksteam, okid) + '. ' + _this.trans('cost') + ' - ' + cost);
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);

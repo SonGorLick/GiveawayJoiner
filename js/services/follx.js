@@ -2,7 +2,7 @@
 class Follx extends Joiner {
 constructor() {
 super();
-this.websiteUrl = 'https://follx.com/account';
+this.websiteUrl = 'https://follx.com';
 this.authLink = 'https://follx.com/logIn';
 this.wonsUrl = 'https://follx.com/giveaways/won';
 this.authContent = '/account';
@@ -18,8 +18,8 @@ value: 0
 $.ajax({
 url: 'https://follx.com/users/' + GJuser.steamid,
 success: function(data){
-data = $(data);
-userData.avatar = data.find('.card-cover img').attr('src');
+data = $(data.replace(/<img/gi, '<noload'));
+userData.avatar = data.find('.card-cover noload').attr('src');
 userData.username = data.find('.username').first().text();
 userData.value = data.find('.user .energy span').first().text();
 },
