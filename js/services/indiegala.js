@@ -42,7 +42,7 @@ show_coins: 'True'
 },
 dataType: 'json',
 success: function(data){
-userData.avatar = data.steamavatar;
+userData.avatar = data.steamavatar.replace('fb1.jpg', 'fb1_medium.jpg');
 userData.username = data.steamnick;
 userData.value = data.silver_coins_tot;
 },
