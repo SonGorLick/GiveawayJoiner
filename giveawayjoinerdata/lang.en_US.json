@@ -86,6 +86,8 @@
 		"steamgifts": {
 			"value_label": "Points",
 			"cost": "Cost",
+			"sound": "Sound notifications",
+			"sound_title": "Play sound when winning a giveaway",
 			"ending": "GA ending (minutes)",
 			"ending_title": "Don't join giveaways before the end of which more than the specified time. 0 - without any restrictions",
 			"chance": "Chance",
