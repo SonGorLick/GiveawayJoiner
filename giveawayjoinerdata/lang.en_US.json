@@ -59,6 +59,8 @@
 		"indiegala": {
 			"value_label": "GalaCoins",
 			"cost": "Cost",
+			"sound": "Sound notifications",
+			"sound_title": "Play sound when winning a giveaway",
 			"check_in_steam": "Check owned on Steam",
 			"check_in_steam_title": "Don't enter if the giveaway games owned on account",
 			"max_level": "Max. level",
@@ -77,6 +79,8 @@
 		"oyunkeyi": {
 			"value_label": "Points",
 			"cost": "Cost",
+			"sound": "Sound notifications",
+			"sound_title": "Play sound when winning a giveaway",
 			"check_in_steam": "Check owned on Steam",
 			"check_in_steam_title": "Don't enter if the giveaway games owned on account",
 			"min_cost": "Min. Cost",
