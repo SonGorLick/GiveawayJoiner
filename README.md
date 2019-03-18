@@ -18,8 +18,9 @@
 14. Completely portable app (all user data and your options storied in app subdirectory 'giveawayjoinerdata'. You can use           multiple copies of the app with different accounts and options, just make copies of app with different appname directories 
     like 'giveawayjoiner1', 'giveawayjoiner2', etc. For example).
 15. Removed functions 'Auto update' and 'Startup with os' in the app.
-16. Translations changes and fixes.
-17. Code optimizations and bugfixes for Linux and Mac OS compatibility.
+16. Removed 'time left' display timer on 'Start' button to reduce the app resources (from v1.1.5e)
+17. Translations changes and fixes.
+18. Code optimizations and bugfixes for Linux and Mac OS compatibility.
 
   To build latest version from source:
 
