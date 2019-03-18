@@ -20,7 +20,7 @@
 15. Removed functions 'Auto update' and 'Startup with os' in the app.
 16. Removed 'time left' display timer on 'Start' button to reduce the app resources (from v1.1.5e)
 17. Translations changes and fixes.
-18. Code optimizations and bugfixes for Linux and Mac OS compatibility.
+18. Code optimizations and bugfixes for Linux and Mac OS compatibility (One source code base to build on all supported os's by       Electron).
 
   To build latest version from source:
 
