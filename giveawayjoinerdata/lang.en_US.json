@@ -22,6 +22,7 @@
 		"started": "Bot is running",
 		"stopped": "Bot is stopped",
 		"logs": "Log",
+		"win": "!!! Giveaways won - ",
 		"settings": "Settings",
 		"clear_log": "Clear log",
 		"log_cleared": "Log cleared",
