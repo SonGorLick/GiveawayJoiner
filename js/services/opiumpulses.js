@@ -96,18 +96,18 @@ opown = 1;
 }
 }
 if (opown === 0) {
+$.ajax({
+url: 'https://www.opiumpulses.com' + eLink,
+success: function () {
+_this.curr_value = _this.curr_value - cost;
+_this.setValue(_this.curr_value);
 if (cost === 0) {
 cost = 'Free.';
 }
 else {
 cost = cost + ' P.';
 }
-$.ajax({
-url: 'https://www.opiumpulses.com' + eLink,
-success: function () {
 _this.log(Lang.get('service.entered_in') + _this.logLink('https://www.opiumpulses.com' + link, name) + ' - ' + _this.logLink(opsteam, opid) + ' - ' + cost);
-_this.curr_value = _this.curr_value - cost;
-_this.setValue(_this.curr_value);
 }
 });
 }
