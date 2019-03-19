@@ -54,8 +54,7 @@ else
 let name = $(data).find('.span8 > h1').text();
 $.ajax({
 url: link + '/enter_competition',
-success: function(data){
-data = $(data.replace(/<img/gi, '<noload'));
+success: function(){
 _this.log(Lang.get('service.entered_in') + _this.logLink(link, name));
 }
 });

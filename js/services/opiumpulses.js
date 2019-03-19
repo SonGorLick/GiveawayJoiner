@@ -94,9 +94,9 @@ opown = 1;
 }
 if( opown === 0 ) {
 if(cost === 0)
-cost = 'Free.'
+cost = 'Free.';
 else {
-cost = cost + ' P.'
+cost = cost + ' P.';
 }
 $.ajax({
 url: 'https://www.opiumpulses.com' + eLink,
