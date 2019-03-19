@@ -38,7 +38,7 @@ userData.avatar = $(response.data).find('#avatar a img').attr('src');
 callback(userData);
 });
 }
-seekService(){
+joinService(){
 let _this = this;
 _this.ajaxReq('http://tf2r.com/raffles.html', (response) => {
 let giveaways = $(response.data).find('.pubrhead-text-right');

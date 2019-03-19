@@ -11,6 +11,7 @@ this.settings.min_cost = { type: 'number', trans: this.transPath('min_cost'), mi
 this.settings.min_cost = { type: 'number', trans: this.transPath('min_cost'), min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
 this.settings.max_cost = { type: 'number', trans: this.transPath('max_cost'), min: this.getConfig('min_cost', 0), max: 240, default: this.getConfig('max_cost', 0) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
+this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
 super.init();
 }
 authCheck(callback){
@@ -51,9 +52,10 @@ callback(userData);
 }
 });
 }
-seekService(){
+joinService(){
 let _this = this;
 let page = 1;
+_this.check = 0;
 let callback = function() {
 page++;
 if ( page <= _this.getConfig('pages', 1) )
@@ -66,7 +68,34 @@ let _this = this;
 let user_level = this.getConfig('max_level', 0),
 user_min = this.getConfig('min_cost', 0),
 user_max = this.getConfig('max_cost', 0);
-$.get('https://www.indiegala.com/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=all', (data) => {
+if( _this.check === 0 ) {
+_this.check = 1;
+$.ajax({
+url: 'https://www.indiegala.com/profile',
+success: function(){
+$.ajax({
+url: 'https://www.indiegala.com/giveaways/library_completed',
+type: 'post',
+data: '{"list_type":"tocheck","page":1}',
+dataType: 'json',
+success: function(){
+$.ajax({
+url: 'https://www.indiegala.com/giveaways/check_if_won_all',
+success: function(){
+}
+});
+}
+});
+}
+});
+}
+let lvl = 'all';
+if( this.getConfig('max_level', 0) === 0 ) {
+lvl = '0';
+}
+$.ajax({
+url: 'https://www.indiegala.com/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + lvl,
+success: function(data){
 let tickets = $(JSON.parse(data).content).find('.tickets-col');
 let curr_ticket = 0;
 function giveawayEnter(){
@@ -98,16 +127,16 @@ name = ticket.find('h2 a').text(),
 igown = 0,
 igapp = 0,
 igsub = 0,
-igid = '',
+igid = '???',
 igstm = '';
 if( igsteam.includes('apps/') ) {
 igapp = parseInt(igsteam.split("apps/")[1].split("/")[0].split("?")[0].split("#")[0]);
-igid = '[app/' + igapp + ']';
+igid = 'app/' + igapp;
 igstm = 'https://store.steampowered.com/app/' + igapp;
 }
 if( igsteam.includes('sub/') ) {
 igsub = parseInt(igsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
-igid = '[sub/' + igsub + ']';
+igid = 'sub/' + igsub;
 igstm = 'https://store.steampowered.com/sub/' + igsub;
 }
 if( _this.getConfig('check_in_steam') ) {
@@ -126,7 +155,7 @@ data: JSON.stringify({ giv_id: id, ticket_price: price }),
 success: function(data){
 if( data.status === 'ok' ){
 _this.setValue(data.new_amount);
-_this.log(Lang.get('service.entered_in') + _this.logLink('https://www.indiegala.com/giveaways/detail/' + id, name) + ' ' + _this.logLink(igstm, igid) + '. ' + _this.trans('cost') + ' - ' + price);
+_this.log(Lang.get('service.entered_in') + _this.logLink('https://www.indiegala.com/giveaways/detail/' + id, name) + ' - ' + _this.logLink(igstm, igid) + ' - ' + price + ' iC.');
 }
 }
 });
@@ -139,6 +168,7 @@ curr_ticket++;
 setTimeout(giveawayEnter, next_after);
 }
 giveawayEnter();
+}
 });
 }
 }

@@ -18,6 +18,7 @@ this.settings.wishlist_only = { type: 'checkbox', trans: this.transPath('wishlis
 this.settings.reserve_on_wish = { type: 'checkbox', trans: this.transPath('reserve_on_wish'), default: this.getConfig('reserve_on_wish', false) };
 this.settings.ignore_on_wish = { type: 'checkbox', trans: this.transPath('ignore_on_wish'), default: this.getConfig('ignore_on_wish', false) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
+this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
 this.token = '';
 this.giveaways = [];
 super.init();
@@ -41,8 +42,9 @@ callback(userData);
 }
 });
 }
-seekService(){
+joinService(){
 let page = 1;
+this.check = 0;
 this.giveaways = [];
 let processCommon = () => {
 if( !this.started )
@@ -74,6 +76,15 @@ if( this.token.length < 10 ){
 this.log(this.trans('token_error'), true);
 this.stopJoiner(true);
 return;
+}
+if( this.check === 0 ) {
+this.check = 1;
+let prize_win = parseInt( data.find('.fade_infinite.nav__notification').text().trim() );
+if( prize_win > 0 ) {
+this.log( this.logLink('https://www.steamgifts.com/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + prize_win + ').') );
+if( this.getConfig('sound') )
+new Audio( __dirname + '/sounds/won.wav' ).play();
+}
 }
 data.find('.giveaway__row-outer-wrap').each((index, item) => {
 let giveaway = $(item);
@@ -140,14 +151,14 @@ let GA = _this.giveaways[curr_giveaway],
 sgown = 0,
 sgapp = 0,
 sgsub = 0,
-sgid = '';
+sgid = '???';
 if( GA.sgsteam.includes('app/') ) {
 sgapp = parseInt(GA.sgsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
-sgid = '[app/' + sgapp + ']';
+sgid = 'app/' + sgapp;
 }
 if( GA.sgsteam.includes('sub/') ) {
 sgsub = parseInt(GA.sgsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
-sgid = '[sub/' + sgsub + ']';
+sgid = 'sub/' + sgsub;
 }
 if( _this.getConfig('check_in_steam') ) {
 if( GJuser.ownapps.includes(',' + sgapp + ',') && sgapp > 0 )
@@ -176,7 +187,7 @@ code: GA.code
 },
 success: function(data){
 if(data.type === 'success'){
-_this.log(Lang.get('service.entered_in') + _this.logLink(GA.link, GA.name) + ' ' + _this.logLink(GA.sgsteam, sgid) + '. ' + _this.trans('cost') + ' - ' + GA.cost + ', ' + _this.trans('chance') + ' - ' + GA.chance + '%');
+_this.log(Lang.get('service.entered_in') + _this.logLink(GA.link, GA.name) + ' - ' + _this.logLink(GA.sgsteam, sgid) + ' - ' + GA.cost + ' P - ' + GA.chance + ' %.');
 _this.setValue(data.points);
 }
 }

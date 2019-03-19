@@ -28,7 +28,7 @@ callback(userData);
 }
 });
 }
-seekService(){
+joinService(){
 let _this = this;
 let page = 1;
 let callback = function() {
@@ -40,7 +40,9 @@ this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback){
 let _this = this;
-$.get('https://www.opiumpulses.com/giveaways?ajax=giveawaylistview&Giveaway_page=' + page, (data) => {
+$.ajax({
+url: 'https://www.opiumpulses.com/giveaways?ajax=giveawaylistview&Giveaway_page=' + page,
+success: function(data){
 data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
 let found_games = data.find('.giveaways-page-item');
 let curr_giveaway = 0;
@@ -64,7 +66,9 @@ else
 let link = giveaway.find('.giveaways-page-item-img-btn-more').attr('href'),
 name = giveaway.find('.giveaways-page-item-footer-name').text().trim(),
 eLink = giveaway.find('.giveaways-page-item-img-btn-enter').attr('href');
-$.get("https://www.opiumpulses.com" + link, (data) => {
+$.ajax({
+url: 'https://www.opiumpulses.com' + link,
+success: function(data){
 data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
 let opsteam = data.find('.giveaways-single-sponsored h1 a').attr('href');
 if( opsteam === undefined ) {
@@ -73,14 +77,14 @@ opsteam = $(data).find('.giveaways-single-sponsored h4 a').attr('href');
 let opown = 0,
 opapp = 0,
 opsub = 0,
-opid = '';
+opid = '???';
 if( opsteam.includes('app/') ) {
 opapp = parseInt(opsteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
-opid = '[app/' + opapp + ']';
+opid = 'app/' + opapp;
 }
 if( opsteam.includes('sub/') ) {
 opsub = parseInt(opsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
-opid = '[sub/' + opsub + ']';
+opid = 'sub/' + opsub;
 }
 if( _this.getConfig('check_in_steam') ) {
 if( GJuser.ownapps.includes(',' + opapp + ',') && opapp > 0 )
@@ -89,15 +93,24 @@ if( GJuser.ownsubs.includes(',' + opsub + ',') && opsub > 0 )
 opown = 1;
 }
 if( opown === 0 ) {
-$.get("https://www.opiumpulses.com" + eLink, (data) => {
+if(cost === 0)
+cost = 'Free.'
+else {
+cost = cost + ' P.'
+}
+$.ajax({
+url: 'https://www.opiumpulses.com' + eLink,
+success: function(data){
 data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload');
-_this.log(Lang.get('service.entered_in') + _this.logLink("https://www.opiumpulses.com" + link, name) + ' ' + _this.logLink(opsteam, opid) + '. ' + _this.trans('cost') + ' - ' + cost);
+_this.log(Lang.get('service.entered_in') + _this.logLink("https://www.opiumpulses.com" + link, name) + ' - ' + _this.logLink(opsteam, opid) + ' - ' + cost);
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
+}
 });
 }
 else {
 next_after = 50;
+}
 }
 });
 }
@@ -105,6 +118,7 @@ curr_giveaway++;
 setTimeout(giveawayEnter, next_after);
 }
 giveawayEnter();
+}
 });
 }
 }

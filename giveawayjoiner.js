@@ -1,9 +1,9 @@
 'use strict';
-const { app, nativeImage, shell, Menu, session, Tray, BrowserWindow, ipcMain, ipcRenderer } = require('electron');
+const { app, nativeImage, shell, session, Tray, BrowserWindow, ipcMain, ipcRenderer } = require('electron');
 const storage = require('electron-json-storage');
 const fs = require('fs');
 const Request = require('request-promise');
-const devMode = app.getVersion() === '2.0.18';
+const devMode = app.getVersion() === '4.1.0';
 let appLoaded = false;
 let authWindow = null;
 let mainWindow = null;
@@ -18,6 +18,8 @@ let _bmd = 'true';
 let _bfr = 'false';
 let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
+app.commandLine.appendSwitch('in-process-gpu');
+app.commandLine.appendSwitch('disable-software-rasterizer');
 app.disableHardwareAcceleration();
 if (process.platform === 'win32') {
 _itr = __dirname + '/icons/icon.ico';
@@ -33,18 +35,6 @@ udata = (udata.slice(0, -34)).toLowerCase();
 _icn = _itr;
 app.setPath('userData', udata + 'data');
 storage.setDataPath(udata + 'data');
-const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
-if (mainWindow) {
-if (mainWindow.isMinimized())
-mainWindow.restore();
-if( !mainWindow.isVisible() )
-mainWindow.show();
-mainWindow.focus();
-}
-});
-if ( isSecondInstance ){
-app.quit();
-}
 ipcMain.on('save-user', function(event, data) {
 user = data;
 global.user = data;

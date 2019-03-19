@@ -91,7 +91,7 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-settings .input-wrap .label { padding: 0 5px; font-size: 12px; color: #b8c1c6; }
 .service-settings .input-wrap.checkbox { padding-left: 5px; line-height: 20px; width: 90%; }
 .service-settings .input-wrap.checkbox input { margin-right: 3px; }
-.joiner-button { color: #4db6ac; cursor: pointer; width: 145px; height: 30px; text-align: center; line-height: 28px; font-size: 26px; text-transform: uppercase; background: transparent; border: none; }
+.joiner-button { color: #4db6ac; cursor: pointer; width: 145px; height: 30px; text-align: center; line-height: 28px; font-size: 26px; background: transparent; border: none; }
 .joiner-button:not(.disabled):hover { color: #00bcd4; }
 .joiner-button.disabled { cursor: default; color: #b9c2c7; pointer-events: none; }
 .service-user-panel { position: relative; padding: 7px 0; height: 52px; }
@@ -112,19 +112,16 @@ input-wrap.checkbox input[disabled] { cursor: default; }
 .fa, .fab { -webkit-font-smoothing: subpixel-antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: optimizeLegibility; line-height: 1; }
 .fa-chrome:before { content: "\f268"; }
 .fa-database:before { content: "\f1c0"; }
-.fa-dot-circle:before { content: "\f192"; }
 .fa-ellipsis-v:before { content: "\f142"; }
 .fa-globe:before { content: "\f57d"; }
 .fa-history:before { content: "\f1da"; }
 .fa-list-ul:before { content: "\f0c9"; }
 .fa-minus:before { content: "\f053"; }
-.fa-pause:before { content: "\f04c"; }
+.fa-stop:before { content: "\f04d"; }
 .fa-play:before { content: "\f111"; }
-.fa-play-circle:before { content: "\f144"; }
 .fa-plus:before { content: "\f054"; }
 .fa-sign-out-alt:before { content: "\f2f5"; }
 .fa-steam:before { content: "\f1b6"; }
-.fa-stop-circle:before { content: "\f28d"; }
 .fa-times:before { content: "\f00d"; }
 .fa-trash-alt:before { content: "\f2ed"; }
 .fa-user-cog:before { content: "\f4fe"; }

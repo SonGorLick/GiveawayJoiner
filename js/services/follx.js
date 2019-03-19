@@ -28,7 +28,7 @@ callback(userData);
 }
 });
 }
-seekService(){
+joinService(){
 let _this = this;
 let page = 1;
 let callback = function() {
@@ -41,7 +41,9 @@ this.enterOnPage(page, callback);
 enterOnPage(page, callback){
 let _this = this;
 let CSRF = '';
-$.get('https://follx.com/giveaways?page=' + page, (html) => {
+$.ajax({
+url: 'https://follx.com/giveaways?page=' + page,
+success: function(html){
 html = $('<div>' + html.replace(/<img/gi, '<noload') + '</div>');
 CSRF = html.find('meta[name="csrf-token"]').attr('content');
 if( CSRF.length < 10 ){
@@ -82,16 +84,16 @@ let fxsteam = card.find('.head_info').attr('style'),
 fxown = 0,
 fxapp = 0,
 fxsub = 0,
-fxid = '',
+fxid = '???',
 fxstm = '';
 if( fxsteam.includes('apps/') ) {
 fxapp = parseInt(fxsteam.split("apps/")[1].split("/")[0].split("?")[0].split("#")[0]);
-fxid = '[app/' + fxapp + ']';
+fxid = 'app/' + fxapp;
 fxstm = 'https://store.steampowered.com/app/' + fxapp;
 }
 if( fxsteam.includes('sub/') ) {
 fxsub = parseInt(fxsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
-fxid = '[sub/' + fxsub + ']';
+fxid = 'sub/' + fxsub;
 fxstm = 'https://store.steampowered.com/sub/' + fxsub;
 }
 if( _this.getConfig('check_in_steam') ) {
@@ -101,7 +103,9 @@ if( GJuser.ownsubs.includes(',' + fxsub + ',') && fxsub > 0 )
 fxown = 1;
 }
 if( fxown === 0 ) {
-$.get(link, (html) => {
+$.ajax({
+url: link,
+success: function(html){
 html = html.replace(/<img/gi, '<noload');
 if( html.indexOf('data-action="enter"') > 0 ){
 $.ajax({
@@ -116,10 +120,11 @@ headers: {
 success: function (data) {
 if(data.response){
 _this.setValue(data.points);
-_this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + ' ' + _this.logLink(fxstm, fxid));
+_this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + ' - ' + _this.logLink(fxstm, fxid));
 }
 }
 });
+}
 }
 });
 }
@@ -131,6 +136,7 @@ curr_giveaway++;
 setTimeout(giveawayEnter, next_after);
 }
 giveawayEnter();
+}
 });
 }
 }

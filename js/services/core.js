@@ -42,7 +42,7 @@ this.statusIcon = $(document.createElement('div'))
 .attr('data-status', 'normal')
 .html(
 '<span class="fa fa-play"></span>' +
-'<span class="fa fa-pause"></span>'
+'<span class="fa fa-stop"></span>'
 )
 .appendTo(this.icon);
 $(document.createElement('span'))
@@ -232,7 +232,7 @@ this.log(Lang.get('service.connection_good'));
 let atimer = this.getConfig('timer', 10);
 this.stimer = atimer;
 this.updateCookies();
-this.seekService();
+this.joinService();
 }
 else if(authState === 0) {
 this.log(Lang.get('service.session_expired'), true);
@@ -468,7 +468,7 @@ log(text, logType){
 this.logField.append('<div class="' + (logType ? 'warn' : 'normal') + '"><span class="time">' + timeStr() + ':</span>' + text + '</div>');
 this.logWrap.scrollTop(this.logWrap[0].scrollHeight);
 }
-seekService(){}
+joinService(){}
 getUserInfo(callback){
 callback({
 avatar: __dirname + '/icons/icon.png',

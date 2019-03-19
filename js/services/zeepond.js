@@ -27,9 +27,11 @@ callback(userData);
 }
 });
 }
-seekService(){
+joinService(){
 let _this = this;
-$.get('https://www.zeepond.com/zeepond/giveaways/enter-a-competition', (data) => {
+$.ajax({
+url: 'https://www.zeepond.com/zeepond/giveaways/enter-a-competition',
+success: function(data){
 data = $(data.replace(/<img/gi, '<noload'));
 let competitions = data.find('.bv-item-wrapper');
 let currcomp = 0;
@@ -38,9 +40,10 @@ if( competitions.length <= currcomp || !_this.started )
 return;
 let next_after = _this.interval();
 let comp = competitions.eq(currcomp),
-link = 'https://www.zeepond.com' + comp.find('.bv-item-image a').attr('href'),
-name = (comp.find('.bv-item-image noload').attr('src').split('/images/competitions/')[1].split('.jpg')[0]).replace(/-/g, ' ');
-$.get(link, (data) => {
+link = 'https://www.zeepond.com' + comp.find('.bv-item-image a').attr('href');
+$.ajax({
+url: link,
+success: function(data){
 data = data.replace(/<img/gi, '<noload');
 let entered = data.indexOf('You have already entered today') >= 0;
 if( entered ) {
@@ -48,16 +51,22 @@ next_after = 50;
 }
 else
 {
-$.get(link + '/enter_competition', (data) => {
+let name = $(data).find('.span8 > h1').text();
+$.ajax({
+url: link + '/enter_competition',
+success: function(data){
 data = $(data.replace(/<img/gi, '<noload'));
 _this.log(Lang.get('service.entered_in') + _this.logLink(link, name));
+}
 });
+}
 }
 });
 currcomp++;
 setTimeout(giveawayEnter, next_after);
 }
 giveawayEnter();
+}
 });
 }
 }

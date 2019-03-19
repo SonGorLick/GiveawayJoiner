@@ -3,12 +3,13 @@ class OyunKeyi extends Joiner {
 constructor() {
 super();
 this.websiteUrl = 'https://www.oyunkeyi.com';
-this.authContent = '/profil';
+this.authContent = 'My Profil';
 this.authLink = 'https://www.oyunkeyi.com/auth/steam';
 this.wonsUrl = 'https://www.oyunkeyi.com/kazandiklarim';
 this.settings.min_cost = { type: 'number', trans: this.transPath('min_cost'), min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
 this.settings.max_cost = { type: 'number', trans: this.transPath('max_cost'), min: this.getConfig('min_cost', 0), max: 200, default: this.getConfig('max_cost', 0) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
+this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
 super.init();
 }
 getUserInfo(callback){
@@ -30,9 +31,10 @@ callback(userData);
 }
 });
 }
-seekService(){
+joinService(){
 let _this = this;
 let page = 1;
+_this.check = 0;
 let callback = function() {
 page++;
 if ( page <= _this.getConfig('pages', 1) )
@@ -44,9 +46,20 @@ enterOnPage(page, callback){
 let _this = this;
 let user_min = this.getConfig('min_cost', 0),
 user_max = this.getConfig('max_cost', 0);
-$.get('https://www.oyunkeyi.com/?page=' + page, (data) => {
-data = data.replace(/<img/gi, '<noload');
-let found_games = $(data).find('.card');
+$.ajax({
+url: 'https://www.oyunkeyi.com/?page=' + page,
+success: function(data){
+data = $(data.replace(/<img/gi, '<noload'));
+if( _this.check === 0 ) {
+_this.check = 1;
+let prize_win = data.find('.modal-body p a b').text().trim();
+if( prize_win === 'Go! My Won' ) {
+_this.log( _this.logLink('https://www.oyunkeyi.com/kazandiklarim', Lang.get('service.win')) );
+if( _this.getConfig('sound') )
+new Audio( __dirname + '/sounds/won.wav' ).play();
+}
+}
+let found_games = data.find('.card');
 let curr_giveaway = 0;
 function giveawayEnter(){
 if( found_games.length <= curr_giveaway || !_this.started || _this.curr_value === 0) {
@@ -69,14 +82,14 @@ eLink = link.replace('cekilis', 'katil'),
 okown = 0,
 okapp = 0,
 oksub = 0,
-okid = '';
+okid = '???';
 if( oksteam.includes('app/') ) {
 okapp = parseInt(oksteam.split("app/")[1].split("/")[0].split("?")[0].split("#")[0]);
-okid = '[app/' + okapp + ']';
+okid = 'app/' + okapp;
 }
 if( oksteam.includes('sub/') ) {
 oksub = parseInt(oksteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
-okid = '[sub/' + oksub + ']';
+okid = 'sub/' + oksub;
 }
 if( _this.getConfig('check_in_steam') ) {
 if( GJuser.ownapps.includes(',' + okapp + ',') && okapp > 0 )
@@ -85,8 +98,10 @@ if( GJuser.ownsubs.includes(',' + oksub + ',') && oksub > 0 )
 okown = 1;
 }
 if( okown === 0 ) {
-$.get(eLink);
-_this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + ' ' + _this.logLink(oksteam, okid) + '. ' + _this.trans('cost') + ' - ' + cost);
+$.ajax({
+url: eLink
+});
+_this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + ' - ' + _this.logLink(oksteam, okid) + ' - ' + cost + ' P.');
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
 }
@@ -98,6 +113,7 @@ curr_giveaway++;
 setTimeout(giveawayEnter, next_after);
 }
 giveawayEnter();
+}
 });
 }
 }
