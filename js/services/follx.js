@@ -4,12 +4,11 @@ constructor() {
 super();
 this.websiteUrl = 'https://follx.com';
 this.authLink = 'https://follx.com/logIn';
-this.wonsUrl = 'https://follx.com/giveaways/won';
 this.authContent = '/account';
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 super.init();
 }
-getUserInfo(callback){
+getUserInfo(callback) {
 let userData = {
 avatar: __dirname + '/images/Follx.png',
 username: 'Follx User',
@@ -17,40 +16,44 @@ value: 0
 };
 $.ajax({
 url: 'https://follx.com/users/' + GJuser.steamid,
-success: function(data){
+success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 userData.avatar = data.find('.card-cover noload').attr('src');
 userData.username = data.find('.username').first().text();
 userData.value = data.find('.user .energy span').first().text();
 },
-complete: function(){
+complete: function () {
 callback(userData);
 }
 });
 }
-joinService(){
+joinService() {
 let _this = this;
 let page = 1;
-let callback = function() {
+_this.sync = 0;
+let callback = function () {
 page++;
-if ( page <= _this.getConfig('pages', 1) )
+if (page <= _this.getConfig('pages', 1)) {
 _this.enterOnPage(page, callback);
+}
 };
 this.enterOnPage(page, callback);
 }
-enterOnPage(page, callback){
+enterOnPage(page, callback) {
 let _this = this;
 let CSRF = '';
 $.ajax({
 url: 'https://follx.com/giveaways?page=' + page,
-success: function(html){
+success: function (html) {
 html = $('<div>' + html.replace(/<img/gi, '<noload') + '</div>');
 CSRF = html.find('meta[name="csrf-token"]').attr('content');
-if( CSRF.length < 10 ){
+if (CSRF.length < 10) {
 _this.log(this.trans('token_error'), true);
 _this.stopJoiner(true);
 return;
 }
+if (_this.sync === 0) {
+_this.sync = 1;
 $.ajax({
 url: 'https://follx.com/ajax/syncAccount',
 method: 'POST',
@@ -62,12 +65,14 @@ headers: {
 },
 dataType: 'json'
 });
+}
 let found_games = html.find('.giveaway_card');
 let curr_giveaway = 0;
-function giveawayEnter(){
-if( found_games.length <= curr_giveaway || !_this.started ) {
-if(callback)
+function giveawayEnter() {
+if (found_games.length <= curr_giveaway || !_this.started) {
+if (callback) {
 callback();
+}
 return;
 }
 let next_after = _this.interval();
@@ -76,49 +81,51 @@ link = card.find('.head_info a').attr('href'),
 name = card.find('.head_info').attr('title'),
 have = card.find('.giveaway-indicators > .have').length > 0,
 entered = card.find('.entered').length > 0;
-if( have || entered )
+if (have || entered) {
 next_after = 50;
-else
-{
+}
+else {
 let fxsteam = card.find('.head_info').attr('style'),
 fxown = 0,
 fxapp = 0,
 fxsub = 0,
 fxid = '???',
 fxstm = '';
-if( fxsteam.includes('apps/') ) {
-fxapp = parseInt(fxsteam.split("apps/")[1].split("/")[0].split("?")[0].split("#")[0]);
+if (fxsteam.includes('apps/')) {
+fxapp = parseInt(fxsteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
 fxid = 'app/' + fxapp;
 fxstm = 'https://store.steampowered.com/app/' + fxapp;
 }
-if( fxsteam.includes('sub/') ) {
-fxsub = parseInt(fxsteam.split("sub/")[1].split("/")[0].split("?")[0].split("#")[0]);
+if (fxsteam.includes('sub/')) {
+fxsub = parseInt(fxsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 fxid = 'sub/' + fxsub;
 fxstm = 'https://store.steampowered.com/sub/' + fxsub;
 }
-if( _this.getConfig('check_in_steam') ) {
-if( GJuser.ownapps.includes(',' + fxapp + ',') && fxapp > 0 )
-fxown = 1;
-if( GJuser.ownsubs.includes(',' + fxsub + ',') && fxsub > 0 )
+if (_this.getConfig('check_in_steam')) {
+if (GJuser.ownapps.includes(',' + fxapp + ',') && fxapp > 0) {
 fxown = 1;
 }
-if( fxown === 0 ) {
+if (GJuser.ownsubs.includes(',' + fxsub + ',') && fxsub > 0) {
+fxown = 1;
+}
+}
+if (fxown === 0) {
 $.ajax({
 url: link,
-success: function(html){
+success: function (html) {
 html = html.replace(/<img/gi, '<noload');
-if( html.indexOf('data-action="enter"') > 0 ){
+if (html.indexOf('data-action="enter"') > 0) {
 $.ajax({
-method: 'post',
+method: 'POST',
 url: link + '/action',
-data: "action=enter",
+data: 'action=enter',
 dataType: 'json',
 headers: {
 'X-Requested-With': 'XMLHttpRequest',
 'X-CSRF-TOKEN': CSRF
 },
 success: function (data) {
-if(data.response){
+if (data.response) {
 _this.setValue(data.points);
 _this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + ' - ' + _this.logLink(fxstm, fxid));
 }

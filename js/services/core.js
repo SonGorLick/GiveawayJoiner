@@ -10,7 +10,6 @@ this.cookies = '';
 this.domain = 'giftseeker.ru';
 this.websiteUrl = 'http://giftseeker.ru';
 this.authLink = 'http://giftseeker.ru';
-this.wonsUrl = 'http://giftseeker.ru';
 this.authContent = '';
 this.withValue = true;
 this.curr_value = 0;
@@ -22,15 +21,16 @@ interval_to: { type: 'number', trans: 'service.interval_to', min: this.getConfig
 pages: { type: 'number', trans: 'service.pages', min: 1, max: 30, default: this.getConfig('pages', 1) }
 };
 }
-init(){
+init() {
 this.addIcon();
 this.addPanel();
 this.renderSettings();
 this.updateCookies();
-if( Config.get('autostart') )
+if (Config.get('autostart')) {
 this.startJoiner(true);
 }
-addIcon(){
+}
+addIcon() {
 this.icon = $(document.createElement('div'))
 .addClass('service-icon')
 .appendTo('.services-icons');
@@ -53,7 +53,7 @@ this.icon.on('click', () => {
 this.setActive();
 });
 }
-addPanel(){
+addPanel() {
 this.panel = $(document.createElement('div'))
 .addClass('service-panel')
 .attr('id', this.constructor.name.toLowerCase())
@@ -92,7 +92,7 @@ this.userInfo = $(document.createElement('div'))
 .html('<div class="avatar"></div>' +
 '<span class="username"></span>')
 .appendTo(this.userPanel);
-if( this.withValue ){
+if (this.withValue) {
 let value = $(document.createElement('span'))
 .addClass('value')
 .html('<span data-lang="' + this.transPath('value_label') + '">' + this.trans('value_label') + '</span>: ')
@@ -110,73 +110,81 @@ this.mainButton = $('<button>' + Lang.get('service.btn_start') + '</button>')
 .addClass('joiner-button start-button')
 .hover(() => {
 this.mainButton.addClass('hovered');
-if( this.started )
+if (this.started) {
 this.buttonState(Lang.get('service.btn_stop'));
+}
 }, () => {
 this.mainButton.removeClass('hovered');
-if( this.started )
+if (this.started) {
 this.buttonState(Lang.get('service.btn_work'));
+}
 })
 .click(() => {
-if(this.mainButton.hasClass('disabled'))
+if (this.mainButton.hasClass('disabled')) {
 return;
-if( !this.started )
+}
+if (!this.started) {
 this.startJoiner();
-else
+}
+else {
 this.stopJoiner();
+}
 })
 .appendTo(this.userPanel);
 }
-setActive(){
+setActive() {
 $('.service-icon, .service-panel').removeClass('active');
 this.icon.addClass('active');
 this.panel.addClass('active');
 }
-authCheck(callback){
+authCheck(callback) {
 let authContent = this.authContent;
 $.ajax({
 url: this.websiteUrl,
 timeout: this.getTimeout,
 success: function (html) {
 html = html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload');
-if( html.indexOf( authContent ) >= 0 )
+if (html.indexOf(authContent) >= 0) {
 callback(1);
-else
+}
+else {
 callback(0);
+}
 },
 error: function () {
 callback(-1);
 }
 });
 }
-startJoiner(autostart){
-if( this.started )
+startJoiner(autostart) {
+if (this.started) {
 return false;
+}
 this.buttonState(Lang.get('service.btn_checking'), 'disabled');
-this.authCheck( (authState) => {
-if ( authState === 1) {
+this.authCheck((authState) => {
+if (authState === 1) {
 this.runTimer();
 }
-else if( authState === -1 ){
+else if (authState === -1) {
 this.log(Lang.get('service.connection_error'), true);
 this.buttonState(Lang.get('service.btn_start'));
-if( autostart ) {
+if (autostart) {
 this.setStatus('bad');
 }
 }
 else {
-if( autostart ){
+if (autostart) {
 this.setStatus('bad');
 this.buttonState(Lang.get('service.btn_start'));
 this.log(Lang.get('service.cant_start'), true);
 }
-else{
+else {
 this.buttonState(Lang.get('service.btn_awaiting'), 'disabled');
 this.waitAuth = true;
 Browser.webContents.on('did-finish-load', () => {
-if( this.waitAuth && Browser.getURL().indexOf(this.websiteUrl) >= 0 ){
+if (this.waitAuth && Browser.getURL().indexOf(this.websiteUrl) >= 0) {
 Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML', (body) => {
-if( body.indexOf(this.authContent) >= 0 ){
+if (body.indexOf(this.authContent) >= 0) {
 Browser.close();
 this.waitAuth = false;
 }
@@ -189,10 +197,12 @@ Browser.once('close', () => {
 Browser.webContents.removeAllListeners('did-finish-load');
 this.waitAuth = false;
 this.authCheck((authState) => {
-if ( authState === 1)
+if (authState === 1) {
 this.runTimer();
-else
+}
+else {
 this.buttonState(Lang.get('service.btn_start'));
+}
 });
 });
 Browser.show();
@@ -200,80 +210,86 @@ Browser.show();
 }
 });
 }
-stopJoiner(bad){
+stopJoiner(bad) {
 let status = bad ? 'bad' : 'normal';
-if( !this.started )
+if (!this.started) {
 return false;
+}
 this.started = false;
 this.setStatus(status);
 clearInterval(this.intervalVar);
 this.log(Lang.get('service.stopped'));
 this.buttonState(Lang.get('service.btn_start'));
 }
-runTimer(){
+runTimer() {
 this.totalTicks = 0;
 this.started = true;
 let atimer = this.getConfig('timer', 10);
 this.stimer = atimer;
 this.setStatus('good');
-this.log( Lang.get('service.started') );
+this.log(Lang.get('service.started'));
 this.updateUserInfo();
-if( this.intervalVar )
+if (this.intervalVar) {
 clearInterval(this.intervalVar);
+}
 this.intervalVar = setInterval(() => {
-if( !this.started )
+if (!this.started) {
 clearInterval(this.intervalVar);
-if( this.totalTicks !== 0 && this.totalTicks % this.usrUpdTimer === 0 )
+}
+if (this.totalTicks !== 0 && this.totalTicks % this.usrUpdTimer === 0) {
 this.updateUserInfo();
-if( this.totalTicks % this.doTimer() === 0 ) {
+}
+if (this.totalTicks % this.doTimer() === 0) {
 this.authCheck((authState) => {
-if(authState === 1) {
+if (authState === 1) {
 this.log(Lang.get('service.connection_good'));
 let atimer = this.getConfig('timer', 10);
 this.stimer = atimer;
 this.updateCookies();
 this.joinService();
 }
-else if(authState === 0) {
+else if (authState === 0) {
 this.log(Lang.get('service.session_expired'), true);
 this.stopJoiner(true);
 }
-else{
+else {
 this.log(Lang.get('service.connection_lost'), true);
 this.stimer = 5;
 }
 });
 }
-if( !this.mainButton.hasClass('hovered') )
+if (!this.mainButton.hasClass('hovered')) {
 this.buttonState(Lang.get('service.btn_work'));
+}
 this.totalTicks++;
 }, 1000);
 }
-updateUserInfo(){
+updateUserInfo() {
 this.authCheck((authState) => {
-if(authState === 1){
+if (authState === 1) {
 this.getUserInfo((userData) => {
 this.userInfo.find('.avatar').css('background-image', "url('" + userData.avatar + "')");
 this.userInfo.find('.username').text(userData.username);
-if( this.withValue )
+if (this.withValue) {
 this.setValue(userData.value);
+}
 this.userInfo.addClass('visible');
 });
 }
 });
 }
-renderSettings(){
-for(let control in this.settings){
+renderSettings() {
+for (let control in this.settings) {
 let input = this.settings[control];
-switch( input.type ){
+switch (input.type) {
 case 'number':
 case 'float_number':
 let step = input.type === 'number' ? 1 : 0.1;
-if(input.default < input.min) {
+if (input.default < input.min) {
 input.default = input.min;
 this.setConfig(control, input.default);
 }
-else if( input.default > input.max ){
+else if (input.default > input.max) {
 input.default = input.max;
 this.setConfig(control, input.default);
 }
@@ -291,23 +307,25 @@ let _this = this;
 let vLabel = numberWrap.find('.value-label');
 let btnUp = numberWrap.find('.btn-up');
 let btnDn = numberWrap.find('.btn-down');
-if( input.default === input.max ) btnUp.addClass('disabled');
-if( input.default === input.min ) btnDn.addClass('disabled');
+if (input.default === input.max) btnUp.addClass('disabled');
+if (input.default === input.min) btnDn.addClass('disabled');
 let pressTimeout = undefined;
 let iterations = 0;
-let up = function(){
+let up = function () {
 let val = parseFloat(vLabel.text());
-if (val < input.max){
+if (val < input.max) {
 val = val + step;
 btnDn.removeClass('disabled');
 }
-if( input.type === 'float_number' )
-val = parseFloat( val.toFixed(1) );
-if( val === input.max )
+if (input.type === 'float_number') {
+val = parseFloat(val.toFixed(1));
+}
+if (val === input.max) {
 btnUp.addClass('disabled');
+}
 vLabel.text(val);
 _this.setConfig(control, val);
-switch(control){
+switch (control) {
 case 'min_cost':
 _this.settings.max_cost.min = val;
 _this.reinitNumber('max_cost');
@@ -326,19 +344,21 @@ _this.reinitNumber('interval_from');
 break;
 }
 };
-let dn = function(){
+let dn = function () {
 let val = parseFloat(vLabel.text());
-if (val > input.min){
+if (val > input.min) {
 val = val - step;
 btnUp.removeClass('disabled');
 }
-if( input.type === 'float_number' )
-val = parseFloat( val.toFixed(1) );
-if( val === input.min )
+if (input.type === 'float_number') {
+val = parseFloat(val.toFixed(1));
+}
+if (val === input.min) {
 btnDn.addClass('disabled');
+}
 vLabel.text(val);
 _this.setConfig(control, val);
-switch(control){
+switch (control) {
 case 'min_cost':
 _this.settings.max_cost.min = val;
 _this.reinitNumber('max_cost');
@@ -358,10 +378,10 @@ break;
 }
 };
 btnUp.on('mousedown', () =>{
-let func = function(){
+let func = function () {
 iterations++;
 up();
-pressTimeout = setTimeout(func, 200 / ( iterations / 2 ));
+pressTimeout = setTimeout(func, 200 / (iterations / 2));
 };
 func();
 })
@@ -370,10 +390,10 @@ iterations = 0;
 clearTimeout(pressTimeout);
 });
 btnDn.on('mousedown', () =>{
-let func = function(){
+let func = function () {
 iterations++;
 dn();
-pressTimeout = setTimeout(func, 200 / ( iterations / 2 ));
+pressTimeout = setTimeout(func, 200 / (iterations / 2));
 };
 func();
 })
@@ -402,74 +422,79 @@ break;
 }
 }
 }
-reinitNumber(control){
+reinitNumber(control) {
 let wrap = $('[data-control="' + this.constructor.name.toLowerCase() + '.' + control + '"]'),
 val = parseInt(wrap.find('.value-label').text());
 wrap.find('.button').removeClass('disabled');
-if( val <= this.settings[control].min )
+if (val <= this.settings[control].min) {
 wrap.find('.btn-down').addClass('disabled');
-if( val >= this.settings[control].max )
+}
+if (val >= this.settings[control].max) {
 wrap.find('.btn-up').addClass('disabled');
 }
-logLink(address, anchor){
+}
+logLink(address, anchor) {
 return '<span class="open-website" data-link="' + address + '">' + anchor + '</span>';
 }
-updateCookies(){
-mainWindow.webContents.session.cookies.get({ domain: this.domain }, (error, cookies) => {
+updateCookies() {
+mainWindow.webContents.session.cookies.get({domain: this.domain}, (error, cookies) => {
 let newCookies = '';
-for( let one in cookies ){
-if(newCookies.length !== 0)
+for (let one in cookies) {
+if (newCookies.length !== 0) {
 newCookies += '; ';
+}
 newCookies += cookies[one].name + '=' + cookies[one].value;
 }
 this.cookies = newCookies;
 });
 }
-interval(){
+interval() {
 let min = this.getConfig('interval_from', this.settings.interval_from.default);
 let max = this.getConfig('interval_to', this.settings.interval_to.default) + 1;
-return ( Math.floor(Math.random() * (max - min)) + min ) * 1000;
+return (Math.floor(Math.random() * (max - min)) + min) * 1000;
 }
-doTimer(){
+doTimer() {
 return this.stimer * 60;
 }
-setStatus(status){
+setStatus(status) {
 this.statusIcon.attr('data-status', status);
 }
-buttonState(text, className){
+buttonState(text, className) {
 this.mainButton.removeClass('disabled').text(text);
-if( className )
+if (className) {
 this.mainButton.addClass(className);
 }
-setValue(new_value){
-if( this.withValue ){
-this.value_label.text( new_value );
+}
+setValue(new_value) {
+if (this.withValue) {
+this.value_label.text(new_value);
 this.curr_value = parseInt(new_value);
 }
 }
-getConfig(key, def){
-if( def === undefined )
+getConfig(key, def) {
+if (def === undefined) {
 def = this.settings[key].default;
+}
 return Config.get(this.constructor.name.toLowerCase() + '_' + key, def);
 }
-setConfig(key, val){
+setConfig(key, val) {
 return Config.set(this.constructor.name.toLowerCase() + '_' + key, val);
 }
-transPath(key){
+transPath(key) {
 return ('service.' + this.constructor.name.toLowerCase() + '.' + key);
 }
-trans(key){
+trans(key) {
 return Lang.get('service.' + this.constructor.name.toLowerCase() + '.' + key);
 }
-clearLog(){
+clearLog() {
 this.logField.html('<div><span class="time">' + timeStr() + ':</span>' + Lang.get('service.log_cleared') + '</div>');
 }
-log(text, logType){
+log(text, logType) {
 this.logField.append('<div class="' + (logType ? 'warn' : 'normal') + '"><span class="time">' + timeStr() + ':</span>' + text + '</div>');
 this.logWrap.scrollTop(this.logWrap[0].scrollHeight);
 }
-joinService(){}
-getUserInfo(callback){
+joinService() {}
+getUserInfo(callback) {
 callback({
 avatar: __dirname + '/icons/icon.png',
 username: 'GJ User',

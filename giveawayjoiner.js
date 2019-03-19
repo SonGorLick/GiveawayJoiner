@@ -35,7 +35,7 @@ udata = (udata.slice(0, -34)).toLowerCase();
 _icn = _itr;
 app.setPath('userData', udata + 'data');
 storage.setDataPath(udata + 'data');
-ipcMain.on('save-user', function(event, data) {
+ipcMain.on('save-user', function (event, data) {
 user = data;
 global.user = data;
 });
@@ -85,7 +85,7 @@ webaudio: false
 }
 });
 mainWindow.setMenu(null);
-if(devMode){
+if (devMode) {
 mainWindow.webContents.openDevTools();
 }
 Browser = new BrowserWindow({
@@ -113,10 +113,12 @@ Browser.on('close', (e) => {
 e.preventDefault();
 Browser.loadFile('blank.html');
 Browser.hide();
-if(mainWindow.hidden)
+if (mainWindow.hidden) {
 authWindow.focus();
-else
+}
+else {
 mainWindow.focus();
+}
 });
 authWindow.on('close', () => {
 authWindow.removeAllListeners('close');
@@ -133,12 +135,14 @@ mainWindow.on('closed', () => {
 mainWindow = null;
 });
 tray = new Tray(nativeImage.createFromPath(_itr));
-tray.setToolTip("GiveawayJoiner " + app.getVersion());
+tray.setToolTip('GiveawayJoiner ' + app.getVersion());
 tray.on('click', () => {
-if( user === null )
+if (user === null) {
 authWindow.isVisible() ? authWindow.hide() : authWindow.show();
-else
+}
+else {
 mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+}
 });
 global.sharedData = {
 devMode: devMode,
@@ -153,141 +157,154 @@ mainWindow: mainWindow,
 Request: Request
 };
 });
-function startApp(){
-if( appLoaded )
+function startApp() {
+if (appLoaded) {
 return;
-let afterLangs = function(){
+}
+let afterLangs = function () {
 authWindow.loadFile('auth.html');
 authWindow.on('ready-to-show', () => {
 authWindow.show();
-if( Config.get('start_minimized') )
+if (Config.get('start_minimized')) {
 authWindow.hide();
-else
+}
+else {
 authWindow.focus();
+}
 });
 };
 Lang.loadLangs(afterLangs);
 appLoaded = true;
 }
 class LanguageClass {
-constructor(){
+constructor() {
 this.default = 'en_US';
 this.languages = {};
 this.langsCount = 0;
 Request({uri: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/all.json', json: true})
 .then((data) => {
-if(data.response !== false){
+if (data.response !== false) {
 data = JSON.parse(data.response).langs;
 let checked = 0;
-for(let one in data){
+for (let one in data) {
 let name = data[one].name;
 let size = data[one].size;
 let loadLang = () => {
-Request( { uri: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/' + name } )
-.then(( lang ) => {
+Request({uri: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/' + name})
+.then((lang) => {
 fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => { });
 })
 .finally(() => {
 checked++;
-if( checked >= data.length )
+if (checked >= data.length) {
 startApp();
+}
 });
 };
-if( !fs.existsSync( storage.getDataPath() + '/' + name ) )
+if (!fs.existsSync(storage.getDataPath() + '/' + name)) {
 loadLang();
-else{
+}
+else {
 fs.stat(storage.getDataPath() + '/' + name, (err, stats) => {
-if( stats.size !== size )
+if (stats.size !== size) {
 loadLang();
-else
+}
+else {
 checked++;
-if( checked === data.length )
+}
+if (checked === data.length) {
 startApp();
+}
 });
 }
 }
 }
-else
+else {
 startApp();
+}
 })
 .catch(() => {
 startApp();
 console.log('catchLang Constructor');
 });
 }
-loadLangs(callback){
+loadLangs(callback) {
 let _this = this;
-if( fs.existsSync(storage.getDataPath()) ){
+if (fs.existsSync(storage.getDataPath())) {
 let lng_to_load = [];
 let dir = fs.readdirSync(storage.getDataPath());
-for(let x = 0; x < dir.length; x++){
-if( dir[x].indexOf('lang.') >= 0 ){
+for (let x = 0; x < dir.length; x++) {
+if (dir[x].indexOf('lang.') >= 0) {
 lng_to_load.push(dir[x].replace('.json', ''));
 }
 }
-if( !lng_to_load.length )
+if (!lng_to_load.length) {
 return;
-storage.getMany(lng_to_load, function(error, langs){
-if(error) throw new Error(`Can't load selected translation`);
+}
+storage.getMany(lng_to_load, function (error, langs) {
+if (error) throw new Error("Can't load selected translation");
 let lng;
-for(lng in langs.lang )
+for (lng in langs.lang)
 _this.langsCount++;
-if( langs.lang[Config.get('lang', _this.default)] === undefined ){
+if (langs.lang[Config.get('lang', _this.default)] === undefined) {
 _this.default = lng;
 Config.set('lang', _this.default);
 }
 _this.languages = langs.lang;
-if(callback)
+if (callback) {
 callback();
+}
 });
 }
 }
-get(key){
+get(key) {
 let response = this.languages;
 let splited = (Config.get('lang', this.default) + '.' + key).split('.');
-for(let i = 0; i < splited.length; i++){
-if( response[splited[i]] !== undefined ){
+for (let i = 0; i < splited.length; i++) {
+if (response[splited[i]] !== undefined) {
 response = response[splited[i]];
 }
-else{
+else {
 response = key;
 break;
 }
 }
 return response;
 }
-change(setLang){
+change(setLang) {
 Config.set('lang', setLang);
 }
-count(){
+count() {
 return this.langsCount;
 }
-current(){
+current() {
 return Config.get('lang', this.default);
 }
-list(){
+list() {
 return this.languages;
 }
 }
 class ConfigClass {
-constructor(){
+constructor() {
 let _this = this;
 this.settings = {};
-storage.get("configs", function(error, data){
-if(error) throw error;
+storage.get('configs', function (error, data) {
+if (error) throw error;
 _this.settings = data;
-_this.set('inits', ( _this.get('inits', 0) + 1) );
+_this.set('inits', (_this.get('inits', 0) + 1));
 });
 }
-set(key, value){
+set(key, value) {
 this.settings[key] = value;
-storage.set("configs", this.settings);
+storage.set('configs', this.settings);
 }
-get(key, def_val){
-if( this.settings[key] !== undefined )
+get(key, def_val) {
+if (this.settings[key] !== undefined) {
 return this.settings[key];
-if( def_val !== undefined )
+}
+if (def_val !== undefined) {
 return def_val;
+}
 return false;
 }
 }
