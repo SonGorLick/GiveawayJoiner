@@ -5,8 +5,8 @@
  1. Changed color design, icons, font in the app like Adapta-Nokto theme.
  2. Increased 'Timer' to max. 1440 minutes (24 hours).
  3. Increased 'Pages' number to check, max. 30 pages now.
- 4. The SteamGifts service bug fixed when service after join to the giveaway from wishlist and continuing join to the normal         giveaways by ignoring options like 'Min. & Max. Cost', 'Points to reserve', 'Min. Level' to join.
- 5. The Indiegala service working fixed (26.02.19.) !!! Need solve the captcha by clicking on 'Visit service web site' button.
+ 4. The SteamGifts service bug fixed when service after join to the giveaway from wishlist and continuing join to the normal     giveaways by ignoring options like 'Min. & Max. Cost', 'Points to reserve', 'Min. Level' to join.
+ 5. The Indiegala service working fixed (26.02.19.) !!! Need to solve the captcha by clicking on 'Visit service web site'         button.
  6. The Indiegala service new option functions added: 'Max. Cost', 'Max. Level'(your level in service) to enter giveaway.
  7. The OpiumPulses service working fixed (26.02.19.).
  8. The OpiumPulses service join to the all giveaways that you can enter.
@@ -14,13 +14,12 @@
 10. The OyunKeyi service added (from v1.1.6).
 11. The ZeePond service added (from v1.1.7).
 12. Added retry connect to services in 5 minutes if the app can't connect to the service.
-13. Added 'Check owned on Steam' (default on) option for SteamGifts, Indiegala, OpiumPulses, OyunKeyi, Follx services to skip       giveaways games that owned on Steam account. Need to be logined on Steam, in 'Profile' section you can check if you press       'Steam' button. 
-14. Completely portable app (all user data and your options storied in app subdirectory 'giveawayjoinerdata'. You can use           multiple copies of the app with different accounts and options, just make copies of app with different appname directories 
-    like 'giveawayjoiner1', 'giveawayjoiner2', etc. For example).
+13. Added 'Check owned on Steam' (default on) option for SteamGifts, Indiegala, OpiumPulses, OyunKeyi, Follx services to skip     giveaways games that owned on Steam account. Need to be logined on Steam, in 'Profile' section you can check if you press     'Steam' button. 
+14. Completely portable app (all user data and your options storied in app subdirectory 'giveawayjoinerdata'. You can use         multiple copies of the app with different accounts and options, just make copies of app with different appname               directories like 'giveawayjoiner1', 'giveawayjoiner2', etc. For example).
 15. Removed functions 'Auto update' and 'Startup with os' in the app.
-16. Removed 'time left' display timer on 'Start' button to reduce the app resources (from v1.1.5e)
+16. Removed 'time left' display timer on 'Start' button to reduce cpu resources (from v1.1.5e)
 17. Translations changes and fixes.
-18. Code optimizations and bugfixes for Linux and Mac OS compatibility (One source code base to build on all supported os's by       Electron).
+18. Code optimizations and bugfixes for Linux and Mac OS compatibility (One source code base to build on all supported os's       by Electron).
 
   To build latest version from source:
 
