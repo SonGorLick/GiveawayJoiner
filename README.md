@@ -1,5 +1,6 @@
 [![DeepScan grade](https://deepscan.io/api/teams/2928/projects/4373/branches/35596/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=2928&pid=4373&bid=35596)
-
+[![CodeFactor](https://www.codefactor.io/repository/github/pumpcin/giveawayjoiner/badge)](https://www.codefactor.io/repository/github/pumpcin/giveawayjoiner)
+ 
  Differences from the original GiftSeeker version 1.1.0:
 
  1. Changed color design, icons, font in the app like Adapta-Nokto theme.
