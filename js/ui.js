@@ -67,13 +67,13 @@ $('.in-service-panel[data-id="' + $(this).attr('data-id') + '"]')
 $('.joiner-button.logout').click(function () {
 let clicked = $(this).addClass('disabled');
 $.ajax({
-method: 'get',
+method: 'GET',
 url: 'http://giftseeker.ru/logout',
 success: function () {
 mainWindow.hide();
 mainWindow.loadURL(__dirname + '/blank.html');
 ipc.send('save-user', null);
-authWindow.show();
+mainWindow.close();
 },
 error: function () {
 clicked.removeClass('disabled');
@@ -106,7 +106,7 @@ function intervalSchedules() {
 if (intervalTicks !== 0 && intervalTicks % 300 === 0) {
 $.ajax({
 url: 'http://giftseeker.ru/api/userData',
-data: {ver: currentBuild},
+data: {ver: "1.1.0"},
 dataType: 'json',
 success: function (data) {
 if (data.response) {

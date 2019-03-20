@@ -57,7 +57,7 @@ buttons.addClass('disabled');
 status.text(Lang.get('auth.check'));
 $.ajax({
 url: 'http://giftseeker.ru/api/userData',
-data: {ver: currentBuild},
+data: {ver: "1.1.0"},
 dataType: 'json',
 success: function (data) {
 if (!data.response) {

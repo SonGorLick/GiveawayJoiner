@@ -14,6 +14,11 @@ this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), defaul
 super.init();
 }
 authCheck(callback) {
+let tmout = (Math.floor(Math.random() * 10000)) + 7000;
+$.ajax({
+url: 'https://www.indiegala.com',
+timeout: tmout,
+success: function () {
 $.ajax({
 url: 'https://www.indiegala.com/get_user_info',
 dataType: 'json',
@@ -27,6 +32,8 @@ callback(0);
 },
 error: function () {
 callback(-1);
+}
+});
 }
 });
 }
@@ -162,7 +169,7 @@ data: JSON.stringify({giv_id: id, ticket_price: price}),
 success: function (data) {
 if (data.status === 'ok') {
 _this.setValue(data.new_amount);
-_this.log(Lang.get('service.entered_in') + _this.logLink('https://www.indiegala.com/giveaways/detail/' + id, name) + ' - ' + _this.logLink(igstm, igid) + ' - ' + price + ' iC.');
+_this.log(Lang.get('service.entered_in') + _this.logLink('https://www.indiegala.com/giveaways/detail/' + id, name) + ' - ' + _this.logLink(igstm, igid) + ' - ' + price + ' iC');
 }
 }
 });

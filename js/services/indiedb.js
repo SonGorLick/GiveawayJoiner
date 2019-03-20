@@ -48,10 +48,7 @@ url: _this.url + link,
 success: function (data) {
 data = data.replace(/<img/gi, '<noload');
 let entered = data.indexOf('"buttonenter buttongiveaway">Join Giveaway<') >= 0;
-if (!entered) {
-next_after = 50;
-}
-else {
+if (entered) {
 let eLink = $(data).find('a.buttonenter').attr('href');
 $.ajax({
 url: _this.url + eLink,
@@ -71,6 +68,9 @@ success: function () {
 }
 }
 });
+}
+else {
+next_after = 50;
 }
 }
 });

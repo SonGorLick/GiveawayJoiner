@@ -3,7 +3,7 @@ class Joiner {
 constructor() {
 this.intervalVar = undefined;
 this.totalTicks = 0;
-this.usrUpdTimer = 60;
+this.usrUpdTimer = 180;
 this.started = false;
 this.waitAuth = false;
 this.cookies = '';
@@ -116,7 +116,12 @@ this.buttonState(Lang.get('service.btn_stop'));
 }, () => {
 this.mainButton.removeClass('hovered');
 if (this.started) {
+if (Config.get('timer_view', false)) {
+this.buttonState(window.timeToStr(this.doTimer() - this.totalTicks % this.doTimer()));
+}
+else {
 this.buttonState(Lang.get('service.btn_work'));
+}
 }
 })
 .click(() => {
@@ -259,7 +264,12 @@ this.stimer = 5;
 });
 }
 if (!this.mainButton.hasClass('hovered')) {
+if (Config.get('timer_view', false)) {
+this.buttonState(window.timeToStr(this.doTimer() - this.totalTicks % this.doTimer()));
+}
+else {
 this.buttonState(Lang.get('service.btn_work'));
+}
 }
 this.totalTicks++;
 }, 1000);

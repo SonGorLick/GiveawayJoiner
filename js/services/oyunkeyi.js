@@ -55,7 +55,7 @@ _this.check = 1;
 let prize_win = data.find('.modal-body p a b').text().trim();
 if (prize_win === 'Go! My Won') {
 _this.log(_this.logLink('https://www.oyunkeyi.com/kazandiklarim', Lang.get('service.win')));
-if (_this.getConfig('sound')) {
+if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }
 }
@@ -105,7 +105,7 @@ if (okown === 0) {
 $.ajax({
 url: eLink
 });
-_this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + ' - ' + _this.logLink(oksteam, okid) + ' - ' + cost + ' P.');
+_this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + ' - ' + _this.logLink(oksteam, okid) + ' - ' + cost + ' P');
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
 }

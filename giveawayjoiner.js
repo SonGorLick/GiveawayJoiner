@@ -50,7 +50,7 @@ app.on('ready', () => {
 Config = new ConfigClass();
 Lang = new LanguageClass();
 _session = session.fromPartition('persist:GiveawayJoiner');
-_session.setUserAgent('Mozilla/5.0 (Linux; Android 8.0.0; SM-G960F Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36');
+_session.setUserAgent('Mozilla/5.0 (Linux; Android 8.1.0; SM-G960F Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Mobile Safari/537.36');
 authWindow = new BrowserWindow({
 width: 280,
 height: 340,
@@ -292,7 +292,6 @@ this.settings = {};
 storage.get('configs', function (error, data) {
 if (error) throw error;
 _this.settings = data;
-_this.set('inits', (_this.get('inits', 0) + 1));
 });
 }
 set(key, value) {

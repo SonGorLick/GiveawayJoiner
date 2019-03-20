@@ -71,7 +71,7 @@ processCommon();
 giveawaysFromUrl(url, callback) {
 $.ajax({
 url: url,
-method: 'get',
+method: 'GET',
 success: (data) => {
 data = $('<div>' + data + '</div>');
 this.token = data.find('input[name="xsrf_token"]').val();
@@ -84,8 +84,8 @@ if (this.check === 0) {
 this.check = 1;
 let prize_win = parseInt(data.find('.fade_infinite.nav__notification').text().trim());
 if (prize_win > 0) {
-this.log(this.logLink('https://www.steamgifts.com/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + prize_win + ').'));
-if (this.getConfig('sound')) {
+this.log(this.logLink('https://www.steamgifts.com/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + prize_win + ')'));
+if (this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }
 }
@@ -197,7 +197,7 @@ code: GA.code
 },
 success: function (data) {
 if (data.type === 'success') {
-_this.log(Lang.get('service.entered_in') + _this.logLink(GA.link, GA.name) + ' - ' + _this.logLink(GA.sgsteam, sgid) + ' - ' + GA.cost + ' P - ' + GA.chance + ' %.');
+_this.log(Lang.get('service.entered_in') + _this.logLink(GA.link, GA.name) + ' - ' + _this.logLink(GA.sgsteam, sgid) + ' - ' + GA.cost + ' P - ' + GA.chance + ' %');
 _this.setValue(data.points);
 }
 }
