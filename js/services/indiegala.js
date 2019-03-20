@@ -70,6 +70,7 @@ let _this = this;
 let user_level = this.getConfig('max_level', 0),
 user_min = this.getConfig('min_cost', 0),
 user_max = this.getConfig('max_cost', 0);
+_this.check = 1;
 if (_this.check === 0) {
 _this.check = 1;
 $.ajax({

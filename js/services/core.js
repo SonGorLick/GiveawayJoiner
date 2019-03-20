@@ -389,7 +389,7 @@ func();
 iterations = 0;
 clearTimeout(pressTimeout);
 });
-btnDn.on('mousedown', () =>{
+btnDn.on('mousedown', () => {
 let func = function () {
 iterations++;
 dn();

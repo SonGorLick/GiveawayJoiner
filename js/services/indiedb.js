@@ -35,7 +35,7 @@ success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 let content = data.find('.rowcontent');
 let currcont = 0;
-function giveawayEnter(){
+function giveawayEnter() {
 if (content.length <= currcont || !_this.started) {
 return;
 }
