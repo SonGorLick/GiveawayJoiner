@@ -121,6 +121,7 @@
 		"logout_btn": "Logout",
 		"start_minimized": "Minimize at startup",
 		"autostart": "Autostart of services",
+		"timer_view": "Display timer",
 		"build_version": "Build version"
 	}
 }
