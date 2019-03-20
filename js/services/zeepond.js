@@ -45,7 +45,7 @@ $.ajax({
 url: link,
 success: function (data) {
 data = data.replace(/<img/gi, '<noload');
-let entered = data.indexOf('You have already entered today') >= 0;
+let entered = data.indexOf('You have already') >= 0;
 if (entered) {
 next_after = 50;
 }
