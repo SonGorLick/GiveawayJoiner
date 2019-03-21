@@ -51,7 +51,7 @@ show_coins: 'True'
 },
 dataType: 'json',
 success: function (data) {
-userData.avatar = data.steamavatar.replace('fb1.jpg', 'fb1_medium.jpg');
+userData.avatar = data.steamavatar.replace('fb1.jpg', 'fb1_full.jpg');
 userData.username = data.steamnick;
 userData.value = data.silver_coins_tot;
 },
@@ -80,8 +80,10 @@ user_max = this.getConfig('max_cost', 0);
 _this.check = 1;
 if (_this.check === 0) {
 _this.check = 1;
+let ptmout = (Math.floor(Math.random() * 10000)) + 7000;
 $.ajax({
 url: 'https://www.indiegala.com/profile',
+timeout: ptmout,
 success: function () {
 $.ajax({
 url: 'https://www.indiegala.com/giveaways/library_completed',
@@ -91,7 +93,7 @@ dataType: 'json',
 success: function () {
 $.ajax({
 url: 'https://www.indiegala.com/giveaways/check_if_won_all',
-success: function () {
+success: function (html) {
 }
 });
 }
