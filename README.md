@@ -13,14 +13,13 @@
  8. The OpiumPulses service join to the all giveaways that you can enter.
  9. The OpiumPulses service new option functions added: 'Pages' to check giveaways.
 10. The OyunKeyi service added (from v1.1.6).
-11. The ZeePond service added (from v1.1.7).
-12. Added retry connect to services in 5 minutes if the app can't connect to the service.
-13. Added 'Check owned on Steam' (default on) option for SteamGifts, Indiegala, OpiumPulses, OyunKeyi, Follx services to skip     giveaways games that owned on Steam account. Need to be logined on Steam, in 'Profile' section you can check if you press     'Steam' button. 
-14. Completely portable app (all user data and your options storied in app subdirectory 'giveawayjoinerdata'. You can use         multiple copies of the app with different accounts and options, just make copies of app with different appname               directories like 'giveawayjoiner1', 'giveawayjoiner2', etc. For example).
-15. Removed functions 'Auto update' and 'Startup with os' in the app.
-16. Removed 'time left' display timer on 'Start' button to reduce cpu resources (from v1.1.5e)
-17. Translations changes and fixes.
-18. Code optimizations and bugfixes for Linux and Mac OS compatibility (One source code base to build on all supported os's       by Electron).
+11. Added retry connect to services in 5 minutes if the app can't connect to the service.
+12. Added 'Check owned on Steam' (default on) option for SteamGifts, Indiegala, OpiumPulses, OyunKeyi, Follx services to skip     giveaways games that owned on Steam account. Need to be logined on Steam, in 'Profile' section you can check if you press     'Steam' button. 
+13. Completely portable app (all user data and your options storied in app subdirectory 'giveawayjoinerdata'. You can use         multiple copies of the app with different accounts and options, just make copies of app with different appname               directories like 'giveawayjoiner1', 'giveawayjoiner2', etc. For example).
+14. Removed functions 'Auto update' and 'Startup with os' in the app.
+15. Removed 'time left' display timer on 'Start' button to reduce cpu resources (from v1.1.5e)
+16. Translations changes and fixes.
+17. Code optimizations and bugfixes for Linux and Mac OS compatibility (One source code base to build on all supported os's       by Electron).
 
   To build latest version from source:
 
