@@ -6,6 +6,7 @@ this.websiteUrl = 'https://follx.com';
 this.authLink = 'https://follx.com/logIn';
 this.authContent = '/account';
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
+this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
 super.init();
 }
 getUserInfo(callback) {
@@ -31,6 +32,8 @@ joinService() {
 let _this = this;
 let page = 1;
 _this.sync = 0;
+_this.check = 0;
+_this.won = this.getConfig('won', 0);
 let callback = function () {
 page++;
 if (page <= _this.getConfig('pages', 1)) {
@@ -65,6 +68,23 @@ headers: {
 },
 dataType: 'json'
 });
+}
+if (_this.check === 0) {
+_this.check = 1;
+let prize_win = parseInt(html.find('.hide-on-med-and-down.user-panel.s6.col > .icons > .marker.cup').text().trim());
+if (isNaN(prize_win)) {
+prize_win = 0;
+}
+if ((prize_win - _this.won) < 0) {
+this.setConfig('won', prize_win);
+}
+if (prize_win > 0 && (prize_win - _this.won) > 0) {
+_this.log(this.logLink('https://follx.com/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (prize_win - _this.won) + ')'));
+_this.setConfig('won', prize_win);
+if (_this.getConfig('sound', true)) {
+new Audio(__dirname + '/sounds/won.wav').play();
+}
+}
 }
 let found_games = html.find('.giveaway_card');
 let curr_giveaway = 0;

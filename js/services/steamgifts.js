@@ -44,6 +44,7 @@ callback(userData);
 joinService() {
 let page = 1;
 this.check = 0;
+this.won = this.getConfig('won', 0);
 this.giveaways = [];
 let processCommon = () => {
 if (!this.started) {
@@ -83,8 +84,15 @@ return;
 if (this.check === 0) {
 this.check = 1;
 let prize_win = parseInt(data.find('.nav__button-container--active.nav__button-container--notification.nav__button-container:nth-of-type(2) > .nav__button > .nav__notification').text().trim());
-if (prize_win > 0) {
-this.log(this.logLink('https://www.steamgifts.com/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + prize_win + ')'));
+if (isNaN(prize_win)) {
+prize_win = 0;
+}
+if ((prize_win - this.won) < 0) {
+this.setConfig('won', prize_win);
+}
+if (prize_win > 0 && (prize_win - this.won) > 0) {
+this.log(this.logLink('https://www.steamgifts.com/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (prize_win - this.won) + ')'));
+this.setConfig('won', prize_win);
 if (this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }

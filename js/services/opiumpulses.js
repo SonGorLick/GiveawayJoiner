@@ -6,6 +6,7 @@ this.websiteUrl = 'https://www.opiumpulses.com';
 this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
+this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
 super.init();
 }
 getUserInfo(callback) {
@@ -30,6 +31,8 @@ callback(userData);
 joinService() {
 let _this = this;
 let page = 1;
+_this.check = 0;
+_this.won = _this.getConfig('won', 0);
 let callback = function () {
 page++;
 if (page <= _this.getConfig('pages', 1)) {
@@ -44,6 +47,17 @@ $.ajax({
 url: 'https://www.opiumpulses.com/giveaways?ajax=giveawaylistview&Giveaway_page=' + page,
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
+if (_this.check === 0) {
+_this.check = 1;
+let prize_win = parseInt(data.find('[href="/user/giveawaykeys"] > span').text().trim());
+if (prize_win > 0 && (prize_win - _this.won) > 0) {
+_this.log(_this.logLink('https://www.opiumpulses.com/user/giveawaykeys', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (prize_win - _this.won) + ')'));
+_this.setConfig('won', prize_win);
+if (_this.getConfig('sound', true)) {
+new Audio(__dirname + '/sounds/won.wav').play();
+}
+}
+}
 let found_games = data.find('.giveaways-page-item');
 let curr_giveaway = 0;
 function giveawayEnter() {

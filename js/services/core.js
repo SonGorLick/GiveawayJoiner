@@ -255,7 +255,7 @@ this.stopJoiner(true);
 }
 else {
 this.log(Lang.get('service.connection_lost'), true);
-this.stimer = 5;
+this.stimer = 10;
 }
 });
 }
