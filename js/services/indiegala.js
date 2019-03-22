@@ -64,6 +64,7 @@ joinService() {
 let _this = this;
 let page = 1;
 _this.check = 0;
+_this.url = 'https://www.indiegala.com';
 let callback = function () {
 page++;
 if (page <= _this.getConfig('pages', 1)) {
@@ -82,17 +83,17 @@ if (_this.check === 0) {
 _this.check = 1;
 let ptmout = (Math.floor(Math.random() * 10000)) + 7000;
 $.ajax({
-url: 'https://www.indiegala.com/profile',
+url: _this.url + '/profile',
 timeout: ptmout,
 success: function () {
 $.ajax({
-url: 'https://www.indiegala.com/giveaways/library_completed',
+url: _this.url + '/giveaways/library_completed',
 type: 'POST',
 data: '{"list_type":"tocheck","page":1}',
 dataType: 'json',
 success: function () {
 $.ajax({
-url: 'https://www.indiegala.com/giveaways/check_if_won_all',
+url: _this.url + '/giveaways/check_if_won_all',
 success: function (html) {
 }
 });
@@ -106,7 +107,7 @@ if (this.getConfig('max_level', 0) === 0) {
 lvl = '0';
 }
 $.ajax({
-url: 'https://www.indiegala.com/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + lvl,
+url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + lvl,
 success: function (data) {
 let tickets = $(JSON.parse(data).content).find('.tickets-col');
 let curr_ticket = 0;
@@ -164,14 +165,14 @@ igown = 1;
 if (igown === 0) {
 $.ajax({
 type: 'POST',
-url: 'https://www.indiegala.com/giveaways/new_entry',
+url: _this.url + '/giveaways/new_entry',
 contentType: 'application/json; charset=utf-8',
 dataType: 'json',
 data: JSON.stringify({giv_id: id, ticket_price: price}),
 success: function (data) {
 if (data.status === 'ok') {
 _this.setValue(data.new_amount);
-_this.log(Lang.get('service.entered_in') + _this.logLink('https://www.indiegala.com/giveaways/detail/' + id, name) + ' - ' + _this.logLink(igstm, igid) + ' - ' + price + ' iC');
+_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + ' - ' + _this.logLink(igstm, igid) + ' - ' + price + ' iC');
 }
 }
 });

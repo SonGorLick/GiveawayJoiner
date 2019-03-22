@@ -30,7 +30,7 @@ joinService() {
 let _this = this;
 _this.url = 'https://www.indiedb.com';
 $.ajax({
-url: 'https://www.indiedb.com/giveaways',
+url: _this.url + '/giveaways',
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 let content = data.find('.rowcontent');

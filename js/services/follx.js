@@ -71,32 +71,32 @@ dataType: 'json'
 }
 if (_this.check === 0) {
 _this.check = 1;
-let prize_win = parseInt(html.find('.hide-on-med-and-down.user-panel.s6.col > .icons > .marker.cup').text().trim());
-if (isNaN(prize_win)) {
-prize_win = 0;
+let fxwon = parseInt(html.find('.hide-on-med-and-down.user-panel.s6.col > .icons > .marker.cup').text().trim());
+if (isNaN(fxwon)) {
+fxwon = 0;
 }
-if ((prize_win - _this.won) < 0) {
-this.setConfig('won', prize_win);
+if ((fxwon - _this.won) < 0) {
+this.setConfig('won', fxwon);
 }
-if (prize_win > 0 && (prize_win - _this.won) > 0) {
-_this.log(this.logLink('https://follx.com/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (prize_win - _this.won) + ')'));
-_this.setConfig('won', prize_win);
+if (fxwon > 0 && (fxwon - _this.won) > 0) {
+_this.log(this.logLink('https://follx.com/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (fxwon - _this.won) + ')'));
+_this.setConfig('won', fxwon);
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }
 }
 }
-let found_games = html.find('.giveaway_card');
-let curr_giveaway = 0;
+let fxfound = html.find('.giveaway_card');
+let fxcurr = 0;
 function giveawayEnter() {
-if (found_games.length <= curr_giveaway || !_this.started) {
+if (fxfound.length <= fxcurr || !_this.started) {
 if (callback) {
 callback();
 }
 return;
 }
 let next_after = _this.interval();
-let card = found_games.eq(curr_giveaway),
+let card = fxfound.eq(fxcurr),
 link = card.find('.head_info a').attr('href'),
 name = card.find('.head_info').attr('title'),
 have = card.find('.giveaway-indicators > .have').length > 0,
@@ -159,7 +159,7 @@ else {
 next_after = 50;
 }
 }
-curr_giveaway++;
+fxcurr++;
 setTimeout(giveawayEnter, next_after);
 }
 giveawayEnter();

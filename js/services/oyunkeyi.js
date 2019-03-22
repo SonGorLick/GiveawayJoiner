@@ -52,34 +52,34 @@ success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 if (_this.check === 0) {
 _this.check = 1;
-let prize_win = data.find('.modal-body p a b').text().trim();
-if (prize_win === 'Go! My Won') {
+let okwon = data.find('.modal-body p a b').text().trim();
+if (okwon === 'Go! My Won') {
 _this.log(_this.logLink('https://www.oyunkeyi.com/kazandiklarim', Lang.get('service.win')));
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }
 }
 }
-let found_games = data.find('.card');
-let curr_giveaway = 0;
+let okfound = data.find('.card');
+let okcurr = 0;
 function giveawayEnter() {
-if (found_games.length <= curr_giveaway || !_this.started || _this.curr_value === 0) {
+if (okfound.length <= okcurr || !_this.started || _this.curr_value === 0) {
 if (callback) {
 callback();
 }
 return;
 }
 let next_after = _this.interval();
-let giveaway = found_games.eq(curr_giveaway),
-link = giveaway.find('.card-body a').attr('href'),
-cost = parseInt(giveaway.find('.card-body a').text().split('(')[1].split('P)')[0]),
-entered = giveaway.attr('style');
+let okway = okfound.eq(okcurr),
+link = okway.find('.card-body a').attr('href'),
+cost = parseInt(okway.find('.card-body a').text().split('(')[1].split('P)')[0]),
+entered = okway.attr('style');
 if (_this.curr_value < cost || cost < user_min || cost > user_max && user_max > 0 || entered.includes('background')) {
 next_after = 50;
 }
 else {
-let oksteam = giveaway.find('.card-body a').eq(2).attr('href'),
-name = giveaway.find('.card-body a').text().split('(')[0].trim(),
+let oksteam = okway.find('.card-body a').eq(2).attr('href'),
+name = okway.find('.card-body a').text().split('(')[0].trim(),
 eLink = link.replace('cekilis', 'katil'),
 okown = 0,
 okapp = 0,
@@ -113,7 +113,7 @@ else {
 next_after = 50;
 }
 }
-curr_giveaway++;
+okcurr++;
 setTimeout(giveawayEnter, next_after);
 }
 giveawayEnter();

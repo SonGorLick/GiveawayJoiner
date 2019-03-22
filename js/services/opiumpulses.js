@@ -33,6 +33,7 @@ let _this = this;
 let page = 1;
 _this.check = 0;
 _this.won = _this.getConfig('won', 0);
+_this.url = 'https://www.opiumpulses.com';
 let callback = function () {
 page++;
 if (page <= _this.getConfig('pages', 1)) {
@@ -44,33 +45,33 @@ this.enterOnPage(page, callback);
 enterOnPage(page, callback) {
 let _this = this;
 $.ajax({
-url: 'https://www.opiumpulses.com/giveaways?ajax=giveawaylistview&Giveaway_page=' + page,
+url: _this.url + '/giveaways?ajax=giveawaylistview&Giveaway_page=' + page,
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
 if (_this.check === 0) {
 _this.check = 1;
-let prize_win = parseInt(data.find('[href="/user/giveawaykeys"] > span').text().trim());
-if (prize_win > 0 && (prize_win - _this.won) > 0) {
-_this.log(_this.logLink('https://www.opiumpulses.com/user/giveawaykeys', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (prize_win - _this.won) + ')'));
-_this.setConfig('won', prize_win);
+let opwon = parseInt(data.find('[href="/user/giveawaykeys"] > span').text().trim());
+if (opwon > 0 && (opwon - _this.won) > 0) {
+_this.log(_this.logLink(_this.url + '/user/giveawaykeys', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (opwon - _this.won) + ')'));
+_this.setConfig('won', opwon);
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }
 }
 }
-let found_games = data.find('.giveaways-page-item');
-let curr_giveaway = 0;
+let opfound = data.find('.giveaways-page-item');
+let opcurr = 0;
 function giveawayEnter() {
-if (found_games.length <= curr_giveaway || !_this.started || _this.curr_value === 0) {
+if (opfound.length <= opcurr || !_this.started || _this.curr_value === 0) {
 if (callback) {
 callback();
 }
 return;
 }
 let next_after = _this.interval();
-let giveaway = found_games.eq(curr_giveaway),
-entered = giveaway.find('.giveaways-page-item-img-btn-wrapper').text(),
-cost = parseInt(giveaway.find('.giveaways-page-item-header-points').text().replace('points', '').trim());
+let opway = opfound.eq(opcurr),
+entered = opway.find('.giveaways-page-item-img-btn-wrapper').text(),
+cost = parseInt(opway.find('.giveaways-page-item-header-points').text().replace('points', '').trim());
 if (isNaN(cost)) {
 cost = 0;
 }
@@ -78,11 +79,11 @@ if (_this.curr_value < cost|| entered.includes('ENTERED')) {
 next_after = 50;
 }
 else {
-let link = giveaway.find('.giveaways-page-item-img-btn-more').attr('href'),
-name = giveaway.find('.giveaways-page-item-footer-name').text().trim(),
-eLink = giveaway.find('.giveaways-page-item-img-btn-enter').attr('href');
+let link = opway.find('.giveaways-page-item-img-btn-more').attr('href'),
+name = opway.find('.giveaways-page-item-footer-name').text().trim(),
+eLink = opway.find('.giveaways-page-item-img-btn-enter').attr('href');
 $.ajax({
-url: 'https://www.opiumpulses.com' + link,
+url: _this.url + link,
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
 let opsteam = data.find('.giveaways-single-sponsored h1 a').attr('href');
@@ -111,7 +112,7 @@ opown = 1;
 }
 if (opown === 0) {
 $.ajax({
-url: 'https://www.opiumpulses.com' + eLink,
+url: _this.url + eLink,
 success: function () {
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
@@ -121,7 +122,7 @@ cost = 'Free';
 else {
 cost = cost + ' P';
 }
-_this.log(Lang.get('service.entered_in') + _this.logLink('https://www.opiumpulses.com' + link, name) + ' - ' + _this.logLink(opsteam, opid) + ' - ' + cost);
+_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + link, name) + ' - ' + _this.logLink(opsteam, opid) + ' - ' + cost);
 }
 });
 }
@@ -131,7 +132,7 @@ next_after = 50;
 }
 });
 }
-curr_giveaway++;
+opcurr++;
 setTimeout(giveawayEnter, next_after);
 }
 giveawayEnter();

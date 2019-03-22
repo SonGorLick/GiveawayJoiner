@@ -3,9 +3,10 @@ class Astats extends Joiner {
 constructor() {
 super();
 this.websiteUrl = 'http://astats.astats.nl';
-this.authContent = '/astats/User_Info.php?SteamID64=';
+this.authContent = 'Logout';
 this.authLink = 'http://astats.astats.nl/astats/profile/Login.php';
 this.withValue = false;
+delete this.settings.pages;
 super.init();
 }
 getUserInfo(callback) {
@@ -28,6 +29,7 @@ callback(userData);
 joinService() {
 let _this = this;
 let page = 1;
+_this.url = 'http://astats.astats.nl';
 let callback = function () {
 page++;
 if (page <= _this.getConfig('pages', 1)) {
@@ -39,7 +41,7 @@ this.enterOnPage(page, callback);
 enterOnPage(page, callback) {
 let _this = this;
 $.ajax({
-url: 'http://astats.astats.nl/astats/TopListGames.php?&DisplayType=Giveaway&Offset=0',
+url: _this.url + '/astats/TopListGames.php?&DisplayType=Giveaway&Offset=0',
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 let afound = data.find('[style="text-align:right;"]'),
@@ -58,7 +60,8 @@ assteam = away.find('a noload').attr('src'),
 asown = 0,
 asapp = 0,
 assub = 0,
-asid = '???';
+asid = '???',
+asstm = '';
 if (alink === undefined || assteam === undefined) {
 next_after = 50;
 }
@@ -67,10 +70,12 @@ let ended = data.find('[href="' + alink + '"] > span').text().trim();
 if (assteam.includes('apps/')) {
 asapp = parseInt(assteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'app/' + asapp;
+asstm = 'https://store.steampowered.com/app/' + asapp;
 }
 if (assteam.includes('sub/')) {
 assub = parseInt(assteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'sub/' + assub;
+asstm = 'https://store.steampowered.com/sub/' + assub;
 }
 if (GJuser.ownapps.includes(',' + asapp + ',') && asapp > 0) {
 asown = 1;
@@ -81,7 +86,7 @@ asown = 1;
 if (asown === 0 && ended !== 'This giveaway has ended.') {
 let tmout = (Math.floor(Math.random() * 10000)) + 7000;
 $.ajax({
-url: 'http://astats.astats.nl' + alink,
+url: _this.url + alink,
 timeout: tmout,
 success: function (html) {
 html = $(html.replace(/<img/gi, '<noload'));
@@ -90,12 +95,12 @@ ajoin = html.find('.input-group-btn').text().trim();
 if (ajoin === 'Join') {
 let pmout = (Math.floor(Math.random() * 10000)) + 7000;
 $.ajax({
-url: 'http://astats.astats.nl' + alink,
+url: _this.url + alink,
 method: 'POST',
 data: 'Comment=&JoinGiveaway=Join',
 timeout: pmout,
 success: function () {
-_this.log(Lang.get('service.entered_in') + _this.logLink(alink, aname) + ' - ' + _this.logLink(assteam, asid));
+_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + alink, aname) + ' - ' + _this.logLink(assteam, asid));
 }
 });
 }
