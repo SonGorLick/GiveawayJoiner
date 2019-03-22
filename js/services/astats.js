@@ -100,7 +100,7 @@ method: 'POST',
 data: 'Comment=&JoinGiveaway=Join',
 timeout: pmout,
 success: function () {
-_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + alink, aname) + ' - ' + _this.logLink(assteam, asid));
+_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + alink, aname) + ' - ' + _this.logLink(asstm, asid));
 }
 });
 }
