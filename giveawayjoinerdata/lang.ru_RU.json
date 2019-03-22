@@ -73,6 +73,8 @@
 		"opiumpulses": {
 			"value_label": "Points",
 			"cost": "Стоимость",
+			"sound": "Звуковые уведомления",
+			"sound_title": "Проигрывать звук при выйгрыше раздачи",
 			"check_in_steam": "Проверять наличие в Steam",
 			"check_in_steam_title": "Не вступать в раздачи игр при их наличии на аккаунте"
 		},
