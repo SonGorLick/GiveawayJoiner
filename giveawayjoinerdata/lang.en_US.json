@@ -67,6 +67,7 @@
 		"indiegala": {
 			"value_label": "GalaCoins",
 			"cost": "Cost",
+			"captcha": "You need solve 'Captcha' to enter giveaways",
 			"sound": "Sound notifications",
 			"sound_title": "Play sound when winning a giveaway",
 			"check_in_steam": "Check owned on Steam",

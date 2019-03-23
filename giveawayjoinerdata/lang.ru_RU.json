@@ -67,6 +67,7 @@
 		"indiegala": {
 			"value_label": "GalaCoins",
 			"cost": "Стоимость",
+			"captcha": "Для вступления в раздачи Вам нужно пройти 'captcha'",
 			"sound": "Звуковые уведомления",
 			"sound_title": "Проигрывать звук при выйгрыше раздачи",
 			"check_in_steam": "Проверять наличие в Steam",
