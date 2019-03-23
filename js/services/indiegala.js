@@ -75,10 +75,9 @@ _this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback) {
 let _this = this;
-let igusrlvl = this.getConfig('max_level', 0),
-igusrmin = this.getConfig('min_cost', 0),
-igusrmax = this.getConfig('max_cost', 0);
-_this.check = 1;
+let igusrlvl = _this.getConfig('max_level', 0),
+igusrmin = _this.getConfig('min_cost', 0),
+igusrmax = _this.getConfig('max_cost', 0);
 if (_this.check === 0) {
 _this.check = 1;
 let ptmout = (Math.floor(Math.random() * 10000)) + 7000;
@@ -95,6 +94,14 @@ success: function () {
 $.ajax({
 url: _this.url + '/giveaways/check_if_won_all',
 success: function (html) {
+if (html.indexOf('Incapsula incident') >= 0) {
+_this.log(_this.trans('captcha'), true);
+}
+let igwon = $(html).find('p p').text().trim();
+_this.log(_this.logLink(_this.url + '/profile', igwon));
+if (_this.getConfig('sound', true)) {
+new Audio(__dirname + '/sounds/won.wav').play();
+}
 }
 });
 }
@@ -103,7 +110,7 @@ success: function (html) {
 });
 }
 let lvl = 'all';
-if (this.getConfig('max_level', 0) === 0) {
+if (igusrlvl === 0) {
 lvl = '0';
 }
 $.ajax({
