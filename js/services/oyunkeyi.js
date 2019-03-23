@@ -93,7 +93,7 @@ if (oksteam.includes('sub/')) {
 oksub = parseInt(oksteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 okid = 'sub/' + oksub;
 }
-if (_this.getConfig('check_in_steam')) {
+if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps.includes(',' + okapp + ',') && okapp > 0) {
 okown = 1;
 }

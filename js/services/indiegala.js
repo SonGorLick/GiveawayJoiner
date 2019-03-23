@@ -97,10 +97,13 @@ success: function (html) {
 if (html.indexOf('Incapsula incident') >= 0) {
 _this.log(_this.trans('captcha'), true);
 }
-let igwon = $(html).find('p p').text().trim();
-_this.log(_this.logLink(_this.url + '/profile', igwon));
+let igwon = $(html).find('p').eq(1).text().trim();
+if (igwon !== 'You did not win... :(') {
+_this.log(_this.logLink(_this.url + '/profile', Lang.get('service.win')));
+_this.setConfig('won', igwon);
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
+}
 }
 }
 });
@@ -161,7 +164,7 @@ igsub = parseInt(igsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')
 igid = 'sub/' + igsub;
 igstm = 'https://store.steampowered.com/sub/' + igsub;
 }
-if (_this.getConfig('check_in_steam')) {
+if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps.includes(',' + igapp + ',') && igapp > 0) {
 igown = 1;
 }

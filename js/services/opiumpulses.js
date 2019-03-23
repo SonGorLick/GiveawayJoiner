@@ -104,7 +104,7 @@ if (opsteam.includes('sub/')) {
 opsub = parseInt(opsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 opid = 'sub/' + opsub;
 }
-if (_this.getConfig('check_in_steam')) {
+if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps.includes(',' + opapp + ',') && opapp > 0) {
 opown = 1;
 }

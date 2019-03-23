@@ -176,7 +176,7 @@ if (GA.sgsteam.includes('sub/')) {
 sgsub = parseInt(GA.sgsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 sgid = 'sub/' + sgsub;
 }
-if (_this.getConfig('check_in_steam')) {
+if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps.includes(',' + sgapp + ',') && sgapp > 0) {
 sgown = 1;
 }

@@ -67,8 +67,14 @@ if (alink === undefined || assteam === undefined) {
 asnext = 50;
 }
 else {
-let ended = data.find('[href="' + alink + '"] > span').text().trim(),
-ahave =  data.find('[href="' + alink + '"] font').attr('color');
+let ended = data.find('[href="' + alink + '"] > span').text().trim();
+if (ended === 'This giveaway has ended.') {
+if (callback) {
+callback();
+}
+return;
+}
+let ahave =  data.find('[href="' + alink + '"] font').attr('color');
 if (assteam.includes('apps/')) {
 asapp = parseInt(assteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'app/' + asapp;
@@ -79,7 +85,7 @@ assub = parseInt(assteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')
 asid = 'sub/' + assub;
 asstm = 'https://store.steampowered.com/sub/' + assub;
 }
-if (_this.getConfig('check_in_steam')) {
+if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps.includes(',' + asapp + ',') && asapp > 0) {
 asown = 1;
 }
@@ -87,7 +93,7 @@ if (GJuser.ownsubs.includes(',' + assub + ',') && assub > 0) {
 asown = 1;
 }
 }
-if (asown === 0 && ahave !== '#FF0000' && ended !== 'This giveaway has ended.') {
+if (asown === 0 && ahave !== '#FF0000') {
 let tmout = (Math.floor(Math.random() * 10000)) + 7000;
 $.ajax({
 url: _this.url + alink,

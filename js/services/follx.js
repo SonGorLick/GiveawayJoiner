@@ -121,7 +121,7 @@ fxsub = parseInt(fxsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')
 fxid = 'sub/' + fxsub;
 fxstm = 'https://store.steampowered.com/sub/' + fxsub;
 }
-if (_this.getConfig('check_in_steam')) {
+if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps.includes(',' + fxapp + ',') && fxapp > 0) {
 fxown = 1;
 }
