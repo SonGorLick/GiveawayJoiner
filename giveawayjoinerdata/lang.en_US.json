@@ -33,10 +33,10 @@
 		"btn_work": "Working",
 		"btn_checking": "Checking",
 		"btn_awaiting": "Awaiting",
-		"connection_good": "Connection good, searching giveaways...",
+		"connection_good": "Searching giveaways...",
 		"connection_error": "Unable to get established connection with the service...",
 		"session_expired": "Session expired",
-		"connection_lost": "Connection lost, retry connect after 5 minutes...",
+		"connection_lost": "Can't connect, retry after 10 minutes...",
 		"timer": "Timer (minutes)",
 		"timer_title": "Interval obtain a list of hands in minutes",
 		"timer_from": "Min timer (minutes)",
@@ -51,7 +51,7 @@
 		"pages": "Pages",
 		"pages_title": "How many first pages should be checked for the available giveaways",
 		"cant_start": "Can't autostart - session not found",
-		"assets": {
+		"astats": {
 			"sound": "Sound notifications",
 			"sound_title": "Play sound when winning a giveaway",
 			"check_in_steam": "Check owned on Steam",
@@ -82,7 +82,7 @@
 			"value_label": "Points",
 			"cost": "Cost",
 			"sound": "Sound notifications",
-			"sound_title": "Play sound when winning a giveaway",
+			"sound_title": "Play sound when won the giveaway",
 			"check_in_steam": "Check owned on Steam",
 			"check_in_steam_title": "Don't enter if the giveaway games owned on account"
 		},
