@@ -51,6 +51,12 @@
 		"pages": "Pages",
 		"pages_title": "How many first pages should be checked for the available giveaways",
 		"cant_start": "Can't autostart - session not found",
+		"assets": {
+			"sound": "Sound notifications",
+			"sound_title": "Play sound when winning a giveaway",
+			"check_in_steam": "Check owned on Steam",
+			"check_in_steam_title": "Don't enter if the giveaway games owned on account"
+		},
 		"follx": {
 			"value_label": "Energy",
 			"sound": "Sound notifications",
