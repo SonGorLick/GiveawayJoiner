@@ -95,14 +95,16 @@ $.ajax({
 url: _this.url + '/giveaways/check_if_won_all',
 success: function (html) {
 if (html.indexOf('Incapsula incident') >= 0) {
-_this.log(_this.trans('captcha'), true);
+_this.log(_this.trans('captcha') + _this.logLink(_this.url + '/giveaways', 'captcha'), true);
 }
+else {
 let igwon = $(html).find('p').eq(1).text().trim();
 if (igwon !== 'You did not win... :(') {
 _this.log(_this.logLink(_this.url + '/profile', Lang.get('service.win')));
 _this.setConfig('won', igwon);
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
+}
 }
 }
 }
