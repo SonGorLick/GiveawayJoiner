@@ -39,7 +39,7 @@ mainWindow.focus();
 let icons = $('.services-icons');
 let maxTop = parseInt(icons.css('top').replace('px', ''));
 $('.services_switcher').bind('mousewheel', function (e) {
-let scroll = e.originalEvent.wheelDelta / 120 > 0 ? 20 : -20;
+let scroll = e.originalEvent.wheelDelta / 150 > 0 ? 30 : -30;
 let height = icons.height();
 let minTop = $(this).height() - height;
 let top = parseInt(icons.css('top').replace('px', ''));

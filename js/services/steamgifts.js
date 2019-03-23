@@ -83,27 +83,27 @@ return;
 }
 if (this.check === 0) {
 this.check = 1;
-let prize_win = parseInt(data.find('.nav__button-container--active.nav__button-container--notification.nav__button-container:nth-of-type(2) > .nav__button > .nav__notification').text().trim());
-if (isNaN(prize_win)) {
-prize_win = 0;
+let sgwon = parseInt(data.find('.nav__button-container--active.nav__button-container--notification.nav__button-container:nth-of-type(2) > .nav__button > .nav__notification').text().trim());
+if (isNaN(sgwon)) {
+sgwon = 0;
 }
-if ((prize_win - this.won) < 0) {
-this.setConfig('won', prize_win);
+if ((sgwon - this.won) < 0) {
+this.setConfig('won', sgwon);
 }
-if (prize_win > 0 && (prize_win - this.won) > 0) {
-this.log(this.logLink('https://www.steamgifts.com/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (prize_win - this.won) + ')'));
-this.setConfig('won', prize_win);
+if (sgwon > 0 && (sgwon - this.won) > 0) {
+this.log(this.logLink('https://www.steamgifts.com/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (sgwon - this.won) + ')'));
+this.setConfig('won', sgwon);
 if (this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }
 }
 }
 data.find('.giveaway__row-outer-wrap').each((index, item) => {
-let giveaway = $(item);
+let sgaway = $(item);
 let copies = 1;
-let link = 'https://www.steamgifts.com' + giveaway.find('a.giveaway__heading__name').attr('href');
-let entries = parseInt(giveaway.find('.fa.fa-tag+span').text().replace(/[^0-9]/g, ''));
-let left = giveaway.find('[data-timestamp]').first().text().split(' ');
+let link = 'https://www.steamgifts.com' + sgaway.find('a.giveaway__heading__name').attr('href');
+let entries = parseInt(sgaway.find('.fa.fa-tag+span').text().replace(/[^0-9]/g, ''));
+let left = sgaway.find('[data-timestamp]').first().text().split(' ');
 let factor = 1;
 switch (left[1]) {
 case 'hour': case 'hours': factor = 60; break;
@@ -111,25 +111,25 @@ case 'day': case 'days': factor = 1440; break;
 case 'week': case 'weeks': factor = 10080; break;
 case 'month': case 'months': factor = 40320; break;
 }
-let detectQty = giveaway.find('.giveaway__heading__thin').first().text();
+let detectQty = sgaway.find('.giveaway__heading__thin').first().text();
 if (detectQty.indexOf('Copies') > 0) {
 copies = parseInt(detectQty.replace(/[^0-9]/g, ''));
 }
 let chance = parseFloat(((copies / entries) * 100).toFixed(2));
 let GA = {
 chance: (chance === Infinity ? 0 : chance),
-pinned: giveaway.closest('.pinned-giveaways__outer-wrap').length > 0,
+pinned: sgaway.closest('.pinned-giveaways__outer-wrap').length > 0,
 link: link,
 left: (parseInt(left[0]) * factor),
 copies: copies,
 entries: entries,
 code: link.match(/away\/(.*)\//)[1],
-name: giveaway.find('a.giveaway__heading__name').text(),
-level: giveaway.find('.giveaway__column--contributor-level').length > 0 ? parseInt(giveaway.find('.giveaway__column--contributor-level').text().replace('+', '').replace('Level ', '')) : 0,
-levelPass: giveaway.find('.giveaway__column--contributor-level--negative').length === 0,
-cost: parseInt(giveaway.find('a.giveaway__icon[rel]').prev().text().replace(/[^0-9]/g, '')),
-sgsteam: giveaway.find('a.giveaway__icon').attr('href'),
-entered: giveaway.find('.giveaway__row-inner-wrap.is-faded').length > 0
+name: sgaway.find('a.giveaway__heading__name').text(),
+level: sgaway.find('.giveaway__column--contributor-level').length > 0 ? parseInt(sgaway.find('.giveaway__column--contributor-level').text().replace('+', '').replace('Level ', '')) : 0,
+levelPass: sgaway.find('.giveaway__column--contributor-level--negative').length === 0,
+cost: parseInt(sgaway.find('a.giveaway__icon[rel]').prev().text().replace(/[^0-9]/g, '')),
+sgsteam: sgaway.find('a.giveaway__icon').attr('href'),
+entered: sgaway.find('.giveaway__row-inner-wrap.is-faded').length > 0
 };
 if (
 !GA.entered &&
@@ -149,21 +149,21 @@ callback();
 }
 giveawaysEnter(callback) {
 let _this = this;
-let curr_giveaway = 0;
+let sgcurr = 0;
 if (this.getConfig('sort_by_chance', false)) {
 this.giveaways.sort((a, b) => {
 return b.chance - a.chance;
 });
 }
 function processOne() {
-if (_this.giveaways.length <= curr_giveaway || !_this.started) {
+if (_this.giveaways.length <= sgcurr || !_this.started) {
 if (callback) {
 callback(false);
 }
 return;
 }
-let next_after = _this.interval();
-let GA = _this.giveaways[curr_giveaway],
+let sgnext = _this.interval();
+let GA = _this.giveaways[sgcurr],
 sgown = 0,
 sgapp = 0,
 sgsub = 0,
@@ -212,10 +212,10 @@ _this.setValue(data.points);
 });
 }
 else {
-next_after = 50;
+sgnext = 50;
 }
-curr_giveaway++;
-setTimeout(processOne, next_after);
+sgcurr++;
+setTimeout(processOne, sgnext);
 }
 processOne();
 }

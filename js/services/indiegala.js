@@ -75,9 +75,9 @@ _this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback) {
 let _this = this;
-let user_level = this.getConfig('max_level', 0),
-user_min = this.getConfig('min_cost', 0),
-user_max = this.getConfig('max_cost', 0);
+let igusrlvl = this.getConfig('max_level', 0),
+igusrmin = this.getConfig('min_cost', 0),
+igusrmax = this.getConfig('max_cost', 0);
 _this.check = 1;
 if (_this.check === 0) {
 _this.check = 1;
@@ -110,16 +110,16 @@ $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + lvl,
 success: function (data) {
 let tickets = $(JSON.parse(data).content).find('.tickets-col');
-let curr_ticket = 0;
+let igcurr = 0;
 function giveawayEnter() {
-if (tickets.length <= curr_ticket || !_this.started || _this.curr_value === 0) {
+if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0) {
 if (callback) {
 callback();
 }
 return;
 }
-let next_after = _this.interval();
-let ticket = tickets.eq(curr_ticket),
+let ignext = _this.interval();
+let ticket = tickets.eq(igcurr),
 price = ticket.find('.ticket-price strong').text(),
 level = parseInt(ticket.find('.type-level span').text().replace('+', '')),
 single = ticket.find('.extra-type .fa-clone').length === 0,
@@ -132,8 +132,8 @@ else {
 enterTimes = parseInt(ticket.find('.giv-coupon .palette-color-11').text());
 entered = enterTimes > 0;
 }
-if (entered || user_level < level || _this.curr_value < price || price < user_min || price > user_max && user_max > 0) {
-next_after = 50;
+if (entered || igusrlvl < level || _this.curr_value < price || price < igusrmin || price > igusrmax && igusrmax > 0) {
+ignext = 50;
 }
 else {
 let id = ticket.find('.ticket-right .relative').attr('rel'),
@@ -178,11 +178,11 @@ _this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + '/giveaways
 });
 }
 else {
-next_after = 50;
+ignext = 50;
 }
 }
-curr_ticket++;
-setTimeout(giveawayEnter, next_after);
+igcurr++;
+setTimeout(giveawayEnter, ignext);
 }
 giveawayEnter();
 }

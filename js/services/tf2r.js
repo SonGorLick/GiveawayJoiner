@@ -44,12 +44,12 @@ joinService() {
 let _this = this;
 _this.ajaxReq('http://tf2r.com/raffles.html', (response) => {
 let giveaways = $(response.data).find('.pubrhead-text-right');
-let curr_giveaway = 0;
+let tfcurr = 0;
 function giveawayEnter() {
-if (giveaways.length <= curr_giveaway || !_this.started) {
+if (giveaways.length <= tfcurr || !_this.started) {
 return;
 }
-let giveaway = giveaways.eq(curr_giveaway),
+let giveaway = giveaways.eq(tfcurr),
 link = giveaway.find('a').attr('href'),
 name = giveaway.find('a').text();
 _this.ajaxReq(link, (response) => {
@@ -80,7 +80,7 @@ _this.log(Lang.get('service.entered_in') + _this.logLink(link, name));
 });
 }
 });
-curr_giveaway++;
+tfcurr++;
 setTimeout(giveawayEnter, _this.interval());
 }
 giveawayEnter();

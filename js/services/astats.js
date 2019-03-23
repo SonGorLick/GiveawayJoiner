@@ -3,10 +3,10 @@ class Astats extends Joiner {
 constructor() {
 super();
 this.websiteUrl = 'http://astats.astats.nl';
-this.authContent = 'Logout';
+this.authContent = 'Log out';
 this.authLink = 'http://astats.astats.nl/astats/profile/Login.php';
 this.withValue = false;
-delete this.settings.pages;
+this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 super.init();
 }
 getUserInfo(callback) {
@@ -40,8 +40,9 @@ this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback) {
 let _this = this;
+let affset = (page - 1) * 200;
 $.ajax({
-url: _this.url + '/astats/TopListGames.php?&DisplayType=Giveaway&Offset=0',
+url: _this.url + '/astats/TopListGames.php?&DisplayType=Giveaway&Offset=' + affset + '#',
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 let afound = data.find('[style="text-align:right;"]'),
@@ -53,7 +54,7 @@ callback();
 }
 return;
 }
-let next_after = _this.interval();
+let asnext = _this.interval();
 let away = afound.eq(acurr);
 let alink = away.find('a').attr('href'),
 assteam = away.find('a noload').attr('src'),
@@ -63,10 +64,11 @@ assub = 0,
 asid = '???',
 asstm = '';
 if (alink === undefined || assteam === undefined) {
-next_after = 50;
+asnext = 50;
 }
 else {
-let ended = data.find('[href="' + alink + '"] > span').text().trim();
+let ended = data.find('[href="' + alink + '"] > span').text().trim(),
+ahave =  data.find('[href="' + alink + '"] font').attr('color');
 if (assteam.includes('apps/')) {
 asapp = parseInt(assteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'app/' + asapp;
@@ -77,23 +79,25 @@ assub = parseInt(assteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')
 asid = 'sub/' + assub;
 asstm = 'https://store.steampowered.com/sub/' + assub;
 }
+if (_this.getConfig('check_in_steam')) {
 if (GJuser.ownapps.includes(',' + asapp + ',') && asapp > 0) {
 asown = 1;
 }
 if (GJuser.ownsubs.includes(',' + assub + ',') && assub > 0) {
 asown = 1;
 }
-if (asown === 0 && ended !== 'This giveaway has ended.') {
+}
+if (asown === 0 && ahave !== '#FF0000' && ended !== 'This giveaway has ended.') {
 let tmout = (Math.floor(Math.random() * 10000)) + 7000;
 $.ajax({
 url: _this.url + alink,
 timeout: tmout,
 success: function (html) {
 html = $(html.replace(/<img/gi, '<noload'));
-let aname = html.find('.panel-gameinfo.panel-default.panel > .panel-heading').text().trim(),
-ajoin = html.find('.input-group-btn').text().trim();
+let ajoin = html.find('.input-group-btn').text().trim();
 if (ajoin === 'Join') {
-let pmout = (Math.floor(Math.random() * 10000)) + 7000;
+let aname = html.find('.panel-gameinfo.panel-default.panel > .panel-heading').text().trim(),
+pmout = (Math.floor(Math.random() * 10000)) + 7000;
 $.ajax({
 url: _this.url + alink,
 method: 'POST',
@@ -104,18 +108,15 @@ _this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + alink, anam
 }
 });
 }
-else {
-next_after = 50;
-}
 }
 });
 }
 else {
-next_after = 50;
+asnext = 50;
 }
 }
 acurr++;
-setTimeout(giveawayEnter, next_after);
+setTimeout(giveawayEnter, asnext);
 }
 giveawayEnter();
 }

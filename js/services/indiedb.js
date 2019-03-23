@@ -34,13 +34,13 @@ url: _this.url + '/giveaways',
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 let content = data.find('.rowcontent');
-let currcont = 0;
+let idbcurr = 0;
 function giveawayEnter() {
-if (content.length <= currcont || !_this.started) {
+if (content.length <= idbcurr || !_this.started) {
 return;
 }
-let next_after = _this.interval();
-let cont = content.eq(currcont),
+let idbnext = _this.interval();
+let cont = content.eq(idbcurr),
 link = cont.find('a').attr('href'),
 name = cont.find('a').attr('title');
 $.ajax({
@@ -70,12 +70,12 @@ success: function () {
 });
 }
 else {
-next_after = 50;
+idbnext = 50;
 }
 }
 });
-currcont++;
-setTimeout(giveawayEnter, next_after);
+idbcurr++;
+setTimeout(giveawayEnter, idbnext);
 }
 giveawayEnter();
 }

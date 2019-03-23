@@ -68,7 +68,7 @@ callback();
 }
 return;
 }
-let next_after = _this.interval();
+let opnext = _this.interval();
 let opway = opfound.eq(opcurr),
 entered = opway.find('.giveaways-page-item-img-btn-wrapper').text(),
 cost = parseInt(opway.find('.giveaways-page-item-header-points').text().replace('points', '').trim());
@@ -76,14 +76,16 @@ if (isNaN(cost)) {
 cost = 0;
 }
 if (_this.curr_value < cost|| entered.includes('ENTERED')) {
-next_after = 50;
+opnext = 50;
 }
 else {
 let link = opway.find('.giveaways-page-item-img-btn-more').attr('href'),
 name = opway.find('.giveaways-page-item-footer-name').text().trim(),
 eLink = opway.find('.giveaways-page-item-img-btn-enter').attr('href');
+let tmout = (Math.floor(Math.random() * 10000)) + 7000;
 $.ajax({
 url: _this.url + link,
+timeout: tmout,
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
 let opsteam = data.find('.giveaways-single-sponsored h1 a').attr('href');
@@ -111,8 +113,10 @@ opown = 1;
 }
 }
 if (opown === 0) {
+let pmout = (Math.floor(Math.random() * 10000)) + 7000;
 $.ajax({
 url: _this.url + eLink,
+timeout: pmout,
 success: function () {
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
@@ -127,13 +131,13 @@ _this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + link, name)
 });
 }
 else {
-next_after = 50;
+opnext = 50;
 }
 }
 });
 }
 opcurr++;
-setTimeout(giveawayEnter, next_after);
+setTimeout(giveawayEnter, opnext);
 }
 giveawayEnter();
 }

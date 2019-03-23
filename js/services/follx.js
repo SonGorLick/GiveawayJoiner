@@ -95,14 +95,14 @@ callback();
 }
 return;
 }
-let next_after = _this.interval();
+let fxnext = _this.interval();
 let card = fxfound.eq(fxcurr),
 link = card.find('.head_info a').attr('href'),
 name = card.find('.head_info').attr('title'),
 have = card.find('.giveaway-indicators > .have').length > 0,
 entered = card.find('.entered').length > 0;
 if (have || entered) {
-next_after = 50;
+fxnext = 50;
 }
 else {
 let fxsteam = card.find('.head_info').attr('style'),
@@ -156,11 +156,11 @@ _this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + ' - ' + _
 });
 }
 else {
-next_after = 50;
+fxnext = 50;
 }
 }
 fxcurr++;
-setTimeout(giveawayEnter, next_after);
+setTimeout(giveawayEnter, fxnext);
 }
 giveawayEnter();
 }

@@ -44,8 +44,8 @@ this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback) {
 let _this = this;
-let user_min = this.getConfig('min_cost', 0),
-user_max = this.getConfig('max_cost', 0);
+let okusrmin = this.getConfig('min_cost', 0),
+okusrmax = this.getConfig('max_cost', 0);
 $.ajax({
 url: 'https://www.oyunkeyi.com/?page=' + page,
 success: function (data) {
@@ -69,13 +69,13 @@ callback();
 }
 return;
 }
-let next_after = _this.interval();
+let oknext = _this.interval();
 let okway = okfound.eq(okcurr),
 link = okway.find('.card-body a').attr('href'),
 cost = parseInt(okway.find('.card-body a').text().split('(')[1].split('P)')[0]),
 entered = okway.attr('style');
-if (_this.curr_value < cost || cost < user_min || cost > user_max && user_max > 0 || entered.includes('background')) {
-next_after = 50;
+if (_this.curr_value < cost || cost < okusrmin || cost > okusrmax && okusrmax > 0 || entered.includes('background')) {
+oknext = 50;
 }
 else {
 let oksteam = okway.find('.card-body a').eq(2).attr('href'),
@@ -110,11 +110,11 @@ _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
 }
 else {
-next_after = 50;
+oknext = 50;
 }
 }
 okcurr++;
-setTimeout(giveawayEnter, next_after);
+setTimeout(giveawayEnter, oknext);
 }
 giveawayEnter();
 }
