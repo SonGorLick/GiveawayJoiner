@@ -54,7 +54,7 @@ if (_this.check === 0) {
 _this.check = 1;
 let okwon = data.find('.modal-body p a b').text().trim();
 if (okwon === 'Go! My Won') {
-_this.log(_this.logLink('https://www.oyunkeyi.com/kazandiklarim', Lang.get('service.win')));
+_this.log(_this.logLink('https://www.oyunkeyi.com/kazandiklarim', Lang.get('service.win')), true);
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }

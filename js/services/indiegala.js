@@ -96,12 +96,13 @@ url: _this.url + '/giveaways/check_if_won_all',
 success: function (html) {
 if (html.indexOf('Incapsula incident') >= 0) {
 _this.log(_this.trans('captcha') + _this.logLink(_this.url + '/giveaways', 'captcha'), true);
+_this.stopJoiner(true);
 }
 else {
 let igwon = $(html).find('p').eq(1).text().trim();
 if (igwon !== 'You did not win... :(') {
-_this.log(_this.logLink(_this.url + '/profile', Lang.get('service.win')));
-_this.setConfig('won', igwon);
+igwon = igwon.replace('Congratulations! You won','').replace('Giveaways','').trim();
+_this.log(_this.logLink(_this.url + '/profile', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + igwon + ')'), true);
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }

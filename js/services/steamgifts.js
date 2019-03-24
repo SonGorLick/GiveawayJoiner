@@ -46,20 +46,21 @@ let page = 1;
 this.check = 0;
 this.won = this.getConfig('won', 0);
 this.giveaways = [];
+this.url = 'https://www.steamgifts.com';
 let processCommon = () => {
 if (!this.started) {
 return;
 }
 this.wishlist = 0;
 if (page <= this.getConfig('pages', 1)) {
-this.giveawaysFromUrl('https://www.steamgifts.com/giveaways/search?page=' + page, processCommon);
+this.giveawaysFromUrl(this.url + '/giveaways/search?page=' + page, processCommon);
 }
 else {
 this.giveawaysEnter();
 }
 page++;
 };
-this.giveawaysFromUrl('https://www.steamgifts.com/giveaways/search?type=wishlist', () => {
+this.giveawaysFromUrl(this.url + '/giveaways/search?type=wishlist', () => {
 this.wishlist = 1;
 this.giveawaysEnter();
 if (this.getConfig('wishlist_only')) {
@@ -87,11 +88,11 @@ let sgwon = parseInt(data.find('.nav__button-container--active.nav__button-conta
 if (isNaN(sgwon)) {
 sgwon = 0;
 }
-if ((sgwon - this.won) < 0) {
+if (sgwon < this.won) {
 this.setConfig('won', sgwon);
 }
-if (sgwon > 0 && (sgwon - this.won) > 0) {
-this.log(this.logLink('https://www.steamgifts.com/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (sgwon - this.won) + ')'));
+if (sgwon > 0 && sgwon > this.won) {
+this.log(this.logLink(this.url + '/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (sgwon) + ')'), true);
 this.setConfig('won', sgwon);
 if (this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
@@ -101,7 +102,7 @@ new Audio(__dirname + '/sounds/won.wav').play();
 data.find('.giveaway__row-outer-wrap').each((index, item) => {
 let sgaway = $(item);
 let copies = 1;
-let link = 'https://www.steamgifts.com' + sgaway.find('a.giveaway__heading__name').attr('href');
+let link = this.url + sgaway.find('a.giveaway__heading__name').attr('href');
 let entries = parseInt(sgaway.find('.fa.fa-tag+span').text().replace(/[^0-9]/g, ''));
 let left = sgaway.find('[data-timestamp]').first().text().split(' ');
 let factor = 1;
@@ -195,7 +196,7 @@ if (
 )
 {
 $.ajax({
-url: 'https://www.steamgifts.com/ajax.php',
+url: _this.url + '/ajax.php',
 method: 'POST',
 dataType: 'json',
 data: {

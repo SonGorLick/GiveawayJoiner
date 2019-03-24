@@ -51,8 +51,8 @@ data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replac
 if (_this.check === 0) {
 _this.check = 1;
 let opwon = parseInt(data.find('[href="/user/giveawaykeys"] > span').text().trim());
-if (opwon > 0 && (opwon - _this.won) > 0) {
-_this.log(_this.logLink(_this.url + '/user/giveawaykeys', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (opwon - _this.won) + ')'));
+if (opwon > 0 && opwon > _this.won) {
+_this.log(_this.logLink(_this.url + '/user/giveawaykeys', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (opwon - _this.won) + ')'), true);
 _this.setConfig('won', opwon);
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
