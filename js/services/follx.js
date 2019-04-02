@@ -33,7 +33,6 @@ let _this = this;
 let page = 1;
 _this.sync = 0;
 _this.check = 0;
-_this.won = this.getConfig('won', 0);
 let callback = function () {
 page++;
 if (page <= _this.getConfig('pages', 1)) {
@@ -71,16 +70,9 @@ dataType: 'json'
 }
 if (_this.check === 0) {
 _this.check = 1;
-let fxwon = parseInt(html.find('.hide-on-med-and-down.user-panel.s6.col > .icons > .marker.cup').text().trim());
-if (isNaN(fxwon)) {
-fxwon = 0;
-}
-if (fxwon < _this.won) {
-this.setConfig('won', fxwon);
-}
-if (fxwon > 0 && fxwon > _this.won) {
-_this.log(this.logLink('https://follx.com/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + fxwon + ')'), true);
-_this.setConfig('won', fxwon);
+let fxwon = html.find('.hide-on-med-and-down.user-panel.s6.col > .icons > .has.marker.cup').attr('href');
+if (fxwon !== undefined) {
+_this.log(_this.logLink('https://follx.com/giveaways/won', Lang.get('service.win')), true);
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }
