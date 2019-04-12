@@ -119,7 +119,7 @@
 			"max_cost": "Max. Cost",
 			"max_cost_title": "Don't enter giveaways with a cost higher than your set max.cost. 0 - without any restrictions",
 			"ignore_on_wish": "Ignore settings for wishlist",
-			"ignore_on_wish_title": "Ignore level and max cost settings for games in the wishlist",
+			"ignore_on_wish_title": "Ignore level, cost, chance settings for games in the wishlist",
 			"reserve_on_wish": "Spend reserve on wishlist",
 			"reserve_on_wish_title": "Spend reserved points on games in the wishlist",
 			"wishlist_only": "Wishlist only",
