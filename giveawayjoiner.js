@@ -3,7 +3,7 @@ const { app, nativeImage, shell, session, Tray, BrowserWindow, ipcMain, ipcRende
 const storage = require('electron-json-storage');
 const fs = require('fs');
 const Request = require('request-promise');
-const devMode = app.getVersion() === '4.1.1';
+const devMode = app.getVersion() === '1.1.9';
 let appLoaded = false;
 let authWindow = null;
 let mainWindow = null;
@@ -50,7 +50,7 @@ app.on('ready', () => {
 Config = new ConfigClass();
 Lang = new LanguageClass();
 _session = session.fromPartition('persist:GiveawayJoiner');
-_session.setUserAgent('Mozilla/5.0 (Linux; Android 8.1.0; SM-G960F Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Mobile Safari/537.36');
+_session.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36');
 authWindow = new BrowserWindow({
 width: 280,
 height: 340,
