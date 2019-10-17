@@ -66,6 +66,7 @@ $('.in-service-panel[data-id="' + $(this).attr('data-id') + '"]')
 });
 $('.joiner-button.logout').click(function () {
 let clicked = $(this).addClass('disabled');
+if (GJuser.steamid !== '1') {
 $.ajax({
 method: 'GET',
 url: 'http://giftseeker.ru/logout',
@@ -80,6 +81,10 @@ clicked.removeClass('disabled');
 alert('something went wrong...');
 }
 });
+}
+else {
+clicked.removeClass('disabled');
+}
 });
 setters.change(function () {
 let changed = $(this);
@@ -112,6 +117,16 @@ success: function (data) {
 if (data.response) {
 renderUser(data.response);
 }
+},
+error: () => {
+let data = {
+response: {
+username: "User",
+avatar: "https:\/\/steamcdn-a.akamaihd.net\/steamcommunity\/public\/images\/avatars\/fe\/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
+steamid: "1"
+}
+};
+renderUser(data.response);
 }
 });
 }

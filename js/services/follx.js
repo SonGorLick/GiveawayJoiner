@@ -15,6 +15,15 @@ avatar: __dirname + '/images/Follx.png',
 username: 'Follx User',
 value: 0
 };
+if (GJuser.steamid === '1') {
+$.ajax({
+url: 'https://follx.com',
+success: function (data) {
+data = $(data.replace(/<img/gi, '<noload'));
+GJuser.steamid = data.find('.common-header .user .expander-content a.username.truncate').attr('href').replace('https://follx.com/users/', '');
+}
+});
+};
 $.ajax({
 url: 'https://follx.com/users/' + GJuser.steamid,
 success: function (data) {

@@ -12,7 +12,7 @@ super.init();
 getUserInfo(callback) {
 let userData = {
 avatar: __dirname + '/images/OpiumPulses.png',
-username: 'OP user',
+username: 'OP User',
 value: 0
 };
 $.ajax({
@@ -92,6 +92,7 @@ let opsteam = data.find('.giveaways-single-sponsored h1 a').attr('href');
 if (opsteam === undefined) {
 opsteam = $(data).find('.giveaways-single-sponsored h4 a').attr('href');
 }
+let openter = data.find('.giveaways-single-promo-content-info-points p').text();
 let opown = 0,
 opapp = 0,
 opsub = 0,
@@ -112,7 +113,7 @@ if (GJuser.ownsubs.includes(',' + opsub + ',') && opsub > 0) {
 opown = 1;
 }
 }
-if (opown === 0) {
+if (opown === 0 && openter !== " You're not eligible to enter") {
 let pmout = (Math.floor(Math.random() * 10000)) + 7000;
 $.ajax({
 url: _this.url + eLink,

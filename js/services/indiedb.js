@@ -12,7 +12,7 @@ super.init();
 getUserInfo(callback) {
 let userData = {
 avatar: __dirname + '/images/IndieDB.png',
-username: 'IDB User'
+username: 'IndieDB User'
 };
 $.ajax({
 url: 'https://www.indiedb.com/messages/updates',

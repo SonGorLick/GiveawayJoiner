@@ -2,7 +2,7 @@
 class Astats extends Joiner {
 constructor() {
 super();
-this.websiteUrl = 'http://astats.astats.nl';
+this.websiteUrl = 'http://astats.astats.nl/astats/TopListGames.php?DisplayType=Giveaway';
 this.authContent = 'Log out';
 this.authLink = 'http://astats.astats.nl/astats/profile/Login.php';
 this.withValue = false;
@@ -12,10 +12,10 @@ super.init();
 getUserInfo(callback) {
 let userData = {
 avatar: __dirname + '/images/Astats.png',
-username: 'AS user',
+username: 'Astats User',
 };
 $.ajax({
-url: 'http://astats.astats.nl/astats/User_Info.php?SteamID64=' + GJuser.steamid,
+url: 'http://astats.astats.nl/astats/User_Info.php',
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 userData.username = data.find('.dropdown-toggle > b').text();
