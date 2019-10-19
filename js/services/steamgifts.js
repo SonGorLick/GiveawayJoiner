@@ -66,7 +66,6 @@ this.giveawaysEnter();
 if (this.getConfig('wishlist_only')) {
 return;
 }
-//this.giveaways = [];
 processCommon();
 });
 }

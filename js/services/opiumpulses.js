@@ -76,13 +76,13 @@ if (isNaN(cost)) {
 cost = 0;
 }
 if (_this.curr_value < cost|| entered.includes('ENTERED')) {
-opnext = 50;
+opnext = 70;
 }
 else {
 let link = opway.find('.giveaways-page-item-img-btn-more').attr('href'),
 name = opway.find('.giveaways-page-item-footer-name').text().trim(),
 eLink = opway.find('.giveaways-page-item-img-btn-enter').attr('href');
-let tmout = (Math.floor(Math.random() * 10000)) + 7000;
+let tmout = (Math.floor(Math.random() * 7000)) + 10000;
 $.ajax({
 url: _this.url + link,
 timeout: tmout,
@@ -114,7 +114,7 @@ opown = 1;
 }
 }
 if (opown === 0 && openter !== " You're not eligible to enter") {
-let pmout = (Math.floor(Math.random() * 10000)) + 7000;
+let pmout = (Math.floor(Math.random() * 7000)) + 10000;
 $.ajax({
 url: _this.url + eLink,
 timeout: pmout,
@@ -132,7 +132,7 @@ _this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + link, name)
 });
 }
 else {
-opnext = 50;
+opnext = 70;
 }
 }
 });

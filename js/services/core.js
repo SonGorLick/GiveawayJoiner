@@ -243,7 +243,7 @@ this.updateUserInfo();
 if (this.totalTicks % this.doTimer() === 0) {
 this.authCheck((authState) => {
 if (authState === 1) {
-this.log(Lang.get('service.connection_good'));
+this.log(Lang.get('service.connection_good') + ' (' + GJuser.ownapps.length + '|' + GJuser.ownsubs.length + ')');
 let atimer = this.getConfig('timer', 10);
 this.stimer = atimer;
 this.updateCookies();
@@ -332,6 +332,14 @@ btnUp.addClass('disabled');
 vLabel.text(val);
 _this.setConfig(control, val);
 switch (control) {
+case 'min_level':
+_this.settings.max_level.min = val;
+_this.reinitNumber('max_level');
+break;
+case 'max_level':
+_this.settings.min_level.max = val;
+_this.reinitNumber('min_level');
+break;
 case 'min_cost':
 _this.settings.max_cost.min = val;
 _this.reinitNumber('max_cost');
@@ -365,6 +373,14 @@ btnDn.addClass('disabled');
 vLabel.text(val);
 _this.setConfig(control, val);
 switch (control) {
+case 'min_level':
+_this.settings.max_level.min = val;
+_this.reinitNumber('max_level');
+break;
+case 'max_level':
+_this.settings.min_level.max = val;
+_this.reinitNumber('min_level');
+break;
 case 'min_cost':
 _this.settings.max_cost.min = val;
 _this.reinitNumber('max_cost');

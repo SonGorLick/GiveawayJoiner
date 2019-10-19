@@ -12,6 +12,7 @@ let mainWindow = shared.mainWindow;
 let intervalTicks = 0;
 GJuser.ownapps = '[]';
 GJuser.ownsubs = '[]';
+GJuser.ig = '';
 $(function () {
 setInterval(intervalSchedules, 1000);
 reloadLangStrings();
@@ -133,6 +134,7 @@ renderUser(data.response);
 if (intervalTicks % 600 === 0) {
 $.ajax({
 url: 'https://store.steampowered.com/dynamicstore/userdata/?v=',
+timeout: 10000,
 dataType: 'json',
 success: function (data) {
 if (JSON.stringify(data.rgOwnedApps) !== '[]') {

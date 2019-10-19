@@ -3,6 +3,7 @@ class Astats extends Joiner {
 constructor() {
 super();
 this.websiteUrl = 'http://astats.astats.nl/astats/TopListGames.php?DisplayType=Giveaway';
+http://astats.astats.nl
 this.authContent = 'Log out';
 this.authLink = 'http://astats.astats.nl/astats/profile/Login.php';
 this.withValue = false;
@@ -30,6 +31,9 @@ joinService() {
 let _this = this;
 let page = 1;
 _this.url = 'http://astats.astats.nl';
+$.ajax({
+url: _this.url + '/astats/TopListGames.php?language=english'
+});
 let callback = function () {
 page++;
 if (page <= _this.getConfig('pages', 1)) {
@@ -64,7 +68,7 @@ assub = 0,
 asid = '???',
 asstm = '';
 if (alink === undefined || assteam === undefined) {
-asnext = 50;
+asnext = 70;
 }
 else {
 let ended = data.find('[href="' + alink + '"] > span').text().trim();
@@ -93,8 +97,8 @@ if (GJuser.ownsubs.includes(',' + assub + ',') && assub > 0) {
 asown = 1;
 }
 }
-if (asown === 0 && ahave !== '#FF0000') {
-let tmout = (Math.floor(Math.random() * 10000)) + 7000;
+if (asown === 0 && ahave === undefined) {
+let tmout = (Math.floor(Math.random() * 7000)) + 10000;
 $.ajax({
 url: _this.url + alink,
 timeout: tmout,
@@ -102,15 +106,15 @@ success: function (html) {
 html = $(html.replace(/<img/gi, '<noload'));
 let ajoin = html.find('.input-group-btn').text().trim();
 if (ajoin === 'Join') {
-let aname = html.find('.panel-gameinfo.panel-default.panel > .panel-heading').text().trim(),
-pmout = (Math.floor(Math.random() * 10000)) + 7000;
+let aname = html.find('.panel-gameinfo.panel-default.panel > .panel-heading').text().trim();
+_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + alink, aname) + ' - ' + _this.logLink(asstm, asid));
+let pmout = (Math.floor(Math.random() * 7000)) + 10000;
 $.ajax({
 url: _this.url + alink,
 method: 'POST',
 data: 'Comment=&JoinGiveaway=Join',
 timeout: pmout,
 success: function () {
-_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + alink, aname) + ' - ' + _this.logLink(asstm, asid));
 }
 });
 }
@@ -118,7 +122,7 @@ _this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + alink, anam
 });
 }
 else {
-asnext = 50;
+asnext = 70;
 }
 }
 acurr++;
