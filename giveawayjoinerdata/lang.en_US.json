@@ -91,18 +91,6 @@
 			"check_in_steam": "Check owned on Steam",
 			"check_in_steam_title": "Don't enter if the giveaway games owned on account"
 		},
-		"oyunkeyi": {
-			"value_label": "Points",
-			"cost": "Cost",
-			"sound": "Sound notifications",
-			"sound_title": "Play sound when winning a giveaway",
-			"check_in_steam": "Check owned on Steam",
-			"check_in_steam_title": "Don't enter if the giveaway games owned on account",
-			"min_cost": "Min. Cost",
-			"min_cost_title": "Don't enter giveaways with a cost lesser than your set min.cost",
-			"max_cost": "Max. Cost",
-			"max_cost_title": "Don't enter giveaways with a cost higher than your set max.cost. 0 - without any restrictions"
-		},
 		"steamgifts": {
 			"value_label": "Points",
 			"cost": "Cost",
@@ -111,6 +99,8 @@
 			"ending": "GA ending (minutes)",
 			"ending_title": "Don't join giveaways before the end of which more than the specified time. 0 - without any restrictions",
 			"chance": "Chance",
+			"sort_by_level": "Sort by level",
+			"sort_by_level_title": "Enter giveaways sorted from high to low level",
 			"sort_by_chance": "Sort by winning chance",
 			"sort_by_chance_title": "Enter giveaways sorted by winning chance",
 			"min_chance": "Min. chance (%)",
