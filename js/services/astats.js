@@ -90,6 +90,10 @@ asid = 'sub/' + assub;
 asstm = 'https://store.steampowered.com/sub/' + assub;
 }
 if (_this.getConfig('check_in_steam', true)) {
+if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
+_this.log('steam data error');
+asown = 1;
+}
 if (GJuser.ownapps.includes(',' + asapp + ',') && asapp > 0) {
 asown = 1;
 }

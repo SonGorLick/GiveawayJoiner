@@ -243,7 +243,17 @@ this.updateUserInfo();
 if (this.totalTicks % this.doTimer() === 0) {
 this.authCheck((authState) => {
 if (authState === 1) {
-this.log(Lang.get('service.connection_good') + ' (' + GJuser.ownapps.length + '|' + GJuser.ownsubs.length + ')');
+$.ajax({
+url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
+dataType: 'json',
+success: function (data) {
+if (JSON.stringify(data.rgOwnedApps) !== '[]') {
+GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
+GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
+}
+},
+});
+this.log(Lang.get('service.connection_good'));
 let atimer = this.getConfig('timer', 10);
 this.stimer = atimer;
 this.updateCookies();

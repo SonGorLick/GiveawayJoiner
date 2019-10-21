@@ -123,6 +123,10 @@ fxid = 'sub/' + fxsub;
 fxstm = 'https://store.steampowered.com/sub/' + fxsub;
 }
 if (_this.getConfig('check_in_steam', true)) {
+if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
+_this.log('steam data error');
+fxown = 1;
+}
 if (GJuser.ownapps.includes(',' + fxapp + ',') && fxapp > 0) {
 fxown = 1;
 }

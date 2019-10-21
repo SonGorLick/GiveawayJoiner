@@ -50,7 +50,7 @@ app.on('ready', () => {
 Config = new ConfigClass();
 Lang = new LanguageClass();
 _session = session.fromPartition('persist:GiveawayJoiner');
-_session.setUserAgent('Mozilla/5.0 (Linux; Android 9; SM-G965F Build/PPR1.180610.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/74.0.3729.157 Mobile Safari/537.36');
+_session.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36');
 authWindow = new BrowserWindow({
 width: 280,
 height: 340,

@@ -44,8 +44,10 @@ this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback) {
 let _this = this;
+let cmout = (Math.floor(Math.random() * 7000)) + 7000;
 $.ajax({
 url: _this.url + '/giveaways?ajax=giveawaylistview&Giveaway_page=' + page,
+timeout: cmout,
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
 if (_this.check === 0) {
@@ -82,7 +84,7 @@ else {
 let link = opway.find('.giveaways-page-item-img-btn-more').attr('href'),
 name = opway.find('.giveaways-page-item-footer-name').text().trim(),
 eLink = opway.find('.giveaways-page-item-img-btn-enter').attr('href');
-let tmout = (Math.floor(Math.random() * 7000)) + 10000;
+let tmout = (Math.floor(Math.random() * 7000)) + 7000;
 $.ajax({
 url: _this.url + link,
 timeout: tmout,
@@ -106,6 +108,10 @@ opsub = parseInt(opsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')
 opid = 'sub/' + opsub;
 }
 if (_this.getConfig('check_in_steam', true)) {
+if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
+_this.log('steam data error');
+opown = 1;
+}
 if (GJuser.ownapps.includes(',' + opapp + ',') && opapp > 0) {
 opown = 1;
 }
@@ -114,7 +120,7 @@ opown = 1;
 }
 }
 if (opown === 0 && openter !== " You're not eligible to enter") {
-let pmout = (Math.floor(Math.random() * 7000)) + 10000;
+let pmout = (Math.floor(Math.random() * 7000)) + 7000;
 $.ajax({
 url: _this.url + eLink,
 timeout: pmout,

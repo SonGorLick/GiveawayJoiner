@@ -12,6 +12,7 @@ this.settings.min_chance = { type: 'float_number', trans: this.transPath('min_ch
 this.settings.min_level = { type: 'number', trans: this.transPath('min_level'), min: 0, max: 10, default: this.getConfig('min_level', 0) };
 this.settings.min_cost = { type: 'number', trans: this.transPath('min_cost'), min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
 this.settings.max_cost = { type: 'number', trans: this.transPath('max_cost'), min: this.getConfig('min_cost', 0), max: 300, default: this.getConfig('max_cost', 0) };
+this.settings.sort_by_level = { type: 'checkbox', trans: this.transPath('sort_by_level'), default: this.getConfig('sort_by_level', true) };
 this.settings.sort_by_chance = { type: 'checkbox', trans: this.transPath('sort_by_chance'), default: this.getConfig('sort_by_chance', false) };
 this.settings.wishlist_only = { type: 'checkbox', trans: this.transPath('wishlist_only'), default: this.getConfig('wishlist_only', false) };
 this.settings.reserve_on_wish = { type: 'checkbox', trans: this.transPath('reserve_on_wish'), default: this.getConfig('reserve_on_wish', false) };
@@ -156,6 +157,11 @@ this.giveaways.sort((a, b) => {
 return b.chance - a.chance;
 });
 }
+if (this.getConfig('sort_by_level', true)) {
+this.giveaways.sort((a, b) => {
+return b.level - a.level;
+});
+}
 function processOne() {
 if (_this.giveaways.length <= sgcurr || !_this.started) {
 if (callback) {
@@ -178,6 +184,10 @@ sgsub = parseInt(GA.sgsteam.split('sub/')[1].split('/')[0].split('?')[0].split('
 sgid = 'sub/' + sgsub;
 }
 if (_this.getConfig('check_in_steam', true)) {
+if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
+_this.log('steam data error');
+sgown = 1;
+}
 if (GJuser.ownapps.includes(',' + sgapp + ',') && sgapp > 0) {
 sgown = 1;
 }
@@ -206,7 +216,7 @@ code: GA.code
 },
 success: function (data) {
 if (data.type === 'success') {
-_this.log(Lang.get('service.entered_in') + _this.logLink(GA.link, GA.name) + ' - ' + _this.logLink(GA.sgsteam, sgid) + ' - ' + GA.cost + ' P - ' + GA.chance + ' %');
+_this.log(Lang.get('service.entered_in') + '[' + GA.level + '+] ' + _this.logLink(GA.link, GA.name) + ' - ' + _this.logLink(GA.sgsteam, sgid) + ' - ' + GA.cost + ' P - ' + GA.chance + ' %');
 _this.setValue(data.points);
 GA.entered = true;
 }
