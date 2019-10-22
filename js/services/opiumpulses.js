@@ -127,13 +127,7 @@ timeout: pmout,
 success: function () {
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
-if (cost === 0) {
-cost = 'Free';
-}
-else {
-cost = cost + ' P';
-}
-_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + link, name) + ' - ' + _this.logLink(opsteam, opid) + ' - ' + cost);
+_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + link, name) + ' - ' + _this.logLink(opsteam, opid) + ' - ' + page + ' - ' + cost + 'P');
 }
 });
 }

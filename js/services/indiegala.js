@@ -13,8 +13,10 @@ this.settings.sort_by_level = { type: 'checkbox', trans: this.transPath('sort_by
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
 super.init();
+this.log(this.trans('captcha') + this.logLink('https://www.indiegala.com/giveaways', 'captcha'), true);
 }
 authCheck(callback) {
+if (GJuser.ig === '') {
 $.ajax({
 url: 'https://www.indiegala.com',
 success: function () {
@@ -24,6 +26,13 @@ dataType: 'json',
 success: function (data) {
 if (data.steamnick) {
 GJuser.ig = '?user_id=' + data.profile;
+$.ajax({
+url: 'https://www.indiegala.com/giveaways/get_user_level_and_coins',
+dataType: 'json',
+success: function (data) {
+GJuser.iglvl = data.current_level;
+}
+});
 callback(1);
 }
 else {
@@ -38,42 +47,42 @@ callback(-1);
 }
 });
 }
+else {
+callback(1);
+}
+}
 getUserInfo(callback) {
 let userData = {
 avatar: __dirname + '/images/IndieGala.png',
 username: 'IG User',
 value: 0
 };
+if (GJuser.ig !== '') {
 $.ajax({
 url: 'https://www.indiegala.com/profile' + GJuser.ig,
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
-if (GJuser.ig !== '') {
 userData.avatar = data.find('.left.relative noload').attr('src');
 userData.username = data.find('.pb-user-data-visible span.username-text').text();
 userData.value = data.find('.pb-header-bottom-silver span.profile-silver-amount').text();
-}
 },
 complete: function (data) {
 callback(userData);
 }
 });
 }
+}
 joinService() {
 let _this = this;
 let page = 1;
 _this.lvl = _this.getConfig('max_level', 0);
 _this.url = 'https://www.indiegala.com';
-_this.check = 1;
-$.ajax({
-url: _this.url + '/profile' + GJuser.ig,
-success: function (data) {
 $.ajax({
 url: _this.url + '/giveaways/library_completed',
 type: 'POST',
 data: '{"list_type":"tocheck","page":1}',
-dataType: 'json',
-success: function () {
+dataType: 'json'
+});
 $.ajax({
 url: _this.url + '/giveaways/check_if_won_all',
 success: function (html) {
@@ -90,35 +99,18 @@ if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }
 }
+}
+}
+});
 $.ajax({
 url: _this.url + '/claimprofile/sync_username_avatar',
-type: 'POST',
-success: function () {
-$.ajax({
-url: _this.url + '/giveaways/get_user_level_and_coins',
-dataType: 'json',
-success: function (data) {
-_this.iglvl = data.current_level;
-if (_this.lvl > _this.iglvl) {
-_this.lvl = _this.iglvl;
-}
-}
+type: 'POST'
 });
+if (_this.lvl > GJuser.iglvl) {
+_this.lvl = GJuser.iglvl;
 }
-});
-}
-}
-});
-}
-});
-}
-});
 let callback = function () {
 page++;
-if (_this.iglvl === undefined) {
-page = 1;
-_this.enterOnPage(page, callback);
-}
 if (page <= _this.getConfig('pages', 1)) {
 _this.enterOnPage(page, callback);
 }
@@ -134,13 +126,11 @@ _this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback) {
 let _this = this;
-if (!_this.getConfig('sort_by_level', true) && _this.iglvl > 0) {
+if (!_this.getConfig('sort_by_level', true) && GJuser.iglvl > 0) {
 _this.lvl = 'all';
 }
-let pmout = (Math.floor(Math.random() * 7000)) + 7000;
 $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
-timeout: pmout,
 success: function (data) {
 let tickets = $(JSON.parse(data).content).find('.tickets-col');
 let igcurr = 0;
@@ -165,7 +155,7 @@ else {
 enterTimes = parseInt(ticket.find('.giv-coupon .palette-color-11').text());
 entered = enterTimes > 0;
 }
-if (entered || _this.iglvl === undefined ||_this.getConfig('max_level', 0) < level || _this.iglvl < level || _this.getConfig('min_level', 0) > level || _this.curr_value < price || price < _this.getConfig('min_cost', 0) || price > _this.getConfig('max_cost', 0) && _this.getConfig('max_cost', 0) > 0) {
+if (entered || GJuser.iglvl === undefined ||_this.getConfig('max_level', 0) < level || GJuser.iglvl < level || _this.getConfig('min_level', 0) > level || _this.curr_value < price || price < _this.getConfig('min_cost', 0) || price > _this.getConfig('max_cost', 0) && _this.getConfig('max_cost', 0) > 0) {
 ignext = 70;
 }
 else {
@@ -200,10 +190,8 @@ igown = 1;
 }
 }
 if (igown === 0) {
-let tmout = (Math.floor(Math.random() * 4000)) + 2000;
 $.ajax({
 type: 'POST',
-timeout: tmout,
 url: _this.url + '/giveaways/new_entry',
 contentType: 'application/json; charset=utf-8',
 dataType: 'json',
@@ -211,7 +199,7 @@ data: JSON.stringify({giv_id: id, ticket_price: price}),
 success: function (data) {
 if (data.status === 'ok') {
 _this.setValue(data.new_amount);
-_this.log(Lang.get('service.entered_in') + '[' + level + '+] ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + ' - ' + _this.logLink(igstm, igid) + ' - ' + price + ' iC');
+_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + ' - ' + _this.logLink(igstm, igid) + ' - ' + page + ' - ' + level + 'L - ' + price + 'iC');
 }
 }
 });

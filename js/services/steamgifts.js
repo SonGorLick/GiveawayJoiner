@@ -216,7 +216,7 @@ code: GA.code
 },
 success: function (data) {
 if (data.type === 'success') {
-_this.log(Lang.get('service.entered_in') + '[' + GA.level + '+] ' + _this.logLink(GA.link, GA.name) + ' - ' + _this.logLink(GA.sgsteam, sgid) + ' - ' + GA.cost + ' P - ' + GA.chance + ' %');
+_this.log(Lang.get('service.entered_in') + _this.logLink(GA.link, GA.name) + ' - ' + _this.logLink(GA.sgsteam, sgid) + ' - ' + GA.level + 'L - ' + GA.cost + 'P - ' + GA.chance + '%');
 _this.setValue(data.points);
 GA.entered = true;
 }

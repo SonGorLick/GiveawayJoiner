@@ -3,7 +3,6 @@ class Astats extends Joiner {
 constructor() {
 super();
 this.websiteUrl = 'http://astats.astats.nl/astats/TopListGames.php?DisplayType=Giveaway';
-http://astats.astats.nl
 this.authContent = 'Log out';
 this.authLink = 'http://astats.astats.nl/astats/profile/Login.php';
 this.withValue = false;
