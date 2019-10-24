@@ -34,7 +34,12 @@
 		"btn_checking": "Checking",
 		"btn_awaiting": "Awaiting",
 		"connection_good": "Searching giveaways...",
-		"connection_error": "Unable to get established connection with the service...",
+		"checking": "Сhecking giveaway ",
+		"checked": "Checking giveaways complete.",
+		"have_on_steam": "Checked - already have on Steam.",
+		"already_joined": "Checked - already joined.",
+		"steam_error": "Steam data not found, giveaway skipped.",
+		"connection_error": "Unable to get established connection with the service.",
 		"session_expired": "Session expired",
 		"connection_lost": "Can't connect, retry after 10 minutes...",
 		"timer": "Timer (minutes)",
@@ -55,14 +60,18 @@
 			"sound": "Sound notifications",
 			"sound_title": "Play sound when winning a giveaway",
 			"check_in_steam": "Check owned on Steam",
-			"check_in_steam_title": "Don't enter if the giveaway games owned on account"
+			"check_in_steam_title": "Don't enter if the giveaway games owned on account",
+			"log": "Logging",
+			"log_title": "Detailed log of the service"
 		},
 		"follx": {
 			"value_label": "Energy",
 			"sound": "Sound notifications",
 			"sound_title": "Play sound when winning a giveaway",
 			"check_in_steam": "Check owned on Steam",
-			"check_in_steam_title": "Don't enter if the giveaway games owned on account"
+			"check_in_steam_title": "Don't enter if the giveaway games owned on account",
+			"log": "Logging",
+			"log_title": "Detailed log of the service"
 		},
 		"indiegala": {
 			"value_label": "GalaCoins",
@@ -81,7 +90,9 @@
 			"min_cost": "Min. Cost",
 			"min_cost_title": "Don't enter giveaways with a cost lesser than your set min.cost",
 			"max_cost": "Max. Cost",
-			"max_cost_title": "Don't enter giveaways with a cost higher than your set max.cost. 0 - without any restrictions"
+			"max_cost_title": "Don't enter giveaways with a cost higher than your set max.cost. 0 - without any restrictions",
+			"log": "Logging",
+			"log_title": "Detailed log of the service"
 		},
 		"opiumpulses": {
 			"value_label": "Points",
@@ -89,7 +100,9 @@
 			"sound": "Sound notifications",
 			"sound_title": "Play sound when won the giveaway",
 			"check_in_steam": "Check owned on Steam",
-			"check_in_steam_title": "Don't enter if the giveaway games owned on account"
+			"check_in_steam_title": "Don't enter if the giveaway games owned on account",
+			"log": "Logging",
+			"log_title": "Detailed log of the service"
 		},
 		"steamgifts": {
 			"value_label": "Points",
