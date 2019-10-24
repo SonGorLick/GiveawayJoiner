@@ -38,6 +38,8 @@
 		"checked": "Checking giveaways complete.",
 		"have_on_steam": "Checked - already have on Steam.",
 		"already_joined": "Checked - already joined.",
+		"cant_join": "Checked - you're not eligible to enter.",
+		"points_low": "Checked - not enough points.",
 		"steam_error": "Steam data not found, giveaway skipped.",
 		"connection_error": "Unable to get established connection with the service.",
 		"session_expired": "Session expired",
