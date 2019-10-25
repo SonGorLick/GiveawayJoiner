@@ -138,7 +138,9 @@
 			"wishlist_only": "Wishlist only",
 			"wishlist_only_title": "Participate in giveaways only from the wishlist",
 			"check_in_steam": "Check owned on Steam",
-			"check_in_steam_title": "Don't enter if the giveaway games owned on account"
+			"check_in_steam_title": "Don't enter if the giveaway games owned on account",
+			"log": "Logging",
+			"log_title": "Detailed log of the service"
 		}
 	},
 	"profile": {
