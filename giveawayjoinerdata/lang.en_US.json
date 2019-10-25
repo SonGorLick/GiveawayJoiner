@@ -42,7 +42,7 @@
 		"points_low": "Skipped - not enough points",
 		"skipped": "Skipped - giveaway does not fit the service settings",
 		"reach_end": "No more giveaways", 
-		"level": "level",
+		"level": "Level ",
 		"steam_error": "Steam data not found, giveaway skipped",
 		"connection_error": "Unable to get established connection with the service",
 		"session_expired": "Session expired",
