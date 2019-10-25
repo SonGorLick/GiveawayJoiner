@@ -19,6 +19,7 @@ this.settings.reserve_on_wish = { type: 'checkbox', trans: this.transPath('reser
 this.settings.ignore_on_wish = { type: 'checkbox', trans: this.transPath('ignore_on_wish'), default: this.getConfig('ignore_on_wish', false) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
+this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', false) };
 this.token = '';
 this.giveaways = [];
 super.init();
@@ -136,6 +137,7 @@ wish: this.wishlist
 if (
 !GA.entered &&
 GA.levelPass &&
+(!GA.wish || !GA.pinned) &&
 (this.getConfig('ending', 0) === 0 || GA.left <= this.getConfig('ending', 0)) &&
 (this.getConfig('min_chance', 0) === 0 || GA.chance >= this.getConfig('min_chance', 0) || GA.wish && _this.getConfig('ignore_on_wish'))
 )
@@ -164,6 +166,15 @@ return b.level - a.level;
 }
 function processOne() {
 if (_this.giveaways.length <= sgcurr || !_this.started) {
+if (_this.getConfig('log', true) && sgcurr > 0) {
+if (sgcurr === 0) {
+_this.log(Lang.get('service.reach_end'));
+_this.log(Lang.get('service.checked') + '1-' + _this.getConfig('pages', 1));
+}
+if (sgcurr > 0) {
+_this.log(Lang.get('service.checked') + '1-' + _this.getConfig('pages', 1));
+}
+}
 if (callback) {
 callback(false);
 }
@@ -185,8 +196,8 @@ sgid = 'sub/' + sgsub;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
-_this.log('steam data error');
-sgown = 1;
+_this.log(Lang.get('service.steam_error'), true);
+sgown = 2;
 }
 if (GJuser.ownapps.includes(',' + sgapp + ',') && sgapp > 0) {
 sgown = 1;
@@ -195,9 +206,20 @@ if (GJuser.ownsubs.includes(',' + sgsub + ',') && sgsub > 0) {
 sgown = 1;
 }
 }
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.checking') + '|' + GA.level + 'L|' + GA.cost + 'P|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name));
+if (sgown === 1) {
+_this.log(Lang.get('service.have_on_steam'));
+}
+if (GA.entered) {
+_this.log(Lang.get('service.already_joined'));
+}
+if (!GA.entered && sgown === 0 && _this.curr_value < GA.cost) {
+_this.log(Lang.get('service.points_low'));
+}
+}
 if (
 (!GA.entered && sgown === 0) &&
-(!GA.wish || !GA.pinned) &&
 (_this.curr_value >= GA.cost) &&
 (GA.wish && _this.getConfig('ignore_on_wish') || _this.getConfig('min_level') === 0 || GA.level >= _this.getConfig('min_level')) &&
 (GA.wish && _this.getConfig('ignore_on_wish') || GA.cost >= _this.getConfig('min_cost')) &&
@@ -216,7 +238,7 @@ code: GA.code
 },
 success: function (data) {
 if (data.type === 'success') {
-_this.log(Lang.get('service.entered_in') + _this.logLink(GA.link, GA.name) + ' - ' + _this.logLink(GA.sgsteam, sgid) + ' - ' + GA.level + 'L - ' + GA.cost + 'P - ' + GA.chance + '%');
+_this.log(Lang.get('service.entered_in') + ' |' + GA.level + 'L|' + GA.cost + 'P|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name));
 _this.setValue(data.points);
 GA.entered = true;
 }

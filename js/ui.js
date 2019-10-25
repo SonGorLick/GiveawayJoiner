@@ -13,6 +13,7 @@ let intervalTicks = 0;
 GJuser.ownapps = '[]';
 GJuser.ownsubs = '[]';
 GJuser.ig = '';
+GJuser.as = '';
 GJuser.iglvl = undefined;
 $(function () {
 setInterval(intervalSchedules, 1000);

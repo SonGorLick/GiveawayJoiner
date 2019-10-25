@@ -7,9 +7,12 @@ this.authContent = 'Log out';
 this.authLink = 'http://astats.astats.nl/astats/profile/Login.php';
 this.withValue = false;
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
+this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', false) };
 super.init();
 }
 getUserInfo(callback) {
+if (GJuser.as === '') {
+GJuser.as = '1';
 let userData = {
 avatar: __dirname + '/images/Astats.png',
 username: 'Astats User',
@@ -26,16 +29,21 @@ callback(userData);
 }
 });
 }
+}
 joinService() {
 let _this = this;
 let page = 1;
 _this.url = 'http://astats.astats.nl';
+_this.pagemax = _this.getConfig('pages', 1);
+if (_this.check === undefined) {
+_this.check = 1;
 $.ajax({
 url: _this.url + '/astats/TopListGames.php?language=english'
 });
+}
 let callback = function () {
 page++;
-if (page <= _this.getConfig('pages', 1)) {
+if (page <= _this.pagemax) {
 _this.enterOnPage(page, callback);
 }
 };
@@ -51,7 +59,13 @@ data = $(data.replace(/<img/gi, '<noload'));
 let afound = data.find('[style="text-align:right;"]'),
 acurr = 0;
 function giveawayEnter() {
+if (afound.length === 0) {
+_this.page.max = page;
+}
 if (afound.length <= acurr || !_this.started) {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.checked') + page);
+}
 if (callback) {
 callback();
 }
@@ -66,18 +80,21 @@ asapp = 0,
 assub = 0,
 asid = '???',
 asstm = '';
-if (alink === undefined || assteam === undefined) {
-asnext = 70;
-}
-else {
+if (alink !== undefined || assteam !== undefined) {
 let ended = data.find('[href="' + alink + '"] > span').text().trim();
 if (ended === 'This giveaway has ended.') {
+_this.pagemax = page;
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.reach_end'));
+_this.log(Lang.get('service.checked') + page);
+}
 if (callback) {
 callback();
 }
 return;
 }
-let ahave =  data.find('[href="' + alink + '"] font').attr('color');
+let ahave =  data.find('[href="' + alink + '"] font').attr('color'),
+aname = data.find('[href="' + alink + '"]').text().trim();
 if (assteam.includes('apps/')) {
 asapp = parseInt(assteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'app/' + asapp;
@@ -90,8 +107,8 @@ asstm = 'https://store.steampowered.com/sub/' + assub;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
-_this.log('steam data error');
-asown = 1;
+_this.log(Lang.get('service.steam_error'), true);
+asown = 2;
 }
 if (GJuser.ownapps.includes(',' + asapp + ',') && asapp > 0) {
 asown = 1;
@@ -100,23 +117,27 @@ if (GJuser.ownsubs.includes(',' + assub + ',') && assub > 0) {
 asown = 1;
 }
 }
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname));
+if (asown === 1) {
+_this.log(Lang.get('service.have_on_steam'));
+}
+}
 if (asown === 0 && ahave === undefined) {
-let tmout = (Math.floor(Math.random() * 7000)) + 10000;
 $.ajax({
 url: _this.url + alink,
-timeout: tmout,
 success: function (html) {
 html = $(html.replace(/<img/gi, '<noload'));
 let ajoin = html.find('.input-group-btn').text().trim();
+if (ajoin === 'Add' && _this.getConfig('log', true)) {
+_this.log(Lang.get('service.already_joined'));
+}
 if (ajoin === 'Join') {
-let aname = html.find('.panel-gameinfo.panel-default.panel > .panel-heading').text().trim();
-_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + alink, aname) + ' - ' + _this.logLink(asstm, asid));
-let pmout = (Math.floor(Math.random() * 7000)) + 10000;
+_this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname));
 $.ajax({
 url: _this.url + alink,
 method: 'POST',
 data: 'Comment=&JoinGiveaway=Join',
-timeout: pmout,
 success: function () {
 }
 });
@@ -125,7 +146,7 @@ success: function () {
 });
 }
 else {
-asnext = 70;
+asnext = 50;
 }
 }
 acurr++;

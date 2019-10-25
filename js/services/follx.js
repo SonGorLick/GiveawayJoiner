@@ -7,6 +7,7 @@ this.authLink = 'https://follx.com/logIn';
 this.authContent = '/account';
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
+this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -41,6 +42,9 @@ joinService() {
 let _this = this;
 let page = 1;
 _this.sync = 0;
+if (_this.check === undefined) {
+setTimeout(2000);
+}
 _this.check = 0;
 let callback = function () {
 page++;
@@ -91,6 +95,9 @@ let fxfound = html.find('.giveaway_card');
 let fxcurr = 0;
 function giveawayEnter() {
 if (fxfound.length <= fxcurr || !_this.started) {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.checked') + page);
+}
 if (callback) {
 callback();
 }
@@ -100,9 +107,12 @@ let fxnext = _this.interval();
 let card = fxfound.eq(fxcurr),
 link = card.find('.head_info a').attr('href'),
 name = card.find('.head_info').attr('title'),
-have = card.find('.giveaway-indicators > .have').length > 0,
 entered = card.find('.entered').length > 0;
-if (have || entered) {
+if (entered) {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.checking') + '|' + page + '#|  ' + _this.logLink(link, name));
+_this.log(Lang.get('service.already_joined'));
+}
 fxnext = 50;
 }
 else {
@@ -124,14 +134,20 @@ fxstm = 'https://store.steampowered.com/sub/' + fxsub;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
-_this.log('steam data error');
-fxown = 1;
+_this.log(Lang.get('service.steam_error'), true);
+fxown = 2;
 }
 if (GJuser.ownapps.includes(',' + fxapp + ',') && fxapp > 0) {
 fxown = 1;
 }
 if (GJuser.ownsubs.includes(',' + fxsub + ',') && fxsub > 0) {
 fxown = 1;
+}
+}
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name));
+if (fxown === 1) {
+_this.log(Lang.get('service.have_on_steam'));
 }
 }
 if (fxown === 0) {
@@ -152,7 +168,7 @@ headers: {
 success: function (data) {
 if (data.response) {
 _this.setValue(data.points);
-_this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + ' - ' + _this.logLink(fxstm, fxid));
+_this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name));
 }
 }
 });

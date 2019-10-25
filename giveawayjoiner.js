@@ -18,7 +18,6 @@ let _bmd = 'true';
 let _bfr = 'false';
 let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
-app.commandLine.appendSwitch('in-process-gpu');
 app.commandLine.appendSwitch('disable-software-rasterizer');
 app.disableHardwareAcceleration();
 if (process.platform === 'win32') {
@@ -50,7 +49,7 @@ app.on('ready', () => {
 Config = new ConfigClass();
 Lang = new LanguageClass();
 _session = session.fromPartition('persist:GiveawayJoiner');
-_session.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36');
+_session.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/78.0.3904.67 Mobile/15E148 Safari/605.1');
 authWindow = new BrowserWindow({
 width: 280,
 height: 340,
@@ -62,12 +61,14 @@ center: true,
 resizable: false,
 frame: false,
 webPreferences: {
+contextIsolation: false,
+nodeIntegration: true,
 session: _session,
 devTools: devMode,
-webaudio: false
+webaudio: true,
 }
 });
-authWindow.setMenu(null);
+authWindow.setMenuBarVisibility(false);
 mainWindow = new BrowserWindow({
 width: 730,
 height: 500,
@@ -79,12 +80,15 @@ center: true,
 resizable: false,
 frame: false,
 webPreferences: {
+contextIsolation: false,
+nodeIntegration: true,
 session: _session,
 devTools: devMode,
-webaudio: false
+webaudio: false,
+webviewTag: true
 }
 });
-mainWindow.setMenu(null);
+mainWindow.setMenuBarVisibility(false);
 if (devMode) {
 mainWindow.webContents.openDevTools();
 }
@@ -101,14 +105,16 @@ frame: _bfr,
 show: false,
 center: true,
 webPreferences: {
+contextIsolation: false,
 nodeIntegration: false,
 session: _session,
 devTools: false,
-webaudio: false
+webaudio: false,
+webviewTag: false
 }
 });
 Browser.loadFile('blank.html');
-Browser.setMenu(null);
+Browser.setMenuBarVisibility(false);
 Browser.on('close', (e) => {
 e.preventDefault();
 Browser.loadFile('blank.html');
