@@ -6,20 +6,22 @@ this.settings.timer.min = 5;
 this.websiteUrl = 'https://www.steamgifts.com';
 this.authContent = 'Account';
 this.authLink = 'https://www.steamgifts.com/?login';
-this.settings.points_reserve = { type: 'number', trans: this.transPath('points_reserve'), min: 0, max: 500, default: this.getConfig('points_reserve', 0) };
 this.settings.ending = { type: 'number', trans: this.transPath('ending'), min: 0, max: 500, default: this.getConfig('ending', 0) };
 this.settings.min_chance = { type: 'float_number', trans: this.transPath('min_chance'), min: 0, max: 100, default: this.getConfig('min_chance', 0) };
-this.settings.min_level = { type: 'number', trans: this.transPath('min_level'), min: 0, max: 10, default: this.getConfig('min_level', 0) };
+this.settings.min_level = { type: 'number', trans: this.transPath('min_level'), min: 0, max: this.getConfig('max_level', 0), default: this.getConfig('min_level', 0) };
+this.settings.max_level = { type: 'number', trans: this.transPath('max_level'), min: this.getConfig('min_level', 0), max: 10, default: this.getConfig('max_level', 0) };
 this.settings.min_cost = { type: 'number', trans: this.transPath('min_cost'), min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
 this.settings.max_cost = { type: 'number', trans: this.transPath('max_cost'), min: this.getConfig('min_cost', 0), max: 300, default: this.getConfig('max_cost', 0) };
-this.settings.sort_by_level = { type: 'checkbox', trans: this.transPath('sort_by_level'), default: this.getConfig('sort_by_level', true) };
+this.settings.points_reserve = { type: 'number', trans: this.transPath('points_reserve'), min: 0, max: 500, default: this.getConfig('points_reserve', 0) };
+this.settings.sort_by_level = { type: 'checkbox', trans: this.transPath('sort_by_level'), default: this.getConfig('sort_by_level', false) };
 this.settings.sort_by_chance = { type: 'checkbox', trans: this.transPath('sort_by_chance'), default: this.getConfig('sort_by_chance', false) };
+this.settings.wishlist_first = { type: 'checkbox', trans: this.transPath('wishlist_first'), default: this.getConfig('wishlist_first', false) };
 this.settings.wishlist_only = { type: 'checkbox', trans: this.transPath('wishlist_only'), default: this.getConfig('wishlist_only', false) };
 this.settings.reserve_on_wish = { type: 'checkbox', trans: this.transPath('reserve_on_wish'), default: this.getConfig('reserve_on_wish', false) };
 this.settings.ignore_on_wish = { type: 'checkbox', trans: this.transPath('ignore_on_wish'), default: this.getConfig('ignore_on_wish', false) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
-this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', false) };
+this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 this.token = '';
 this.giveaways = [];
 super.init();
@@ -135,9 +137,8 @@ entered: sgaway.find('.giveaway__row-inner-wrap.is-faded').length > 0,
 wish: this.wishlist
 };
 if (
-!GA.entered &&
-GA.levelPass &&
-(!GA.wish || !GA.pinned) &&
+(!GA.entered && !GA.pinned && GA.levelPass) &&
+(!GA.wish || this.getConfig('wishlist_only', false) || this.getConfig('wishlist_first', false) && !this.getConfig('sort_by_level', false)) &&
 (this.getConfig('ending', 0) === 0 || GA.left <= this.getConfig('ending', 0)) &&
 (this.getConfig('min_chance', 0) === 0 || GA.chance >= this.getConfig('min_chance', 0) || GA.wish && _this.getConfig('ignore_on_wish'))
 )
@@ -159,7 +160,7 @@ this.giveaways.sort((a, b) => {
 return b.chance - a.chance;
 });
 }
-if (this.getConfig('sort_by_level', true)) {
+if (this.getConfig('sort_by_level', false)) {
 this.giveaways.sort((a, b) => {
 return b.level - a.level;
 });
@@ -221,7 +222,7 @@ _this.log(Lang.get('service.points_low'));
 if (
 (!GA.entered && sgown === 0) &&
 (_this.curr_value >= GA.cost) &&
-(GA.wish && _this.getConfig('ignore_on_wish') || _this.getConfig('min_level') === 0 || GA.level >= _this.getConfig('min_level')) &&
+(GA.wish && _this.getConfig('ignore_on_wish') || _this.getConfig('max_level') === 0 || GA.level >= _this.getConfig('min_level') && GA.level <= _this.getConfig('max_level') && _this.getConfig('max_level') > 0) &&
 (GA.wish && _this.getConfig('ignore_on_wish') || GA.cost >= _this.getConfig('min_cost')) &&
 (GA.wish && _this.getConfig('ignore_on_wish') || _this.getConfig('max_cost') === 0 || GA.cost <= _this.getConfig('max_cost')) &&
 (GA.wish && _this.getConfig('reserve_on_wish') || _this.getConfig('points_reserve') === 0 || ((_this.curr_value - GA.cost) >= _this.getConfig('points_reserve')))

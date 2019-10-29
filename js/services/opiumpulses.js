@@ -7,7 +7,7 @@ this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
-this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', false) };
+this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 super.init();
 }
 getUserInfo(callback) {
@@ -85,13 +85,21 @@ link = opway.find('.giveaways-page-item-img-btn-more').attr('href'),
 name = opway.find('.giveaways-page-item-footer-name').text().trim(),
 entered = opway.find('.giveaways-page-item-img-btn-wrapper').text(),
 eLink = opway.find('.giveaways-page-item-img-btn-enter').attr('href'),
-cost = parseInt(opway.find('.giveaways-page-item-header-points').text().replace('points', '').trim());
+cost = parseInt(opway.find('.giveaways-page-item-header-points').text().replace('points', '').trim()),
+code = (link.slice(11, 16)),
+njoin = 0;
 if (isNaN(cost)) {
 cost = 0;
 }
-if (_this.curr_value < cost || entered.includes('ENTERED')) {
+if (GJuser.op.includes(',' + code + ',')) {
+njoin = 1;
+}
+if (_this.curr_value < cost || entered.includes('ENTERED') || njoin === 1) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + cost + 'P|  ' + _this.logLink(_this.url + link, name));
+if (njoin === 1) {
+_this.log(Lang.get('service.cant_join'));
+}
 if (entered.includes('ENTERED')) {
 _this.log(Lang.get('service.already_joined'));
 }
@@ -135,16 +143,20 @@ if (GJuser.ownsubs.includes(',' + opsub + ',') && opsub > 0) {
 opown = 1;
 }
 }
+if (openter === " You're not eligible to enter") {
+GJuser.op = GJuser.op + code + ',';
+opown = 3;
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + ' |' + page + '#|' + cost + 'P|'+ _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name));
-if (openter === " You're not eligible to enter") {
+if (opown === 3) {
 _this.log(Lang.get('service.cant_join'));
 }
-if (opown === 1 && openter !== " You're not eligible to enter") {
+if (opown === 1) {
 _this.log(Lang.get('service.have_on_steam'));
 }
 }
-if (opown === 0 && openter !== " You're not eligible to enter") {
+if (opown === 0) {
 $.ajax({
 url: _this.url + eLink,
 success: function () {

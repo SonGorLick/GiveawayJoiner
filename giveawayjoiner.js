@@ -1,5 +1,5 @@
 'use strict';
-const { app, nativeImage, shell, session, Tray, BrowserWindow, ipcMain, ipcRenderer } = require('electron');
+const { app, nativeImage, shell, session, Tray, BrowserWindow, Menu, ipcMain, ipcRenderer } = require('electron');
 const storage = require('electron-json-storage');
 const fs = require('fs');
 const Request = require('request-promise');
@@ -50,6 +50,7 @@ Config = new ConfigClass();
 Lang = new LanguageClass();
 _session = session.fromPartition('persist:GiveawayJoiner');
 _session.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/78.0.3904.67 Mobile/15E148 Safari/605.1');
+Menu.setApplicationMenu(null);
 authWindow = new BrowserWindow({
 width: 280,
 height: 340,
@@ -68,7 +69,6 @@ devTools: devMode,
 webaudio: true,
 }
 });
-authWindow.setMenuBarVisibility(false);
 mainWindow = new BrowserWindow({
 width: 730,
 height: 500,
@@ -88,9 +88,8 @@ webaudio: false,
 webviewTag: true
 }
 });
-mainWindow.setMenuBarVisibility(false);
 if (devMode) {
-mainWindow.webContents.openDevTools();
+mainWindow.webContents.openDevTools({ mode: 'detach' });
 }
 Browser = new BrowserWindow({
 parent: mainWindow,
@@ -114,7 +113,6 @@ webviewTag: false
 }
 });
 Browser.loadFile('blank.html');
-Browser.setMenuBarVisibility(false);
 Browser.on('close', (e) => {
 e.preventDefault();
 Browser.loadFile('blank.html');

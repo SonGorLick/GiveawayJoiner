@@ -238,11 +238,12 @@ if (!this.started) {
 clearInterval(this.intervalVar);
 }
 if (this.totalTicks !== 0 && this.totalTicks % this.usrUpdTimer === 0) {
+if (this.websiteUrl === 'https://www.indiegala.com') {
 this.updateUserInfo();
 }
+}
 if (this.totalTicks % this.doTimer() === 0) {
-this.authCheck((authState) => {
-if (authState === 1) {
+this.updateUserInfo();
 $.ajax({
 url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
 dataType: 'json',
@@ -253,6 +254,8 @@ GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']
 }
 },
 });
+this.authCheck((authState) => {
+if (authState === 1) {
 this.log(Lang.get('service.connection_good'));
 let atimer = this.getConfig('timer', 10);
 this.stimer = atimer;
@@ -281,8 +284,8 @@ this.totalTicks++;
 }, 1000);
 }
 updateUserInfo() {
-this.authCheck((authState) => {
-if (authState === 1) {
+//this.authCheck((authState) => {
+//if (authState === 1) {
 this.getUserInfo((userData) => {
 this.userInfo.find('.avatar').css('background-image', "url('" + userData.avatar + "')");
 this.userInfo.find('.username').text(userData.username);
@@ -291,8 +294,8 @@ this.setValue(userData.value);
 }
 this.userInfo.addClass('visible');
 });
-}
-});
+//}
+//});
 }
 renderSettings() {
 for (let control in this.settings) {

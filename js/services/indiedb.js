@@ -12,7 +12,7 @@ super.init();
 getUserInfo(callback) {
 let userData = {
 avatar: __dirname + '/images/IndieDB.png',
-username: 'IDB User'
+username: 'IndieDB User'
 };
 $.ajax({
 url: 'https://www.indiedb.com/messages/updates',
@@ -33,8 +33,8 @@ $.ajax({
 url: _this.url + '/giveaways',
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
-let content = data.find('.rowcontent');
-let idbcurr = 0;
+let content = data.find('.rowcontent'),
+idbcurr = 0;
 function giveawayEnter() {
 if (content.length <= idbcurr || !_this.started) {
 return;
@@ -42,35 +42,43 @@ return;
 let idbnext = _this.interval();
 let cont = content.eq(idbcurr),
 link = cont.find('a').attr('href'),
-name = cont.find('a').attr('title');
+name = cont.find('a').attr('title'),
+id = cont.find('a noload').attr('src').replace('https://media.indiedb.com/cache/images/giveaways/1/1', '').match(/[\d]+/)[0];
 $.ajax({
 url: _this.url + link,
 success: function (data) {
 data = data.replace(/<img/gi, '<noload');
-let entered = data.indexOf('"buttonenter buttongiveaway">Join Giveaway<') >= 0;
-if (entered) {
+let enter = data.indexOf('"buttonenter buttongiveaway">Join Giveaway<') >= 0,
+entered = data.indexOf('"buttonenter buttonentered buttongiveaway">Success - Giveaway joined<') >= 0;
+if (enter) {
 let eLink = $(data).find('a.buttonenter').attr('href');
 $.ajax({
-url: _this.url + eLink,
-success: function (data) {
-data = $(data.replace(/<img/gi, '<noload'));
+url: _this.url + eLink
+});
 _this.log(Lang.get('service.entered_in') + _this.logLink(link, name));
-let adds = data.find('#giveawaysjoined > div p');
+}
+if (enter || entered) {
+let adds = $(data).find('#giveawaysjoined > div p');
 for (let curradds = 0; curradds < adds.length; curradds++) {
-let addlink = adds.eq(curradds).find('a').attr('href');
-if (!addlink.includes('https')) {
+let addlink = adds.eq(curradds).find('a').attr('href'),
+finish = adds.eq(curradds).find('a').attr('class');
+if (!finish.includes('buttonentered')) {
+if (!addlink.includes('http')) {
 $.ajax({
-url: _this.url + addlink,
-success: function () {
+url: _this.url + addlink
+});
 }
+if (addlink.includes('http')) {
+$.ajax({
+type: 'POST',
+timeout: 60000,
+dataType: 'json',
+url: _this.url + '/giveaways/ajax/'+ finish.replace('buttonenter buttoncomplete ','') + '/' + id,
+data: {ajax: 't'}
 });
 }
 }
 }
-});
-}
-else {
-idbnext = 50;
 }
 }
 });

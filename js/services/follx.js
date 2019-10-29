@@ -7,7 +7,7 @@ this.authLink = 'https://follx.com/logIn';
 this.authContent = '/account';
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
-this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', false) };
+this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 super.init();
 }
 getUserInfo(callback) {
@@ -44,8 +44,8 @@ let page = 1;
 _this.sync = 0;
 if (_this.check === undefined) {
 setTimeout(2000);
-}
 _this.check = 0;
+}
 let callback = function () {
 page++;
 if (page <= _this.getConfig('pages', 1)) {

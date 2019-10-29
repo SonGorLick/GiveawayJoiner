@@ -35,44 +35,16 @@ ipc.send('change-lang', $(this).val());
 }
 $('#auth_button').click(function (e) {
 e.preventDefault();
-Browser.loadURL('http://giftseeker.ru/logIn');
-Browser.show();
-Browser.setTitle('GiveawayJoiner - ' + Lang.get('auth.browser_loading'));
-Browser.webContents.on('did-finish-load', () => {
-if (Browser.getURL() === 'http://giftseeker.ru/') {
-Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML', (body) => {
-if (body.indexOf('/account') >= 0) {
-Browser.webContents.removeAllListeners('did-finish-load');
-Browser.close();
 checkAuth();
-}
-});
-}
-});
 });
 checkAuth();
 });
 function checkAuth() {
 buttons.addClass('disabled');
 status.text(Lang.get('auth.check'));
-$.ajax({
-url: 'http://giftseeker.ru/api/userData',
-data: {ver: "1.1.0"},
-dataType: 'json',
-success: function (data) {
-if (!data.response) {
-status.text(Lang.get('auth.ses_not_found'));
-buttons.removeClass('disabled');
-return;
-}
-ipc.send('save-user', data.response);
-status.text(Lang.get('auth.session') + data.response.username);
-loadProgram();
-},
-error: () => {
 let data = {
 response: {
-username: "Offline mode",
+username: "GJ User",
 avatar: "https:\/\/steamcdn-a.akamaihd.net\/steamcommunity\/public\/images\/avatars\/fe\/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
 steamid: "1"
 }
@@ -80,8 +52,6 @@ steamid: "1"
 ipc.send('save-user', data.response);
 status.text(Lang.get('auth.session') + data.response.username);
 loadProgram();
-}
-});
 }
 function loadProgram() {
 mainWindow.loadFile('index.html');

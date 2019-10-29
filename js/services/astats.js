@@ -2,17 +2,15 @@
 class Astats extends Joiner {
 constructor() {
 super();
-this.websiteUrl = 'http://astats.astats.nl/astats/TopListGames.php?DisplayType=Giveaway';
+this.websiteUrl = 'http://astats.astats.nl/astats/';
 this.authContent = 'Log out';
 this.authLink = 'http://astats.astats.nl/astats/profile/Login.php';
 this.withValue = false;
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
-this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', false) };
+this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 super.init();
 }
 getUserInfo(callback) {
-if (GJuser.as === '') {
-GJuser.as = '1';
 let userData = {
 avatar: __dirname + '/images/Astats.png',
 username: 'Astats User',
@@ -29,14 +27,13 @@ callback(userData);
 }
 });
 }
-}
 joinService() {
 let _this = this;
 let page = 1;
 _this.url = 'http://astats.astats.nl';
 _this.pagemax = _this.getConfig('pages', 1);
-if (_this.check === undefined) {
-_this.check = 1;
+if (GJuser.as === '') {
+GJuser.as = ',';
 $.ajax({
 url: _this.url + '/astats/TopListGames.php?language=english'
 });
@@ -51,9 +48,16 @@ this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback) {
 let _this = this;
+let asnext = _this.interval();
 let affset = (page - 1) * 200;
+if (page === 1) {
+_this.pageurl = '/astats/TopListGames.php?&DisplayType=Giveaway';
+}
+else {
+_this.pageurl = '/astats/TopListGames.php?&DisplayType=Giveaway&Offset=' + affset + '#';
+}
 $.ajax({
-url: _this.url + '/astats/TopListGames.php?&DisplayType=Giveaway&Offset=' + affset + '#',
+url: _this.url + _this.pageurl,
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 let afound = data.find('[style="text-align:right;"]'),
@@ -71,7 +75,6 @@ callback();
 }
 return;
 }
-let asnext = _this.interval();
 let away = afound.eq(acurr);
 let alink = away.find('a').attr('href'),
 assteam = away.find('a noload').attr('src'),
@@ -94,7 +97,8 @@ callback();
 return;
 }
 let ahave =  data.find('[href="' + alink + '"] font').attr('color'),
-aname = data.find('[href="' + alink + '"]').text().trim();
+aname = data.find('[href="' + alink + '"]').text().trim(),
+asjoin = alink.replace('/astats/Giveaway.php?GiveawayID=','');
 if (assteam.includes('apps/')) {
 asapp = parseInt(assteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'app/' + asapp;
@@ -117,10 +121,16 @@ if (GJuser.ownsubs.includes(',' + assub + ',') && assub > 0) {
 asown = 1;
 }
 }
+if (GJuser.as.includes(',' + asjoin + ',')) {
+asown = 3;
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname));
 if (asown === 1) {
 _this.log(Lang.get('service.have_on_steam'));
+}
+if (asown === 3) {
+_this.log(Lang.get('service.already_joined'));
 }
 }
 if (asown === 0 && ahave === undefined) {
@@ -129,11 +139,18 @@ url: _this.url + alink,
 success: function (html) {
 html = $(html.replace(/<img/gi, '<noload'));
 let ajoin = html.find('.input-group-btn').text().trim();
-if (ajoin === 'Add' && _this.getConfig('log', true)) {
+if (ajoin === 'Add') {
+GJuser.as = GJuser.as + asjoin + ',';
+if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'));
+}
+}
+if (ajoin !== 'Add' && ajoin !== 'Join' && _this.getConfig('log', true)) {
+_this.log(Lang.get('service.cant_join'));
 }
 if (ajoin === 'Join') {
 _this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname));
+GJuser.as = GJuser.as + asjoin + ',';
 $.ajax({
 url: _this.url + alink,
 method: 'POST',

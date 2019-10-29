@@ -12,8 +12,10 @@ let mainWindow = shared.mainWindow;
 let intervalTicks = 0;
 GJuser.ownapps = '[]';
 GJuser.ownsubs = '[]';
+GJuser.black = '';
 GJuser.ig = '';
 GJuser.as = '';
+GJuser.op = ',';
 GJuser.iglvl = undefined;
 $(function () {
 setInterval(intervalSchedules, 1000);
@@ -69,25 +71,10 @@ $('.in-service-panel[data-id="' + $(this).attr('data-id') + '"]')
 });
 $('.joiner-button.logout').click(function () {
 let clicked = $(this).addClass('disabled');
-if (GJuser.steamid !== '1') {
-$.ajax({
-method: 'GET',
-url: 'http://giftseeker.ru/logout',
-success: function () {
 mainWindow.hide();
 mainWindow.loadURL(__dirname + '/blank.html');
 ipc.send('save-user', null);
 mainWindow.close();
-},
-error: function () {
-clicked.removeClass('disabled');
-alert('something went wrong...');
-}
-});
-}
-else {
-clicked.removeClass('disabled');
-}
 });
 setters.change(function () {
 let changed = $(this);
@@ -111,28 +98,6 @@ openWebsite($(this).attr('data-link'));
 });
 });
 function intervalSchedules() {
-if (intervalTicks !== 0 && intervalTicks % 300 === 0) {
-$.ajax({
-url: 'http://giftseeker.ru/api/userData',
-data: {ver: "1.1.0"},
-dataType: 'json',
-success: function (data) {
-if (data.response) {
-renderUser(data.response);
-}
-},
-error: () => {
-let data = {
-response: {
-username: "Offline mode",
-avatar: "https:\/\/steamcdn-a.akamaihd.net\/steamcommunity\/public\/images\/avatars\/fe\/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
-steamid: "1"
-}
-};
-renderUser(data.response);
-}
-});
-}
 if (intervalTicks % 600 === 0) {
 $.ajax({
 url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
