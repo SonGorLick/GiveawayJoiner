@@ -42,6 +42,7 @@ joinService() {
 let _this = this;
 let page = 1;
 _this.sync = 0;
+_this.log(GJuser.black);
 if (_this.check === undefined) {
 setTimeout(2000);
 _this.check = 0;
@@ -144,10 +145,16 @@ if (GJuser.ownsubs.includes(',' + fxsub + ',') && fxsub > 0) {
 fxown = 1;
 }
 }
+if (GJuser.black.includes(fxid + ',')) {
+fxown = 4;
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name));
 if (fxown === 1) {
 _this.log(Lang.get('service.have_on_steam'));
+}
+if (fxown === 4) {
+_this.log(Lang.get('service.blacklisted'));
 }
 }
 if (fxown === 0) {

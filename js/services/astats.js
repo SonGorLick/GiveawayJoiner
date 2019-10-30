@@ -48,7 +48,6 @@ this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback) {
 let _this = this;
-let asnext = _this.interval();
 let affset = (page - 1) * 200;
 if (page === 1) {
 _this.pageurl = '/astats/TopListGames.php?&DisplayType=Giveaway';
@@ -75,6 +74,7 @@ callback();
 }
 return;
 }
+let asnext = _this.interval();
 let away = afound.eq(acurr);
 let alink = away.find('a').attr('href'),
 assteam = away.find('a noload').attr('src'),
@@ -124,6 +124,9 @@ asown = 1;
 if (GJuser.as.includes(',' + asjoin + ',')) {
 asown = 3;
 }
+if (GJuser.black.includes(asid + ',')) {
+asown = 4;
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname));
 if (asown === 1) {
@@ -131,6 +134,9 @@ _this.log(Lang.get('service.have_on_steam'));
 }
 if (asown === 3) {
 _this.log(Lang.get('service.already_joined'));
+}
+if (asown === 4) {
+_this.log(Lang.get('service.blacklisted'));
 }
 }
 if (asown === 0 && ahave === undefined) {

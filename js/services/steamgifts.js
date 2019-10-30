@@ -140,7 +140,7 @@ if (
 (!GA.entered && !GA.pinned && GA.levelPass) &&
 (!GA.wish || this.getConfig('wishlist_only', false) || this.getConfig('wishlist_first', false) && !this.getConfig('sort_by_level', false)) &&
 (this.getConfig('ending', 0) === 0 || GA.left <= this.getConfig('ending', 0)) &&
-(this.getConfig('min_chance', 0) === 0 || GA.chance >= this.getConfig('min_chance', 0) || GA.wish && _this.getConfig('ignore_on_wish'))
+(this.getConfig('min_chance', 0) === 0 || GA.chance >= this.getConfig('min_chance', 0) || GA.wish && this.getConfig('ignore_on_wish', false))
 )
 this.giveaways.push(GA);
 });
@@ -207,10 +207,16 @@ if (GJuser.ownsubs.includes(',' + sgsub + ',') && sgsub > 0) {
 sgown = 1;
 }
 }
+if (GJuser.black.includes(sgid + ',')) {
+sgown = 4;
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + GA.level + 'L|' + GA.cost + 'P|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name));
 if (sgown === 1) {
 _this.log(Lang.get('service.have_on_steam'));
+}
+if (sgown === 4) {
+_this.log(Lang.get('service.blacklisted'));
 }
 if (GA.entered) {
 _this.log(Lang.get('service.already_joined'));
@@ -222,10 +228,10 @@ _this.log(Lang.get('service.points_low'));
 if (
 (!GA.entered && sgown === 0) &&
 (_this.curr_value >= GA.cost) &&
-(GA.wish && _this.getConfig('ignore_on_wish') || _this.getConfig('max_level') === 0 || GA.level >= _this.getConfig('min_level') && GA.level <= _this.getConfig('max_level') && _this.getConfig('max_level') > 0) &&
-(GA.wish && _this.getConfig('ignore_on_wish') || GA.cost >= _this.getConfig('min_cost')) &&
-(GA.wish && _this.getConfig('ignore_on_wish') || _this.getConfig('max_cost') === 0 || GA.cost <= _this.getConfig('max_cost')) &&
-(GA.wish && _this.getConfig('reserve_on_wish') || _this.getConfig('points_reserve') === 0 || ((_this.curr_value - GA.cost) >= _this.getConfig('points_reserve')))
+(GA.wish && _this.getConfig('ignore_on_wish', false) || _this.getConfig('max_level', 0) === 0 || GA.level >= _this.getConfig('min_level', 0) && GA.level <= _this.getConfig('max_level', 0) && _this.getConfig('max_level', 0) > 0) &&
+(GA.wish && _this.getConfig('ignore_on_wish', false) || GA.cost >= _this.getConfig('min_cost', 0)) &&
+(GA.wish && _this.getConfig('ignore_on_wish', false) || _this.getConfig('max_cost', 0) === 0 || GA.cost <= _this.getConfig('max_cost', 0)) &&
+(GA.wish && _this.getConfig('ignore_on_wish', false) || _this.getConfig('points_reserve', 0) === 0 || ((_this.curr_value - GA.cost) >= _this.getConfig('points_reserve', 0)))
 )
 {
 $.ajax({

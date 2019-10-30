@@ -4,6 +4,7 @@ const storage = require('electron-json-storage');
 const fs = require('fs');
 const Request = require('request-promise');
 const devMode = app.getVersion() === '1.1.9';
+let _ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/78.0.3904.67 Mobile/15E148 Safari/605.1';
 let appLoaded = false;
 let authWindow = null;
 let mainWindow = null;
@@ -34,6 +35,18 @@ udata = (udata.slice(0, -34)).toLowerCase();
 _icn = _itr;
 app.setPath('userData', udata + 'data');
 storage.setDataPath(udata + 'data');
+if (fs.existsSync(storage.getDataPath() + '/user-agent.txt')) {
+let content = fs.readFileSync(storage.getDataPath() + '/user-agent.txt');
+if (content.length > 0) {
+_ua = content.toString();
+}
+}
+else {
+fs.writeFile(storage.getDataPath() + '/user-agent.txt', _ua, (err) => { });
+}
+if (!fs.existsSync(storage.getDataPath() + '/blacklist.txt')) {
+fs.writeFile(storage.getDataPath() + '/blacklist.txt', 'app/0,sub/0,', (err) => { });
+}
 ipcMain.on('save-user', function (event, data) {
 user = data;
 global.user = data;
@@ -49,7 +62,7 @@ app.on('ready', () => {
 Config = new ConfigClass();
 Lang = new LanguageClass();
 _session = session.fromPartition('persist:GiveawayJoiner');
-_session.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/78.0.3904.67 Mobile/15E148 Safari/605.1');
+_session.setUserAgent(_ua);
 Menu.setApplicationMenu(null);
 authWindow = new BrowserWindow({
 width: 280,
@@ -62,11 +75,12 @@ center: true,
 resizable: false,
 frame: false,
 webPreferences: {
-contextIsolation: false,
-nodeIntegration: true,
 session: _session,
 devTools: devMode,
+contextIsolation: false,
+nodeIntegration: true,
 webaudio: true,
+webviewTag: true
 }
 });
 mainWindow = new BrowserWindow({
@@ -80,10 +94,10 @@ center: true,
 resizable: false,
 frame: false,
 webPreferences: {
-contextIsolation: false,
-nodeIntegration: true,
 session: _session,
 devTools: devMode,
+contextIsolation: false,
+nodeIntegration: true,
 webaudio: false,
 webviewTag: true
 }
@@ -104,9 +118,9 @@ frame: _bfr,
 show: false,
 center: true,
 webPreferences: {
+session: _session,
 contextIsolation: false,
 nodeIntegration: false,
-session: _session,
 devTools: false,
 webaudio: false,
 webviewTag: false

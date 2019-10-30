@@ -147,6 +147,9 @@ if (openter === " You're not eligible to enter") {
 GJuser.op = GJuser.op + code + ',';
 opown = 3;
 }
+if (GJuser.black.includes(opid + ',')) {
+opown = 4;
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + ' |' + page + '#|' + cost + 'P|'+ _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name));
 if (opown === 3) {
@@ -154,6 +157,9 @@ _this.log(Lang.get('service.cant_join'));
 }
 if (opown === 1) {
 _this.log(Lang.get('service.have_on_steam'));
+}
+if (opown === 4) {
+_this.log(Lang.get('service.blacklisted'));
 }
 }
 if (opown === 0) {

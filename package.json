@@ -1,7 +1,7 @@
 {
   "name": "GiveawayJoiner",
   "productName": "GiveawayJoiner",
-  "version": "1.1.9h",
+  "version": "1.1.9j",
   "description": "Autojoin to steam game giveaways",
   "main": "giveawayjoiner.js",
   "dependencies": {
@@ -13,7 +13,7 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "^7",
-    "electron-builder": "^21",
+    "electron-builder": "^22",
     "postinstall": "install-app-deps"
   },
   "scripts": {

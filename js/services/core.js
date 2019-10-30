@@ -1,4 +1,6 @@
 'use strict';
+const storage = require('electron-json-storage');
+const fs = require('fs');
 class Joiner {
 constructor() {
 this.intervalVar = undefined;
@@ -184,7 +186,7 @@ this.buttonState(Lang.get('service.btn_awaiting'), 'disabled');
 this.waitAuth = true;
 Browser.webContents.on('did-finish-load', () => {
 if (this.waitAuth && Browser.getURL().indexOf(this.websiteUrl) >= 0) {
-Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML', (body) => {
+Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML').then(body => {
 if (body.indexOf(this.authContent) >= 0) {
 Browser.close();
 this.waitAuth = false;
@@ -254,6 +256,13 @@ GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']
 }
 },
 });
+if (fs.existsSync(storage.getDataPath().replace('giveawayjoinerdata/storage', 'giveawayjoinerdata') + '/blacklist.txt')) {
+let blacklist = fs.readFileSync(storage.getDataPath().replace('giveawayjoinerdata/storage', 'giveawayjoinerdata') + '/blacklist.txt');
+if (blacklist.length > 0) {
+GJuser.black = blacklist.toString();
+GJuser.black = GJuser.black.replace(';', ',').replace('.', ',').replace(':', ',').replace(' ', '') + ',';
+}
+}
 this.authCheck((authState) => {
 if (authState === 1) {
 this.log(Lang.get('service.connection_good'));
@@ -284,8 +293,6 @@ this.totalTicks++;
 }, 1000);
 }
 updateUserInfo() {
-//this.authCheck((authState) => {
-//if (authState === 1) {
 this.getUserInfo((userData) => {
 this.userInfo.find('.avatar').css('background-image', "url('" + userData.avatar + "')");
 this.userInfo.find('.username').text(userData.username);
@@ -294,8 +301,6 @@ this.setValue(userData.value);
 }
 this.userInfo.addClass('visible');
 });
-//}
-//});
 }
 renderSettings() {
 for (let control in this.settings) {

@@ -145,6 +145,12 @@ $(document.createElement('button'))
 .html('<div class="fab fa-steam" title="Steam"></div>')
 .attr('data-link', 'https://store.steampowered.com/login')
 .appendTo(info_links);
+$(document.createElement('button'))
+.addClass('open-website')
+.html('<div class="fa fa-mask" title="User-Agent: /giveawayjoinerdata/user-agent.txt"></div>')
+.css('margin-left', '7px')
+.attr('data-link', 'https://www.whatsmyua.info')
+.appendTo(info_links);
 }
 function renderUser(userData) {
 $('.content-item .info .avatar').css({'background-image': 'url("' + userData.avatar + '")'});

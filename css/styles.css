@@ -118,6 +118,7 @@ input-wrap.checkbox input[disabled] { cursor: default; }
 .fa-globe:before { content: '\f57d'; }
 .fa-history:before { content: '\f1da'; }
 .fa-list-ul:before { content: '\f0c9'; }
+.fa-mask:before { content: '\f6fa'; }
 .fa-minus:before { content: '\f053'; }
 .fa-stop:before { content: '\f04d'; }
 .fa-play:before { content: '\f111'; }

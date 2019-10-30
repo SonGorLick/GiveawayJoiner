@@ -221,10 +221,16 @@ if (GJuser.ownsubs.includes(',' + igsub + ',') && igsub > 0) {
 igown = 1;
 }
 }
+if (GJuser.black.includes(igid + ',')) {
+igown = 4;
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + level + 'L|' + price + 'P|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name));
 if (igown === 1) {
 _this.log(Lang.get('service.have_on_steam'));
+}
+if (igown === 4) {
+_this.log(Lang.get('service.blacklisted'));
 }
 }
 if (igown === 0) {
