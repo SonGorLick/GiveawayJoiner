@@ -11,6 +11,9 @@ this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: t
 super.init();
 }
 getUserInfo(callback) {
+if (GJuser.op.length > 601) {
+GJuser.op = ',';
+}
 let userData = {
 avatar: __dirname + '/images/OpiumPulses.png',
 username: 'OP User',

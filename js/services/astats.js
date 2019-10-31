@@ -11,6 +11,9 @@ this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: t
 super.init();
 }
 getUserInfo(callback) {
+if (GJuser.as.length > 601) {
+GJuser.as = ',';
+}
 let userData = {
 avatar: __dirname + '/images/Astats.png',
 username: 'Astats User',

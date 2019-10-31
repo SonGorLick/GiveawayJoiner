@@ -216,7 +216,7 @@ if (sgown === 1) {
 _this.log(Lang.get('service.have_on_steam'));
 }
 if (sgown === 4) {
-_this.log(Lang.get('service.blacklisted'));
+  _this.log(Lang.get('service.blacklisted'));
 }
 if (GA.entered) {
 _this.log(Lang.get('service.already_joined'));
@@ -253,6 +253,9 @@ GA.entered = true;
 });
 }
 else {
+if (!GA.entered && sgown === 0 && _this.curr_value >= GA.cost && _this.getConfig('log', true)) {
+_this.log(Lang.get('service.skipped'));
+}
 sgnext = 50;
 }
 sgcurr++;

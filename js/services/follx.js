@@ -42,7 +42,6 @@ joinService() {
 let _this = this;
 let page = 1;
 _this.sync = 0;
-_this.log(GJuser.black);
 if (_this.check === undefined) {
 setTimeout(2000);
 _this.check = 0;

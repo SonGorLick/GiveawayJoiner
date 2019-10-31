@@ -69,13 +69,6 @@ $('.service-panel > ul li, .in-service-panel').removeClass('active');
 $('.in-service-panel[data-id="' + $(this).attr('data-id') + '"]')
 .add('.service-panel > ul li[data-id="' + $(this).attr('data-id') + '"]').addClass('active');
 });
-$('.joiner-button.logout').click(function () {
-let clicked = $(this).addClass('disabled');
-mainWindow.hide();
-mainWindow.loadURL(__dirname + '/blank.html');
-ipc.send('save-user', null);
-mainWindow.close();
-});
 setters.change(function () {
 let changed = $(this);
 let value = changed.val();
@@ -147,7 +140,7 @@ $(document.createElement('button'))
 .appendTo(info_links);
 $(document.createElement('button'))
 .addClass('open-website')
-.html('<div class="fa fa-mask" title="User-Agent: /giveawayjoinerdata/user-agent.txt"></div>')
+.html('<div class="fa fa-user-secret" title="User-Agent: /giveawayjoinerdata/user-agent.txt"></div>')
 .css('margin-left', '7px')
 .attr('data-link', 'https://www.whatsmyua.info')
 .appendTo(info_links);
