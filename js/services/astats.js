@@ -2,11 +2,12 @@
 class Astats extends Joiner {
 constructor() {
 super();
-this.websiteUrl = 'http://astats.astats.nl/astats/';
+this.websiteUrl = 'https://astats.astats.nl/astats/';
 this.authContent = 'Log out';
-this.authLink = 'http://astats.astats.nl/astats/profile/Login.php';
+this.authLink = 'https://astats.astats.nl/astats/profile/Login.php';
 this.withValue = false;
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
+this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 super.init();
 }
@@ -19,7 +20,7 @@ avatar: __dirname + '/images/Astats.png',
 username: 'Astats User',
 };
 $.ajax({
-url: 'http://astats.astats.nl/astats/User_Info.php',
+url: 'https://astats.astats.nl/astats/User_Info.php',
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 userData.username = data.find('.dropdown-toggle > b').text();
@@ -33,7 +34,7 @@ callback(userData);
 joinService() {
 let _this = this;
 let page = 1;
-_this.url = 'http://astats.astats.nl';
+_this.url = 'https://astats.astats.nl';
 _this.pagemax = _this.getConfig('pages', 1);
 if (GJuser.as === '') {
 GJuser.as = ',';
@@ -127,7 +128,7 @@ asown = 1;
 if (GJuser.as.includes(',' + asjoin + ',')) {
 asown = 3;
 }
-if (GJuser.black.includes(asid + ',')) {
+if (GJuser.black.includes(asid + ',') && _this.getConfig('blacklist_on', false)) {
 asown = 4;
 }
 if (_this.getConfig('log', true)) {

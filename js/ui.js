@@ -16,6 +16,7 @@ GJuser.black = '';
 GJuser.ig = '';
 GJuser.as = '';
 GJuser.op = ',';
+GJuser.sp = '';
 GJuser.iglvl = undefined;
 $(function () {
 setInterval(intervalSchedules, 1000);

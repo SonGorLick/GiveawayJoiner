@@ -2,7 +2,7 @@
 class IndieGala extends Joiner {
 constructor() {
 super();
-this.authContent = 'My Libraries';
+this.authContent = 'My Profile';
 this.websiteUrl = 'https://www.indiegala.com';
 this.authLink = 'https://www.indiegala.com/login';
 this.settings.min_level = { type: 'number', trans: this.transPath('min_level'), min: 0, max: this.getConfig('max_level', 0), default: this.getConfig('min_level', 0) };
@@ -11,6 +11,7 @@ this.settings.min_cost = { type: 'number', trans: this.transPath('min_cost'), mi
 this.settings.max_cost = { type: 'number', trans: this.transPath('max_cost'), min: this.getConfig('min_cost', 0), max: 240, default: this.getConfig('max_cost', 0) };
 this.settings.sort_by_level = { type: 'checkbox', trans: this.transPath('sort_by_level'), default: this.getConfig('sort_by_level', true) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
+this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
 this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 super.init();
@@ -221,7 +222,7 @@ if (GJuser.ownsubs.includes(',' + igsub + ',') && igsub > 0) {
 igown = 1;
 }
 }
-if (GJuser.black.includes(igid + ',')) {
+if (GJuser.black.includes(igid + ',') && _this.getConfig('blacklist_on', false)) {
 igown = 4;
 }
 if (_this.getConfig('log', true)) {

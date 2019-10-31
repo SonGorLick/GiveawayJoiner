@@ -6,6 +6,7 @@ this.websiteUrl = 'https://follx.com';
 this.authLink = 'https://follx.com/logIn';
 this.authContent = '/account';
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
+this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
 this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 super.init();
@@ -144,7 +145,7 @@ if (GJuser.ownsubs.includes(',' + fxsub + ',') && fxsub > 0) {
 fxown = 1;
 }
 }
-if (GJuser.black.includes(fxid + ',')) {
+if (GJuser.black.includes(fxid + ',') && _this.getConfig('blacklist_on', false)) {
 fxown = 4;
 }
 if (_this.getConfig('log', true)) {

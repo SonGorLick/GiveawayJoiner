@@ -20,6 +20,7 @@ this.settings.wishlist_only = { type: 'checkbox', trans: this.transPath('wishlis
 this.settings.reserve_on_wish = { type: 'checkbox', trans: this.transPath('reserve_on_wish'), default: this.getConfig('reserve_on_wish', false) };
 this.settings.ignore_on_wish = { type: 'checkbox', trans: this.transPath('ignore_on_wish'), default: this.getConfig('ignore_on_wish', false) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
+this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
 this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 this.token = '';
@@ -168,13 +169,7 @@ return b.level - a.level;
 function processOne() {
 if (_this.giveaways.length <= sgcurr || !_this.started) {
 if (_this.getConfig('log', true) && sgcurr > 0) {
-if (sgcurr === 0) {
-_this.log(Lang.get('service.reach_end'));
 _this.log(Lang.get('service.checked') + '1-' + _this.getConfig('pages', 1));
-}
-if (sgcurr > 0) {
-_this.log(Lang.get('service.checked') + '1-' + _this.getConfig('pages', 1));
-}
 }
 if (callback) {
 callback(false);
@@ -207,7 +202,7 @@ if (GJuser.ownsubs.includes(',' + sgsub + ',') && sgsub > 0) {
 sgown = 1;
 }
 }
-if (GJuser.black.includes(sgid + ',')) {
+if (GJuser.black.includes(sgid + ',') && _this.getConfig('blacklist_on', false)) {
 sgown = 4;
 }
 if (_this.getConfig('log', true)) {
@@ -216,7 +211,7 @@ if (sgown === 1) {
 _this.log(Lang.get('service.have_on_steam'));
 }
 if (sgown === 4) {
-  _this.log(Lang.get('service.blacklisted'));
+_this.log(Lang.get('service.blacklisted'));
 }
 if (GA.entered) {
 _this.log(Lang.get('service.already_joined'));

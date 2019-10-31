@@ -6,6 +6,7 @@ this.websiteUrl = 'https://www.opiumpulses.com';
 this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
+this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
 this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 super.init();
@@ -150,7 +151,7 @@ if (openter === " You're not eligible to enter") {
 GJuser.op = GJuser.op + code + ',';
 opown = 3;
 }
-if (GJuser.black.includes(opid + ',')) {
+if (GJuser.black.includes(opid + ',') && _this.getConfig('blacklist_on', false)) {
 opown = 4;
 }
 if (_this.getConfig('log', true)) {
