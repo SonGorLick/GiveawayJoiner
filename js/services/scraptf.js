@@ -2,7 +2,8 @@
 class ScrapTF extends Joiner {
 constructor() {
 super();
-this.settings.interval_from.min = 9;
+this.settings.interval_from.min = 10;
+this.settings.interval_to.min = 15;
 this.websiteUrl = 'https://scrap.tf';
 this.authContent = 'Logout';
 this.authLink = 'https://scrap.tf/login';
