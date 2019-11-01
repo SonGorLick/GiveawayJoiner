@@ -43,10 +43,8 @@ joinService() {
 let _this = this;
 let page = 1;
 _this.sync = 0;
-if (_this.check === undefined) {
-setTimeout(2000);
-_this.check = 0;
-}
+_this.log(storage.getDataPath().replace('giveawayjoinerdata/storage', 'giveawayjoinerdata') + '/blacklist.txt');
+_this.log(GJuser.black);
 let callback = function () {
 page++;
 if (page <= _this.getConfig('pages', 1)) {

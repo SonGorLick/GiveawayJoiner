@@ -260,7 +260,7 @@ if (fs.existsSync(storage.getDataPath().replace('giveawayjoinerdata/storage', 'g
 let blacklist = fs.readFileSync(storage.getDataPath().replace('giveawayjoinerdata/storage', 'giveawayjoinerdata') + '/blacklist.txt');
 if (blacklist.length > 0) {
 GJuser.black = blacklist.toString();
-GJuser.black = GJuser.black.replace(';', ',').replace('.', ',').replace(':', ',').replace(' ', '') + ',';
+GJuser.black = GJuser.black.replace(';', ',').replace('.', ',').replace(':', ',').replace('  ', '').replace(' ', '') + ',';
 }
 }
 this.authCheck((authState) => {
