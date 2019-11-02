@@ -144,6 +144,9 @@ _this.log(Lang.get('service.blacklisted'));
 }
 }
 if (asown === 0 && ahave === undefined) {
+let tmout = (Math.floor(Math.random() * 1000)) + 1000;
+setTimeout(function () {
+}, tmout);
 $.ajax({
 url: _this.url + alink,
 success: function (html) {
@@ -159,13 +162,16 @@ if (ajoin !== 'Add' && ajoin !== 'Join' && _this.getConfig('log', true)) {
 _this.log(Lang.get('service.cant_join'));
 }
 if (ajoin === 'Join') {
-_this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname));
+let pmout = (Math.floor(Math.random() * 1000)) + 1000;
+setTimeout(function () {
+}, pmout);
 GJuser.as = GJuser.as + asjoin + ',';
 $.ajax({
 url: _this.url + alink,
 method: 'POST',
 data: 'Comment=&JoinGiveaway=Join',
 success: function () {
+_this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname));
 }
 });
 }

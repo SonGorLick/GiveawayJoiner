@@ -13,6 +13,7 @@ this.settings.max_level = { type: 'number', trans: this.transPath('max_level'), 
 this.settings.min_cost = { type: 'number', trans: this.transPath('min_cost'), min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
 this.settings.max_cost = { type: 'number', trans: this.transPath('max_cost'), min: this.getConfig('min_cost', 0), max: 300, default: this.getConfig('max_cost', 0) };
 this.settings.points_reserve = { type: 'number', trans: this.transPath('points_reserve'), min: 0, max: 500, default: this.getConfig('points_reserve', 0) };
+this.settings.sort_by_copies = { type: 'checkbox', trans: this.transPath('sort_by_copies'), default: this.getConfig('sort_by_copies', false) };
 this.settings.sort_by_level = { type: 'checkbox', trans: this.transPath('sort_by_level'), default: this.getConfig('sort_by_level', false) };
 this.settings.sort_by_chance = { type: 'checkbox', trans: this.transPath('sort_by_chance'), default: this.getConfig('sort_by_chance', false) };
 this.settings.wishlist_first = { type: 'checkbox', trans: this.transPath('wishlist_first'), default: this.getConfig('wishlist_first', false) };
@@ -166,6 +167,11 @@ this.giveaways.sort((a, b) => {
 return b.level - a.level;
 });
 }
+if (this.getConfig('sort_by_copies', false)) {
+this.giveaways.sort((a, b) => {
+return b.copies - a.copies;
+});
+}
 function processOne() {
 if (_this.giveaways.length <= sgcurr || !_this.started) {
 if (_this.getConfig('log', true) && sgcurr > 0) {
@@ -206,7 +212,7 @@ if (GJuser.black.includes(sgid + ',') && _this.getConfig('blacklist_on', false))
 sgown = 4;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + GA.level + 'L|' + GA.cost + 'P|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name));
+_this.log(Lang.get('service.checking') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + 'P|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name));
 if (sgown === 1) {
 _this.log(Lang.get('service.have_on_steam'));
 }
@@ -240,7 +246,7 @@ code: GA.code
 },
 success: function (data) {
 if (data.type === 'success') {
-_this.log(Lang.get('service.entered_in') + ' |' + GA.level + 'L|' + GA.cost + 'P|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name));
+_this.log(Lang.get('service.entered_in') + ' |'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + 'P|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name));
 _this.setValue(data.points);
 GA.entered = true;
 }
