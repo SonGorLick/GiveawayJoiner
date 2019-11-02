@@ -134,6 +134,8 @@
 			"ending": "GA ending (minutes)",
 			"ending_title": "Don't join giveaways before the end of which more than the specified time. 0 - without any restrictions",
 			"chance": "Chance",
+			"sort_by_copies": "Sort by copies number",
+			"sort_by_copies_title": "Enter sorted from high to low number of copies in giveaway",
 			"sort_by_level": "Sort by level",
 			"sort_by_level_title": "Enter giveaways sorted from high to low level",
 			"sort_by_chance": "Sort by winning chance",
