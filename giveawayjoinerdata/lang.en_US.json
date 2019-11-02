@@ -156,6 +156,8 @@
 			"ignore_on_wish_title": "Ignore level, cost, chance settings for giveaways from the wishlist",
 			"reserve_on_wish": "Spend reserve on wishlist",
 			"reserve_on_wish_title": "Spend reserved points in giveaways from the wishlist",
+			"multiple_first": "Multiply copies first",
+			"multiple_first_title": "First of all participate in giveaways with copies more than one",
 			"wishlist_first": "Wishlist first",
 			"wishlist_first_title": "First of all participate in giveaways from the wishlist",
 			"wishlist_only": "Wishlist only",
