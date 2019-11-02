@@ -72,6 +72,14 @@
 			"log": "Logging",
 			"log_title": "Detailed log of the service"
 		},
+		"scraptf": {
+			"log": "Logging",
+			"log_title": "Detailed log of the service"
+		},
+		"indiedb": {
+			"log": "Logging",
+			"log_title": "Detailed log of the service"
+		},
 		"follx": {
 			"value_label": "Energy",
 			"sound": "Sound notifications",
