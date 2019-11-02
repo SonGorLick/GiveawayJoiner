@@ -58,7 +58,7 @@ for (let spcurred = 0; spcurred < sptented.length; spcurred++) {
 let linked = sptented.eq(spcurred).find('.panel-heading .raffle-name a').attr('href').replace('/raffles/', '');
 GJuser.sp = GJuser.sp + linked + ',';
 }
-let pmout = (Math.floor(Math.random() * 4000)) + 6000;
+let pmout = (Math.floor(Math.random() * 3000)) + 7000;
 setTimeout(function () {
 }, pmout);
 function giveawayEnter() {
@@ -91,7 +91,7 @@ let enter = data.indexOf('>Enter Raffle<') >= 0,
 hash = data.substring(data.indexOf("ScrapTF.Raffles.EnterRaffle(")+39,data.indexOf("<i18n>Enter Raffle</i18n></button>")).slice(0, 64),
 csrf = data.substring(data.indexOf("ScrapTF.User.Hash =")+21,data.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 if (enter) {
-let tmout = (Math.floor(Math.random() * 4000)) + 3000;
+let tmout = (Math.floor(Math.random() * 3000)) + 4000;
 setTimeout(function () {
 $.ajax({
 type: 'POST',
@@ -127,7 +127,7 @@ _this.log(Lang.get('service.cant_join'));
 else {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'));
-spnext = 50;
+spnext = 1000;
 }
 }
 spcurr++;
