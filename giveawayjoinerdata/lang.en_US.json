@@ -69,10 +69,14 @@
 			"blacklist_on_title": "Don't enter if the giveaway in blacklist",
 			"check_in_steam": "Check owned on Steam",
 			"check_in_steam_title": "Don't enter if the giveaway owned on account",
+			"rnd": "Random",
+			"rnd_title": "Random enter giveaways on page, not how on site",
 			"log": "Logging",
 			"log_title": "Detailed log of the service"
 		},
 		"scraptf": {
+			"rnd": "Random",
+			"rnd_title": "Random enter giveaways on page, not how on site",
 			"log": "Logging",
 			"log_title": "Detailed log of the service"
 		},
@@ -104,7 +108,7 @@
 			"check_in_steam": "Check owned on Steam",
 			"check_in_steam_title": "Don't enter if the giveaway owned on account",
 			"min_level": "Min. level",
-			"min_level_title": "Do not enter in giveaways where required level less than the selected",
+			"min_level_title": "Do't enter giveaways where required level less than the selected",
 			"max_level": "Max. level",
 			"max_level_title": "Don't enter giveaways where required level more than the selected",
 			"min_cost": "Min. Cost",
@@ -143,7 +147,7 @@
 			"min_chance": "Min. chance (%)",
 			"min_chance_title": "Min. chance to participate in giveaways. 0 - Don't consider a chance",
 			"min_level": "Min. level",
-			"min_level_title": "Do not enter in giveaways where required level less than the selected",
+			"min_level_title": "Do't enter giveaways where required level less than the selected",
 			"max_level": "Max. level",
 			"max_level_title": "Don't enter giveaways where required level more than the selected",
 			"points_reserve": "Reserve of points",
