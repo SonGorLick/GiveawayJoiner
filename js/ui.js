@@ -7,7 +7,6 @@ let Config = shared.Config;
 let Lang = shared.Lang;
 let GJuser = remote.getGlobal('user');
 let Browser = shared.Browser;
-let authWindow = shared.authWindow;
 let mainWindow = shared.mainWindow;
 let intervalTicks = 0;
 GJuser.ownapps = '[]';
@@ -17,6 +16,7 @@ GJuser.ig = '';
 GJuser.as = '';
 GJuser.op = ',';
 GJuser.sp = '';
+GJuser.tf = ',';
 GJuser.iglvl = undefined;
 $(function () {
 setInterval(intervalSchedules, 1000);
@@ -34,7 +34,6 @@ let menu_switcher = $('.list_type');
 if (Config.get('menu_as_list')) {
 menu_switcher.addClass('state');
 }
-authWindow.hide();
 mainWindow.show();
 if (Config.get('start_minimized')) {
 mainWindow.hide();
@@ -116,7 +115,7 @@ $(this).attr('title', Lang.get($(this).attr('data-lang-title')));
 }
 function profileSection() {
 renderUser(GJuser);
-$('.build .version').text(currentBuild);
+$('.build .version').text(currentBuild + ' (Electron ' + process.versions.electron + ')');
 let lang_select = $('select#lang');
 let lang_list = Lang.list();
 if (Lang.count() <= 1) {

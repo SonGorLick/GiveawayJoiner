@@ -5,10 +5,9 @@ super();
 this.websiteUrl = 'https://www.opiumpulses.com';
 this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
-this.settings.arcade = { type: 'checkbox', trans: this.transPath('arcade'), default: this.getConfig('arcade', false) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
-this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
 this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
+this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 super.init();
 }
@@ -36,13 +35,24 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-let page = 1,
-arpg = 1;
+let page = 1;
 _this.pagemax = _this.getConfig('pages', 1);
-_this.pgarc = 2;
 _this.check = 0;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.opiumpulses.com';
+$.ajax({
+url: _this.url + '/arcade/index?ArcadeGame_page=1',
+success: function (data) {
+data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
+let arfound = data.find('.arcade-item-img-btn-wrapper'),
+arlnk = arfound.eq(0).find('a').attr('href');
+if (arlnk !== undefined) {
+$.ajax({
+url: _this.url + arlnk
+});
+}
+}
+});
 let callback = function () {
 page++;
 if (page <= _this.pagemax) {
@@ -50,16 +60,6 @@ _this.enterOnPage(page, callback);
 }
 };
 this.enterOnPage(page, callback);
-if (_this.getConfig('arcade', false)) {
-let arcade = function () {
-arpg++;
-if (arpg <= _this.pgarc) {
-_this.pgarc++;
-_this.enterOnArcade(arpg, arcade);
-}
-};
-this.enterOnArcade(arpg, arcade);
-}
 }
 enterOnPage(page, callback) {
 let _this = this;
@@ -202,38 +202,6 @@ opcurr++;
 setTimeout(giveawayEnter, opnext);
 }
 giveawayEnter();
-}
-});
-}
-enterOnArcade(arpg, arcade) {
-let _this = this;
-$.ajax({
-url: _this.url + '/arcade/index?ArcadeGame_page=' + arpg,
-success: function (data) {
-data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
-let arfound = data.find('.arcade-item-img-btn-wrapper');
-let arcurr = 0;
-function giveawayArcade() {
-if (arfound.length < 28) {
-_this.pgarc = arpg;
-}
-if (arfound.length <= arcurr || !_this.started) {
-if (arcade) {
-arcade();
-}
-return;
-}
-let arway = arfound.eq(arcurr),
-arlnk = arway.find('a').attr('href');
-if (arlnk !== undefined) {
-$.ajax({
-url: _this.url + arlnk
-});
-}
-arcurr++;
-setTimeout(giveawayArcade, 1000);
-}
-giveawayArcade();
 }
 });
 }

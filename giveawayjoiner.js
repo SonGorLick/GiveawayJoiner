@@ -3,10 +3,9 @@ const { app, nativeImage, shell, session, Tray, BrowserWindow, Menu, ipcMain, ip
 const storage = require('electron-json-storage');
 const fs = require('fs');
 const Request = require('request-promise');
-const devMode = app.getVersion() === '7.0.0';
+const devMode = app.getVersion() === '7.0.1';
 let _ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/78.0.3904.67 Mobile/15E148 Safari/605.1';
 let appLoaded = false;
-let authWindow = null;
 let mainWindow = null;
 let Browser = null;
 let _session = null;
@@ -64,25 +63,6 @@ Lang = new LanguageClass();
 _session = session.fromPartition('persist:GiveawayJoiner');
 _session.setUserAgent(_ua);
 Menu.setApplicationMenu(null);
-authWindow = new BrowserWindow({
-width: 280,
-height: 340,
-skipTaskbar: true,
-title: 'GiveawayJoiner',
-icon: _icn,
-show: false,
-center: true,
-resizable: false,
-frame: false,
-webPreferences: {
-session: _session,
-devTools: devMode,
-contextIsolation: false,
-nodeIntegration: true,
-webaudio: true,
-webviewTag: true
-}
-});
 mainWindow = new BrowserWindow({
 width: 730,
 height: 500,
@@ -132,31 +112,20 @@ e.preventDefault();
 Browser.loadFile('blank.html');
 Browser.hide();
 if (mainWindow.hidden) {
-authWindow.focus();
-}
-else {
 mainWindow.focus();
 }
 });
-authWindow.on('close', () => {
-authWindow.removeAllListeners('close');
-mainWindow.close();
-});
 mainWindow.on('close', () => {
 mainWindow.removeAllListeners('close');
-authWindow.close();
-});
-authWindow.on('closed', () => {
-authWindow = null;
 });
 mainWindow.on('closed', () => {
 mainWindow = null;
 });
 tray = new Tray(nativeImage.createFromPath(_itr));
-tray.setToolTip('GiveawayJoiner ' + app.getVersion());
+tray.setToolTip('Giveaway Joiner');
 tray.on('click', () => {
 if (user === null) {
-authWindow.isVisible() ? authWindow.hide() : authWindow.show();
+mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
 }
 else {
 mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
@@ -170,7 +139,6 @@ ipcMain: ipcMain,
 Lang: Lang,
 Config: Config,
 Browser: Browser,
-authWindow: authWindow,
 mainWindow: mainWindow,
 Request: Request
 };
@@ -180,14 +148,23 @@ if (appLoaded) {
 return;
 }
 let afterLangs = function () {
-authWindow.loadFile('auth.html');
-authWindow.on('ready-to-show', () => {
-authWindow.show();
+let data = {
+response: {
+username: 'Giveaway Joiner',
+avatar: __dirname + '/icons/icon.png',
+steamid: '1'
+}
+};
+user = data.response;
+global.user = data.response;
+mainWindow.loadFile('index.html');
+mainWindow.on('ready-to-show', () => {
+mainWindow.show();
 if (Config.get('start_minimized')) {
-authWindow.hide();
+mainWindow.hide();
 }
 else {
-authWindow.focus();
+mainWindow.focus();
 }
 });
 };

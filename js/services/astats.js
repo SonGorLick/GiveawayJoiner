@@ -7,6 +7,7 @@ this.authContent = 'Log out';
 this.authLink = 'https://astats.astats.nl/astats/profile/Login.php';
 this.withValue = false;
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
+this.settings.rnd = { type: 'checkbox', trans: this.transPath('rnd'), default: this.getConfig('rnd', true) };
 this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 super.init();
@@ -64,13 +65,25 @@ url: _this.url + _this.pageurl,
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 let afound = data.find('[style="text-align:right;"]'),
-acurr = 0;
+acurr = 0,
+random = Array.from(Array(afound.length).keys());
+if (_this.getConfig('rnd', true)) {
+for(let i = random.length - 1; i > 0; i--){
+const j = Math.floor(Math.random() * i);
+const temp = random[i];
+random[i] = random[j];
+random[j] = temp;
+}
+}
 function giveawayEnter() {
 if (afound.length === 0) {
-_this.page.max = page;
+_this.pagemax = page;
 }
 if (afound.length <= acurr || !_this.started) {
 if (_this.getConfig('log', true)) {
+if (_this.pagemax === page) {
+_this.log(Lang.get('service.reach_end'));
+}
 _this.log(Lang.get('service.checked') + page);
 }
 if (callback) {
@@ -78,9 +91,10 @@ callback();
 }
 return;
 }
-let asnext = _this.interval();
-let away = afound.eq(acurr);
-let alink = away.find('a').attr('href'),
+let asnext = _this.interval(),
+arnd = random[acurr],
+away = afound.eq(arnd),
+alink = away.find('a').attr('href'),
 assteam = away.find('a noload').attr('src'),
 asown = 0,
 asapp = 0,
@@ -88,20 +102,9 @@ assub = 0,
 asid = '???',
 asstm = '';
 if (alink !== undefined || assteam !== undefined) {
-let ended = data.find('[href="' + alink + '"] > span').text().trim();
-if (ended === 'This giveaway has ended.') {
-_this.pagemax = page;
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.reach_end'));
-_this.log(Lang.get('service.checked') + page);
-}
-if (callback) {
-callback();
-}
-return;
-}
+let aname = data.find('[href="' + alink + '"]').text().trim();
+if (!aname.includes('This giveaway has ended.')) {
 let ahave =  data.find('[href="' + alink + '"] font').attr('color'),
-aname = data.find('[href="' + alink + '"]').text().trim(),
 asjoin = alink.replace('/astats/Giveaway.php?GiveawayID=','');
 if (assteam.includes('apps/')) {
 asapp = parseInt(assteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
@@ -179,6 +182,11 @@ _this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + _this.logLink(as
 });
 }
 else {
+asnext = 50;
+}
+}
+else {
+_this.pagemax = page;
 asnext = 50;
 }
 }

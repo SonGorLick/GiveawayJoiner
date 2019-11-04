@@ -5,6 +5,7 @@ super();
 this.websiteUrl = 'https://scrap.tf';
 this.authContent = 'Logout';
 this.authLink = 'https://scrap.tf/login';
+this.settings.rnd = { type: 'checkbox', trans: this.transPath('rnd'), default: this.getConfig('rnd', true) };
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 this.withValue = false;
 delete this.settings.pages;
@@ -58,7 +59,16 @@ for (let spcurred = 0; spcurred < sptented.length; spcurred++) {
 let linked = sptented.eq(spcurred).find('.panel-heading .raffle-name a').attr('href').replace('/raffles/', '');
 GJuser.sp = GJuser.sp + linked + ',';
 }
-let pmout = (Math.floor(Math.random() * 3000)) + 7000;
+let pmout = (Math.floor(Math.random() * 3000)) + 7000,
+random = Array.from(Array(sptent.length).keys());
+if (_this.getConfig('rnd', true)) {
+for(let i = random.length - 1; i > 0; i--){
+const j = Math.floor(Math.random() * i);
+const temp = random[i];
+random[i] = random[j];
+random[j] = temp;
+}
+}
 setTimeout(function () {
 }, pmout);
 function giveawayEnter() {
@@ -71,13 +81,14 @@ callback();
 }
 return;
 }
-let spnext = _this.interval();
-let spcont = sptent.eq(spcurr),
+let spnext = _this.interval(),
+sprnd = random[spcurr],
+spcont = sptent.eq(sprnd),
 link = spcont.find('.panel-heading .raffle-name a').attr('href'),
 name = spcont.find('.panel-heading .raffle-name a').text(),
 entered = link.replace('/raffles/', '');
 if (name === undefined || name === '') {
-name = _this.url + link;
+name = link;
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + _this.logLink(_this.url + link, name));

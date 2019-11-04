@@ -13,11 +13,11 @@ this.settings.max_level = { type: 'number', trans: this.transPath('max_level'), 
 this.settings.min_cost = { type: 'number', trans: this.transPath('min_cost'), min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
 this.settings.max_cost = { type: 'number', trans: this.transPath('max_cost'), min: this.getConfig('min_cost', 0), max: 300, default: this.getConfig('max_cost', 0) };
 this.settings.points_reserve = { type: 'number', trans: this.transPath('points_reserve'), min: 0, max: 500, default: this.getConfig('points_reserve', 0) };
-this.settings.sort_by_chance = { type: 'checkbox', trans: this.transPath('sort_by_chance'), default: this.getConfig('sort_by_chance', false) };
-this.settings.wishlist_first = { type: 'checkbox', trans: this.transPath('wishlist_first'), default: this.getConfig('wishlist_first', false) };
-this.settings.sort_by_level = { type: 'checkbox', trans: this.transPath('sort_by_level'), default: this.getConfig('sort_by_level', false) };
-this.settings.multiple_first = { type: 'checkbox', trans: this.transPath('multiple_first'), default: this.getConfig('multiple_first', false) };
 this.settings.sort_by_copies = { type: 'checkbox', trans: this.transPath('sort_by_copies'), default: this.getConfig('sort_by_copies', false) };
+this.settings.multiple_first = { type: 'checkbox', trans: this.transPath('multiple_first'), default: this.getConfig('multiple_first', false) };
+this.settings.sort_by_level = { type: 'checkbox', trans: this.transPath('sort_by_level'), default: this.getConfig('sort_by_level', false) };
+this.settings.wishlist_first = { type: 'checkbox', trans: this.transPath('wishlist_first'), default: this.getConfig('wishlist_first', false) };
+this.settings.sort_by_chance = { type: 'checkbox', trans: this.transPath('sort_by_chance'), default: this.getConfig('sort_by_chance', false) };
 this.settings.wishlist_only = { type: 'checkbox', trans: this.transPath('wishlist_only'), default: this.getConfig('wishlist_only', false) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 this.settings.reserve_on_wish = { type: 'checkbox', trans: this.transPath('reserve_on_wish'), default: this.getConfig('reserve_on_wish', false) };
@@ -141,7 +141,7 @@ wish: this.wishlist
 };
 if (
 (!GA.entered && !GA.pinned && GA.levelPass) &&
-(!GA.wish || this.getConfig('wishlist_only', false) || this.getConfig('wishlist_first', false) && !this.getConfig('sort_by_level', false)) &&
+(!GA.wish || this.getConfig('wishlist_first', false) || this.getConfig('wishlist_only', false)) &&
 (this.getConfig('ending', 0) === 0 || GA.left <= this.getConfig('ending', 0)) &&
 (this.getConfig('min_chance', 0) === 0 || GA.chance >= this.getConfig('min_chance', 0) || GA.wish && this.getConfig('ignore_on_wish', false))
 )
@@ -158,8 +158,12 @@ callback();
 giveawaysEnter(callback) {
 let _this = this;
 let sgcurr = 0;
+if (this.getConfig('wishlist_first', false) && !this.getConfig('wishlist_only', false) && this.wishlist) {
+this.gawf = this.giveaways.filter(GA => GA.wish === true);
+this.giveaways = [];
+}
 if (this.getConfig('multiple_first', false)) {
-this.ga = this.giveaways.filter(GA => GA.copies > 1);
+this.gamf = this.giveaways.filter(GA => GA.copies > 1);
 this.giveaways = this.giveaways.filter(GA => GA.copies === 1);
 }
 if (this.getConfig('sort_by_chance', false)) {
@@ -177,8 +181,11 @@ this.giveaways.sort((a, b) => {
 return b.copies - a.copies;
 });
 }
+if (this.getConfig('wishlist_first', false) && !this.getConfig('wishlist_only', false) && !this.wishlist) {
+this.giveaways.unshift.apply(this.giveaways, this.gawf);
+}
 if (this.getConfig('multiple_first', false)) {
-this.giveaways.unshift.apply(this.giveaways, this.ga);
+this.giveaways.unshift.apply(this.giveaways, this.gamf);
 }
 function processOne() {
 if (_this.giveaways.length <= sgcurr || !_this.started) {

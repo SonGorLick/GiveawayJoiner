@@ -71,6 +71,7 @@ url: _this.url + addlink
 if (addlink.includes('http')) {
 $.ajax({
 type: 'POST',
+crossDomain: true,
 timeout: 60000,
 dataType: 'json',
 url: _this.url + '/giveaways/ajax/'+ finish.replace('buttonenter buttoncomplete ','') + '/' + id,

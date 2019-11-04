@@ -25,6 +25,23 @@ this.addPanel();
 this.renderSettings();
 this.updateCookies();
 if (Config.get('autostart')) {
+$.ajax({
+url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
+dataType: 'json',
+success: function (data) {
+if (JSON.stringify(data.rgOwnedApps) !== '[]') {
+GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
+GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
+}
+}
+});
+if (fs.existsSync(storage.getDataPath().replace('giveawayjoinerdata/storage', 'giveawayjoinerdata') + '/blacklist.txt')) {
+let blacklist = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt');
+if (blacklist.length > 0) {
+GJuser.black = blacklist.toString();
+GJuser.black = GJuser.black.replace(';', ',').replace('.', ',').replace(':', ',').replace('  ', '').replace(' ', '') + ',';
+}
+}
 this.startJoiner(true);
 }
 }
@@ -254,7 +271,7 @@ if (JSON.stringify(data.rgOwnedApps) !== '[]') {
 GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
 GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
 }
-},
+}
 });
 if (fs.existsSync(storage.getDataPath().replace('giveawayjoinerdata/storage', 'giveawayjoinerdata') + '/blacklist.txt')) {
 let blacklist = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt');

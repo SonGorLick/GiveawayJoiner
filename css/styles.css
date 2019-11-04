@@ -12,7 +12,6 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 #head_decor:before,
 #head_decor:after { content: ''; display: block; background-color: inherit; height: 20px; width: 30px; position: absolute; left: -22px; bottom: 7px; transform: rotate(30deg); }
 #head_decor:after { left: auto; right: -22px; bottom: 7px; transform: rotate(-30deg); }
-#head .logo { background: url('../icons/icon.png') 20px center/55% no-repeat; width: 110px; position: absolute; z-index: 5; left: 0; top: 0; height: 80px; -webkit-app-region: no-drag; }
 #head .menu { position: relative; z-index: 1; list-style: none; display: block; width: 630px; margin-left: 350px; height: 80px; }
 #head .menu li { line-height: 80px; display: inline-block; padding: 0 10px; font-size: 34px; }
 #head .menu li span { -webkit-app-region: no-drag; color: #5a646a; height: 20px; line-height: 20px; cursor: pointer; display: inline-block; vertical-align: middle; }
