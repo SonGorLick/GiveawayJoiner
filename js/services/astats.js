@@ -7,7 +7,7 @@ this.authContent = 'Log out';
 this.authLink = 'https://astats.astats.nl/astats/profile/Login.php';
 this.withValue = false;
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
-this.settings.rnd = { type: 'checkbox', trans: this.transPath('rnd'), default: this.getConfig('rnd', true) };
+this.settings.rnd = { type: 'checkbox', trans: this.transPath('rnd'), default: this.getConfig('rnd', false) };
 this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 super.init();
@@ -67,7 +67,7 @@ data = $(data.replace(/<img/gi, '<noload'));
 let afound = data.find('[style="text-align:right;"]'),
 acurr = 0,
 random = Array.from(Array(afound.length).keys());
-if (_this.getConfig('rnd', true)) {
+if (_this.getConfig('rnd', false)) {
 for(let i = random.length - 1; i > 0; i--){
 const j = Math.floor(Math.random() * i);
 const temp = random[i];
@@ -147,9 +147,8 @@ _this.log(Lang.get('service.blacklisted'));
 }
 }
 if (asown === 0 && ahave === undefined) {
-let tmout = (Math.floor(Math.random() * 1000)) + 1000;
 setTimeout(function () {
-}, tmout);
+}, (Math.floor(Math.random() * 1000)) + 1000);
 $.ajax({
 url: _this.url + alink,
 success: function (html) {
@@ -165,9 +164,8 @@ if (ajoin !== 'Add' && ajoin !== 'Join' && _this.getConfig('log', true)) {
 _this.log(Lang.get('service.cant_join'));
 }
 if (ajoin === 'Join') {
-let pmout = (Math.floor(Math.random() * 1000)) + 1000;
 setTimeout(function () {
-}, pmout);
+}, (Math.floor(Math.random() * 1000)) + 1000);
 GJuser.as = GJuser.as + asjoin + ',';
 $.ajax({
 url: _this.url + alink,
@@ -189,6 +187,9 @@ else {
 _this.pagemax = page;
 asnext = 50;
 }
+}
+else {
+asnext = 50;
 }
 acurr++;
 setTimeout(giveawayEnter, asnext);

@@ -47,7 +47,6 @@ joinService() {
 let _this = this;
 _this.ajaxReq('http://tf2r.com/raffles.html', (response) => {
 let giveaways = $(response.data).find('.pubrhead-text-right');
-_this.log('giveaways found - ' + giveaways.length);
 let tfcurr = 0;
 function giveawayEnter() {
 if (giveaways.length <= tfcurr || !_this.started) {
@@ -57,7 +56,6 @@ let giveaway = giveaways.eq(tfcurr),
 link = giveaway.find('a').attr('href'),
 name = giveaway.find('a').text(),
 rid = link.replace('http://tf2r.com/k', '').replace('.html', '');
-_this.log('giveaway - ' + name + ' |link - ' + link);
 _this.ajaxReq(link, (response) => {
 if (response.success) {
 let html = $('<div>' + response.data + '</div>');
@@ -70,7 +68,7 @@ url: link,
 success: function (data) {
 data = data.replace(/<img/gi, '<noload');
 let lastentrys = 0;
-lastentrys = data.substring(data.indexOf("var entryc =")+1,data.indexOf("var lastchat")).slice(0, 10).trim().replace(';', '');
+lastentrys = data.substring(data.indexOf("var entryc =")+12,data.indexOf("var lastchat")).slice(0, 11).replace(';', '').replace('=', '').trim();
 _this.log('giveaway lastentrys - ' + lastentrys);
 Request({
 method: 'POST',

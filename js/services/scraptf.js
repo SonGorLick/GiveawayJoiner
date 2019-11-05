@@ -5,7 +5,7 @@ super();
 this.websiteUrl = 'https://scrap.tf';
 this.authContent = 'Logout';
 this.authLink = 'https://scrap.tf/login';
-this.settings.rnd = { type: 'checkbox', trans: this.transPath('rnd'), default: this.getConfig('rnd', true) };
+this.settings.rnd = { type: 'checkbox', trans: this.transPath('rnd'), default: this.getConfig('rnd', false) };
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 this.withValue = false;
 delete this.settings.pages;
@@ -13,8 +13,8 @@ super.init();
 }
 getUserInfo(callback) {
 let userData = {
-avatar: __dirname + '/images/Scraptf.png',
-username: 'Scraptf User',
+avatar: __dirname + '/images/ScrapTF.png',
+username: 'ScrapTF User',
 };
 $.ajax({
 url: 'https://scrap.tf',
@@ -59,9 +59,8 @@ for (let spcurred = 0; spcurred < sptented.length; spcurred++) {
 let linked = sptented.eq(spcurred).find('.panel-heading .raffle-name a').attr('href').replace('/raffles/', '');
 GJuser.sp = GJuser.sp + linked + ',';
 }
-let pmout = (Math.floor(Math.random() * 3000)) + 7000,
-random = Array.from(Array(sptent.length).keys());
-if (_this.getConfig('rnd', true)) {
+let random = Array.from(Array(sptent.length).keys());
+if (_this.getConfig('rnd', false)) {
 for(let i = random.length - 1; i > 0; i--){
 const j = Math.floor(Math.random() * i);
 const temp = random[i];
@@ -70,7 +69,7 @@ random[j] = temp;
 }
 }
 setTimeout(function () {
-}, pmout);
+}, (Math.floor(Math.random() * 3000)) + 10000);
 function giveawayEnter() {
 if (sptent.length <= spcurr || !_this.started) {
 if (_this.getConfig('log', true)) {
@@ -88,12 +87,18 @@ link = spcont.find('.panel-heading .raffle-name a').attr('href'),
 name = spcont.find('.panel-heading .raffle-name a').text(),
 entered = link.replace('/raffles/', '');
 if (name === undefined || name === '') {
-name = link;
+name = entered;
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + _this.logLink(_this.url + link, name));
 }
 if (!GJuser.sp.includes(',' + entered + ',')) {
+let pmout = 0;
+if (_this.check === undefined) {
+pmout = (Math.floor(Math.random() * 5000)) + 8000;
+_this.check = 1;
+}
+setTimeout(function () {
 $.ajax({
 url: _this.url + link,
 success: function (data) {
@@ -103,6 +108,7 @@ hash = data.substring(data.indexOf("ScrapTF.Raffles.EnterRaffle(")+39,data.index
 csrf = data.substring(data.indexOf("ScrapTF.User.Hash =")+21,data.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 if (enter) {
 let tmout = (Math.floor(Math.random() * 3000)) + 4000;
+spnext = spnext + tmout + pmout;
 setTimeout(function () {
 $.ajax({
 type: 'POST',
@@ -134,6 +140,7 @@ _this.log(Lang.get('service.cant_join'));
 }
 }
 });
+}, pmout);
 }
 else {
 if (_this.getConfig('log', true)) {

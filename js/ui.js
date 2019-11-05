@@ -141,7 +141,7 @@ $(document.createElement('button'))
 $(document.createElement('button'))
 .addClass('open-website')
 .html('<div class="fa fa-user-secret" title="User-Agent: /giveawayjoinerdata/user-agent.txt"></div>')
-.css('margin-left', '7px')
+.css('margin-left', '10px')
 .attr('data-link', 'https://www.whatsmyua.info')
 .appendTo(info_links);
 }

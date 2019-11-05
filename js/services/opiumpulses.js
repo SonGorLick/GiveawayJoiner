@@ -45,7 +45,7 @@ url: _this.url + '/arcade/index?ArcadeGame_page=1',
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
 let arfound = data.find('.arcade-item-img-btn-wrapper'),
-arlnk = arfound.eq(0).find('a').attr('href');
+arlnk = arfound.eq(Math.floor(Math.random() * 28)).find('a').attr('href');
 if (arlnk !== undefined) {
 $.ajax({
 url: _this.url + arlnk
@@ -180,9 +180,8 @@ _this.log(Lang.get('service.blacklisted'));
 }
 }
 if (opown === 0) {
-let pmout = (Math.floor(Math.random() * 1000)) + 1000;
 setTimeout(function () {
-}, pmout);
+}, (Math.floor(Math.random() * 1000)) + 1000);
 $.ajax({
 url: _this.url + eLink,
 success: function () {

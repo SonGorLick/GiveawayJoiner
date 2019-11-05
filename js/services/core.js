@@ -13,9 +13,9 @@ this.withValue = true;
 this.curr_value = 0;
 this.getTimeout = 15000;
 this.settings = {
-timer: { type: 'number', trans: 'service.timer', min: 5, max: 1440, default: this.getConfig('timer', 10) },
-interval_from: { type: 'number', trans: 'service.interval_from', min: 0, max: this.getConfig('interval_to', 5), default: this.getConfig('interval_from', 3) },
-interval_to: { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 3), max: 60, default: this.getConfig('interval_to', 5) },
+timer: { type: 'number', trans: 'service.timer', min: 5, max: 1440, default: this.getConfig('timer', 60) },
+interval_from: { type: 'number', trans: 'service.interval_from', min: 0, max: this.getConfig('interval_to', 15), default: this.getConfig('interval_from', 10) },
+interval_to: { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 10), max: 60, default: this.getConfig('interval_to', 15) },
 pages: { type: 'number', trans: 'service.pages', min: 1, max: 30, default: this.getConfig('pages', 1) }
 };
 }
@@ -244,7 +244,7 @@ this.buttonState(Lang.get('service.btn_start'));
 runTimer() {
 this.totalTicks = 0;
 this.started = true;
-let atimer = this.getConfig('timer', 10);
+let atimer = this.getConfig('timer', 60);
 this.stimer = atimer;
 this.setStatus('good');
 this.log(Lang.get('service.started'));
@@ -283,7 +283,7 @@ GJuser.black = GJuser.black.replace(';', ',').replace('.', ',').replace(':', ','
 this.authCheck((authState) => {
 if (authState === 1) {
 this.log(Lang.get('service.connection_good'));
-let atimer = this.getConfig('timer', 10);
+let atimer = this.getConfig('timer', 60);
 this.stimer = atimer;
 this.updateCookies();
 this.joinService();

@@ -64,8 +64,8 @@ _session = session.fromPartition('persist:GiveawayJoiner');
 _session.setUserAgent(_ua);
 Menu.setApplicationMenu(null);
 mainWindow = new BrowserWindow({
-width: 730,
-height: 500,
+width: 876,
+height: 600,
 skipTaskbar: true,
 title: 'GiveawayJoiner',
 icon: _icn,
@@ -89,10 +89,10 @@ Browser = new BrowserWindow({
 parent: mainWindow,
 icon: _icn,
 title: 'GiveawayJoiner',
-width: 1024,
-height: 600,
-minWidth: 600,
-minHeight: 500,
+width: 1200,
+height: 700,
+minWidth: 800,
+minHeight: 600,
 modal: _bmd,
 frame: _bfr,
 show: false,
