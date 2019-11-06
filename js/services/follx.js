@@ -93,7 +93,7 @@ let fxcurr = 0;
 function giveawayEnter() {
 if (fxfound.length <= fxcurr || !_this.started) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checked') + page);
+_this.log(Lang.get('service.checked') + page + '#');
 }
 if (callback) {
 callback();
@@ -107,7 +107,7 @@ name = card.find('.head_info').attr('title'),
 entered = card.find('.entered').length > 0;
 if (entered) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|  ' + _this.logLink(link, name));
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (fxcurr + 1) + '№|  ' + _this.logLink(link, name));
 _this.log(Lang.get('service.already_joined'));
 }
 fxnext = 50;
@@ -145,7 +145,7 @@ if (GJuser.black.includes(fxid + ',') && _this.getConfig('blacklist_on', false))
 fxown = 4;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name));
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (fxcurr + 1) + '№|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name));
 if (fxown === 1) {
 _this.log(Lang.get('service.have_on_steam'));
 }
@@ -171,7 +171,7 @@ headers: {
 success: function (data) {
 if (data.response) {
 _this.setValue(data.points);
-_this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name));
+_this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + (fxcurr + 1) + '№|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name));
 }
 }
 });

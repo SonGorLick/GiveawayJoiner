@@ -5,10 +5,11 @@ super();
 this.websiteUrl = 'https://www.opiumpulses.com';
 this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
-this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
+this.settings.rnd = { type: 'checkbox', trans: this.transPath('rnd'), default: this.getConfig('rnd', false) };
 this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
-this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
+this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
+this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -79,7 +80,16 @@ new Audio(__dirname + '/sounds/won.wav').play();
 }
 }
 let opfound = data.find('.giveaways-page-item');
-let opcurr = 0;
+let opcurr = 0,
+random = Array.from(Array(opfound.length).keys());
+if (_this.getConfig('rnd', false)) {
+for(let i = random.length - 1; i > 0; i--){
+const j = Math.floor(Math.random() * i);
+const temp = random[i];
+random[i] = random[j];
+random[j] = temp;
+}
+}
 function giveawayEnter() {
 if (opfound.length < 40) {
 _this.pagemax = page;
@@ -89,15 +99,16 @@ if (_this.getConfig('log', true)) {
 if (opfound.length < 40) {
 _this.log(Lang.get('service.reach_end'));
 }
-_this.log(Lang.get('service.checked') + page);
+_this.log(Lang.get('service.checked') + page + '#');
 }
 if (callback) {
 callback();
 }
 return;
 }
-let opnext = _this.interval();
-let opway = opfound.eq(opcurr),
+let opnext = _this.interval(),
+oprnd = random[opcurr],
+opway = opfound.eq(oprnd),
 link = opway.find('.giveaways-page-item-img-btn-more').attr('href'),
 name = opway.find('.giveaways-page-item-footer-name').text().trim(),
 entered = opway.find('.giveaways-page-item-img-btn-wrapper').text(),
@@ -113,7 +124,7 @@ njoin = 1;
 }
 if (_this.curr_value < cost || entered.includes('ENTERED') || njoin === 1) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + cost + 'P|  ' + _this.logLink(_this.url + link, name));
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name));
 if (njoin === 1) {
 _this.log(Lang.get('service.cant_join'));
 }
@@ -168,7 +179,7 @@ if (GJuser.black.includes(opid + ',') && _this.getConfig('blacklist_on', false))
 opown = 4;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + ' |' + page + '#|' + cost + 'P|'+ _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name));
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|' + _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name));
 if (opown === 3) {
 _this.log(Lang.get('service.cant_join'));
 }
@@ -187,7 +198,7 @@ url: _this.url + eLink,
 success: function () {
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
-_this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + cost + 'P|'+ _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name));
+_this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|' + _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name));
 }
 });
 }

@@ -3,7 +3,7 @@ const { app, nativeImage, shell, session, Tray, BrowserWindow, Menu, ipcMain, ip
 const storage = require('electron-json-storage');
 const fs = require('fs');
 const Request = require('request-promise');
-const devMode = app.getVersion() === '7.0.1';
+const devMode = app.getVersion() === '7.1.0';
 let _ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/78.0.3904.67 Mobile/15E148 Safari/605.1';
 let appLoaded = false;
 let mainWindow = null;

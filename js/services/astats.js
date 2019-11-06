@@ -84,7 +84,7 @@ if (_this.getConfig('log', true)) {
 if (_this.pagemax === page) {
 _this.log(Lang.get('service.reach_end'));
 }
-_this.log(Lang.get('service.checked') + page);
+_this.log(Lang.get('service.checked') + page + '#');
 }
 if (callback) {
 callback();
@@ -102,8 +102,13 @@ assub = 0,
 asid = '???',
 asstm = '';
 if (alink !== undefined || assteam !== undefined) {
-let aname = data.find('[href="' + alink + '"]').text().trim();
-if (!aname.includes('This giveaway has ended.')) {
+let aname = data.find('[href="' + alink + '"]').text().trim(),
+ended = data.find('[href="' + alink + '"] > span').text().trim();
+if (aname.includes('This giveaway has ended.') || ended === 'This giveaway has ended.') {
+_this.pagemax = page;
+asnext = 50;
+}
+else {
 let ahave =  data.find('[href="' + alink + '"] font').attr('color'),
 asjoin = alink.replace('/astats/Giveaway.php?GiveawayID=','');
 if (assteam.includes('apps/')) {
@@ -135,7 +140,7 @@ if (GJuser.black.includes(asid + ',') && _this.getConfig('blacklist_on', false))
 asown = 4;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname));
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (arnd + 1) + '№|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname));
 if (asown === 1) {
 _this.log(Lang.get('service.have_on_steam'));
 }
@@ -172,7 +177,7 @@ url: _this.url + alink,
 method: 'POST',
 data: 'Comment=&JoinGiveaway=Join',
 success: function () {
-_this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname));
+_this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + (arnd + 1) + '№|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname));
 }
 });
 }
@@ -182,10 +187,6 @@ _this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + _this.logLink(as
 else {
 asnext = 50;
 }
-}
-else {
-_this.pagemax = page;
-asnext = 50;
 }
 }
 else {

@@ -227,7 +227,7 @@ if (GJuser.black.includes(sgid + ',') && _this.getConfig('blacklist_on', false))
 sgown = 4;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + 'P|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name));
+_this.log(Lang.get('service.checking') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name));
 if (sgown === 1) {
 _this.log(Lang.get('service.have_on_steam'));
 }
@@ -261,7 +261,7 @@ code: GA.code
 },
 success: function (data) {
 if (data.type === 'success') {
-_this.log(Lang.get('service.entered_in') + ' |'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + 'P|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name));
+_this.log(Lang.get('service.entered_in') + ' |'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name));
 _this.setValue(data.points);
 GA.entered = true;
 }

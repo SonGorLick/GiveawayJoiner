@@ -13,15 +13,15 @@ super.init();
 }
 getUserInfo(callback) {
 let userData = {
-avatar: __dirname + '/images/ScrapTF.png',
-username: 'ScrapTF User',
+avatar: __dirname + '/icons/icon.png',
+username: 'ScrapTF User'
 };
 $.ajax({
 url: 'https://scrap.tf',
 success: function (html) {
 html = $(html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
 userData.username = html.find('.nav-username').text();
-userData.avatar = html.find('.pull-left.nav-avatar > .avatar-container > noload').attr('src');
+userData.avatar = __dirname + '/images/ScrapTF.png';
 },
 complete: function () {
 callback(userData);
@@ -69,11 +69,15 @@ random[j] = temp;
 }
 }
 setTimeout(function () {
-}, (Math.floor(Math.random() * 3000)) + 10000);
+}, (Math.floor(Math.random() * 2000)) + 7000);
 function giveawayEnter() {
 if (sptent.length <= spcurr || !_this.started) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checked') + page);
+if (page === 1) {
+_this.log(Lang.get('service.checked') + 'Sort by ending');
+}
+else {
+_this.log(Lang.get('service.checked') + 'Sort by newest');
 }
 if (callback) {
 callback();
@@ -90,15 +94,9 @@ if (name === undefined || name === '') {
 name = entered;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + _this.logLink(_this.url + link, name));
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + link, name));
 }
-if (!GJuser.sp.includes(',' + entered + ',')) {
-let pmout = 0;
-if (_this.check === undefined) {
-pmout = (Math.floor(Math.random() * 5000)) + 8000;
-_this.check = 1;
-}
-setTimeout(function () {
+if (!GJuser.sp.includes(',' + entered + ',' || GJuser.sp.length < 2)) {
 $.ajax({
 url: _this.url + link,
 success: function (data) {
@@ -108,7 +106,6 @@ hash = data.substring(data.indexOf("ScrapTF.Raffles.EnterRaffle(")+39,data.index
 csrf = data.substring(data.indexOf("ScrapTF.User.Hash =")+21,data.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 if (enter) {
 let tmout = (Math.floor(Math.random() * 3000)) + 4000;
-spnext = spnext + tmout + pmout;
 setTimeout(function () {
 $.ajax({
 type: 'POST',
@@ -124,10 +121,11 @@ data: {raffle: entered, captha: '', hash: hash, csrf: csrf},
 success: function (response) {
 let spresp = JSON.stringify(response.success);
 if (spresp) {
-_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + link, name));
+_this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + link, name));
 }
 else {
 _this.log(Lang.get('service.cant_join'));
+spnext = 1000;
 }
 }
 });
@@ -136,11 +134,11 @@ _this.log(Lang.get('service.cant_join'));
 else {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.cant_join'));
+spnext = 1000;
 }
 }
 }
 });
-}, pmout);
 }
 else {
 if (_this.getConfig('log', true)) {
