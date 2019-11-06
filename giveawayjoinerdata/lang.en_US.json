@@ -107,6 +107,12 @@
 			"captcha": "To enter giveaways You need solve ",
 			"sound": "Sound notifications",
 			"sound_title": "Play sound when winning a giveaway",
+			"ending": "GA ending (hours)",
+			"ending_title": "Enter giveaways before the end of which less than the specified time. 0 - without any restrictions",
+			"ending_first": "No sort first",
+			"ending_first_title": "First of all without sort enter giveaways before the end of which less than the specified time",
+			"sbl_ending_ig": "Ignore settings for sort",
+			"sbl_ending_ig_title": "Ignore GA ending (hours) settings for sorted giveaways by level",
 			"sort_by_level": "Sort by level",
 			"sort_by_level_title": "Enter giveaways sorted from high to low level",
 			"blacklist_on": "Enable blacklist",
@@ -131,6 +137,8 @@
 			"sound_title": "Play sound when won the giveaway",
 			"blacklist_on": "Enable blacklist",
 			"blacklist_on_title": "Don't enter if the giveaway in blacklist",
+			"rnd": "Random",
+			"rnd_title": "Random enter giveaways on page, not how on site",
 			"check_in_steam": "Check owned on Steam",
 			"check_in_steam_title": "Don't enter if the giveaway owned on account",
 			"log": "Logging",
@@ -142,7 +150,7 @@
 			"sound": "Sound notifications",
 			"sound_title": "Play sound when winning a giveaway",
 			"ending": "GA ending (minutes)",
-			"ending_title": "Don't join giveaways before the end of which more than the specified time. 0 - without any restrictions",
+			"ending_title": "Don't enter giveaways before the end of which more than the specified time. 0 - without any restrictions",
 			"chance": "Chance",
 			"sort_by_copies": "Sort by copies number",
 			"sort_by_copies_title": "Enter sorted from high to low number of copies in giveaway",
@@ -185,6 +193,6 @@
 		"start_minimized": "Minimize at startup",
 		"autostart": "Autostart of services",
 		"timer_view": "Display timer",
-		"build_version": "Build version"
+		"build_version": "Version"
 	}
 }
