@@ -79,6 +79,7 @@ _this.log(Lang.get('service.checked') + 'Sort by ending');
 else {
 _this.log(Lang.get('service.checked') + 'Sort by newest');
 }
+}
 if (callback) {
 callback();
 }

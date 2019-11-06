@@ -124,12 +124,7 @@ mainWindow = null;
 tray = new Tray(nativeImage.createFromPath(_itr));
 tray.setToolTip('Giveaway Joiner');
 tray.on('click', () => {
-if (user === null) {
 mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
-}
-else {
-mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
-}
 });
 global.sharedData = {
 devMode: devMode,
