@@ -74,6 +74,12 @@
 			"log": "Logging",
 			"log_title": "Detailed log of the service"
 		},
+		"indiedb": {
+			"rnd": "Random",
+			"rnd_title": "Random enter giveaways on page, not how on site",
+			"log": "Logging",
+			"log_title": "Detailed log of the service"
+		},
 		"tf2r": {
 			"rnd": "Random",
 			"rnd_title": "Random enter giveaways on page, not how on site",
