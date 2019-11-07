@@ -101,12 +101,10 @@ _this.log(Lang.get('service.entered_in') + ' ' + finish + ' - ' + name);
 if (addlink.includes('http')) {
 $.ajax({
 url: _this.url + '/giveaways/ajax/'+ finish + '/' + id,
-success: function () {
+});
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.entered_in') + ' ' + finish + ' - ' + name);
 }
-}
-});
 }
 }
 }
