@@ -35,7 +35,7 @@ GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']
 }
 }
 });
-if (fs.existsSync(storage.getDataPath().replace('giveawayjoinerdata/storage', 'giveawayjoinerdata') + '/blacklist.txt')) {
+if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt')) {
 let blacklist = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt');
 if (blacklist.length > 0) {
 GJuser.black = blacklist.toString();
@@ -273,7 +273,7 @@ GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']
 }
 }
 });
-if (fs.existsSync(storage.getDataPath().replace('giveawayjoinerdata/storage', 'giveawayjoinerdata') + '/blacklist.txt')) {
+if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt')) {
 let blacklist = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt');
 if (blacklist.length > 0) {
 GJuser.black = blacklist.toString();

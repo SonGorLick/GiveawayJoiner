@@ -109,7 +109,7 @@ _this.pagemax = page;
 asnext = 50;
 }
 else {
-let ahave =  data.find('[href="' + alink + '"] font').attr('color'),
+let ahave = data.find('[href="' + alink + '"] font').attr('color'),
 asjoin = alink.replace('/astats/Giveaway.php?GiveawayID=','');
 if (assteam.includes('apps/')) {
 asapp = parseInt(assteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
