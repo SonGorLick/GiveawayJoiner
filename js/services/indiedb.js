@@ -57,6 +57,7 @@ $.ajax({
 url: _this.url + eLink
 });
 _this.log(Lang.get('service.entered_in') + _this.logLink(link, name));
+enter = false;
 entered = true;
 }
 if (entered) {
