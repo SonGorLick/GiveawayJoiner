@@ -43,9 +43,10 @@ joinService() {
 let _this = this;
 let page = 1;
 _this.sync = 0;
+_this.pagemax = _this.getConfig('pages', 1);
 let callback = function () {
 page++;
-if (page <= _this.getConfig('pages', 1)) {
+if (page <= _this.pagemax) {
 _this.enterOnPage(page, callback);
 }
 };
@@ -91,8 +92,14 @@ new Audio(__dirname + '/sounds/won.wav').play();
 let fxfound = html.find('.giveaway_card');
 let fxcurr = 0;
 function giveawayEnter() {
+//if (fxfound.length < 20) {
+//_this.pagemax = page;
+//}
 if (fxfound.length <= fxcurr || !_this.started) {
 if (_this.getConfig('log', true)) {
+//if (fxfound.length < 20) {
+//_this.log(Lang.get('service.reach_end'));
+//}
 _this.log(Lang.get('service.checked') + page + '#');
 }
 if (callback) {

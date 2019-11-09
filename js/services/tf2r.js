@@ -30,12 +30,9 @@ callback(-1);
 });
 }
 getUserInfo(callback) {
-if (GJuser.tf.length > 601) {
-GJuser.tf = ',';
-}
 let userData = {
 avatar: __dirname + '/images/TF2R.png',
-username: 'TF2R User'
+username: 'TF2R user'
 };
 this.ajaxReq('http://tf2r.com/notifications.html', (response) => {
 if (response.success) {
@@ -47,7 +44,8 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-_this.ajaxReq('http://tf2r.com/raffles.html', (response) => {
+_this.url = 'http://tf2r.com';
+_this.ajaxReq(_this.url + '/raffles.html', (response) => {
 let giveaways = $(response.data).find('.pubrhead-text-right');
 let tfcurr = 0;
 let random = Array.from(Array(giveaways.length).keys());
@@ -58,8 +56,7 @@ const temp = random[i];
 random[i] = random[j];
 random[j] = temp;
 }
-}
-function giveawayEnter() {
+}function giveawayEnter() {
 if (giveaways.length <= tfcurr || !_this.started) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.reach_end'));
@@ -71,55 +68,40 @@ let tfrnd = random[tfcurr],
 giveaway = giveaways.eq(tfrnd),
 link = giveaway.find('a').attr('href'),
 name = giveaway.find('a').text(),
-rid = link.replace('http://tf2r.com/k', '').replace('.html', '');
+rid = link.replace(_this.url + '/k', '').replace('.html', '');
 _this.ajaxReq(link, (response) => {
 if (response.success) {
 let html = $('<div>' + response.data + '</div>');
-let entered = html.find('#enbut').length === 0;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + _this.logLink(link, name));
 }
-if (entered || response.data.indexOf('Fuck off') >= 0 || GJuser.tf.includes(rid + ',')) {
+let entered = html.find('#enbut').length === 0;
+if (entered || GJuser.tf.includes(rid + ',')) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'));
 }
 return;
 }
-setTimeout(function () {
-$.ajax({
-url: link,
-success: function (data) {
-data = data.replace(/<img/gi, '<noload');
-let lastentrys = 0;
-lastentrys = data.substring(data.indexOf("var entryc =")+12,data.indexOf("var lastchat")).slice(0, 11).replace(';', '').replace('=', '').trim();
-}
-});
-$.ajax({
-url: link,
-success: function (data) {
-data = data.replace(/<img/gi, '<noload');
-setTimeout(function () {
-$.ajax({
-type: 'POST',
-dataType: 'json',
-url: 'http://tf2r.com/job.php',
+Request({
+method: 'POST',
+uri: _this.url + '/job.php',
+form: {
+enterraffle: 'true',
+rid: rid,
+ass: 'yup, indeed'
+},
 headers: {
 'User-Agent': mainWindow.webContents.session.getUserAgent(),
 Cookie: _this.cookies
 },
-data: {enterraffle: 'true', rid: rid, ass: 'yup, indeed'},
-success: function () {
+json: true
+})
+.then((body) => {
+if (body.status === 'ok') {
 _this.log(Lang.get('service.entered_in') + _this.logLink(link, name));
 GJuser.tf = GJuser.tf + rid + ',';
-},
-error: function () {
-_this.log(Lang.get('service.cant_join'));
 }
 });
-}, (Math.floor(Math.random() * 1000)) + 1000);
-}
-});
-}, (Math.floor(Math.random() * 1000)) + 1000);
 }
 });
 tfcurr++;

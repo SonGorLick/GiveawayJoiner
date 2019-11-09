@@ -79,7 +79,8 @@ devTools: devMode,
 contextIsolation: false,
 nodeIntegration: true,
 webaudio: false,
-webviewTag: true
+webviewTag: true,
+webSecurity: false
 }
 });
 if (devMode) {
@@ -103,7 +104,8 @@ contextIsolation: false,
 nodeIntegration: false,
 devTools: false,
 webaudio: false,
-webviewTag: false
+webviewTag: false,
+webSecurity: false
 }
 });
 Browser.loadFile('blank.html');

@@ -123,7 +123,7 @@ type: 'POST'
 if (_this.check === undefined) {
 setTimeout(function () {
 _this.check = 1;
-}, 7000);
+}, 10000);
 }
 if (GJuser.iglvl === 0) {
 _this.sort = false;

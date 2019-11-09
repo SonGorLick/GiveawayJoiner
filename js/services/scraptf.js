@@ -74,10 +74,10 @@ function giveawayEnter() {
 if (sptent.length <= spcurr || !_this.started) {
 if (_this.getConfig('log', true)) {
 if (page === 1) {
-_this.log(Lang.get('service.checked') + 'Sort by ending');
+_this.log(Lang.get('service.checked') + 'Public Raffles (Sort by Time Left)');
 }
 else {
-_this.log(Lang.get('service.checked') + 'Sort by newest');
+_this.log(Lang.get('service.checked') + 'Public Raffles (Sort by Newest)');
 }
 }
 if (callback) {
