@@ -190,7 +190,7 @@ this.giveaways.unshift.apply(this.giveaways, this.gamf);
 function processOne() {
 if (_this.giveaways.length <= sgcurr || !_this.started) {
 if (_this.getConfig('log', true) && sgcurr > 0) {
-_this.log(Lang.get('service.checked') + '1-' + _this.getConfig('pages', 1));
+_this.log(Lang.get('service.checked') + '1# - ' + _this.getConfig('pages', 1) + '#');
 }
 if (callback) {
 callback(false);

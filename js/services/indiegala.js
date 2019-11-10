@@ -169,13 +169,15 @@ _this.pagemax = page;
 }
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0) {
 if (_this.getConfig('log', true)) {
-if (tickets.length < 12) {
-if (_this.sort) {
-_this.log(Lang.get('service.level') + _this.lvl);
-}
+if (tickets.length < 12 && !_this.sort) {
 _this.log(Lang.get('service.reach_end'));
 }
+if (_this.sort) {
+_this.log(Lang.get('service.level') + _this.lvl + '. ' + Lang.get('service.checked') + page + '#');
+}
+else {
 _this.log(Lang.get('service.checked') + page + '#');
+}
 }
 if (_this.sort_after && page === _this.pagemax) {
 page = 1;

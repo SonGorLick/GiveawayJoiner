@@ -311,9 +311,6 @@ this.totalTicks++;
 }
 updateUserInfo() {
 this.getUserInfo((userData) => {
-if (userData.avatar === undefined) {
-userData.avatar = __dirname + '/icons/icon.png';
-}
 this.userInfo.find('.avatar').css('background-image', "url('" + userData.avatar + "')");
 this.userInfo.find('.username').text(userData.username);
 if (this.withValue) {

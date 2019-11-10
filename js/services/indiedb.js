@@ -5,7 +5,6 @@ super();
 this.websiteUrl = 'https://www.indiedb.com';
 this.authContent = 'View your profile';
 this.authLink = 'https://www.indiedb.com/members/login';
-this.settings.rnd = { type: 'checkbox', trans: this.transPath('rnd'), default: this.getConfig('rnd', false) };
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 this.withValue = false;
 delete this.settings.pages;
@@ -78,7 +77,7 @@ $.ajax({
 url: _this.url + addlink,
 success: function (data) {
 data = data.replace(/<img/gi, '<noload');
-let check = data.indexOf('<p><strong>Support us by subscribing:</strong></p>') >= 0
+let check = data.indexOf('<p><strong>Support us by subscribing:</strong></p>') >= 0;
 if (_this.getConfig('log', true) && !check) {
 _this.log(Lang.get('service.entered_in') + ' ' + finish + ' - ' + name);
 }
@@ -103,7 +102,7 @@ entered = false;
 if (!enter && !entered) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.reach_end'));
-_this.log(Lang.get('service.checked'));
+_this.log(Lang.get('service.checked') + 'Giveaways');
 return;
 }
 }

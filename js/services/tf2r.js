@@ -30,9 +30,12 @@ callback(-1);
 });
 }
 getUserInfo(callback) {
+if (GJuser.tf.length > 601) {
+GJuser.tf = ',';
+}
 let userData = {
 avatar: __dirname + '/images/TF2R.png',
-username: 'TF2R user'
+username: 'TF2R User'
 };
 this.ajaxReq('http://tf2r.com/notifications.html', (response) => {
 if (response.success) {
