@@ -3,7 +3,7 @@ const { app, nativeImage, shell, session, Tray, BrowserWindow, Menu, ipcMain, ip
 const storage = require('electron-json-storage');
 const fs = require('fs');
 const Request = require('request-promise');
-const devMode = app.getVersion() === '1.2.0l';
+const devMode = app.getVersion() === '7.1.1';
 let _ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/78.0.3904.67 Mobile/15E148 Safari/605.1';
 let appLoaded = false;
 let mainWindow = null;
@@ -78,9 +78,9 @@ session: _session,
 devTools: devMode,
 contextIsolation: false,
 nodeIntegration: true,
-webaudio: false,
 webviewTag: true,
-webSecurity: false
+webSecurity: false,
+webaudio: false
 }
 });
 if (devMode) {
@@ -100,12 +100,12 @@ show: false,
 center: true,
 webPreferences: {
 session: _session,
+devTools: false,
 contextIsolation: false,
 nodeIntegration: false,
-devTools: false,
-webaudio: false,
 webviewTag: false,
-webSecurity: false
+webSecurity: false,
+webaudio: false
 }
 });
 Browser.loadFile('blank.html');

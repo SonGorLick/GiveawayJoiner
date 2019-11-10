@@ -178,7 +178,7 @@ headers: {
 success: function (data) {
 if (data.response) {
 _this.setValue(data.points);
-_this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + (fxcurr + 1) + '№|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name));
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (fxcurr + 1) + '№|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name));
 }
 }
 });

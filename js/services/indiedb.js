@@ -79,12 +79,12 @@ success: function (data) {
 data = data.replace(/<img/gi, '<noload');
 let check = data.indexOf('<p><strong>Support us by subscribing:</strong></p>') >= 0;
 if (_this.getConfig('log', true) && !check) {
-_this.log(Lang.get('service.entered_in') + ' ' + finish + ' - ' + name);
+_this.log(Lang.get('service.entered_in') + finish + ' - ' + name);
 }
 }
 });
 if (_this.getConfig('log', true) && !addlink.includes('the-challenge-of-adblock')) {
-_this.log(Lang.get('service.entered_in') + ' ' + finish + ' - ' + name);
+_this.log(Lang.get('service.entered_in') + finish + ' - ' + name);
 }
 }
 if (addlink.includes('http')) {
@@ -92,7 +92,7 @@ $.ajax({
 url: _this.url + '/giveaways/ajax/'+ finish + '/' + id,
 });
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.entered_in') + ' ' + finish + ' - ' + name);
+_this.log(Lang.get('service.entered_in') + finish + ' - ' + name);
 }
 }
 }

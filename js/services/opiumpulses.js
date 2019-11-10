@@ -198,7 +198,7 @@ url: _this.url + eLink,
 success: function () {
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
-_this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|' + _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name));
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|' + _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name));
 }
 });
 }

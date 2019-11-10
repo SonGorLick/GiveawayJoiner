@@ -173,7 +173,7 @@ if (tickets.length < 12 && !_this.sort) {
 _this.log(Lang.get('service.reach_end'));
 }
 if (_this.sort) {
-_this.log(Lang.get('service.level') + _this.lvl + '. ' + Lang.get('service.checked') + page + '#');
+_this.log(Lang.get('service.checked') + _this.lvl + 'L-' + page + '#');
 }
 else {
 _this.log(Lang.get('service.checked') + page + '#');
@@ -298,7 +298,7 @@ data: JSON.stringify({giv_id: id, ticket_price: price}),
 success: function (data) {
 if (data.status === 'ok') {
 _this.setValue(data.new_amount);
-_this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name));
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name));
 }
 }
 });

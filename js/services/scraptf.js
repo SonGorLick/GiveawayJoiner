@@ -89,7 +89,7 @@ let spnext = _this.interval(),
 sprnd = random[spcurr],
 spcont = sptent.eq(sprnd),
 link = spcont.find('.panel-heading .raffle-name a').attr('href'),
-name = spcont.find('.panel-heading .raffle-name a').text(),
+name = spcont.find('.panel-heading .raffle-name a').text().trim(),
 entered = link.replace('/raffles/', '');
 if (name === undefined || name === '') {
 name = entered;
@@ -97,7 +97,7 @@ name = entered;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + link, name));
 }
-if (!GJuser.sp.includes(',' + entered + ',' || GJuser.sp.length < 2)) {
+if (!GJuser.sp.includes(',' + entered + ',') || GJuser.sp.length < 2) {
 $.ajax({
 url: _this.url + link,
 success: function (data) {
@@ -122,7 +122,7 @@ data: {raffle: entered, captha: '', hash: hash, csrf: csrf},
 success: function (response) {
 let spresp = JSON.stringify(response.success);
 if (spresp) {
-_this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + link, name));
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + link, name));
 }
 else {
 _this.log(Lang.get('service.cant_join'));

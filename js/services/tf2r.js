@@ -71,12 +71,12 @@ let tfrnd = random[tfcurr],
 giveaway = giveaways.eq(tfrnd),
 link = giveaway.find('a').attr('href'),
 name = giveaway.find('a').text(),
-rid = link.replace(_this.url + '/k', '').replace('.html', '');
+rid = link.replace('http://tf2r.com/k', '').replace('.html', '');
 _this.ajaxReq(link, (response) => {
 if (response.success) {
 let html = $('<div>' + response.data + '</div>');
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + _this.logLink(link, name));
+_this.log(Lang.get('service.checking') + '|' + (tfrnd + 1) + '№|  ' + _this.logLink(link, name));
 }
 let entered = html.find('#enbut').length === 0;
 if (entered || GJuser.tf.includes(rid + ',')) {
@@ -94,6 +94,9 @@ rid: rid,
 ass: 'yup, indeed'
 },
 headers: {
+'Host': _this.domain,
+'Referer': link,
+'X-Requested-With': 'XMLHttpRequest',
 'User-Agent': mainWindow.webContents.session.getUserAgent(),
 Cookie: _this.cookies
 },
@@ -101,7 +104,7 @@ json: true
 })
 .then((body) => {
 if (body.status === 'ok') {
-_this.log(Lang.get('service.entered_in') + _this.logLink(link, name));
+_this.log(Lang.get('service.entered_in') + '|' + (tfrnd + 1) + '№|  ' + _this.logLink(link, name));
 GJuser.tf = GJuser.tf + rid + ',';
 }
 });

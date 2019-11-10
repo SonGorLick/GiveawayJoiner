@@ -177,7 +177,7 @@ url: _this.url + alink,
 method: 'POST',
 data: 'Comment=&JoinGiveaway=Join',
 success: function () {
-_this.log(Lang.get('service.entered_in') + ' |' + page + '#|' + (arnd + 1) + '№|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname));
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (arnd + 1) + '№|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname));
 }
 });
 }
