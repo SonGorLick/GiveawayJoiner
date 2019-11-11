@@ -13,15 +13,16 @@ super.init();
 }
 getUserInfo(callback) {
 let userData = {
-avatar: __dirname + '/icons/icon.png',
+avatar: __dirname + '/images/ScrapTF.png',
 username: 'ScrapTF User'
 };
 $.ajax({
 url: 'https://scrap.tf',
-success: function (html) {
-html = $(html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
-userData.username = html.find('.nav-username').text();
-userData.avatar = __dirname + '/images/ScrapTF.png';
+success: function (data) {
+data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
+userData.avatar = data.substring(data.indexOf('style="" src="')+14,data.indexOf('class="nav-username"')).slice(0, 121);
+userData.username = $(data).find('.nav-username').text();
+GJuser.sp = userData.avatar;
 },
 complete: function () {
 callback(userData);

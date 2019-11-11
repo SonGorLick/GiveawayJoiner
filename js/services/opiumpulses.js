@@ -42,7 +42,7 @@ _this.check = 0;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.opiumpulses.com';
 $.ajax({
-url: _this.url + '/arcade/index?ArcadeGame_page=1',
+url: _this.url + '/arcade',
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
 let arfound = data.find('.arcade-item-img-btn-wrapper'),

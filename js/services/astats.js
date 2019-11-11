@@ -6,10 +6,11 @@ this.websiteUrl = 'https://astats.astats.nl/astats/';
 this.authContent = 'Log out';
 this.authLink = 'https://astats.astats.nl/astats/profile/Login.php';
 this.withValue = false;
-this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 this.settings.rnd = { type: 'checkbox', trans: this.transPath('rnd'), default: this.getConfig('rnd', false) };
-this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
+this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
+this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
+this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -35,6 +36,7 @@ callback(userData);
 joinService() {
 let _this = this;
 let page = 1;
+_this.won = _this.getConfig('won', 0);
 _this.url = 'https://astats.astats.nl';
 _this.pagemax = _this.getConfig('pages', 1);
 if (GJuser.as === '') {
@@ -43,6 +45,29 @@ $.ajax({
 url: _this.url + '/astats/TopListGames.php?language=english'
 });
 }
+$.ajax({
+url: _this.url + '/astats/profile/User_Inbox.php',
+success: function (data) {
+data = $(data.replace(/<img/gi, '<noload'));
+let aswon = data.find('td:nth-of-type(4) > a').text('Congratulations you are a giveaway winner!');
+if (aswon === undefined) {
+aswon = 0;
+}
+else {
+aswon = aswon.length;
+}
+if (aswon < _this.won) {
+_this.setConfig('won', aswon);
+}
+if (aswon > 0 && aswon > _this.won) {
+_this.log(_this.logLink(_this.url + '/astats/profile/User_Inbox.php', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (aswon) + ')'), true);
+_this.setConfig('won', aswon);
+if (_this.getConfig('sound', true)) {
+new Audio(__dirname + '/sounds/won.wav').play();
+}
+}
+}
+});
 let callback = function () {
 page++;
 if (page <= _this.pagemax) {

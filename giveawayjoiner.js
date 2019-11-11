@@ -3,7 +3,7 @@ const { app, nativeImage, shell, session, Tray, BrowserWindow, Menu, ipcMain, ip
 const storage = require('electron-json-storage');
 const fs = require('fs');
 const Request = require('request-promise');
-const devMode = app.getVersion() === '7.1.1';
+const devMode = app.getVersion() === '4.2.12';
 let _ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/78.0.3904.67 Mobile/15E148 Safari/605.1';
 let appLoaded = false;
 let mainWindow = null;
@@ -18,6 +18,7 @@ let _bmd = 'true';
 let _bfr = 'false';
 let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
+app.commandLine.appendSwitch('in-process-gpu');
 app.commandLine.appendSwitch('disable-software-rasterizer');
 app.disableHardwareAcceleration();
 if (process.platform === 'win32') {
@@ -76,10 +77,10 @@ frame: false,
 webPreferences: {
 session: _session,
 devTools: devMode,
-contextIsolation: false,
-nodeIntegration: true,
-webviewTag: true,
-webSecurity: false,
+//contextIsolation: false,
+//nodeIntegration: true,
+//webviewTag: true,
+//webSecurity: false,
 webaudio: false
 }
 });
@@ -101,10 +102,9 @@ center: true,
 webPreferences: {
 session: _session,
 devTools: false,
-contextIsolation: false,
+//contextIsolation: false,
 nodeIntegration: false,
-webviewTag: false,
-webSecurity: false,
+//webviewTag: false,
 webaudio: false
 }
 });

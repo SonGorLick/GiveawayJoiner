@@ -17,22 +17,14 @@ avatar: __dirname + '/images/Follx.png',
 username: 'Follx User',
 value: 0
 };
-if (GJuser.steamid === '1') {
 $.ajax({
 url: 'https://follx.com',
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
+userData.username = data.find('.common-header .user .expander-content a.username.truncate').text().trim();
+userData.value = data.find('.common-header .user .expander-content .energy > span').text().trim();
+userData.avatar = data.find('.common-header .user span.avatar').attr('style').replace("background-image: url('",'').replace("')", '');
 GJuser.steamid = data.find('.common-header .user .expander-content a.username.truncate').attr('href').replace('https://follx.com/users/', '');
-}
-});
-}
-$.ajax({
-url: 'https://follx.com/users/' + GJuser.steamid,
-success: function (data) {
-data = $(data.replace(/<img/gi, '<noload'));
-userData.avatar = data.find('.card-cover noload').attr('src');
-userData.username = data.find('.username').first().text();
-userData.value = data.find('.user .energy span').first().text();
 },
 complete: function () {
 callback(userData);
@@ -43,6 +35,7 @@ joinService() {
 let _this = this;
 let page = 1;
 _this.sync = 0;
+_this.url = 'https://follx.com';
 _this.pagemax = _this.getConfig('pages', 1);
 let callback = function () {
 page++;
@@ -56,7 +49,7 @@ enterOnPage(page, callback) {
 let _this = this;
 let CSRF = '';
 $.ajax({
-url: 'https://follx.com/giveaways?page=' + page,
+url: _this.url + '/giveaways?page=' + page,
 success: function (html) {
 html = $('<div>' + html.replace(/<img/gi, '<noload') + '</div>');
 CSRF = html.find('meta[name="csrf-token"]').attr('content');
@@ -68,7 +61,7 @@ return;
 if (_this.sync === 0) {
 _this.sync = 1;
 $.ajax({
-url: 'https://follx.com/ajax/syncAccount',
+url: _this.url + '/ajax/syncAccount',
 method: 'POST',
 headers: {
 'X-CSRF-TOKEN': CSRF,
