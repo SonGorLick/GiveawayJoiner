@@ -3,7 +3,7 @@ class IndieGala extends Joiner {
 constructor() {
 super();
 this.authContent = 'My Profile';
-this.websiteUrl = 'https://www.indiegala.com';
+this.websiteUrl = 'https://www.indiegala.com/giveaways';
 this.authLink = 'https://www.indiegala.com/login';
 this.settings.ending = { type: 'number', trans: this.transPath('ending'), min: 0, max: 720, default: this.getConfig('ending', 0) };
 this.settings.min_level = { type: 'number', trans: this.transPath('min_level'), min: 0, max: this.getConfig('max_level', 0), default: this.getConfig('min_level', 0) };
@@ -18,17 +18,28 @@ this.settings.sbl_ending_ig = { type: 'checkbox', trans: this.transPath('sbl_end
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 super.init();
+this.log(this.trans('captcha') + this.logLink('https://www.indiegala.com/giveaways', 'captcha'), true);
 }
 authCheck(callback) {
+if (GJuser.ig === '') {
+$.ajax({
+url: 'https://www.indiegala.com/giveaways/',
+success: function () {
 $.ajax({
 url: 'https://www.indiegala.com/get_user_info',
+data: {
+uniq_param: (new Date()).getTime(),
+show_coins: 'True'
+},
 dataType: 'json',
 success: function (data) {
 if (data.steamnick) {
 GJuser.ig = data.profile;
+GJuser.iglvl = data.giveaways_user_lever;
 callback(1);
 }
 else {
+GJuser.ig = '';
 callback(0);
 }
 },
@@ -36,6 +47,12 @@ error: function () {
 callback(-1);
 }
 });
+}
+});
+}
+else {
+callback(1);
+}
 }
 getUserInfo(callback) {
 let userData = {
@@ -54,7 +71,6 @@ success: function (data) {
 userData.avatar = data.steamavatar.replace('fb1.jpg', 'fb1_full.jpg');
 userData.username = data.steamnick;
 userData.value = data.silver_coins_tot;
-GJuser.iglvl = data.giveaways_user_lever;
 },
 complete: function () {
 callback(userData);
@@ -83,26 +99,20 @@ Request({
 method: 'GET',
 uri: _this.url + '/giveaways/check_if_won_all',
 headers: {
-'Origin': 'https://www.indiegala.com',
-'Referer': _this.url + '/profile?user_id=' + GJuser.iglvl,
-'User-Agent': mainWindow.webContents.session.getUserAgent(),
-Cookie: _this.cookies
+'origin': 'https://www.indiegala.com',
+'referer': _this.url + '/profile?user_id=' + GJuser.iglvl,
+'user-agent': mainWindow.webContents.session.getUserAgent(),
+'cookie': _this.cookies
 },
 json: false
 })
 .then((html) => {
-if (html.indexOf('Incapsula incident') >= 0) {
-_this.log(_this.trans('captcha') + _this.logLink(_this.url + '/giveaways', 'captcha'), true);
-_this.stopJoiner(true);
-}
-else {
 let igwon = $(html).find('p').eq(1).text().trim();
-if (!igwon.includes('You did not win')) {
+if (igwon.includes('Congratulations! You won')) {
 igwon = igwon.replace('Congratulations! You won','').replace('Giveaways','').trim();
 _this.log(_this.logLink(_this.url + '/profile', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + igwon + ')'), true);
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
-}
 }
 }
 });
@@ -137,7 +147,7 @@ page++;
 if (page <= _this.pagemax) {
 _this.enterOnPage(page, callback);
 }
-if (_this.sort && page > _this.pagemax && _this.lvl > _this.getConfig('min_level', 0)) {
+if (_this.sort && page > _this.pagemax && _this.lvl > _this.lvlmin) {
 _this.lvl = _this.lvl - 1;
 _this.pagemax = _this.getConfig('pages', 1);
 page = 1;
@@ -151,17 +161,21 @@ let _this = this;
 if (!_this.sort && GJuser.iglvl > 0) {
 _this.lvl = 'all';
 }
+setTimeout(function () {
 $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
 success: function (data) {
 let tickets = $(JSON.parse(data).content).find('.tickets-col');
 let igcurr = 0;
 function giveawayEnter() {
-if (tickets.length < 12) {
+if (tickets.length < 12 || _this.curr_value === 0) {
 _this.pagemax = page;
 }
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0) {
 if (_this.getConfig('log', true)) {
+if (_this.curr_value === 0){
+_this.log(Lang.get('service.points_low'));
+}
 if (tickets.length < 12 && !_this.sort) {
 _this.log(Lang.get('service.reach_end'));
 }
@@ -239,7 +253,7 @@ if (!entered && _this.curr_value >= price) {
 _this.log(Lang.get('service.skipped'));
 }
 }
-ignext = 50;
+ignext = 100;
 }
 else {
 let igown = 0,
@@ -282,33 +296,35 @@ _this.log(Lang.get('service.blacklisted'));
 }
 }
 if (igown === 0) {
+setTimeout(function () {
 Request({
 method: 'POST',
 uri: _this.url + '/giveaways/new_entry',
 form: JSON.stringify({giv_id: id, ticket_price: price}),
 headers: {
-'Origin': 'https://www.indiegala.com',
-'Referer': _this.url + '/giveaways/' + page + '/expiry/asc/level/' + _this.lvl,
-'X-Requested-With': 'XMLHttpRequest',
-'User-Agent': mainWindow.webContents.session.getUserAgent(),
-Cookie: _this.cookies
+'origin': 'https://www.indiegala.com',
+'user-agent': mainWindow.webContents.session.getUserAgent(),
+'referer': _this.url + '/giveaways/' + page + '/expiry/asc/level/' + _this.lvl,
+'cookie': _this.cookies
 },
 json: true
 })
-.then((body) => {
-if (body.status === 'ok') {
-_this.setValue(data.new_amount);
+.then((response) => {
+if (response.status === 'ok') {
+_this.setValue(response.new_amount);
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name));
 }
 else {
-_this.log(_this.trans('captcha') + _this.logLink(_this.url + '/giveaways', 'captcha'), true);
-_this.stopJoiner(true);
+_this.log(Lang.get('service.cant_join'));
+spnext = 1000;
 }
 });
+}, (Math.floor(Math.random() * 1000)) + 3000);
 }
 else {
-ignext = 50;
+ignext = 100;
 }
+
 }
 igcurr++;
 setTimeout(giveawayEnter, ignext);
@@ -316,5 +332,6 @@ setTimeout(giveawayEnter, ignext);
 giveawayEnter();
 }
 });
+}, 10000)
 }
 }

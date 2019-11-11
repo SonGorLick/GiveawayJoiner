@@ -257,11 +257,11 @@ this.intervalVar = setInterval(() => {
 if (!this.started) {
 clearInterval(this.intervalVar);
 }
-if (this.totalTicks !== 0 && this.totalTicks % this.usrUpdTimer === 0) {
-if (this.websiteUrl === 'https://www.indiegala.com') {
-this.updateUserInfo();
-}
-}
+//if (this.totalTicks !== 0 && this.totalTicks % this.usrUpdTimer === 0) {
+//if (this.websiteUrl === 'https://www.indiegala.com') {
+//this.updateUserInfo();
+//}
+//}
 if (this.totalTicks % this.doTimer() === 0) {
 this.updateUserInfo();
 $.ajax({
