@@ -18,30 +18,17 @@ this.settings.sbl_ending_ig = { type: 'checkbox', trans: this.transPath('sbl_end
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 super.init();
-this.log(this.trans('captcha') + this.logLink('https://www.indiegala.com/giveaways', 'captcha'), true);
 }
 authCheck(callback) {
-if (GJuser.ig === '') {
-$.ajax({
-url: 'https://www.indiegala.com',
-success: function () {
 $.ajax({
 url: 'https://www.indiegala.com/get_user_info',
 dataType: 'json',
 success: function (data) {
 if (data.steamnick) {
-GJuser.ig = '?user_id=' + data.profile;
-$.ajax({
-url: 'https://www.indiegala.com/giveaways/get_user_level_and_coins',
-dataType: 'json',
-success: function (data) {
-GJuser.iglvl = data.current_level;
-}
-});
+GJuser.ig = data.profile;
 callback(1);
 }
 else {
-GJuser.ig = '';
 callback(0);
 }
 },
@@ -49,12 +36,6 @@ error: function () {
 callback(-1);
 }
 });
-}
-});
-}
-else {
-callback(1);
-}
 }
 getUserInfo(callback) {
 let userData = {
@@ -73,6 +54,7 @@ success: function (data) {
 userData.avatar = data.steamavatar.replace('fb1.jpg', 'fb1_full.jpg');
 userData.username = data.steamnick;
 userData.value = data.silver_coins_tot;
+GJuser.iglvl = data.giveaways_user_lever;
 },
 complete: function () {
 callback(userData);
@@ -94,25 +76,36 @@ $.ajax({
 url: _this.url + '/giveaways/library_completed',
 type: 'POST',
 data: '{"list_type":"tocheck","page":1}',
-dataType: 'json'
-});
-$.ajax({
-url: _this.url + '/giveaways/check_if_won_all',
-success: function (html) {
+dataType: 'json',
+success: function (response) {
+if (response.check_it_all_enabled === true) {
+Request({
+method: 'GET',
+uri: _this.url + '/giveaways/check_if_won_all',
+headers: {
+'Origin': 'https://www.indiegala.com',
+'Referer': _this.url + '/profile?user_id=' + GJuser.iglvl,
+'User-Agent': mainWindow.webContents.session.getUserAgent(),
+Cookie: _this.cookies
+},
+json: false
+})
+.then((html) => {
 if (html.indexOf('Incapsula incident') >= 0) {
-GJuser.ig = '';
 _this.log(_this.trans('captcha') + _this.logLink(_this.url + '/giveaways', 'captcha'), true);
 _this.stopJoiner(true);
 }
 else {
 let igwon = $(html).find('p').eq(1).text().trim();
-if (igwon !== 'You did not win... :(') {
+if (!igwon.includes('You did not win')) {
 igwon = igwon.replace('Congratulations! You won','').replace('Giveaways','').trim();
 _this.log(_this.logLink(_this.url + '/profile', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + igwon + ')'), true);
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }
 }
+}
+});
 }
 }
 });
@@ -289,17 +282,27 @@ _this.log(Lang.get('service.blacklisted'));
 }
 }
 if (igown === 0) {
-$.ajax({
-type: 'POST',
-url: _this.url + '/giveaways/new_entry',
-contentType: 'application/json; charset=utf-8',
-dataType: 'json',
-data: JSON.stringify({giv_id: id, ticket_price: price}),
-success: function (data) {
-if (data.status === 'ok') {
+Request({
+method: 'POST',
+uri: _this.url + '/giveaways/new_entry',
+form: JSON.stringify({giv_id: id, ticket_price: price}),
+headers: {
+'Origin': 'https://www.indiegala.com',
+'Referer': _this.url + '/giveaways/' + page + '/expiry/asc/level/' + _this.lvl,
+'X-Requested-With': 'XMLHttpRequest',
+'User-Agent': mainWindow.webContents.session.getUserAgent(),
+Cookie: _this.cookies
+},
+json: true
+})
+.then((body) => {
+if (body.status === 'ok') {
 _this.setValue(data.new_amount);
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name));
 }
+else {
+_this.log(_this.trans('captcha') + _this.logLink(_this.url + '/giveaways', 'captcha'), true);
+_this.stopJoiner(true);
 }
 });
 }
