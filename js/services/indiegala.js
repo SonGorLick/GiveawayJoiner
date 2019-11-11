@@ -3,7 +3,7 @@ class IndieGala extends Joiner {
 constructor() {
 super();
 this.authContent = 'My Profile';
-this.websiteUrl = 'https://www.indiegala.com/giveaways';
+this.websiteUrl = 'https://www.indiegala.com';
 this.authLink = 'https://www.indiegala.com/login';
 this.settings.ending = { type: 'number', trans: this.transPath('ending'), min: 0, max: 720, default: this.getConfig('ending', 0) };
 this.settings.min_level = { type: 'number', trans: this.transPath('min_level'), min: 0, max: this.getConfig('max_level', 0), default: this.getConfig('min_level', 0) };
@@ -80,6 +80,7 @@ callback(userData);
 joinService() {
 let _this = this;
 let page = 1;
+_this.ua = mainWindow.webContents.session.getUserAgent();
 _this.lvlmax = _this.getConfig('max_level', 0);
 _this.lvlmin = _this.getConfig('min_level', 0);
 _this.pagemax = _this.getConfig('pages', 1);
@@ -110,7 +111,7 @@ json: false
 let igwon = $(html).find('p').eq(1).text().trim();
 if (igwon.includes('Congratulations! You won')) {
 igwon = igwon.replace('Congratulations! You won','').replace('Giveaways','').trim();
-_this.log(_this.logLink(_this.url + '/profile', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + igwon + ')'), true);
+_this.log(_this.logLink(_this.url + '/profile' + GJuser.ig, Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + igwon + ')'), true);
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }
@@ -123,11 +124,6 @@ $.ajax({
 url: _this.url + '/claimprofile/sync_username_avatar',
 type: 'POST'
 });
-if (_this.check === undefined) {
-setTimeout(function () {
-_this.check = 1;
-}, 10000);
-}
 if (GJuser.iglvl === 0) {
 _this.sort = false;
 }
@@ -161,7 +157,26 @@ let _this = this;
 if (!_this.sort && GJuser.iglvl > 0) {
 _this.lvl = 'all';
 }
-setTimeout(function () {
+if (page === 1) {
+_this.pageurl = _this.url + '/giveaways';
+_this.urlref = _this.url + '/';
+}
+else {
+_this.pageurl = _this.url + '/giveaways/' + page + '/expiry/asc/level/' + _this.lvl;
+_this.urlref = _this.url + '/giveaways/' + (page - 1) + '/expiry/asc/level/' + _this.lvl;
+}
+Request({
+method: 'GET',
+uri: _this.pageurl,
+headers: {
+'origin': 'https://www.indiegala.com',
+'referer': _this.urlref,
+'user-agent': _this.ua,
+'cookie': _this.cookies
+},
+json: false
+})
+.then(() => {
 $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
 success: function (data) {
@@ -253,7 +268,7 @@ if (!entered && _this.curr_value >= price) {
 _this.log(Lang.get('service.skipped'));
 }
 }
-ignext = 100;
+ignext = 50;
 }
 else {
 let igown = 0,
@@ -296,14 +311,16 @@ _this.log(Lang.get('service.blacklisted'));
 }
 }
 if (igown === 0) {
-setTimeout(function () {
+_this.entry = false;
+for (let i = 1; i < 3; i++) {
+if (!_this.entry) {
 Request({
 method: 'POST',
 uri: _this.url + '/giveaways/new_entry',
 form: JSON.stringify({giv_id: id, ticket_price: price}),
 headers: {
 'origin': 'https://www.indiegala.com',
-'user-agent': mainWindow.webContents.session.getUserAgent(),
+'user-agent': _this.ua,
 'referer': _this.url + '/giveaways/' + page + '/expiry/asc/level/' + _this.lvl,
 'cookie': _this.cookies
 },
@@ -311,20 +328,21 @@ json: true
 })
 .then((response) => {
 if (response.status === 'ok') {
+_this.entry = true;
 _this.setValue(response.new_amount);
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name));
 }
 else {
 _this.log(Lang.get('service.cant_join'));
-spnext = 1000;
+ignext = 50;
 }
 });
-}, (Math.floor(Math.random() * 1000)) + 3000);
+}
+}
 }
 else {
-ignext = 100;
+ignext = 50;
 }
-
 }
 igcurr++;
 setTimeout(giveawayEnter, ignext);
@@ -332,6 +350,6 @@ setTimeout(giveawayEnter, ignext);
 giveawayEnter();
 }
 });
-}, 10000)
+});
 }
 }
