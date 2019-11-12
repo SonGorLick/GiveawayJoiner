@@ -31,6 +31,9 @@ break;
 }
 });
 let menu_switcher = $('.list_type');
+if (!Config.get('menu_as_list')) {
+menu_switcher.removeClass('state');
+}
 mainWindow.show();
 if (Config.get('start_minimized')) {
 mainWindow.hide();

@@ -203,7 +203,6 @@ this.buttonState(Lang.get('service.btn_awaiting'), 'disabled');
 this.waitAuth = true;
 Browser.webContents.on('did-finish-load', () => {
 if (this.waitAuth && Browser.getURL().indexOf(this.websiteUrl) >= 0) {
-//Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML').then(body => {
 Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML', (body) => {
 if (body.indexOf(this.authContent) >= 0) {
 Browser.close();
@@ -257,11 +256,6 @@ this.intervalVar = setInterval(() => {
 if (!this.started) {
 clearInterval(this.intervalVar);
 }
-//if (this.totalTicks !== 0 && this.totalTicks % this.usrUpdTimer === 0) {
-//if (this.websiteUrl === 'https://www.indiegala.com') {
-//this.updateUserInfo();
-//}
-//}
 if (this.totalTicks % this.doTimer() === 0) {
 this.updateUserInfo();
 $.ajax({
@@ -312,13 +306,6 @@ this.totalTicks++;
 }
 updateUserInfo() {
 this.getUserInfo((userData) => {
-//if (userData.avatar === undefined) {
-//userData.avatar = __dirname + '/icons/icon.png';
-//}
-//if (userData.avatar.includes('electron.asar')) {
-//userData.avatar = userData.avatar.replace('electron.asar/resources', 'app.asar');
-//userData.avatar = userData.avatar.replace('electron.asar', 'app.asar');
-//}
 this.userInfo.find('.avatar').css('background-image', "url('" + userData.avatar + "')");
 this.userInfo.find('.username').text(userData.username);
 if (this.withValue) {

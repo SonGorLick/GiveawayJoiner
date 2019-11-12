@@ -112,7 +112,7 @@ json: false
 let igwon = $(html).find('p').eq(1).text().trim();
 if (igwon.includes('Congratulations! You won')) {
 igwon = igwon.replace('Congratulations! You won','').replace('Giveaways','').trim();
-_this.log(_this.logLink(_this.url + '/profile' + GJuser.ig, Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + igwon + ')'), true);
+_this.log(_this.logLink(_this.url + '/profile?user_id=' + GJuser.ig, Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + igwon + ')'), true);
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }
@@ -345,7 +345,7 @@ _this.setValue(response.new_amount);
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name));
 }
 else {
-_this.log(Lang.get('service.cant_join'));
+_this.log(Lang.get('service.err_join'), true);
 ignext = 50;
 }
 });

@@ -77,10 +77,6 @@ frame: false,
 webPreferences: {
 session: _session,
 devTools: devMode,
-//contextIsolation: false,
-//nodeIntegration: true,
-//webviewTag: true,
-//webSecurity: false,
 webaudio: false
 }
 });
@@ -102,9 +98,7 @@ center: true,
 webPreferences: {
 session: _session,
 devTools: false,
-//contextIsolation: false,
 nodeIntegration: false,
-//webviewTag: false,
 webaudio: false
 }
 });

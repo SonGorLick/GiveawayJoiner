@@ -121,13 +121,15 @@ headers: {
 },
 data: {raffle: entered, captha: '', hash: hash, csrf: csrf},
 success: function (response) {
-let spresp = JSON.stringify(response.success);
-if (spresp) {
+let spresp = JSON.stringify(response.message);
+if (spresp === 'Entered raffle!') {
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + link, name));
 }
 else {
-_this.log(Lang.get('service.cant_join'));
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join') + '(' + response.message + ')', true);
 spnext = 1000;
+}
 }
 }
 });

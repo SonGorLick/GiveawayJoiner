@@ -59,7 +59,8 @@ const temp = random[i];
 random[i] = random[j];
 random[j] = temp;
 }
-}function giveawayEnter() {
+}
+function giveawayEnter() {
 if (giveaways.length <= tfcurr || !_this.started) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.reach_end'));
@@ -103,6 +104,11 @@ json: true
 if (body.status === 'ok') {
 _this.log(Lang.get('service.entered_in') + '|' + (tfrnd + 1) + '№|  ' + _this.logLink(link, name));
 GJuser.tf = GJuser.tf + rid + ',';
+}
+else {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), true);
+}
 }
 });
 }
