@@ -2,8 +2,8 @@
 const { app, nativeImage, shell, session, Tray, BrowserWindow, Menu, ipcMain, ipcRenderer } = require('electron');
 const storage = require('electron-json-storage');
 const fs = require('fs');
-const Request = require('request-promise');
-const devMode = app.getVersion() === '1.2.1';
+const rq = require('request-promise');
+const devMode = app.getVersion() === '1.2.1b';
 let _ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/78.0.3904.67 Mobile/15E148 Safari/605.1';
 let appLoaded = false;
 let mainWindow = null;
@@ -137,7 +137,7 @@ Lang: Lang,
 Config: Config,
 Browser: Browser,
 mainWindow: mainWindow,
-Request: Request
+rq: rq
 };
 });
 function startApp() {
@@ -173,7 +173,7 @@ constructor() {
 this.default = 'en_US';
 this.languages = {};
 this.langsCount = 0;
-Request({uri: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/all.json', json: true})
+rq({uri: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/all.json', json: true})
 .then((data) => {
 if (data.response !== false) {
 data = JSON.parse(data.response).langs;
@@ -182,7 +182,7 @@ for (let one in data) {
 let name = data[one].name;
 let size = data[one].size;
 let loadLang = () => {
-Request({uri: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/' + name})
+rq({uri: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/' + name})
 .then((lang) => {
 fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => { });
 })

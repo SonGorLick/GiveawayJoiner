@@ -18,12 +18,13 @@ this.settings.sbl_ending_ig = { type: 'checkbox', trans: this.transPath('sbl_end
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 super.init();
-this.log(this.trans('captcha') + this.logLink('https://www.indiegala.com/giveaways', 'captcha'), true);
+this.log(this.logLink('https://www.indiegala.com/login', 'To Login'));
+this.log(this.logLink('https://www.indiegala.com/giveaways', 'To solve Captcha'));
 }
 authCheck(callback) {
 if (GJuser.ig === '') {
 $.ajax({
-url: 'https://www.indiegala.com/giveaways/',
+url: 'https://www.indiegala.com/',
 success: function () {
 $.ajax({
 url: 'https://www.indiegala.com/get_user_info',
@@ -96,13 +97,13 @@ data: '{"list_type":"tocheck","page":1}',
 dataType: 'json',
 success: function (response) {
 if (response.check_it_all_enabled === true) {
-Request({
+rq({
 method: 'GET',
 uri: _this.url + '/giveaways/check_if_won_all',
 headers: {
 'origin': 'https://www.indiegala.com',
 'referer': _this.url + '/profile?user_id=' + GJuser.iglvl,
-'user-agent': mainWindow.webContents.session.getUserAgent(),
+'user-agent': _this.ua,
 'cookie': _this.cookies
 },
 json: false
@@ -124,6 +125,11 @@ $.ajax({
 url: _this.url + '/claimprofile/sync_username_avatar',
 type: 'POST'
 });
+if (_this.check === undefined) {
+setTimeout(function () {
+_this.check = 1;
+}, 10000);
+}
 if (GJuser.iglvl === 0) {
 _this.sort = false;
 }
@@ -165,18 +171,23 @@ else {
 _this.pageurl = _this.url + '/giveaways/' + page + '/expiry/asc/level/' + _this.lvl;
 _this.urlref = _this.url + '/giveaways/' + (page - 1) + '/expiry/asc/level/' + _this.lvl;
 }
-Request({
+rq({
 method: 'GET',
 uri: _this.pageurl,
 headers: {
-'origin': 'https://www.indiegala.com',
-'referer': _this.urlref,
+'authority': 'www.indiegala.com',
+'upgrade-insecure-requests': 1,
 'user-agent': _this.ua,
+'sec-fetch-user': '?1',
+'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'navigate',
+'referer': _this.urlref,
 'cookie': _this.cookies
 },
 json: false
 })
-.then(() => {
+.then((html) => {
 $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
 success: function (data) {
@@ -311,15 +322,17 @@ _this.log(Lang.get('service.blacklisted'));
 }
 }
 if (igown === 0) {
-_this.entry = false;
-for (let i = 1; i < 3; i++) {
-if (!_this.entry) {
-Request({
+rq({
 method: 'POST',
 uri: _this.url + '/giveaways/new_entry',
 form: JSON.stringify({giv_id: id, ticket_price: price}),
 headers: {
+'authority': 'www.indiegala.com',
+'accept': 'application/json, text/javascript, */*; q=0.01',
 'origin': 'https://www.indiegala.com',
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'cors',
+'x-requested-with': 'XMLHttpRequest',
 'user-agent': _this.ua,
 'referer': _this.url + '/giveaways/' + page + '/expiry/asc/level/' + _this.lvl,
 'cookie': _this.cookies
@@ -328,7 +341,6 @@ json: true
 })
 .then((response) => {
 if (response.status === 'ok') {
-_this.entry = true;
 _this.setValue(response.new_amount);
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name));
 }
@@ -337,8 +349,6 @@ _this.log(Lang.get('service.cant_join'));
 ignext = 50;
 }
 });
-}
-}
 }
 else {
 ignext = 50;

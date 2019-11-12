@@ -85,7 +85,7 @@ _this.log(Lang.get('service.already_joined'));
 }
 return;
 }
-Request({
+rq({
 method: 'POST',
 uri: _this.url + '/job.php',
 form: {
@@ -94,9 +94,6 @@ rid: rid,
 ass: 'yup, indeed'
 },
 headers: {
-//'Host': _this.domain,
-//'Referer': link,
-//'X-Requested-With': 'XMLHttpRequest',
 'User-Agent': mainWindow.webContents.session.getUserAgent(),
 Cookie: _this.cookies
 },
