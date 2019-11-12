@@ -39,6 +39,7 @@
 		"blacklisted": "Skipped - giveaway in blacklist",
 		"already_joined": "Skipped - already joined",
 		"cant_join": "Skipped - you're not eligible to enter",
+		"err_join": "Skipped - failed to enter giveaway due to an error ",
 		"points_low": "Skipped - not enough points",
 		"skipped": "Skipped - giveaway does not fit the service settings",
 		"reach_end": "No more giveaways", 
