@@ -324,7 +324,7 @@ _this.log(Lang.get('service.blacklisted'), 'black');
 }
 }
 if (igown === 0) {
-igrtry++
+igrtry++;
 rq({
 method: 'POST',
 uri: _this.url + '/giveaways/new_entry',

@@ -543,11 +543,9 @@ this.logField.html('<div><span class="time">' + timeStr() + ':</span>' + Lang.ge
 }
 log(text, logType) {
 if (logType === '' || logType === undefined) {
-this.logField.append('<div class="normal"><span class="time">' + timeStr() + ':</span>' + text + '</div>');
+logType = 'normal';
 }
-else {
 this.logField.append('<div class="' + logType + '"><span class="time">' + timeStr() + ':</span>' + text + '</div>');
-}
 this.logWrap.scrollTop(this.logWrap[0].scrollHeight);
 }
 joinService() {}

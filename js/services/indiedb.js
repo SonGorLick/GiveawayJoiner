@@ -29,7 +29,6 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-let idbnext = _this.interval();
 _this.url = 'https://www.indiedb.com';
 $.ajax({
 url: _this.url + '/giveaways',
