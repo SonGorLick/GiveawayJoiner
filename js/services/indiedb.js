@@ -29,6 +29,7 @@ callback(userData);
 }
 joinService() {
 let _this = this;
+let idbnext = _this.interval();
 _this.url = 'https://www.indiedb.com';
 $.ajax({
 url: _this.url + '/giveaways',
@@ -39,14 +40,14 @@ link = cont.find('h2 a').attr('href'),
 name = cont.find('h2 a').text();
 if (link === undefined || !_this.started) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.reach_end'));
-_this.log(Lang.get('service.checked') + 'Giveaways');
+_this.log(Lang.get('service.reach_end'), 'skip');
+_this.log(Lang.get('service.checked') + 'Giveaways', 'srch');
 }
 return;
 }
-let id = cont.find('div a noload').attr('src').replace('https://media.indiedb.com/cache/images/giveaways/1/1', '').match(/[\d]+/)[0];
+let id = data.substring(data.indexOf('<meta property="og:image" content="')+81).slice(0, 8).match(/[\d]+/)[0];
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + ' ' + _this.logLink(link, name));
+_this.log(Lang.get('service.checking') + ' ' + _this.logLink(link, name), 'chk');
 }
 let enter = data.indexOf('"buttonenter buttongiveaway">Join Giveaway<') >= 0,
 entered = data.indexOf('"buttonenter buttonentered buttongiveaway">Success - Giveaway joined<') >= 0;
@@ -55,13 +56,13 @@ let eLink = cont.find('p a.buttonenter').attr('href');
 $.ajax({
 url: _this.url + eLink
 });
-_this.log(Lang.get('service.entered_in') + _this.logLink(link, name));
+_this.log(Lang.get('service.entered_in') + _this.logLink(link, name), 'enter');
 enter = false;
 entered = true;
 }
 if (entered) {
 if (_this.getConfig('log', true) && !enter) {
-_this.log(Lang.get('service.already_joined'));
+_this.log(Lang.get('service.already_joined'), 'skip');
 }
 let adds = cont.find('#giveawaysjoined > div p');
 for (let curradds = 0; curradds < adds.length; curradds++) {
@@ -79,12 +80,12 @@ success: function (data) {
 data = data.replace(/<img/gi, '<noload');
 let check = data.indexOf('<p><strong>Support us by subscribing:</strong></p>') >= 0;
 if (_this.getConfig('log', true) && !check) {
-_this.log(Lang.get('service.entered_in') + finish + ' - ' + name);
+_this.log(Lang.get('service.entered_in') + finish + ' - ' + name, 'enter');
 }
 }
 });
 if (_this.getConfig('log', true) && !addlink.includes('the-challenge-of-adblock')) {
-_this.log(Lang.get('service.entered_in') + finish + ' - ' + name);
+_this.log(Lang.get('service.entered_in') + finish + ' - ' + name, 'enter');
 }
 }
 if (addlink.includes('http')) {
@@ -92,7 +93,7 @@ $.ajax({
 url: _this.url + '/giveaways/ajax/'+ finish + '/' + id,
 });
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.entered_in') + finish + ' - ' + name);
+_this.log(Lang.get('service.entered_in') + finish + ' - ' + name, 'enter');
 }
 }
 }
@@ -100,11 +101,13 @@ _this.log(Lang.get('service.entered_in') + finish + ' - ' + name);
 entered = false;
 }
 if (!enter && !entered) {
+setTimeout(function () {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.reach_end'));
-_this.log(Lang.get('service.checked') + 'Giveaways');
-return;
+_this.log(Lang.get('service.reach_end'), 'skip');
+_this.log(Lang.get('service.checked') + 'Giveaways', 'srch');
 }
+}, 10000);
+return;
 }
 }
 });

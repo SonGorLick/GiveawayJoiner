@@ -75,10 +75,10 @@ function giveawayEnter() {
 if (sptent.length <= spcurr || !_this.started) {
 if (_this.getConfig('log', true)) {
 if (page === 1) {
-_this.log(Lang.get('service.checked') + 'Public Raffles (Sort by Time Left)');
+_this.log(Lang.get('service.checked') + 'Public Raffles (Sort by Time Left)', 'srch');
 }
 else {
-_this.log(Lang.get('service.checked') + 'Public Raffles (Sort by Newest)');
+_this.log(Lang.get('service.checked') + 'Public Raffles (Sort by Newest)', 'srch');
 }
 }
 if (callback) {
@@ -96,7 +96,7 @@ if (name === undefined || name === '') {
 name = entered;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + link, name));
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + link, name), 'chk');
 }
 if (!GJuser.sp.includes(',' + entered + ',') || GJuser.sp.length < 2) {
 $.ajax({
@@ -121,13 +121,22 @@ headers: {
 },
 data: {raffle: entered, captha: '', hash: hash, csrf: csrf},
 success: function (response) {
-let spresp = JSON.stringify(response.message);
-if (spresp === 'Entered raffle!') {
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + link, name));
+let spresp = JSON.stringify(response.success);
+if (spresp) {
+let spmess = JSON.stringify(response.message);
+if (spmess === '"Entered raffle!"') {
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + link, name), 'enter');
 }
 else {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join') + '(' + response.message + ')', true);
+_this.log(Lang.get('service.err_join') + '(' + spmess + ')', 'err');
+spnext = 1000;
+}
+}
+}
+else {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.cant_join'), 'cant');
 spnext = 1000;
 }
 }
@@ -137,7 +146,7 @@ spnext = 1000;
 }
 else {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.cant_join'));
+_this.log(Lang.get('service.cant_join'), 'cant');
 spnext = 1000;
 }
 }
@@ -146,7 +155,7 @@ spnext = 1000;
 }
 else {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.already_joined'));
+_this.log(Lang.get('service.already_joined'), 'skip');
 spnext = 1000;
 }
 }

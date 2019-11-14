@@ -54,7 +54,7 @@ success: function (html) {
 html = $('<div>' + html.replace(/<img/gi, '<noload') + '</div>');
 CSRF = html.find('meta[name="csrf-token"]').attr('content');
 if (CSRF.length < 10) {
-_this.log(this.trans('token_error'), true);
+_this.log(this.trans('token_error'), 'err');
 _this.stopJoiner(true);
 return;
 }
@@ -76,7 +76,7 @@ if (_this.check === 0) {
 _this.check = 1;
 let fxwon = html.find('.hide-on-med-and-down.user-panel.s6.col > .icons > .has.marker.cup').attr('href');
 if (fxwon !== undefined) {
-_this.log(_this.logLink('https://follx.com/giveaways/won', Lang.get('service.win')), true);
+_this.log(_this.logLink('https://follx.com/giveaways/won', Lang.get('service.win')), 'win');
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }
@@ -91,9 +91,9 @@ function giveawayEnter() {
 if (fxfound.length <= fxcurr || !_this.started) {
 if (_this.getConfig('log', true)) {
 //if (fxfound.length < 20) {
-//_this.log(Lang.get('service.reach_end'));
+//_this.log(Lang.get('service.reach_end'), 'skip');
 //}
-_this.log(Lang.get('service.checked') + page + '#');
+_this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 if (callback) {
 callback();
@@ -107,10 +107,10 @@ name = card.find('.head_info').attr('title'),
 entered = card.find('.entered').length > 0;
 if (entered) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (fxcurr + 1) + '№|  ' + _this.logLink(link, name));
-_this.log(Lang.get('service.already_joined'));
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (fxcurr + 1) + '№|  ' + _this.logLink(link, name), 'chk');
+_this.log(Lang.get('service.already_joined'), 'skip');
 }
-fxnext = 50;
+fxnext = 100;
 }
 else {
 let fxsteam = card.find('.head_info').attr('style'),
@@ -131,7 +131,7 @@ fxstm = 'https://store.steampowered.com/sub/' + fxsub;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
-_this.log(Lang.get('service.steam_error'), true);
+_this.log(Lang.get('service.steam_error'), 'err');
 fxown = 2;
 }
 if (GJuser.ownapps.includes(',' + fxapp + ',') && fxapp > 0) {
@@ -145,12 +145,12 @@ if (GJuser.black.includes(fxid + ',') && _this.getConfig('blacklist_on', false))
 fxown = 4;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (fxcurr + 1) + '№|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name));
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (fxcurr + 1) + '№|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name), 'chk');
 if (fxown === 1) {
-_this.log(Lang.get('service.have_on_steam'));
+_this.log(Lang.get('service.have_on_steam'), 'steam');
 }
 if (fxown === 4) {
-_this.log(Lang.get('service.blacklisted'));
+_this.log(Lang.get('service.blacklisted'), 'black');
 }
 }
 if (fxown === 0) {
@@ -171,7 +171,7 @@ headers: {
 success: function (data) {
 if (data.response) {
 _this.setValue(data.points);
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (fxcurr + 1) + '№|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name));
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (fxcurr + 1) + '№|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name), 'enter');
 }
 }
 });
@@ -180,7 +180,7 @@ _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (fxcurr + 1) + '�
 });
 }
 else {
-fxnext = 50;
+fxnext = 100;
 }
 }
 fxcurr++;

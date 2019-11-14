@@ -60,7 +60,7 @@ if (aswon < _this.won) {
 _this.setConfig('won', aswon);
 }
 if (aswon > 0 && aswon > _this.won) {
-_this.log(_this.logLink(_this.url + '/astats/profile/User_Inbox.php', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (aswon) + ')'), true);
+_this.log(_this.logLink(_this.url + '/astats/profile/User_Inbox.php', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (aswon) + ')'), 'win');
 _this.setConfig('won', aswon);
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
@@ -107,9 +107,9 @@ _this.pagemax = page;
 if (afound.length <= acurr || !_this.started) {
 if (_this.getConfig('log', true)) {
 if (_this.pagemax === page) {
-_this.log(Lang.get('service.reach_end'));
+_this.log(Lang.get('service.reach_end'), 'skip');
 }
-_this.log(Lang.get('service.checked') + page + '#');
+_this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 if (callback) {
 callback();
@@ -131,7 +131,7 @@ let aname = data.find('[href="' + alink + '"]').text().trim(),
 ended = data.find('[href="' + alink + '"] > span').text().trim();
 if (aname.includes('This giveaway has ended.') || ended === 'This giveaway has ended.') {
 _this.pagemax = page;
-asnext = 50;
+asnext = 100;
 }
 else {
 let ahave = data.find('[href="' + alink + '"] font').attr('color'),
@@ -148,7 +148,7 @@ asstm = 'https://store.steampowered.com/sub/' + assub;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
-_this.log(Lang.get('service.steam_error'), true);
+_this.log(Lang.get('service.steam_error'), 'err');
 asown = 2;
 }
 if (GJuser.ownapps.includes(',' + asapp + ',') && asapp > 0) {
@@ -165,15 +165,15 @@ if (GJuser.black.includes(asid + ',') && _this.getConfig('blacklist_on', false))
 asown = 4;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (arnd + 1) + '№|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname));
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (arnd + 1) + '№|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname), 'chk');
 if (asown === 1) {
-_this.log(Lang.get('service.have_on_steam'));
+_this.log(Lang.get('service.have_on_steam'), 'steam');
 }
 if (asown === 3) {
-_this.log(Lang.get('service.already_joined'));
+_this.log(Lang.get('service.already_joined'), 'skip');
 }
 if (asown === 4) {
-_this.log(Lang.get('service.blacklisted'));
+_this.log(Lang.get('service.blacklisted'), 'black');
 }
 }
 if (asown === 0 && ahave === undefined) {
@@ -187,11 +187,11 @@ let ajoin = html.find('.input-group-btn').text().trim();
 if (ajoin === 'Add') {
 GJuser.as = GJuser.as + asjoin + ',';
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.already_joined'));
+_this.log(Lang.get('service.already_joined'), 'skip');
 }
 }
 if (ajoin !== 'Add' && ajoin !== 'Join' && _this.getConfig('log', true)) {
-_this.log(Lang.get('service.cant_join'));
+_this.log(Lang.get('service.cant_join'), 'cant');
 }
 if (ajoin === 'Join') {
 setTimeout(function () {
@@ -202,7 +202,7 @@ url: _this.url + alink,
 method: 'POST',
 data: 'Comment=&JoinGiveaway=Join',
 success: function () {
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (arnd + 1) + '№|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname));
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (arnd + 1) + '№|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname), 'enter');
 }
 });
 }
@@ -210,12 +210,12 @@ _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (arnd + 1) + '№
 });
 }
 else {
-asnext = 50;
+asnext = 100;
 }
 }
 }
 else {
-asnext = 50;
+asnext = 100;
 }
 acurr++;
 setTimeout(giveawayEnter, asnext);

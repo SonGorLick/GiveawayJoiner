@@ -186,7 +186,7 @@ if (authState === 1) {
 this.runTimer();
 }
 else if (authState === -1) {
-this.log(Lang.get('service.connection_error'), true);
+this.log(Lang.get('service.connection_error'), 'err');
 this.buttonState(Lang.get('service.btn_start'));
 if (autostart) {
 this.setStatus('bad');
@@ -196,7 +196,7 @@ else {
 if (autostart) {
 this.setStatus('bad');
 this.buttonState(Lang.get('service.btn_start'));
-this.log(Lang.get('service.cant_start'), true);
+this.log(Lang.get('service.cant_start'), 'err');
 }
 else {
 this.buttonState(Lang.get('service.btn_awaiting'), 'disabled');
@@ -277,18 +277,18 @@ GJuser.black = GJuser.black.replace(';', ',').replace('.', ',').replace(':', ','
 }
 this.authCheck((authState) => {
 if (authState === 1) {
-this.log(Lang.get('service.connection_good'));
+this.log(Lang.get('service.connection_good'), 'srch');
 let atimer = this.getConfig('timer', 60);
 this.stimer = atimer;
 this.updateCookies();
 this.joinService();
 }
 else if (authState === 0) {
-this.log(Lang.get('service.session_expired'), true);
+this.log(Lang.get('service.session_expired'), 'err');
 this.stopJoiner(true);
 }
 else {
-this.log(Lang.get('service.connection_lost'), true);
+this.log(Lang.get('service.connection_lost'), 'err');
 this.stimer = 10;
 }
 });
@@ -542,7 +542,12 @@ clearLog() {
 this.logField.html('<div><span class="time">' + timeStr() + ':</span>' + Lang.get('service.log_cleared') + '</div>');
 }
 log(text, logType) {
-this.logField.append('<div class="' + (logType ? 'warn' : 'normal') + '"><span class="time">' + timeStr() + ':</span>' + text + '</div>');
+if (logType === '' || logType === undefined) {
+this.logField.append('<div class="normal"><span class="time">' + timeStr() + ':</span>' + text + '</div>');
+}
+else {
+this.logField.append('<div class="' + logType + '"><span class="time">' + timeStr() + ':</span>' + text + '</div>');
+}
 this.logWrap.scrollTop(this.logWrap[0].scrollHeight);
 }
 joinService() {}

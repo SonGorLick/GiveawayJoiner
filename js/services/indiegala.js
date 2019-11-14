@@ -18,8 +18,8 @@ this.settings.sbl_ending_ig = { type: 'checkbox', trans: this.transPath('sbl_end
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
 super.init();
-this.log(this.logLink('https://www.indiegala.com/login', 'To Login'));
-this.log(this.logLink('https://www.indiegala.com/giveaways', 'To solve Captcha'));
+this.log(this.logLink('https://www.indiegala.com/login', 'Login'), 'win');
+this.log(this.logLink('https://www.indiegala.com/giveaways', 'Captcha'), 'err');
 }
 authCheck(callback) {
 if (GJuser.ig === '') {
@@ -112,7 +112,7 @@ json: false
 let igwon = $(html).find('p').eq(1).text().trim();
 if (igwon.includes('Congratulations! You won')) {
 igwon = igwon.replace('Congratulations! You won','').replace('Giveaways','').trim();
-_this.log(_this.logLink(_this.url + '/profile?user_id=' + GJuser.ig, Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + igwon + ')'), true);
+_this.log(_this.logLink(_this.url + '/profile?user_id=' + GJuser.ig, Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + igwon + ')'), 'win');
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }
@@ -187,12 +187,13 @@ headers: {
 },
 json: false
 })
-.then((html) => {
+.then(() => {
 $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
 success: function (data) {
-let tickets = $(JSON.parse(data).content).find('.tickets-col');
-let igcurr = 0;
+let tickets = $(JSON.parse(data).content).find('.tickets-col'),
+igcurr = 0,
+igrtry = 0;
 function giveawayEnter() {
 if (tickets.length < 12 || _this.curr_value === 0) {
 _this.pagemax = page;
@@ -200,16 +201,16 @@ _this.pagemax = page;
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0) {
 if (_this.getConfig('log', true)) {
 if (_this.curr_value === 0){
-_this.log(Lang.get('service.points_low'));
+_this.log(Lang.get('service.points_low'), 'skip');
 }
 if (tickets.length < 12 && !_this.sort) {
-_this.log(Lang.get('service.reach_end'));
+_this.log(Lang.get('service.reach_end'), 'skip');
 }
 if (_this.sort) {
-_this.log(Lang.get('service.checked') + _this.lvl + 'L-' + page + '#');
+_this.log(Lang.get('service.checked') + _this.lvl + 'L-' + page + '#', 'srch');
 }
 else {
-_this.log(Lang.get('service.checked') + page + '#');
+_this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 }
 if (_this.sort_after && page === _this.pagemax) {
@@ -267,19 +268,20 @@ if (
 (time > _this.ending && _this.ending !== 0 && _this.sort && !_this.getConfig('sbl_ending_ig', false))
 )
 {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name));
+if (_this.getConfig('log', true) && igrtry === 0) {
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name), 'chk');
 if (entered) {
-_this.log(Lang.get('service.already_joined'));
+_this.log(Lang.get('service.already_joined'), 'skip');
 }
 if (!entered && _this.curr_value < price) {
-_this.log(Lang.get('service.points_low'));
+_this.log(Lang.get('service.points_low'), 'skip');
 }
 if (!entered && _this.curr_value >= price) {
-_this.log(Lang.get('service.skipped'));
+_this.log(Lang.get('service.skipped'), 'skip');
 }
 }
-ignext = 50;
+ignext = 100;
+igcurr++;
 }
 else {
 let igown = 0,
@@ -299,7 +301,7 @@ igstm = 'https://store.steampowered.com/sub/' + igsub;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
-_this.log(Lang.get('service.steam_error'), true);
+_this.log(Lang.get('service.steam_error'), 'err');
 igown = 2;
 }
 if (GJuser.ownapps.includes(',' + igapp + ',') && igapp > 0) {
@@ -313,15 +315,16 @@ if (GJuser.black.includes(igid + ',') && _this.getConfig('blacklist_on', false))
 igown = 4;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name));
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name), 'chk');
 if (igown === 1) {
-_this.log(Lang.get('service.have_on_steam'));
+_this.log(Lang.get('service.have_on_steam'), 'steam');
 }
 if (igown === 4) {
-_this.log(Lang.get('service.blacklisted'));
+_this.log(Lang.get('service.blacklisted'), 'black');
 }
 }
 if (igown === 0) {
+igrtry++
 rq({
 method: 'POST',
 uri: _this.url + '/giveaways/new_entry',
@@ -341,20 +344,27 @@ json: true
 })
 .then((response) => {
 if (response.status === 'ok') {
+igrtry = 0;
 _this.setValue(response.new_amount);
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name));
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name), 'enter');
+igcurr++;
 }
 else {
-_this.log(Lang.get('service.err_join'), true);
-ignext = 50;
+ignext = (Math.floor(Math.random() * 300)) + 200;
 }
 });
 }
 else {
-ignext = 50;
-}
-}
+ignext = 100;
 igcurr++;
+}
+}
+if (igrtry >= 3) {
+igrtry = 0;
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
+}
 setTimeout(giveawayEnter, ignext);
 }
 giveawayEnter();

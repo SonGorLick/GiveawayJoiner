@@ -84,7 +84,7 @@ success: (data) => {
 data = $('<div>' + data + '</div>');
 this.token = data.find('input[name="xsrf_token"]').val();
 if (this.token.length < 10) {
-this.log(this.trans('token_error'), true);
+this.log(this.trans('token_error'), 'err');
 this.stopJoiner(true);
 return;
 }
@@ -98,7 +98,7 @@ if (sgwon < this.won) {
 this.setConfig('won', sgwon);
 }
 if (sgwon > 0 && sgwon > this.won) {
-this.log(this.logLink(this.url + '/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (sgwon) + ')'), true);
+this.log(this.logLink(this.url + '/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (sgwon) + ')'), 'win');
 this.setConfig('won', sgwon);
 if (this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
@@ -190,7 +190,7 @@ this.giveaways.unshift.apply(this.giveaways, this.gamf);
 function processOne() {
 if (_this.giveaways.length <= sgcurr || !_this.started) {
 if (_this.getConfig('log', true) && sgcurr > 0) {
-_this.log(Lang.get('service.checked') + '1#-' + _this.getConfig('pages', 1) + '#');
+_this.log(Lang.get('service.checked') + '1#-' + _this.getConfig('pages', 1) + '#', 'srch');
 }
 if (callback) {
 callback(false);
@@ -213,7 +213,7 @@ sgid = 'sub/' + sgsub;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
-_this.log(Lang.get('service.steam_error'), true);
+_this.log(Lang.get('service.steam_error'), 'err');
 sgown = 2;
 }
 if (GJuser.ownapps.includes(',' + sgapp + ',') && sgapp > 0) {
@@ -227,18 +227,18 @@ if (GJuser.black.includes(sgid + ',') && _this.getConfig('blacklist_on', false))
 sgown = 4;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name));
+_this.log(Lang.get('service.checking') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name), 'chk');
 if (sgown === 1) {
-_this.log(Lang.get('service.have_on_steam'));
+_this.log(Lang.get('service.have_on_steam'), 'steam');
 }
 if (sgown === 4) {
-_this.log(Lang.get('service.blacklisted'));
+_this.log(Lang.get('service.blacklisted'), 'black');
 }
 if (GA.entered) {
-_this.log(Lang.get('service.already_joined'));
+_this.log(Lang.get('service.already_joined'), 'skip');
 }
 if (!GA.entered && sgown === 0 && _this.curr_value < GA.cost) {
-_this.log(Lang.get('service.points_low'));
+_this.log(Lang.get('service.points_low'), 'skip');
 }
 }
 if (
@@ -261,7 +261,7 @@ code: GA.code
 },
 success: function (data) {
 if (data.type === 'success') {
-_this.log(Lang.get('service.entered_in') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name));
+_this.log(Lang.get('service.entered_in') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name), 'enter');
 _this.setValue(data.points);
 GA.entered = true;
 }
@@ -270,9 +270,9 @@ GA.entered = true;
 }
 else {
 if (!GA.entered && sgown === 0 && _this.curr_value >= GA.cost && _this.getConfig('log', true)) {
-_this.log(Lang.get('service.skipped'));
+_this.log(Lang.get('service.skipped'), 'skip');
 }
-sgnext = 50;
+sgnext = 100;
 }
 sgcurr++;
 setTimeout(processOne, sgnext);

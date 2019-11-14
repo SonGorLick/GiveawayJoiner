@@ -72,7 +72,7 @@ if (_this.check === 0) {
 _this.check = 1;
 let opwon = parseInt(data.find('[href="/user/giveawaykeys"] > span').text().trim());
 if (opwon > 0 && opwon > _this.won) {
-_this.log(_this.logLink(_this.url + '/user/giveawaykeys', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (opwon - _this.won) + ')'), true);
+_this.log(_this.logLink(_this.url + '/user/giveawaykeys', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (opwon - _this.won) + ')'), 'win');
 _this.setConfig('won', opwon);
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
@@ -97,9 +97,9 @@ _this.pagemax = page;
 if (opfound.length <= opcurr || !_this.started || _this.curr_value === 0) {
 if (_this.getConfig('log', true)) {
 if (opfound.length < 40) {
-_this.log(Lang.get('service.reach_end'));
+_this.log(Lang.get('service.reach_end'), 'skip');
 }
-_this.log(Lang.get('service.checked') + page + '#');
+_this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 if (callback) {
 callback();
@@ -124,18 +124,18 @@ njoin = 1;
 }
 if (_this.curr_value < cost || entered.includes('ENTERED') || njoin === 1) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name));
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name), 'chk');
 if (njoin === 1) {
-_this.log(Lang.get('service.cant_join'));
+_this.log(Lang.get('service.cant_join'), 'cant');
 }
 if (entered.includes('ENTERED')) {
-_this.log(Lang.get('service.already_joined'));
+_this.log(Lang.get('service.already_joined'), 'skip');
 }
 if (_this.curr_value < cost && !entered.includes('ENTERED')) {
-_this.log(Lang.get('service.points_low'));
+_this.log(Lang.get('service.points_low'), 'skip');
 }
 }
-opnext = 50;
+opnext = 100;
 }
 else {
 $.ajax({
@@ -161,7 +161,7 @@ opid = 'sub/' + opsub;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
-_this.log(Lang.get('service.steam_error'), true);
+_this.log(Lang.get('service.steam_error'), 'err');
 opown = 2;
 }
 if (GJuser.ownapps.includes(',' + opapp + ',') && opapp > 0) {
@@ -179,15 +179,15 @@ if (GJuser.black.includes(opid + ',') && _this.getConfig('blacklist_on', false))
 opown = 4;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|' + _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name));
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|' + _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name), 'chk');
 if (opown === 3) {
-_this.log(Lang.get('service.cant_join'));
+_this.log(Lang.get('service.cant_join'), 'cant');
 }
 if (opown === 1) {
-_this.log(Lang.get('service.have_on_steam'));
+_this.log(Lang.get('service.have_on_steam'), 'steam');
 }
 if (opown === 4) {
-_this.log(Lang.get('service.blacklisted'));
+_this.log(Lang.get('service.blacklisted'), 'black');
 }
 }
 if (opown === 0) {
@@ -198,12 +198,12 @@ url: _this.url + eLink,
 success: function () {
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|' + _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name));
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|' + _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name), 'enter');
 }
 });
 }
 else {
-opnext = 50;
+opnext = 100;
 }
 }
 });

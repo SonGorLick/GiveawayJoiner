@@ -40,7 +40,7 @@ username: 'TF2R User'
 this.ajaxReq('http://tf2r.com/notifications.html', (response) => {
 if (response.success) {
 userData.username = $(response.data).find('#nameho').text();
-userData.avatar = $(response.data).find('#avatar a img').attr('src');
+userData.avatar = $(response.data).find('#avatar a noload').attr('src');
 }
 callback(userData);
 });
@@ -63,8 +63,8 @@ random[j] = temp;
 function giveawayEnter() {
 if (giveaways.length <= tfcurr || !_this.started) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.reach_end'));
-_this.log(Lang.get('service.checked') + 'Public Raffles');
+_this.log(Lang.get('service.reach_end'), 'skip');
+_this.log(Lang.get('service.checked') + 'Public Raffles', 'srch');
 }
 return;
 }
@@ -77,12 +77,12 @@ _this.ajaxReq(link, (response) => {
 if (response.success) {
 let html = $('<div>' + response.data + '</div>');
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + (tfrnd + 1) + '№|  ' + _this.logLink(link, name));
+_this.log(Lang.get('service.checking') + '|' + (tfrnd + 1) + '№|  ' + _this.logLink(link, name), 'chk');
 }
 let entered = html.find('#enbut').length === 0;
 if (entered || GJuser.tf.includes(rid + ',')) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.already_joined'));
+_this.log(Lang.get('service.already_joined'), 'skip');
 }
 return;
 }
@@ -102,12 +102,12 @@ json: true
 })
 .then((body) => {
 if (body.status === 'ok') {
-_this.log(Lang.get('service.entered_in') + '|' + (tfrnd + 1) + '№|  ' + _this.logLink(link, name));
+_this.log(Lang.get('service.entered_in') + '|' + (tfrnd + 1) + '№|  ' + _this.logLink(link, name), 'enter');
 GJuser.tf = GJuser.tf + rid + ',';
 }
 else {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), true);
+_this.log(Lang.get('service.err_join'), 'err');
 }
 }
 });
@@ -129,6 +129,7 @@ url: url,
 timeout: this.getTimeout,
 success: function (html) {
 response.success = true;
+html = html.replace(/<img/gi, '<noload');
 response.data = html;
 },
 error: function (error) {

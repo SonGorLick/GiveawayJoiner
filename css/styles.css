@@ -71,7 +71,15 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .in-service-panel { font-size: 14px; display: none; background: rgba(47,61,68,1); height: 460px; padding: 15px; border-radius: 2px; border: 1px solid rgba(33,43,48,1); }
 .in-service-panel.active { display: block; }
 .service-logs { font-size: 12px; overflow-x: auto; }
-.service-logs .warn { color: lightcoral; }
+.service-logs .err { color: lightcoral; }
+.service-logs .win { color: hotpink; }
+.service-logs .enter { color: limegreen; }
+.service-logs .steam { color: midnightblue; }
+.service-logs .black { color: black; }
+.service-logs .skip { color: dimgray ; }
+.service-logs .srch { color: orange; }
+.service-logs .cant { color: saddlebrown; }
+.service-logs .chk { color: grey; }
 .service-logs span.time { color: #4db6ac; padding-right: 6px; }
 .service-logs span.open-website { cursor: pointer; text-decoration: underline; }
 .service-logs { -webkit-user-select: text; }
