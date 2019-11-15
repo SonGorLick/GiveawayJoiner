@@ -8,6 +8,8 @@ this.authLink = 'https://www.indiedb.com/members/login';
 this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 this.withValue = false;
 delete this.settings.pages;
+delete this.settings.interval_from;
+delete this.settings.interval_to;
 super.init();
 }
 getUserInfo(callback) {
