@@ -77,6 +77,7 @@ frame: false,
 webPreferences: {
 session: _session,
 devTools: devMode,
+webSecurity: false,
 webaudio: false
 }
 });
@@ -99,6 +100,7 @@ webPreferences: {
 session: _session,
 devTools: false,
 nodeIntegration: false,
+webSecurity: false,
 webaudio: false
 }
 });

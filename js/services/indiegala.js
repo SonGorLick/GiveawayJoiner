@@ -314,7 +314,7 @@ igown = 1;
 if (GJuser.black.includes(igid + ',') && _this.getConfig('blacklist_on', false)) {
 igown = 4;
 }
-if (_this.getConfig('log', true)) {
+if (_this.getConfig('log', true) && igrtry === 0) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + 'â„–|' + time + 'h|' + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name), 'chk');
 if (igown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
@@ -350,7 +350,7 @@ _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + 'â
 igcurr++;
 }
 else {
-ignext = (Math.floor(Math.random() * 300)) + 200;
+ignext = (Math.floor(Math.random() * 200)) + 300;
 }
 });
 }
@@ -359,8 +359,9 @@ ignext = 100;
 igcurr++;
 }
 }
-if (igrtry >= 3) {
+if (igrtry >= 6) {
 igrtry = 0;
+igcurr++;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
