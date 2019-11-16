@@ -91,6 +91,8 @@
 		"scraptf": {
 			"sound": "Sound notifications",
 			"sound_title": "Play sound when winning a giveaway",
+			"sort_by_end": "Sort by time",
+			"sort_by_end_title": "Enter giveaways sorted from low to high ended time",
 			"rnd": "Random",
 			"rnd_title": "Random enter giveaways on page, not how on site",
 			"log": "Logging",
