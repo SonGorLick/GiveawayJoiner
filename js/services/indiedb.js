@@ -52,6 +52,9 @@ _this.log(Lang.get('service.checking') + ' ' + _this.logLink(link, name), 'chk')
 }
 let enter = data.indexOf('"buttonenter buttongiveaway">Join Giveaway<') >= 0,
 entered = data.indexOf('"buttonenter buttonentered buttongiveaway">Success - Giveaway joined<') >= 0;
+if (_this.getConfig('log', true) && entered) {
+_this.log(Lang.get('service.already_joined'), 'skip');
+}
 if (enter) {
 let eLink = cont.find('p a.buttonenter').attr('href');
 $.ajax({
@@ -62,9 +65,6 @@ enter = false;
 entered = true;
 }
 if (entered) {
-if (_this.getConfig('log', true) && !enter) {
-_this.log(Lang.get('service.already_joined'), 'skip');
-}
 let adds = cont.find('#giveawaysjoined > div p');
 for (let curradds = 0; curradds < adds.length; curradds++) {
 let addlink = adds.eq(curradds).find('a').attr('href'),
@@ -75,6 +75,7 @@ if (finish === '') {
 finish = addlink;
 }
 if (!addlink.includes('http')) {
+setTimeout(function () {
 $.ajax({
 url: _this.url + addlink,
 success: function (data) {
@@ -88,14 +89,17 @@ _this.log(Lang.get('service.entered_in') + finish + ' - ' + name, 'enter');
 if (_this.getConfig('log', true) && !addlink.includes('the-challenge-of-adblock')) {
 _this.log(Lang.get('service.entered_in') + finish + ' - ' + name, 'enter');
 }
+}, 2000);
 }
 if (addlink.includes('http')) {
+setTimeout(function () {
 $.ajax({
 url: _this.url + '/giveaways/ajax/'+ finish + '/' + id,
 });
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.entered_in') + finish + ' - ' + name, 'enter');
 }
+}, 2000);
 }
 }
 }
@@ -107,7 +111,7 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 _this.log(Lang.get('service.checked') + 'Giveaways', 'srch');
 }
-}, 10000);
+}, 15000);
 return;
 }
 }

@@ -7,8 +7,9 @@ this.websiteUrl = 'https://scrap.tf';
 this.authContent = 'Logout';
 this.authLink = 'https://scrap.tf/login';
 this.settings.sort_by_end = { type: 'checkbox', trans: this.transPath('sort_by_end'), default: this.getConfig('sort_by_end', false) };
-this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
+this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
 this.settings.rnd = { type: 'checkbox', trans: this.transPath('rnd'), default: this.getConfig('rnd', false) };
+this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 this.withValue = false;
 delete this.settings.pages;
 super.init();
@@ -34,11 +35,12 @@ callback(userData);
 joinService() {
 let _this = this;
 _this.url = 'https://scrap.tf';
-let page = 1,
-spurl = '';
+_this.won = _this.getConfig('won', 0);
 GJuser.sp = ',';
 _this.done = false;
-if (this.getConfig('sort_by_end', false)) {
+let page = 1,
+spurl = '';
+if (_this.getConfig('sort_by_end', false)) {
 spurl = '/ending';
 _this.sort = 1;
 }
@@ -49,16 +51,34 @@ $.ajax({
 url: _this.url + '/raffles' + spurl,
 success: function (data) {
 data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
+let spwon = $(data).find('.nav-notice a').text().trim();
+if (spwon.length > 0) {
+spwon = parseInt(spwon.match(/\d+/)[0]);
+}
+else {
+spwon = 0;
+}
+if (spwon < _this.won) {
+_this.setConfig('won', spwon);
+}
+if (spwon > 0 && spwon > _this.won) {
+_this.log(_this.logLink(_this.url + '/notices', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (spwon) + ')'), 'win');
+_this.setConfig('won', spwon);
+if (_this.getConfig('sound', true)) {
+new Audio(__dirname + '/sounds/won.wav').play();
+}
+}
 _this.sptent = $(data).find('.panel-raffle');
 _this.sptented = $(data).find('.raffle-entered');
+_this.splength = _this.sptent.length;
 let csrf = data.substring(data.indexOf("ScrapTF.User.Hash =")+21,data.indexOf("ScrapTF.User.QueueHash")).slice(0, 64),
 spcurr = 0;
 for (let spcurred = 0; spcurred < _this.sptented.length; spcurred++) {
 let linked = _this.sptented.eq(spcurred).find('.panel-heading .raffle-name a').attr('href').replace('/raffles/', '');
 GJuser.sp = GJuser.sp + linked + ',';
 }
-let random = Array.from(Array(_this.sptent.length).keys());
-if (_this.getConfig('rnd', false)) {
+let random = Array.from(Array(_this.splength).keys());
+if (_this.getConfig('rnd', false) && _this.splength > 1) {
 for(let i = random.length - 1; i > 0; i--){
 const j = Math.floor(Math.random() * i);
 const temp = random[i];
@@ -71,7 +91,7 @@ setTimeout(function () {
 function giveawayEnter() {
 if (_this.sptent.length <= spcurr || !_this.started) {
 if (_this.getConfig('log', true)) {
-if (spcurr < 60) {
+if (spcurr < 60 || _this.done) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
@@ -90,7 +110,7 @@ name = id;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + link, name), 'chk');
 }
-if (!GJuser.sp.includes(',' + id + ',') || GJuser.sp.length < 2) {
+if (!GJuser.sp.includes(',' + id + ',')) {
 $.ajax({
 url: _this.url + link,
 success: function (data) {
@@ -129,10 +149,8 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 else {
 spnext = 1000;
-if (entered) {
-if (_this.getConfig('log', true)) {
+if (entered && _this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'skip');
-}
 }
 else {
 if (_this.getConfig('log', true)) {
@@ -151,7 +169,7 @@ _this.log(Lang.get('service.already_joined'), 'skip');
 }
 spcurr++;
 if (spcurr === 60 && !_this.done) {
-spnext = 15000;
+spnext = 10000;
 $.ajax({
 type: 'POST',
 dataType: 'json',
@@ -166,16 +184,19 @@ data: {start: id, sort: _this.sort, puzzle: 0, csrf: csrf},
 success: function (response) {
 let success = JSON.stringify(response.success);
 if (success) {
-_this.done = JSON.stringify(response.done);
 let html = $('<div>' + (response.html).replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload') + '</div>');
 _this.sptent = html.find('.panel-raffle');
 _this.sptented = html.find('.raffle-entered');
+_this.splength = _this.sptent.length;
+if (_this.splength < 60) {
+_this.done = true;
+}
 for (let spcurred = 0; spcurred < _this.sptented.length; spcurred++) {
 let linked = _this.sptented.eq(spcurred).find('.panel-heading .raffle-name a').attr('href').replace('/raffles/', '');
 GJuser.sp = GJuser.sp + linked + ',';
 }
-let random = Array.from(Array(_this.sptent.length).keys());
-if (_this.getConfig('rnd', false)) {
+let random = Array.from(Array(_this.splength).keys());
+if (_this.getConfig('rnd', false) && _this.splength > 1) {
 for(let i = random.length - 1; i > 0; i--){
 const j = Math.floor(Math.random() * i);
 const temp = random[i];
@@ -188,6 +209,9 @@ _this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 page++;
 spcurr = 0;
+}
+else {
+_this.done = true;
 }
 }
 });
