@@ -281,6 +281,7 @@ _this.log(Lang.get('service.skipped'), 'skip');
 }
 }
 ignext = 100;
+igrtry = 0;
 igcurr++;
 }
 else {
@@ -350,16 +351,17 @@ _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + 'â
 igcurr++;
 }
 else {
-ignext = (Math.floor(Math.random() * 200)) + 300;
+ignext = (Math.floor(Math.random() * 400)) + 500;
 }
 });
 }
 else {
 ignext = 100;
+igrtry = 0;
 igcurr++;
 }
 }
-if (igrtry >= 6) {
+if (igrtry >= 8) {
 igrtry = 0;
 igcurr++;
 if (_this.getConfig('log', true)) {

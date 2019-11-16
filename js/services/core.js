@@ -539,13 +539,13 @@ trans(key) {
 return Lang.get('service.' + this.constructor.name.toLowerCase() + '.' + key);
 }
 clearLog() {
-this.logField.html('<div><span class="time">' + timeStr() + ':</span>' + Lang.get('service.log_cleared') + '</div>');
+this.logField.html('<div><span class="time">' + timeStr() + '</span>' + Lang.get('service.log_cleared') + '</div>');
 }
 log(text, logType) {
 if (logType === '' || logType === undefined) {
 logType = 'normal';
 }
-this.logField.append('<div class="' + logType + '"><span class="time">' + timeStr() + ':</span>' + text + '</div>');
+this.logField.append('<div class="' + logType + '"><span class="time">' + timeStr() + '</span>' + text + '</div>');
 this.logWrap.scrollTop(this.logWrap[0].scrollHeight);
 }
 joinService() {}
