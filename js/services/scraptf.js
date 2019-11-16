@@ -162,7 +162,7 @@ headers: {
 'x-requested-with': 'XMLHttpRequest',
 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
 },
-data: {start: id, sort: _this.sort, puzzle: 0, csrf: csrfpage},
+data: {start: id, sort: _this.sort, puzzle: 0, csrf: csrf},
 success: function (response) {
 let success = JSON.stringify(response.success);
 if (success) {
