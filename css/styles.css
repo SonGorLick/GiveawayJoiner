@@ -34,11 +34,11 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .content-item[data-id=profile] .joiner-button.logout { position: absolute; right: 10px; bottom: 10px;  text-align: right; }
 .services_switcher { background-color: #29353b; width: 110px; height: 100%; position: absolute; left: 0; top: 0; border-right: 1px solid #222d32; overflow: hidden; }
 .services-icons { padding-top: 4px; position: absolute; z-index: 1; width: 100%; top: 34px; left: 0; }
-.service-icon { border: 1px solid transparent; cursor: pointer; position: relative; width: 95px; height: 90px; margin: 0 auto 10px; font-size: 12px; }
+.service-icon { border: 1px solid transparent; cursor: pointer; position: relative; width: 105px; height: 60px; margin: 0 auto 2px; font-size: 12px; }
 .service-icon.active { border-color: #29353b; background: rgba(77,182,172,0.7); }
 .service-icon:hover:not(.active) { background: rgba(0,188,212,0.7); border-color: #29353b; }
-.service-icon .bg { margin: 10px auto 0; width: 32px; height: 32px; background: center center/contain no-repeat; }
-.service-icon .service-name { display: block; font-size: 12px; font-weight: bold; text-align: center; }
+.service-icon .bg { margin: 5px auto 2px; width: 32px; height: 32px; background: center center/contain no-repeat; }
+.service-icon .service-name { display: inline-flex; font-size: 12px; font-weight: bold; }
 .service-icon .service-status { width: 16px; height: 16px; line-height: 16px; text-align: center; font-size: 14px; position: absolute; right: 2px; bottom: 2px; background: center/contain no-repeat; }
 .service-icon .service-status span { display: none; color: #b8c1c6; }
 .service-icon .service-status[data-status=good] span:first-child { display: inline; color: lightgreen; }

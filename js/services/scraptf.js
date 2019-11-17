@@ -169,7 +169,7 @@ _this.log(Lang.get('service.already_joined'), 'skip');
 }
 spcurr++;
 if (spcurr === 60 && !_this.done) {
-spnext = 10000;
+spnext = 15000;
 $.ajax({
 type: 'POST',
 dataType: 'json',

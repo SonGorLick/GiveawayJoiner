@@ -89,7 +89,7 @@ _this.log(Lang.get('service.entered_in') + finish + ' - ' + name, 'enter');
 if (_this.getConfig('log', true) && !addlink.includes('the-challenge-of-adblock')) {
 _this.log(Lang.get('service.entered_in') + finish + ' - ' + name, 'enter');
 }
-}, 2000);
+}, 1000);
 }
 if (addlink.includes('http')) {
 setTimeout(function () {
@@ -99,7 +99,7 @@ url: _this.url + '/giveaways/ajax/'+ finish + '/' + id,
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.entered_in') + finish + ' - ' + name, 'enter');
 }
-}, 2000);
+}, 1000);
 }
 }
 }
