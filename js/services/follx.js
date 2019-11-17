@@ -85,14 +85,14 @@ new Audio(__dirname + '/sounds/won.wav').play();
 let fxfound = html.find('.giveaway_card');
 let fxcurr = 0;
 function giveawayEnter() {
-//if (fxfound.length < 20) {
-//_this.pagemax = page;
-//}
+if (fxfound.length < 20) {
+_this.pagemax = page;
+}
 if (fxfound.length <= fxcurr || !_this.started) {
 if (_this.getConfig('log', true)) {
-//if (fxfound.length < 20) {
-//_this.log(Lang.get('service.reach_end'), 'skip');
-//}
+if (fxfound.length < 20) {
+_this.log(Lang.get('service.reach_end'), 'skip');
+}
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 if (callback) {
