@@ -158,7 +158,7 @@ link = spcont.find('.panel-heading .raffle-name a').attr('href'),
 name = spcont.find('.panel-heading .raffle-name a').text().trim(),
 id = link.replace('/raffles/', '');
 if (name === undefined || name === '' || name.length === 0) {
-let name = id;
+name = link.replace('/raffles/', '');
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + link, name), 'chk');
