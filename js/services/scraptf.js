@@ -100,7 +100,7 @@ new Audio(__dirname + '/sounds/won.wav').play();
 }
 }
 }
-if (page > 1) {
+if (page !== 1) {
 let success = JSON.stringify(data.success);
 if (success) {
 _this.done = JSON.stringify(data.done);
@@ -126,8 +126,8 @@ for (let spcurred = 0; spcurred < sptented.length; spcurred++) {
 let linked = sptented.eq(spcurred).find('.panel-heading .raffle-name a').attr('href').replace('/raffles/', '');
 GJuser.sp = GJuser.sp + linked + ',';
 }
-let spcurr = 0,
-random = Array.from(Array(sptent.length).keys());
+let spcurr = 0;
+let random = Array.from(Array(sptent.length).keys());
 if (_this.getConfig('rnd', false)) {
 for(let i = random.length - 1; i > 0; i--){
 const j = Math.floor(Math.random() * i);
@@ -136,6 +136,7 @@ random[i] = random[j];
 random[j] = temp;
 }
 }
+_this.lastid;
 setTimeout(function () {
 }, (Math.floor(Math.random() * 2000)) + 7000);
 function giveawayEnter() {
@@ -154,18 +155,18 @@ return;
 let spnext = _this.interval(),
 sprnd = random[spcurr],
 spcont = sptent.eq(sprnd),
-link = spcont.find('.panel-heading .raffle-name a').attr('href'),
-name = spcont.find('.panel-heading .raffle-name a').text().trim(),
-id = link.replace('/raffles/', '');
-if (name === undefined || name === '' || name.length === 0) {
-name = link.replace('/raffles/', '');
+splink = spcont.find('.panel-heading .raffle-name a').attr('href');
+let id = splink.replace('/raffles/', '');
+let spname = spcont.find('.panel-heading .raffle-name a').text().trim();
+if (spname === undefined || spname === '' || spname.length === 0 || spname.length > 150) {
+spname = id;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + link, name), 'chk');
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + splink, spname), 'chk');
 }
 if (!GJuser.sp.includes(',' + id + ',')) {
 $.ajax({
-url: _this.url + link,
+url: _this.url + splink,
 success: function (data) {
 data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 let enter = data.indexOf('>Enter Raffle<') >= 0,
@@ -188,7 +189,7 @@ data: {raffle: id, captha: '', hash: hash, csrf: _this.csrf},
 success: function (response) {
 let spmess = JSON.stringify(response.message);
 if (spmess === '"Entered raffle!"') {
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + link, name), 'enter');
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + splink, spname), 'enter');
 }
 else {
 spnext = 15000;
