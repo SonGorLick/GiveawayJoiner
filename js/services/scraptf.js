@@ -110,7 +110,7 @@ data = $('<div>' + (data.html).replace(/<img/gi, '<noload').replace(/<audio/gi, 
 }
 let sptent = $(data).find('.panel-raffle'),
 sptented = $(data).find('.raffle-entered');
-if (sptent.length === 60) {
+if (sptent.length >= 60) {
 _this.done = false;
 }
 else {
@@ -155,7 +155,7 @@ spcont = sptent.eq(sprnd),
 splink = spcont.find('.panel-heading .raffle-name a').attr('href'),
 id = splink.replace('/raffles/', ''),
 spname = spcont.find('.panel-heading .raffle-name a').text().trim();
-if (spname === undefined || spname === '' || spname.length === 0 || spname.length > 150) {
+if (spname === undefined || spname === '' || spname.length === 0 || spname.length > 120) {
 spname = id;
 }
 if (_this.getConfig('log', true)) {
@@ -199,7 +199,6 @@ _this.log(Lang.get('service.err_join'), 'err');
 }, tmout);
 }
 else {
-spnext = 1000;
 if (entered && _this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'skip');
 }
