@@ -7,8 +7,9 @@ this.websiteUrl = 'https://scrap.tf';
 this.authContent = 'Logout';
 this.authLink = 'https://scrap.tf/login';
 this.settings.sort_by_end = { type: 'checkbox', trans: this.transPath('sort_by_end'), default: this.getConfig('sort_by_end', false) };
-this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
+this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
 this.settings.rnd = { type: 'checkbox', trans: this.transPath('rnd'), default: this.getConfig('rnd', false) };
+this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
 this.withValue = false;
 super.init();
 }
@@ -42,6 +43,7 @@ _this.sort = 1;
 else {
 _this.sort = 0;
 }
+_this.done = false;
 _this.pagemax = _this.getConfig('pages', 1);
 let callback = function () {
 page++;
@@ -54,7 +56,6 @@ this.enterOnPage(page, callback);
 enterOnPage(page, callback) {
 let _this = this;
 GJuser.sp = ',';
-_this.done = false;
 let spurl = _this.url + '/raffles' + _this.spurl,
 type = 'get',
 head = {},
@@ -101,23 +102,22 @@ new Audio(__dirname + '/sounds/won.wav').play();
 }
 }
 if (page !== 1) {
-let success = JSON.stringify(data.success);
-if (success) {
-_this.done = JSON.stringify(data.done);
-_this.lastid = JSON.stringify(data.lastid);
+let success = data.success;
+if (success === true) {
+_this.lastid = data.lastid;
 data = $('<div>' + (data.html).replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload') + '</div>');
+}
+}
+let sptent = $(data).find('.panel-raffle'),
+sptented = $(data).find('.raffle-entered');
+if (sptent.length === 60) {
+_this.done = false;
 }
 else {
 _this.done = true;
 }
-}
-let sptent = $(data).find('.panel-raffle');
-let sptented = $(data).find('.raffle-entered');
 if (page === 1) {
 _this.lastid = sptent.eq(-1).find('.panel-heading .raffle-name a').attr('href').replace('/raffles/', '');
-if (sptent.length < 60) {
-_this.done = true;
-}
 }
 if (_this.done) {
 _this.pagemax = page;
@@ -126,8 +126,8 @@ for (let spcurred = 0; spcurred < sptented.length; spcurred++) {
 let linked = sptented.eq(spcurred).find('.panel-heading .raffle-name a').attr('href').replace('/raffles/', '');
 GJuser.sp = GJuser.sp + linked + ',';
 }
-let spcurr = 0;
-let random = Array.from(Array(sptent.length).keys());
+let spcurr = 0,
+random = Array.from(Array(sptent.length).keys());
 if (_this.getConfig('rnd', false)) {
 for(let i = random.length - 1; i > 0; i--){
 const j = Math.floor(Math.random() * i);
@@ -136,9 +136,6 @@ random[i] = random[j];
 random[j] = temp;
 }
 }
-_this.lastid;
-setTimeout(function () {
-}, (Math.floor(Math.random() * 2000)) + 7000);
 function giveawayEnter() {
 if (sptent.length <= spcurr || !_this.started) {
 if (_this.getConfig('log', true)) {
@@ -155,9 +152,9 @@ return;
 let spnext = _this.interval(),
 sprnd = random[spcurr],
 spcont = sptent.eq(sprnd),
-splink = spcont.find('.panel-heading .raffle-name a').attr('href');
-let id = splink.replace('/raffles/', '');
-let spname = spcont.find('.panel-heading .raffle-name a').text().trim();
+splink = spcont.find('.panel-heading .raffle-name a').attr('href'),
+id = splink.replace('/raffles/', ''),
+spname = spcont.find('.panel-heading .raffle-name a').text().trim();
 if (spname === undefined || spname === '' || spname.length === 0 || spname.length > 150) {
 spname = id;
 }
@@ -203,10 +200,8 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 else {
 spnext = 1000;
-if (entered) {
-if (_this.getConfig('log', true)) {
+if (entered && _this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'skip');
-}
 }
 else {
 if (_this.getConfig('log', true)) {
