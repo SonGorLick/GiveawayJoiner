@@ -14,7 +14,7 @@ this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklis
 super.init();
 }
 getUserInfo(callback) {
-if (GJuser.as.length > 601) {
+if (GJuser.as.length > 801) {
 GJuser.as = ',';
 }
 let userData = {
