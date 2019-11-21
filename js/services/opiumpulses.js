@@ -99,7 +99,12 @@ if (_this.getConfig('log', true)) {
 if (opfound.length < 40) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
+if (page === _this.pagemax) {
+_this.log(Lang.get('service.checked') + page + '#-' + _this.getConfig('pages', 1) + '#', 'srch');
+}
+else {
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
+}
 }
 if (callback) {
 callback();

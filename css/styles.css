@@ -1,6 +1,6 @@
 html { position: absolute; top:0; left:0; width:100%; height:100%; }
 body { -webkit-user-select: none; overflow: hidden; font-family: 'Noto Sans', sans-serif; font-size: 12px; color:#b9c2c7; position: relative; width: 100%; height: 100%; border: 1px solid #222d32; border-top: none; box-sizing: border-box; }
-* { font-family: inherit; margin:0; padding:0; outline: none; box-sizing: inherit; }
+* { -webkit-font-smoothing: never; font-family: inherit; margin:0; padding:0; outline: none; box-sizing: inherit; }
 .no-selectable { -webkit-user-select: none; cursor: default; }
 a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .styled-scrollbar::-webkit-scrollbar-track { width: 8px; background-color: #29353b; }
@@ -116,7 +116,7 @@ button.open-website:hover { color: #00bcd4; }
 .input-wrap.checkbox label:hover { color: #00bcd4; }
 input-wrap.checkbox input[disabled] { cursor: default; }
 .input-wrap.checkbox input[disabled] + label { cursor: default; color: #2c383e; }
-.fa, .fab { -webkit-font-smoothing: subpixel-antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: optimizeLegibility; line-height: 1; }
+.fa, .fab { -webkit-font-smoothing: never; display: inline-block; font-style: normal; font-variant: normal; text-rendering: optimizeLegibility; line-height: 1; }
 .fa-chrome:before { content: '\f268'; }
 .fa-database:before { content: '\f1c0'; }
 .fa-ellipsis-v:before { content: '\f142'; }
@@ -137,3 +137,4 @@ input-wrap.checkbox input[disabled] { cursor: default; }
 .fa { font-family: 'Font Awesome 5 Free'; font-weight: 900; }
 @font-face { font-family: 'Font Awesome 5 Brands'; font-style: normal; font-weight: normal; src: url('fb.woff2') format('woff2'); }
 .fab { font-family: 'Font Awesome 5 Brands'; font-weight: 400; }
+@font-face { font-family: 'Noto Sans'; font-style: normal; font-weight: 400; src: url('ns.woff2') format('woff2'); }

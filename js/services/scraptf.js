@@ -43,7 +43,7 @@ _this.sort = 1;
 else {
 _this.sort = 0;
 }
-_this.done = false;
+_this.lastid = '';
 _this.pagemax = _this.getConfig('pages', 1);
 let callback = function () {
 page++;
@@ -105,22 +105,23 @@ if (page !== 1) {
 let success = data.success;
 if (success === true) {
 _this.lastid = data.lastid;
+let done = data.done;
+if (done === true) {
+_this.pagemax = page;
+}
 data = $('<div>' + (data.html).replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload') + '</div>');
 }
 }
 let sptent = $(data).find('.panel-raffle'),
 sptented = $(data).find('.raffle-entered');
-if (sptent.length >= 60) {
-_this.done = false;
-}
-else {
-_this.done = true;
+if (sptent.length === 0) {
+_this.pagemax = page;
 }
 if (page === 1) {
-_this.lastid = sptent.eq(-1).find('.panel-heading .raffle-name a').attr('href').replace('/raffles/', '');
-}
-if (_this.done) {
+if (sptent.length < 60) {
 _this.pagemax = page;
+}
+_this.lastid = sptent.eq(-1).find('.panel-heading .raffle-name a').attr('href').replace('/raffles/', '');
 }
 for (let spcurred = 0; spcurred < sptented.length; spcurred++) {
 let linked = sptented.eq(spcurred).find('.panel-heading .raffle-name a').attr('href').replace('/raffles/', '');
@@ -139,10 +140,13 @@ random[j] = temp;
 function giveawayEnter() {
 if (sptent.length <= spcurr || !_this.started) {
 if (_this.getConfig('log', true)) {
-if (_this.done) {
+if (page === _this.pagemax) {
 _this.log(Lang.get('service.reach_end'), 'skip');
+_this.log(Lang.get('service.checked') + page + '#-' + _this.getConfig('pages', 1) + '#', 'srch');
 }
+else {
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
+}
 }
 if (callback) {
 callback();
@@ -155,7 +159,7 @@ spcont = sptent.eq(sprnd),
 splink = spcont.find('.panel-heading .raffle-name a').attr('href'),
 id = splink.replace('/raffles/', ''),
 spname = spcont.find('.panel-heading .raffle-name a').text().trim();
-if (spname === undefined || spname === '' || spname.length === 0 || spname.length > 120) {
+if (spname === undefined || spname === '' || spname.length === 0 || spname.length > 100) {
 spname = id;
 }
 if (_this.getConfig('log', true)) {

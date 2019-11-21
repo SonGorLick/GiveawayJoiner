@@ -106,10 +106,13 @@ _this.pagemax = page;
 }
 if (afound.length <= acurr || !_this.started) {
 if (_this.getConfig('log', true)) {
-if (_this.pagemax === page) {
+if (page === _this.pagemax) {
 _this.log(Lang.get('service.reach_end'), 'skip');
+_this.log(Lang.get('service.checked') + page + '#-' + _this.getConfig('pages', 1) + '#', 'srch');
 }
+else {
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
+}
 }
 if (callback) {
 callback();
@@ -131,7 +134,7 @@ let aname = data.find('[href="' + alink + '"]').text().trim(),
 ended = data.find('[href="' + alink + '"] > span').text().trim();
 if (aname.includes('This giveaway has ended.') || ended === 'This giveaway has ended.') {
 _this.pagemax = page;
-asnext = 100;
+asnext = 50;
 }
 else {
 let ahave = data.find('[href="' + alink + '"] font').attr('color'),

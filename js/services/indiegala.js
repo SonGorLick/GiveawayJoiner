@@ -2,6 +2,7 @@
 class IndieGala extends Joiner {
 constructor() {
 super();
+this.domain = '.indiegala.com';
 this.authContent = 'My Profile';
 this.websiteUrl = 'https://www.indiegala.com';
 this.authLink = 'https://www.indiegala.com/login';
@@ -200,17 +201,24 @@ _this.pagemax = page;
 }
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0) {
 if (_this.getConfig('log', true)) {
-if (_this.curr_value === 0){
-_this.log(Lang.get('service.points_low'), 'skip');
-}
 if (tickets.length < 12 && !_this.sort) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
+if (page === _this.pagemax) {
 if (_this.sort) {
-_this.log(Lang.get('service.checked') + _this.lvl + 'L-' + page + '#', 'srch');
+_this.log(Lang.get('service.checked') + _this.lvl + 'L|' + page + '#-' + _this.getConfig('pages', 1) + '#', 'srch');
+}
+else {
+_this.log(Lang.get('service.checked') + page + '#-' + _this.getConfig('pages', 1) + '#', 'srch');
+}
+}
+else {
+if (_this.sort) {
+_this.log(Lang.get('service.checked') + _this.lvl + 'L|' + page + '#', 'srch');
 }
 else {
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
+}
 }
 }
 if (_this.sort_after && page === _this.pagemax) {
@@ -279,6 +287,14 @@ _this.log(Lang.get('service.points_low'), 'skip');
 if (!entered && _this.curr_value >= price) {
 _this.log(Lang.get('service.skipped'), 'skip');
 }
+}
+if (
+(time > _this.ending && _this.ending !== 0 && !_this.sort) ||
+(time > _this.ending && _this.ending !== 0 && _this.sort && !_this.getConfig('sbl_ending_ig', false))
+)
+{
+_this.pagemax = page;
+igcurr = 12;
 }
 ignext = 100;
 igrtry = 0;
@@ -351,7 +367,7 @@ _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + 'â
 igcurr++;
 }
 else {
-ignext = (Math.floor(Math.random() * 400)) + 500;
+ignext = (Math.floor(Math.random() * 400)) + 600;
 }
 });
 }
@@ -361,7 +377,7 @@ igrtry = 0;
 igcurr++;
 }
 }
-if (igrtry >= 8) {
+if (igrtry >= 10) {
 igrtry = 0;
 igcurr++;
 if (_this.getConfig('log', true)) {
