@@ -277,6 +277,9 @@ GJuser.black = GJuser.black.replace(';', ',').replace('.', ',').replace(':', ','
 }
 this.authCheck((authState) => {
 if (authState === 1) {
+if (Config.get('log_autoclear', false)) {
+this.logField.html('<div></div>');
+}
 this.log(Lang.get('service.connection_good'), 'srch');
 let atimer = this.getConfig('timer', 60);
 this.stimer = atimer;

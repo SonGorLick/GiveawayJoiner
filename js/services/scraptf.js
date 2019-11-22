@@ -44,6 +44,7 @@ else {
 _this.sort = 0;
 }
 _this.lastid = '';
+_this.won = _this.getConfig('won', 0);
 _this.pagemax = _this.getConfig('pages', 1);
 let callback = function () {
 page++;
@@ -84,7 +85,7 @@ if (page === 1) {
 data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 _this.csrf = data.substring(data.indexOf("ScrapTF.User.Hash =")+21,data.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 let spwon = $(data).find('.nav-notice a').text().trim();
-if (spwon.length > 0) {
+if (spwon.length > 0 && spwon.includes("You've won")) {
 spwon = parseInt(spwon.match(/\d+/)[0]);
 }
 else {
@@ -130,7 +131,7 @@ GJuser.sp = GJuser.sp + linked + ',';
 let spcurr = 0,
 random = Array.from(Array(sptent.length).keys());
 if (_this.getConfig('rnd', false)) {
-for(let i = random.length - 1; i > 0; i--){
+for(let i = random.length - 1; i > spcurr; i--){
 const j = Math.floor(Math.random() * i);
 const temp = random[i];
 random[i] = random[j];
@@ -157,15 +158,16 @@ let spnext = _this.interval(),
 sprnd = random[spcurr],
 spcont = sptent.eq(sprnd),
 splink = spcont.find('.panel-heading .raffle-name a').attr('href'),
+spended = spcont.find('.panel-heading .raffle-details span.raffle-state-ended').text().trim(),
 id = splink.replace('/raffles/', ''),
 spname = spcont.find('.panel-heading .raffle-name a').text().trim();
-if (spname === undefined || spname === '' || spname.length === 0 || spname.length > 100) {
-spname = id;
+if (spname === undefined || spname === '' || spname.length === 0 || spname.length > 105) {
+spname = '?????? ' + '(' + id + ')';
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + splink, spname), 'chk');
 }
-if (!GJuser.sp.includes(',' + id + ',')) {
+if (!GJuser.sp.includes(',' + id + ',') && !spended.includes('Ended')) {
 $.ajax({
 url: _this.url + splink,
 success: function (data) {
