@@ -131,7 +131,7 @@ GJuser.sp = GJuser.sp + linked + ',';
 let spcurr = 0,
 random = Array.from(Array(sptent.length).keys());
 if (_this.getConfig('rnd', false)) {
-for(let i = random.length - 1; i > spcurr; i--){
+for(let i = random.length - 1; i > 0; i--){
 const j = Math.floor(Math.random() * i);
 const temp = random[i];
 random[i] = random[j];
