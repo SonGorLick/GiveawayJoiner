@@ -2,7 +2,6 @@
 class IndieGala extends Joiner {
 constructor() {
 super();
-this.domain = '.indiegala.com';
 this.authContent = 'My Profile';
 this.websiteUrl = 'https://www.indiegala.com';
 this.authLink = 'https://www.indiegala.com/login';
@@ -23,7 +22,6 @@ this.log(this.logLink('https://www.indiegala.com/login', 'Login'), 'win');
 this.log(this.logLink('https://www.indiegala.com/giveaways', 'Captcha'), 'err');
 }
 authCheck(callback) {
-if (GJuser.ig === '') {
 $.ajax({
 url: 'https://www.indiegala.com/',
 success: function () {
@@ -37,7 +35,12 @@ dataType: 'json',
 success: function (data) {
 if (data.steamnick) {
 GJuser.ig = data.profile;
+if (data.giveaways_user_lever !== undefined || GJuser.iglvl === undefined) {
 GJuser.iglvl = data.giveaways_user_lever;
+}
+else {
+GJuser.iglvl = this.getConfig('max_level', 0);
+}
 callback(1);
 }
 else {
@@ -51,10 +54,6 @@ callback(-1);
 });
 }
 });
-}
-else {
-callback(1);
-}
 }
 getUserInfo(callback) {
 let userData = {

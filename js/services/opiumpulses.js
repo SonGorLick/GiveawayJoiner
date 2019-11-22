@@ -13,7 +13,7 @@ this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklis
 super.init();
 }
 getUserInfo(callback) {
-if (GJuser.op.length > 601) {
+if (GJuser.op.length > 1201) {
 GJuser.op = ',';
 }
 let userData = {
@@ -119,25 +119,39 @@ name = opway.find('.giveaways-page-item-footer-name').text().trim(),
 entered = opway.find('.giveaways-page-item-img-btn-wrapper').text(),
 eLink = opway.find('.giveaways-page-item-img-btn-enter').attr('href'),
 cost = parseInt(opway.find('.giveaways-page-item-header-points').text().replace('points', '').trim()),
-code = (link.slice(11, 16)),
+code = link.slice(11, 16),
 njoin = 0;
 if (isNaN(cost)) {
 cost = 0;
 }
-if (GJuser.op.includes(',' + code + ',')) {
+if (GJuser.op.includes(',' + code + '-n,')) {
 njoin = 1;
 }
-if (_this.curr_value < cost || entered.includes('ENTERED') || njoin === 1) {
+if (GJuser.op.includes(',' + code + '-s,')) {
+njoin = 2;
+}
+if (GJuser.op.includes(',' + code + '-b,')) {
+njoin = 3;
+}
+if (_this.curr_value < cost || entered.includes('ENTERED') || njoin > 0) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name), 'chk');
+if (!entered.includes('ENTERED')) {
 if (njoin === 1) {
 _this.log(Lang.get('service.cant_join'), 'cant');
 }
-if (entered.includes('ENTERED')) {
-_this.log(Lang.get('service.already_joined'), 'skip');
+if (njoin === 2) {
+_this.log(Lang.get('service.have_on_steam'), 'steam');
 }
-if (_this.curr_value < cost && !entered.includes('ENTERED')) {
+if (njoin === 3) {
+_this.log(Lang.get('service.blacklisted'), 'black');
+}
+if (_this.curr_value < cost && njoin === 0) {
 _this.log(Lang.get('service.points_low'), 'skip');
+}
+}
+else {
+_this.log(Lang.get('service.already_joined'), 'skip');
 }
 }
 opnext = 100;
@@ -177,19 +191,27 @@ opown = 1;
 }
 }
 if (openter === " You're not eligible to enter") {
-GJuser.op = GJuser.op + code + ',';
 opown = 3;
 }
 if (GJuser.black.includes(opid + ',') && _this.getConfig('blacklist_on', false)) {
 opown = 4;
 }
+if (opown === 1) {
+GJuser.op = GJuser.op + code + '-s,';
+}
+if (opown === 3) {
+GJuser.op = GJuser.op + code + '-n,';
+}
+if (opown === 4) {
+GJuser.op = GJuser.op + code + '-b,';
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|' + _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name), 'chk');
-if (opown === 3) {
-_this.log(Lang.get('service.cant_join'), 'cant');
-}
 if (opown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
+}
+if (opown === 3) {
+_this.log(Lang.get('service.cant_join'), 'cant');
 }
 if (opown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');
