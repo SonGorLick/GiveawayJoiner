@@ -200,6 +200,7 @@
 		"logout_btn": "Выход",
 		"start_minimized": "Сворачивать при запуске",
 		"autostart": "Автостарт сервисов",
+		"log_autoclear": "Автоочистка логов",
 		"timer_view": "Отображать таймер",
 		"build_version": "Версия"
 	}

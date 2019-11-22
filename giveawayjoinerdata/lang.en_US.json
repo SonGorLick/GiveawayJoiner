@@ -200,6 +200,7 @@
 		"logout_btn": "Logout",
 		"start_minimized": "Minimize at startup",
 		"autostart": "Autostart of services",
+		"log_autoclear": "Auto clear logs",
 		"timer_view": "Display timer",
 		"build_version": "Version"
 	}
