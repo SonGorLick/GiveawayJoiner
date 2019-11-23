@@ -127,10 +127,10 @@ cost = 0;
 if (GJuser.op.includes(',' + code + '-n,')) {
 njoin = 1;
 }
-if (GJuser.op.includes(',' + code + '-s,')) {
+if (GJuser.op.includes(',' + code + '-s,') && _this.getConfig('check_in_steam', true)) {
 njoin = 2;
 }
-if (GJuser.op.includes(',' + code + '-b,')) {
+if (GJuser.op.includes(',' + code + '-b,') && _this.getConfig('blacklist_on', false)) {
 njoin = 3;
 }
 if (_this.curr_value < cost || entered.includes('ENTERED') || njoin > 0) {

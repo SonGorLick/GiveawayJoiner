@@ -30,7 +30,7 @@ callback(-1);
 });
 }
 getUserInfo(callback) {
-if (GJuser.tf.length > 601) {
+if (GJuser.tf.length > 301) {
 GJuser.tf = ',';
 }
 let userData = {
