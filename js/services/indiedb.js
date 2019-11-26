@@ -5,7 +5,7 @@ super();
 this.websiteUrl = 'https://www.indiedb.com';
 this.authContent = 'View your profile';
 this.authLink = 'https://www.indiedb.com/members/login';
-this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
+this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
 this.withValue = false;
 delete this.settings.pages;
 delete this.settings.interval_from;
@@ -31,6 +31,10 @@ callback(userData);
 }
 joinService() {
 let _this = this;
+if (_this.getConfig('timer_to', 70) !== _this.getConfig('timer_from', 50)) {
+let idbtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 70) - _this.getConfig('timer_from', 50))) + _this.getConfig('timer_from', 50));
+_this.stimer = idbtimer;
+}
 _this.url = 'https://www.indiedb.com';
 $.ajax({
 url: _this.url + '/giveaways',

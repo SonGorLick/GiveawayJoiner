@@ -6,11 +6,11 @@ this.websiteUrl = 'https://astats.astats.nl/astats/';
 this.authContent = 'Log out';
 this.authLink = 'https://astats.astats.nl/astats/profile/Login.php';
 this.withValue = false;
-this.settings.rnd = { type: 'checkbox', trans: this.transPath('rnd'), default: this.getConfig('rnd', false) };
-this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
-this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
-this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
-this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
+this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
+this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
+this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
+this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
+this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -35,6 +35,10 @@ callback(userData);
 }
 joinService() {
 let _this = this;
+if (_this.getConfig('timer_to', 70) !== _this.getConfig('timer_from', 50)) {
+let astimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 70) - _this.getConfig('timer_from', 50))) + _this.getConfig('timer_from', 50));
+_this.stimer = astimer;
+}
 let page = 1;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://astats.astats.nl';
@@ -180,8 +184,6 @@ _this.log(Lang.get('service.blacklisted'), 'black');
 }
 }
 if (asown === 0 && ahave === undefined) {
-setTimeout(function () {
-}, (Math.floor(Math.random() * 1000)) + 1000);
 $.ajax({
 url: _this.url + alink,
 success: function (html) {
@@ -198,7 +200,7 @@ _this.log(Lang.get('service.cant_join'), 'cant');
 }
 if (ajoin === 'Join') {
 setTimeout(function () {
-}, (Math.floor(Math.random() * 1000)) + 1000);
+}, (Math.floor(Math.random() * 1000)) + 2000);
 GJuser.as = GJuser.as + asjoin + ',';
 $.ajax({
 url: _this.url + alink,
@@ -208,6 +210,9 @@ success: function () {
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (arnd + 1) + '№|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname), 'enter');
 }
 });
+}
+else {
+asnext = 1000;
 }
 }
 });

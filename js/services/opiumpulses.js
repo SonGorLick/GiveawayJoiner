@@ -5,11 +5,11 @@ super();
 this.websiteUrl = 'https://www.opiumpulses.com';
 this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
-this.settings.rnd = { type: 'checkbox', trans: this.transPath('rnd'), default: this.getConfig('rnd', false) };
-this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
-this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
-this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
-this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
+this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
+this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
+this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
+this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
+this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -36,6 +36,10 @@ callback(userData);
 }
 joinService() {
 let _this = this;
+if (_this.getConfig('timer_to', 70) !== _this.getConfig('timer_from', 50)) {
+let optimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 70) - _this.getConfig('timer_from', 50))) + _this.getConfig('timer_from', 50));
+_this.stimer = optimer;
+}
 let page = 1;
 _this.pagemax = _this.getConfig('pages', 1);
 _this.check = 0;
@@ -189,21 +193,17 @@ opown = 1;
 if (GJuser.ownsubs.includes(',' + opsub + ',') && opsub > 0) {
 opown = 1;
 }
-}
-if (openter === " You're not eligible to enter") {
-opown = 3;
-}
-if (GJuser.black.includes(opid + ',') && _this.getConfig('blacklist_on', false)) {
-opown = 4;
-}
 if (opown === 1) {
 GJuser.op = GJuser.op + code + '-s,';
 }
-if (opown === 3) {
-GJuser.op = GJuser.op + code + '-n,';
 }
-if (opown === 4) {
+if (openter === " You're not eligible to enter") {
+GJuser.op = GJuser.op + code + '-n,';
+opown = 3;
+}
+if (GJuser.black.includes(opid + ',') && _this.getConfig('blacklist_on', false)) {
 GJuser.op = GJuser.op + code + '-b,';
+opown = 4;
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|' + _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name), 'chk');

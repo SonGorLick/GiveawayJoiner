@@ -7,9 +7,9 @@ this.websiteUrl = 'https://scrap.tf';
 this.authContent = 'Logout';
 this.authLink = 'https://scrap.tf/login';
 this.settings.sort_by_end = { type: 'checkbox', trans: this.transPath('sort_by_end'), default: this.getConfig('sort_by_end', false) };
-this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
-this.settings.rnd = { type: 'checkbox', trans: this.transPath('rnd'), default: this.getConfig('rnd', false) };
-this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
+this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
+this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
+this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
 this.withValue = false;
 super.init();
 }
@@ -33,6 +33,10 @@ callback(userData);
 }
 joinService() {
 let _this = this;
+if (_this.getConfig('timer_to', 70) !== _this.getConfig('timer_from', 50)) {
+let sptimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 70) - _this.getConfig('timer_from', 50))) + _this.getConfig('timer_from', 50));
+_this.stimer = sptimer;
+}
 _this.url = 'https://scrap.tf';
 let page = 1;
 _this.spurl = '';
@@ -176,7 +180,7 @@ let enter = data.indexOf('>Enter Raffle<') >= 0,
 entered = data.indexOf('>Leave Raffle<') >= 0,
 hash = data.substring(data.indexOf("ScrapTF.Raffles.EnterRaffle(")+39,data.indexOf("<i18n>Enter Raffle</i18n></button>")).slice(0, 64);
 if (enter) {
-let tmout = (Math.floor(Math.random() * 2000)) + 5000;
+let tmout = Math.floor(Math.random() * Math.floor(spnext / 4)) + Math.floor(spnext / 2);
 setTimeout(function () {
 $.ajax({
 type: 'POST',
@@ -195,7 +199,7 @@ if (spmess === '"Entered raffle!"') {
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + splink, spname), 'enter');
 }
 else {
-spnext = 15000;
+spnext = 21000;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }

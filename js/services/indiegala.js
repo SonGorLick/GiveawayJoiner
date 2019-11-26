@@ -10,16 +10,17 @@ this.settings.min_level = { type: 'number', trans: this.transPath('min_level'), 
 this.settings.max_level = { type: 'number', trans: this.transPath('max_level'), min: this.getConfig('min_level', 0), max: 8, default: this.getConfig('max_level', 0) };
 this.settings.min_cost = { type: 'number', trans: this.transPath('min_cost'), min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
 this.settings.max_cost = { type: 'number', trans: this.transPath('max_cost'), min: this.getConfig('min_cost', 0), max: 240, default: this.getConfig('max_cost', 0) };
+this.settings.join_qty = { type: 'number', trans: this.transPath('join_qty'), min: 1, max: 100, default: this.getConfig('join_qty', 1) };
+this.settings.points_reserve = { type: 'number', trans: this.transPath('points_reserve'), min: 0, max: 500, default: this.getConfig('points_reserve', 0) };
 this.settings.ending_first = { type: 'checkbox', trans: this.transPath('ending_first'), default: this.getConfig('ending_first', false) };
-this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
+this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
 this.settings.sort_by_level = { type: 'checkbox', trans: this.transPath('sort_by_level'), default: this.getConfig('sort_by_level', false) };
-this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
+this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.settings.sbl_ending_ig = { type: 'checkbox', trans: this.transPath('sbl_ending_ig'), default: this.getConfig('sbl_ending_ig', false) };
-this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
-this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
+this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
+this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
 super.init();
 this.log(this.logLink('https://www.indiegala.com/login', 'Login'), 'win');
-this.log(this.logLink('https://www.indiegala.com/giveaways', 'Captcha'), 'err');
 }
 authCheck(callback) {
 $.ajax({
@@ -80,6 +81,10 @@ callback(userData);
 }
 joinService() {
 let _this = this;
+if (_this.getConfig('timer_to', 70) !== _this.getConfig('timer_from', 50)) {
+let igtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 70) - _this.getConfig('timer_from', 50))) + _this.getConfig('timer_from', 50));
+_this.stimer = igtimer;
+}
 let page = 1;
 _this.ua = mainWindow.webContents.session.getUserAgent();
 _this.lvlmax = _this.getConfig('max_level', 0);
@@ -88,6 +93,7 @@ _this.pagemax = _this.getConfig('pages', 1);
 _this.sort = _this.getConfig('sort_by_level', false);
 _this.ending = _this.getConfig('ending', 0);
 _this.ending_first = _this.getConfig('ending_first', false);
+_this.reserve = _this.getConfig('points_reserve', 0);
 _this.sort_after = false;
 _this.url = 'https://www.indiegala.com';
 $.ajax({
@@ -261,7 +267,7 @@ entered = ticket.find('.giv-coupon').length === 0;
 }
 else {
 enterTimes = parseInt(ticket.find('.giv-coupon .palette-color-11').text());
-entered = enterTimes > 0;
+entered = enterTimes > (_this.getConfig('join_qty', 1) - 1);
 }
 if (
 (entered) ||
@@ -269,6 +275,7 @@ if (
 (GJuser.iglvl < level) ||
 (_this.lvlmin > level) ||
 (_this.curr_value < price) ||
+(_this.reserve > _this.curr_value - price) ||
 (price < _this.getConfig('min_cost', 0) && _this.getConfig('min_cost', 0) !== 0) ||
 (price > _this.getConfig('max_cost', 0) && _this.getConfig('max_cost', 0) !== 0) ||
 (time > _this.ending && _this.ending !== 0 && !_this.sort) ||

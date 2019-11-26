@@ -13,7 +13,8 @@ this.withValue = true;
 this.curr_value = 0;
 this.getTimeout = 15000;
 this.settings = {
-timer: { type: 'number', trans: 'service.timer', min: 5, max: 1440, default: this.getConfig('timer', 60) },
+timer_from: { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 70), default: this.getConfig('timer_from', 50) },
+timer_to: { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 50), max: 2880, default: this.getConfig('timer_to', 70) },
 interval_from: { type: 'number', trans: 'service.interval_from', min: 0, max: this.getConfig('interval_to', 15), default: this.getConfig('interval_from', 10) },
 interval_to: { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 10), max: 60, default: this.getConfig('interval_to', 15) },
 pages: { type: 'number', trans: 'service.pages', min: 1, max: 30, default: this.getConfig('pages', 1) }
@@ -24,7 +25,7 @@ this.addIcon();
 this.addPanel();
 this.renderSettings();
 this.updateCookies();
-if (Config.get('autostart')) {
+if (Config.get('autostart') && this.constructor.name !== 'ZP') {
 $.ajax({
 url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
 dataType: 'json',
@@ -65,7 +66,9 @@ $(document.createElement('span'))
 .text(this.constructor.name)
 .appendTo(this.icon);
 this.icon.on('click', () => {
+if (this.constructor.name !== 'ZP' || this.getConfig('on', false)) {
 this.setActive();
+}
 });
 }
 addPanel() {
@@ -244,7 +247,7 @@ this.buttonState(Lang.get('service.btn_start'));
 runTimer() {
 this.totalTicks = 0;
 this.started = true;
-let atimer = this.getConfig('timer', 60);
+let atimer = this.getConfig('timer_from', 50);
 this.stimer = atimer;
 this.setStatus('good');
 this.log(Lang.get('service.started'));
@@ -273,6 +276,9 @@ let blacklist = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'blacklist.
 if (blacklist.length > 0) {
 GJuser.black = blacklist.toString();
 GJuser.black = GJuser.black.replace(';', ',').replace('.', ',').replace(':', ',').replace('  ', '').replace(' ', '') + ',';
+if (GJuser.black.includes('app/ZP,')) {
+setConfig('zp_on', 1);
+}
 }
 }
 this.authCheck((authState) => {
@@ -281,7 +287,7 @@ if (Config.get('log_autoclear', false)) {
 this.logField.html('<div></div>');
 }
 this.log(Lang.get('service.connection_good'), 'srch');
-let atimer = this.getConfig('timer', 60);
+let atimer = this.getConfig('timer_from', 50);
 this.stimer = atimer;
 this.updateCookies();
 this.joinService();
@@ -389,6 +395,14 @@ case 'interval_to':
 _this.settings.interval_from.max = val;
 _this.reinitNumber('interval_from');
 break;
+case 'timer_from':
+_this.settings.timer_to.min = val;
+_this.reinitNumber('timer_to');
+break;
+case 'timer_to':
+_this.settings.timer_from.max = val;
+_this.reinitNumber('timer_from');
+break;
 }
 };
 let dn = function () {
@@ -429,6 +443,14 @@ break;
 case 'interval_to':
 _this.settings.interval_from.max = val;
 _this.reinitNumber('interval_from');
+break;
+case 'timer_from':
+_this.settings.timer_to.min = val;
+_this.reinitNumber('timer_to');
+break;
+case 'timer_to':
+_this.settings.timer_from.max = val;
+_this.reinitNumber('timer_from');
 break;
 }
 };

@@ -2,7 +2,7 @@
 class SteamGifts extends Joiner {
 constructor() {
 super();
-this.settings.timer.min = 5;
+this.settings.timer_from.min = 5;
 this.websiteUrl = 'https://www.steamgifts.com';
 this.authContent = 'Account';
 this.authLink = 'https://www.steamgifts.com/?login';
@@ -19,12 +19,12 @@ this.settings.sort_by_level = { type: 'checkbox', trans: this.transPath('sort_by
 this.settings.wishlist_first = { type: 'checkbox', trans: this.transPath('wishlist_first'), default: this.getConfig('wishlist_first', false) };
 this.settings.sort_by_chance = { type: 'checkbox', trans: this.transPath('sort_by_chance'), default: this.getConfig('sort_by_chance', false) };
 this.settings.wishlist_only = { type: 'checkbox', trans: this.transPath('wishlist_only'), default: this.getConfig('wishlist_only', false) };
-this.settings.check_in_steam = { type: 'checkbox', trans: this.transPath('check_in_steam'), default: this.getConfig('check_in_steam', true) };
+this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
 this.settings.reserve_on_wish = { type: 'checkbox', trans: this.transPath('reserve_on_wish'), default: this.getConfig('reserve_on_wish', false) };
-this.settings.blacklist_on = { type: 'checkbox', trans: this.transPath('blacklist_on'), default: this.getConfig('blacklist_on', false) };
+this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
 this.settings.ignore_on_wish = { type: 'checkbox', trans: this.transPath('ignore_on_wish'), default: this.getConfig('ignore_on_wish', false) };
-this.settings.sound = { type: 'checkbox', trans: this.transPath('sound'), default: this.getConfig('sound', true) };
-this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
+this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
+this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
 this.token = '';
 this.giveaways = [];
 super.init();
@@ -50,6 +50,10 @@ callback(userData);
 }
 joinService() {
 let page = 1;
+if (this.getConfig('timer_to', 70) !== this.getConfig('timer_from', 50)) {
+let sgtimer = (Math.floor(Math.random() * (this.getConfig('timer_to', 70) - this.getConfig('timer_from', 50))) + this.getConfig('timer_from', 50));
+this.stimer = sgtimer;
+}
 this.check = 0;
 this.won = this.getConfig('won', 0);
 this.giveaways = [];

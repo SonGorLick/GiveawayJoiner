@@ -6,8 +6,8 @@ this.domain = 'tf2r.com';
 this.websiteUrl = 'http://tf2r.com';
 this.authContent = 'Notifications';
 this.authLink = 'http://tf2r.com/login';
-this.settings.rnd = { type: 'checkbox', trans: this.transPath('rnd'), default: this.getConfig('rnd', false) };
-this.settings.log = { type: 'checkbox', trans: this.transPath('log'), default: this.getConfig('log', true) };
+this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
+this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
 this.withValue = false;
 this.getTimeout = 10000;
 delete this.settings.pages;
@@ -47,6 +47,10 @@ callback(userData);
 }
 joinService() {
 let _this = this;
+if (_this.getConfig('timer_to', 70) !== _this.getConfig('timer_from', 50)) {
+let tftimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 70) - _this.getConfig('timer_from', 50))) + _this.getConfig('timer_from', 50));
+_this.stimer = tftimer;
+}
 _this.url = 'http://tf2r.com';
 _this.ajaxReq(_this.url + '/raffles.html', (response) => {
 let giveaways = $(response.data).find('.pubrhead-text-right');

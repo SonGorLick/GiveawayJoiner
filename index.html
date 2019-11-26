@@ -94,6 +94,7 @@ const currentBuild = require('electron').remote.app.getVersion();
 <script src="./js/services/follx.js"></script>
 <script src="./js/services/scraptf.js"></script>
 <script src="./js/services/tf2r.js"></script>
+<script src="./js/services/zp.js"></script>
 <script>
 window.services = {
 steamgifts: new SteamGifts(),
@@ -103,7 +104,8 @@ astats: new Astats(),
 astats: new IndieDB(),
 follx: new Follx(),
 scraptf: new ScrapTF(),
-tf2r: new TF2R()
+tf2r: new TF2R(),
+zp: new ZP()
 };
 window.services.steamgifts.setActive();
 </script>

@@ -21,7 +21,7 @@ let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
 app.commandLine.appendSwitch('in-process-gpu');
 app.commandLine.appendSwitch('disable-software-rasterizer');
-app.commandLine.appendSwitch('disk-cache-size', 20);
+app.commandLine.appendSwitch('disk-cache-size', 50);
 app.disableHardwareAcceleration();
 if (process.platform === 'win32') {
 _itr = __dirname + '/icons/icon.ico';
@@ -183,8 +183,6 @@ let loadLang = () => {
 rq({uri: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/' + name})
 .then((lang) => {
 fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => { });
-})
-.finally(() => {
 checked++;
 if (checked >= data.length) {
 startApp();
