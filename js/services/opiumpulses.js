@@ -193,17 +193,21 @@ opown = 1;
 if (GJuser.ownsubs.includes(',' + opsub + ',') && opsub > 0) {
 opown = 1;
 }
-if (opown === 1) {
-GJuser.op = GJuser.op + code + '-s,';
-}
 }
 if (openter === " You're not eligible to enter") {
-GJuser.op = GJuser.op + code + '-n,';
 opown = 3;
 }
 if (GJuser.black.includes(opid + ',') && _this.getConfig('blacklist_on', false)) {
-GJuser.op = GJuser.op + code + '-b,';
 opown = 4;
+}
+if (opown === 1) {
+GJuser.op = GJuser.op + code + '-s,';
+}
+if (opown === 3) {
+GJuser.op = GJuser.op + code + '-n,';
+}
+if (opown === 4) {
+GJuser.op = GJuser.op + code + '-b,';
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|' + _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name), 'chk');

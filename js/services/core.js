@@ -40,7 +40,7 @@ if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt')) {
 let blacklist = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt');
 if (blacklist.length > 0) {
 GJuser.black = blacklist.toString();
-GJuser.black = GJuser.black.replace(';', ',').replace('.', ',').replace(':', ',').replace('  ', '').replace(' ', '') + ',';
+GJuser.black = GJuser.black + ',';
 }
 }
 this.startJoiner(true);
@@ -166,8 +166,8 @@ $.ajax({
 url: this.websiteUrl,
 timeout: this.getTimeout,
 success: function (html) {
-html = html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload');
-if (html.indexOf(authContent) >= 0) {
+html = html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload').replace(/<ins/gi, '<noload');
+if (html.indexOf(authContent) >= 0 || html.indexOf(this.authContent) >= 0) {
 callback(1);
 }
 else {
@@ -275,10 +275,7 @@ if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt')) {
 let blacklist = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt');
 if (blacklist.length > 0) {
 GJuser.black = blacklist.toString();
-GJuser.black = GJuser.black.replace(';', ',').replace('.', ',').replace(':', ',').replace('  ', '').replace(' ', '') + ',';
-if (GJuser.black.includes('app/ZP,')) {
-setConfig('zp_on', 1);
-}
+GJuser.black = GJuser.black + ',';
 }
 }
 this.authCheck((authState) => {
