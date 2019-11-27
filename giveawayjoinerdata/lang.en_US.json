@@ -90,6 +90,10 @@
 			"log": "Logging",
 			"log_title": "Detailed log of the service"
 		},
+		"zp": {
+			"check_all": "Check all giveaways",
+			"check_all_title": "In any case, check all giveaways on the site"
+		},
 		"tf2r": {
 			"sound": "Sound notifications",
 			"sound_title": "Play sound when winning a giveaway",
