@@ -10,7 +10,6 @@
 		"steam_login": "Login via Steam",
 		"lng_choice_title": "Change translation",
 		"choose_lang": "Choose language",
-		"no_avail_trans": "Another translations not available",
 		"go_back": "Go Back"
 	},
 	"ui": {
@@ -43,6 +42,7 @@
 		"cant_join": "Skipped - you're not eligible to enter",
 		"err_join": "Skipped - failed to enter giveaway due to an error ",
 		"points_low": "Skipped - not enough points",
+		"time": "Skipped - giveaway does not fit the time settings",
 		"skipped": "Skipped - giveaway does not fit the service settings",
 		"reach_end": "No more giveaways",
 		"level": "Level ",
