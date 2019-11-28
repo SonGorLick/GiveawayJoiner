@@ -75,13 +75,13 @@ zpcomp = comp.eq(zprnd),
 zplink = _this.url + zpcomp.find('.bv-item-image a').attr('href'),
 zpnam = zplink.replace('https://www.zeepond.com/zeepond/giveaways/enter-a-competition/', ''),
 njoin = 0;
-if (GJuser.zp.includes(',' + zpnam + '(z=')) {
+if (GJuser.zp.includes(',' + zpnam + '(z=') && !_this.getConfig('check_all', false)) {
 let zpga = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0],
 zpdtnw = new Date(),
 zptnw = (zpdtnw.getHours() * 60) + zpdtnw.getMinutes(),
 zpdnw = zpdtnw.getDate(),
 zpdga = parseInt(zpga.slice(0, 2)),
-zptga = (parseInt(zpga.slice(2, 4)) * 60) + parseInt(zpga.slice(4, 6));
+zptga = parseInt(zpga.slice(2, 6));
 if (zpdnw === zpdga || (zpdnw !== zpdga && zptnw < zptga)) {
 njoin = 3;
 }
@@ -184,9 +184,9 @@ success: function (response) {
 response = $(response.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
 let zpdt = new Date(),
 zph = zpdt.getHours(),
-zpm = zpdt.getMinutes() + 1,
+zpm = (zpdt.getMinutes() + 1),
 zpd = zpdt.getDate(),
-zpt = ('0' + zpd.toString()).slice(-2) + ('0' + zph.toString()).slice(-2) + ('0' + zpm.toString()).slice(-2);
+zpt = ('0' + zpd.toString()).slice(-2) + ('0000' + ((zph * 60) + zpm).toString()).slice(-4);
 if (GJuser.zp.includes(zpnam + '(z=')) {
 let zptold = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];
 GJuser.zp = GJuser.zp.replace(zpnam + '(z=' + zptold, zpnam + '(z=' + zpt);

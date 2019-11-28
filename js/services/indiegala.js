@@ -201,10 +201,10 @@ let tickets = $(JSON.parse(data).content).find('.tickets-col'),
 igcurr = 0,
 igrtry = 0;
 function giveawayEnter() {
-if (tickets.length < 12 || _this.curr_value === 0) {
+if (tickets.length < 12 || _this.curr_value === _this.getConfig('points_reserve', 0)) {
 _this.pagemax = page;
 }
-if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0) {
+if (tickets.length <= igcurr || !_this.started || _this.curr_value === _this.getConfig('points_reserve', 0)) {
 if (_this.getConfig('log', true)) {
 if (tickets.length < 12 && !_this.sort) {
 _this.log(Lang.get('service.reach_end'), 'skip');
