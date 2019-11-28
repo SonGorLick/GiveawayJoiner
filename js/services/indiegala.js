@@ -201,7 +201,7 @@ let tickets = $(JSON.parse(data).content).find('.tickets-col'),
 igcurr = 0,
 igrtry = 0;
 function giveawayEnter() {
-if (tickets.length < 12 || _this.curr_value === _this.reserve) {
+if (tickets.length < 12 || _this.curr_value === _this.reserve || !_this.started) {
 _this.pagemax = page;
 }
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === _this.reserve) {
@@ -284,15 +284,6 @@ if (
 {
 if (_this.getConfig('log', true) && igrtry === 0) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name), 'chk');
-if (entered) {
-_this.log(Lang.get('service.already_joined'), 'skip');
-}
-if (!entered && _this.curr_value < price) {
-_this.log(Lang.get('service.points_low'), 'skip');
-}
-if (!entered && _this.curr_value >= price) {
-_this.log(Lang.get('service.skipped'), 'skip');
-}
 }
 if (
 (time > _this.ending && _this.ending !== 0 && !_this.sort) ||
@@ -300,7 +291,21 @@ if (
 )
 {
 _this.pagemax = page;
-igcurr = 12;
+igcurr = 100;
+}
+if (_this.getConfig('log', true) && igrtry === 0) {
+if (entered) {
+_this.log(Lang.get('service.already_joined'), 'skip');
+}
+if (!entered && _this.curr_value < price) {
+_this.log(Lang.get('service.points_low'), 'skip');
+}
+if (!entered && _this.curr_value >= price && igcurr !== 100) {
+_this.log(Lang.get('service.skipped'), 'skip');
+}
+if (igcurr === 100) {
+_this.log(Lang.get('service.time'), 'skip');
+}
 }
 ignext = 100;
 igrtry = 0;

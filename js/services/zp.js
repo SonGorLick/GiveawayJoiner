@@ -119,7 +119,7 @@ if (njoin === 2) {
 _this.log(Lang.get('service.blacklisted'), 'black');
 }
 if (njoin === 3) {
-_this.log(Lang.get('service.already_joined'), 'skip');
+_this.log(Lang.get('service.time'), 'skip');
 }
 }
 if (njoin === 0) {
