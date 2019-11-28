@@ -166,8 +166,8 @@ $.ajax({
 url: this.websiteUrl,
 timeout: this.getTimeout,
 success: function (html) {
-html = html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload').replace(/<ins/gi, '<noload');
-if (html.indexOf(authContent) >= 0 || html.indexOf(this.authContent) >= 0) {
+html = html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload');
+if (html.indexOf(authContent) >= 0) {
 callback(1);
 }
 else {
@@ -214,7 +214,7 @@ this.waitAuth = false;
 });
 }
 });
-Browser.setTitle('GiveawayJoiner - ' + Lang.get('auth.browser_loading'));
+Browser.setTitle('GiveawayJoiner - ' + Lang.get('service.browser_loading'));
 Browser.loadURL(this.authLink);
 Browser.once('close', () => {
 Browser.webContents.removeAllListeners('did-finish-load');

@@ -152,6 +152,6 @@ $('.content-item .info .username').html(userData.username);
 }
 function openWebsite(url) {
 Browser.loadURL(url);
-Browser.setTitle('GiveawayJoiner - ' + Lang.get('auth.browser_loading'));
+Browser.setTitle('GiveawayJoiner - ' + Lang.get('service.browser_loading'));
 Browser.show();
 }

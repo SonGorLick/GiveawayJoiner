@@ -5,7 +5,7 @@ const storage = require('electron-json-storage');
 const fs = require('fs');
 const rq = require('request-promise');
 const devMode = app.getVersion() === '4.2.12';
-let _ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1';
+let _ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/78.0.3904.67 Mobile/15E148 Safari/605.1';
 let appLoaded = false;
 let mainWindow = null;
 let Browser = null;

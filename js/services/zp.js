@@ -6,7 +6,7 @@ this.settings.timer_to.default = 700;
 this.settings.timer_from.default = 500;
 this.settings.interval_from.min = 9;
 this.websiteUrl = 'https://www.zeepond.com';
-this.authContent = 'My Profile';
+this.authContent = 'My Account';
 this.authLink = 'https://www.zeepond.com/cb-login';
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
 this.settings.check_all = { type: 'checkbox', trans: this.transPath('check_all'), default: this.getConfig('check_all', false) };
@@ -16,6 +16,19 @@ this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getC
 this.withValue = false;
 delete this.settings.pages;
 super.init();
+this.log(this.logLink('https://www.zeepond.com/cb-login', Lang.get('service.login')));
+}
+authCheck(callback) {
+$.ajax({
+url: 'https://www.zeepond.com',
+success: function (html) {
+html = html.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload').replace(/<script/gi, '<noload');
+callback(1);
+},
+error: function () {
+callback(-1);
+}
+});
 }
 getUserInfo(callback) {
 if (GJuser.zp.length > 10000) {
@@ -47,8 +60,13 @@ _this.url = 'https://www.zeepond.com';
 $.ajax({
 url: _this.url + '/zeepond/giveaways/enter-a-competition',
 success: function (data) {
-data = $(data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
-let comp = data.find('.bv-item-wrapper'),
+data = data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
+let logined = data.indexOf('My Account') >= 0;
+if (!logined) {
+_this.log(Lang.get('service.session_expired'), 'err');
+_this.stopJoiner(true);
+}
+let comp = $(data).find('.bv-item-wrapper'),
 zpcurr = 0,
 random = Array.from(Array(comp.length).keys());
 if (_this.getConfig('rnd', false)) {
