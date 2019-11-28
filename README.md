@@ -14,5 +14,3 @@
   GiveawayJoiner build will be in sources subfolder 'dist'
   p.s. for Linux: GiveawayJoiner need 'libgconf-2-4' lib to be installed in your distro, for Ubuntu users in terminal enter command:
   >sudo apt-get install gconf2
-  
-  Recommended 'Noto' fonts family installed
