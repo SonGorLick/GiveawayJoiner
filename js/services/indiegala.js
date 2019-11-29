@@ -198,7 +198,12 @@ $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
 success: function (data) {
 if (data.indexOf('"status": "ok"') < 0) {
+if (data.indexOf('status": "server_error"') >= 0) {
+_this.pagemax = page;
+}
+else {
 _this.enterOnPage(page, callback);
+}
 }
 else {
 let tickets = $(JSON.parse(data).content).find('.tickets-col'),
