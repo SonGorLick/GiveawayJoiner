@@ -113,7 +113,7 @@ zptnw = (zpdtnw.getHours() * 60) + zpdtnw.getMinutes(),
 zpdnw = zpdtnw.getDate(),
 zpdga = parseInt(zpga.slice(0, 2)),
 zptga = parseInt(zpga.slice(2, 6));
-if (zpdnw === zpdga || (zpdnw !== zpdga && zptnw < zptga)) {
+if (zpdnw === zpdga || (zpdnw === (zpdga + 1) && zptnw < zptga)) {
 njoin = 3;
 }
 }
