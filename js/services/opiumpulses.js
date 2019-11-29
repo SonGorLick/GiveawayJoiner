@@ -13,8 +13,14 @@ this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', 
 super.init();
 }
 getUserInfo(callback) {
-if (GJuser.op.length > 1201) {
+if (GJuser.op === '') {
 GJuser.op = ',';
+if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'opiumpulses.txt')) {
+let opdata = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'opiumpulses.txt');
+if (opdata.length > 1 && opdata.length < 2000) {
+GJuser.op = opdata.toString();
+}
+}
 }
 let userData = {
 avatar: __dirname + '/images/OpiumPulses.png',
@@ -99,6 +105,9 @@ if (opfound.length < 40) {
 _this.pagemax = page;
 }
 if (opfound.length <= opcurr || !_this.started || _this.curr_value === 0) {
+if (opfound.length <= opcurr && page === _this.pagemax) {
+fs.writeFile(storage.getDataPath().slice(0, -7) + 'opiumpulses.txt', GJuser.op, (err) => { });
+}
 if (_this.getConfig('log', true)) {
 if (opfound.length < 40) {
 _this.log(Lang.get('service.reach_end'), 'skip');

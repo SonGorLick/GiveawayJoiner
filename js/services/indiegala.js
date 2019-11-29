@@ -197,6 +197,9 @@ json: false
 $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
 success: function (data) {
+if (data.indexOf('"status": "ok"') < 0) {
+}
+else {
 let tickets = $(JSON.parse(data).content).find('.tickets-col'),
 igcurr = 0,
 igrtry = 0;
@@ -248,16 +251,21 @@ igsteam = ticket.find('.giv-game-img').attr('data-src'),
 name = ticket.find('h2 a').text(),
 time = ticket.find('.box_pad_5 > .info-row:nth-of-type(5)').text(),
 entered = false,
-enterTimes = 0;
+enterTimes = 0,
+igtime = '';
 if (time.includes('day')) {
-time = 24 * (time.replace('day left','').replace('days left','').trim());
+igtime = time.replace('day left','').replace('days left','').trim()
+time = 24 * igtime;
+igtime = igtime + 'd|';
 }
 else {
 if (time.includes('hour')) {
 time = time.replace('hour left','').replace('hours left','').trim();
+igtime = time + 'h|';
 }
 else {
 if (time.includes('minute')) {
+igtime = time.replace('minute left','').replace('minutes left','').trim() + 'm|';
 time = 0;
 }
 }
@@ -283,7 +291,7 @@ if (
 )
 {
 if (_this.getConfig('log', true) && igrtry === 0) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name), 'chk');
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name), 'chk');
 }
 if (
 (time > _this.ending && _this.ending !== 0 && !_this.sort) ||
@@ -294,10 +302,10 @@ _this.pagemax = page;
 igcurr = 100;
 }
 if (_this.getConfig('log', true) && igrtry === 0) {
-if (entered) {
+if (entered && igcurr !== 100) {
 _this.log(Lang.get('service.already_joined'), 'skip');
 }
-if (!entered && _this.curr_value < price) {
+if (!entered && _this.curr_value < price && igcurr !== 100) {
 _this.log(Lang.get('service.points_low'), 'skip');
 }
 if (!entered && _this.curr_value >= price && igcurr !== 100) {
@@ -343,7 +351,7 @@ if (GJuser.black.includes(igid + ',') && _this.getConfig('blacklist_on', false))
 igown = 4;
 }
 if (_this.getConfig('log', true) && igrtry === 0) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name), 'chk');
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name), 'chk');
 if (igown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
@@ -374,7 +382,7 @@ json: true
 if (response.status === 'ok') {
 igrtry = 0;
 _this.setValue(response.new_amount);
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + time + 'h|' + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name), 'enter');
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name), 'enter');
 igcurr++;
 }
 else {
@@ -388,7 +396,7 @@ igrtry = 0;
 igcurr++;
 }
 }
-if (igrtry >= 10) {
+if (igrtry >= 12) {
 igrtry = 0;
 igcurr++;
 if (_this.getConfig('log', true)) {
@@ -398,6 +406,7 @@ _this.log(Lang.get('service.err_join'), 'err');
 setTimeout(giveawayEnter, ignext);
 }
 giveawayEnter();
+}
 }
 });
 });

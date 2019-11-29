@@ -14,8 +14,11 @@ this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', 
 super.init();
 }
 getUserInfo(callback) {
-if (GJuser.as.length > 901) {
-GJuser.as = ',';
+if (GJuser.as === '' && fs.existsSync(storage.getDataPath().slice(0, -7) + 'astats.txt')) {
+let asdata = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'astats.txt');
+if (asdata.length > 1 && asdata.length < 2000) {
+GJuser.as = asdata.toString();
+}
 }
 let userData = {
 avatar: __dirname + '/images/Astats.png',
@@ -43,7 +46,7 @@ let page = 1;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://astats.astats.nl';
 _this.pagemax = _this.getConfig('pages', 1);
-if (GJuser.as === '') {
+if (GJuser === '') {
 GJuser.as = ',';
 $.ajax({
 url: _this.url + '/astats/TopListGames.php?language=english'
@@ -109,6 +112,9 @@ if (afound.length === 0) {
 _this.pagemax = page;
 }
 if (afound.length <= acurr || !_this.started) {
+if (afound.length <= acurr && page === _this.pagemax) {
+fs.writeFile(storage.getDataPath().slice(0, -7) + 'astats.txt', GJuser.as, (err) => { });
+}
 if (_this.getConfig('log', true)) {
 if (page === _this.pagemax) {
 _this.log(Lang.get('service.reach_end'), 'skip');
@@ -135,14 +141,15 @@ asid = '???',
 asstm = '';
 if (alink !== undefined || assteam !== undefined) {
 let aname = data.find('[href="' + alink + '"]').text().trim(),
-ended = data.find('[href="' + alink + '"] > span').text().trim();
+ended = data.find('[href="' + alink + '"] > span').text().trim(),
+asjoin = alink.replace('/astats/Giveaway.php?GiveawayID=','');
 if (aname.includes('This giveaway has ended.') || ended === 'This giveaway has ended.') {
+GJuser.as = GJuser.as.replace(',' + asjoin + ',', ',');
 _this.pagemax = page;
 asnext = 50;
 }
 else {
-let ahave = data.find('[href="' + alink + '"] font').attr('color'),
-asjoin = alink.replace('/astats/Giveaway.php?GiveawayID=','');
+let ahave = data.find('[href="' + alink + '"] font').attr('color');
 if (assteam.includes('apps/')) {
 asapp = parseInt(assteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'app/' + asapp;
@@ -200,16 +207,16 @@ _this.log(Lang.get('service.cant_join'), 'cant');
 }
 if (ajoin === 'Join') {
 setTimeout(function () {
-}, (Math.floor(Math.random() * 1000)) + 2000);
-GJuser.as = GJuser.as + asjoin + ',';
 $.ajax({
 url: _this.url + alink,
 method: 'POST',
 data: 'Comment=&JoinGiveaway=Join',
 success: function () {
+GJuser.as = GJuser.as + asjoin + ',';
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (arnd + 1) + '№|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname), 'enter');
 }
 });
+}, (Math.floor(Math.random() * 1000)) + 2000);
 }
 else {
 asnext = 1000;

@@ -14,10 +14,10 @@ GJuser.ownsubs = '[]';
 GJuser.black = '';
 GJuser.ig = '';
 GJuser.as = '';
-GJuser.op = ',';
+GJuser.op = '';
 GJuser.sp = '';
 GJuser.tf = ',';
-GJuser.zp = ',';
+GJuser.zp = '';
 GJuser.iglvl = undefined;
 $(function () {
 setInterval(intervalSchedules, 1000);

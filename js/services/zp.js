@@ -19,6 +19,15 @@ super.init();
 this.log(this.logLink('https://www.zeepond.com/cb-login', Lang.get('service.login')));
 }
 authCheck(callback) {
+if (GJuser.zp === '') {
+GJuser.zp = ',';
+if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'zp.txt')) {
+let zpdata = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'zp.txt');
+if (zpdata.length > 1 && zpdata.length < 10000) {
+GJuser.zp = zpdata.toString();
+}
+}
+}
 $.ajax({
 url: 'https://www.zeepond.com',
 success: function (html) {
@@ -79,6 +88,9 @@ random[j] = temp;
 }
 function giveawayEnter() {
 if (comp.length <= zpcurr || _this.skip || !_this.started) {
+if (comp.length <= zpcurr) {
+fs.writeFile(storage.getDataPath().slice(0, -7) + 'zp.txt', GJuser.zp, (err) => { });
+}
 if (_this.getConfig('log', true)) {
 if (_this.started && !_this.skip) {
 _this.log(Lang.get('service.reach_end'), 'skip');
@@ -205,9 +217,9 @@ zph = zpdt.getHours(),
 zpm = (zpdt.getMinutes() + 1),
 zpd = zpdt.getDate(),
 zpt = ('0' + zpd.toString()).slice(-2) + ('0000' + ((zph * 60) + zpm).toString()).slice(-4);
-if (GJuser.zp.includes(zpnam + '(z=')) {
+if (GJuser.zp.includes(',' + zpnam + '(z=')) {
 let zptold = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];
-GJuser.zp = GJuser.zp.replace(zpnam + '(z=' + zptold, zpnam + '(z=' + zpt);
+GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zptold, ',' + zpnam + '(z=' + zpt);
 }
 else {
 GJuser.zp = GJuser.zp + zpnam + '(z=' + zpt + '),';

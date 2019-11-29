@@ -163,6 +163,7 @@ _this.log(Lang.get('service.blacklisted'), 'black');
 }
 }
 if (fxown === 0) {
+let fxcrr = fxcurr + 1;
 $.ajax({
 url: link,
 success: function (html) {
@@ -180,7 +181,7 @@ headers: {
 success: function (data) {
 if (data.response) {
 _this.setValue(data.points);
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (fxcurr + 1) + '№|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name), 'enter');
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + fxcrr + '№|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name), 'enter');
 }
 }
 });
