@@ -46,7 +46,7 @@ let page = 1;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://astats.astats.nl';
 _this.pagemax = _this.getConfig('pages', 1);
-if (GJuser === '') {
+if (GJuser.as === '') {
 GJuser.as = ',';
 $.ajax({
 url: _this.url + '/astats/TopListGames.php?language=english'

@@ -198,6 +198,7 @@ $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
 success: function (data) {
 if (data.indexOf('"status": "ok"') < 0) {
+_this.log(Lang.get('service.checked') + page + '#', 'err');
 }
 else {
 let tickets = $(JSON.parse(data).content).find('.tickets-col'),
