@@ -42,7 +42,7 @@
 		"cant_join": "Skipped - you're not eligible to enter",
 		"err_join": "Skipped - failed to enter giveaway due to an error ",
 		"points_low": "Skipped - not enough points",
-		"time": "Skipped - giveaway does not fit the time settings",
+		"time": "Skipped - giveaway does not fit the time to enter",
 		"skipped": "Skipped - giveaway does not fit the service settings",
 		"reach_end": "No more giveaways",
 		"level": "Level ",
@@ -105,8 +105,10 @@
 			"log_title": "Detailed log of the service"
 		},
 		"zp": {
-			"check_all": "Check all giveaways",
-			"check_all_title": "In any case, check all giveaways on the site"
+			"skip_after": "Safe search",
+			"skip_after_title": "If can't enter in giveaway, checking of other giveaways will be skipped",
+			"check_all": "Force check",
+			"check_all_title": "Force check giveaways, ignore the saved time of the last entry"
 		},
 		"tf2r": {
 			"sound": "Sound notifications",
