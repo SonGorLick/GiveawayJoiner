@@ -8,11 +8,12 @@ this.settings.interval_from.min = 9;
 this.websiteUrl = 'https://www.zeepond.com';
 this.authContent = 'My Account';
 this.authLink = 'https://www.zeepond.com/cb-login';
+this.settings.skip_after = { type: 'checkbox', trans: this.transPath('skip_after'), default: this.getConfig('skip_after', true) };
+this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
 this.settings.check_all = { type: 'checkbox', trans: this.transPath('check_all'), default: this.getConfig('check_all', false) };
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
 this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
 this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
-this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
 this.withValue = false;
 delete this.settings.pages;
 super.init();
@@ -152,7 +153,7 @@ if (!zpsteam.includes('https://store.steam')) {
 zpsteam = undefined;
 }
 if (entered) {
-if (!_this.getConfig('check_all', false)) {
+if (_this.getConfig('skip_after', true)) {
 _this.skip = true;
 }
 zpown = 5;
