@@ -24,7 +24,7 @@ if (GJuser.zp === '') {
 GJuser.zp = ',';
 if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'zp.txt')) {
 let zpdata = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'zp.txt');
-if (zpdata.length > 1 && zpdata.length < 10000) {
+if (zpdata.length > 1 && zpdata.length < 20000) {
 GJuser.zp = zpdata.toString();
 }
 }
