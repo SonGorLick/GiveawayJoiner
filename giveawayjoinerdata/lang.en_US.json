@@ -2,15 +2,9 @@
 	"lang_culture": "en_US",
 	"lang_name": "English",
 	"auth": {
-		"check": "Looking for session...",
-		"session": "Session - ",
 		"ses_not_found": "Session not found",
 		"connection_error": "Connection error",
-		"browser_loading": "loading",
-		"steam_login": "Login via Steam",
-		"lng_choice_title": "Change translation",
-		"choose_lang": "Choose language",
-		"go_back": "Go Back"
+		"browser_loading": "loading"
 	},
 	"ui": {
 		"menu1": "Services",
@@ -20,10 +14,14 @@
 	"service": {
 		"started": "Bot is running",
 		"stopped": "Bot is stopped",
+		"logs": "Log",
 		"win": "!!! Congrats, you won !!!",
 		"qty": "quantity",
-		"login": "Press to login",
+		"login": "Click, if you need to login",
 		"browser_loading": "loading",
+		"steam_login": "Login to Steam",
+		"ua_check": "To check User-Agent (you can change it in file /giveawayjoinerdata/user-agent.txt)",
+		"ses_not_found": "Session not found",
 		"settings": "Settings",
 		"clear_log": "Clear log",
 		"log_cleared": "Log cleared",
@@ -31,6 +29,8 @@
 		"btn_start": "Start",
 		"btn_stop": "Stop",
 		"btn_work": "Working",
+		"open_file": "Open file ",
+		"file_not_found": "File not found",
 		"btn_checking": "Checking",
 		"btn_awaiting": "Awaiting",
 		"connection_good": "Searching giveaways...",
@@ -43,6 +43,7 @@
 		"err_join": "Skipped - failed to enter giveaway due to an error ",
 		"points_low": "Skipped - not enough points",
 		"time": "Skipped - giveaway does not fit the time to enter",
+		"not_ga": "Skipped - not a giveaway",
 		"skipped": "Skipped - giveaway does not fit the service settings",
 		"reach_end": "No more giveaways",
 		"level": "Level ",
@@ -103,6 +104,17 @@
 			"sound_title": "Play sound when winning a giveaway",
 			"log": "Logging",
 			"log_title": "Detailed log of the service"
+        	},
+		"chronogg": {
+			"balance": "Balance: ",
+			"spins": "Spins: ",
+			"legendaries": "Legendaries: ",
+			"spinned": "Skipped - already spin a coin",
+			"quest": "Coins recieved: ",
+			"streak": "Days: ",
+			"bonus": "Bonus: ",
+			"total": "Total: ",
+			"jwt_err": "JWT data not found in file"
 		},
 		"zp": {
 			"skip_after": "Safe search",
@@ -228,7 +240,6 @@
 		}
 	},
 	"profile": {
-		"logout_btn": "Logout",
 		"start_minimized": "Minimize at startup",
 		"autostart": "Autostart of services",
 		"log_autoclear": "Auto clear logs",
