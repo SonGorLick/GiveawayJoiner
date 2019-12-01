@@ -9,10 +9,10 @@ this.websiteUrl = 'https://www.zeepond.com';
 this.authContent = 'My Account';
 this.authLink = 'https://www.zeepond.com/cb-login';
 this.settings.skip_after = { type: 'checkbox', trans: this.transPath('skip_after'), default: this.getConfig('skip_after', true) };
-this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
-this.settings.check_all = { type: 'checkbox', trans: this.transPath('check_all'), default: this.getConfig('check_all', false) };
-this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
 this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
+this.settings.check_all = { type: 'checkbox', trans: this.transPath('check_all'), default: this.getConfig('check_all', false) };
+this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
+this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
 this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
 this.withValue = false;
 delete this.settings.pages;
@@ -41,9 +41,6 @@ callback(-1);
 });
 }
 getUserInfo(callback) {
-if (GJuser.zp.length > 10000) {
-GJuser.zp = ',';
-}
 let userData = {
 avatar: __dirname + '/images/ZP.png',
 username: 'ZP User'
@@ -73,7 +70,7 @@ success: function (data) {
 data = data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
 let logined = data.indexOf('My Account') >= 0;
 if (!logined) {
-_this.log(Lang.get('service.session_expired'), 'err');
+_this.log(Lang.get('service.ses_not_found'), 'err');
 _this.stopJoiner(true);
 }
 let comp = $(data).find('.bv-item-wrapper'),

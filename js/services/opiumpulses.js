@@ -232,7 +232,6 @@ _this.log(Lang.get('service.blacklisted'), 'black');
 }
 if (opown === 0) {
 setTimeout(function () {
-}, (Math.floor(Math.random() * 1000)) + 1000);
 $.ajax({
 url: _this.url + eLink,
 success: function () {
@@ -241,6 +240,7 @@ _this.setValue(_this.curr_value);
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|' + _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name), 'enter');
 }
 });
+}, (Math.floor(Math.random() * 2000)) + 1000);
 }
 else {
 opnext = 100;

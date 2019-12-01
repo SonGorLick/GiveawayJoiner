@@ -326,7 +326,14 @@ let input = this.settings[control];
 switch (input.type) {
 case 'number':
 case 'float_number':
-let step = input.type === 'number' ? 1 : 0.1;
+case 'ten_number':
+let step = 1;
+if (input.type === 'float_number') {
+step = 0.1;
+}
+if (input.type === 'ten_number') {
+step = 10;
+}
 if (input.default < input.min) {
 input.default = input.min;
 this.setConfig(control, input.default);

@@ -216,7 +216,7 @@ GJuser.as = GJuser.as + asjoin + ',';
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (arnd + 1) + '№|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname), 'enter');
 }
 });
-}, (Math.floor(Math.random() * 1000)) + 2000);
+}, (Math.floor(Math.random() * 2000)) + 1000);
 }
 else {
 asnext = 1000;

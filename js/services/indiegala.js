@@ -6,11 +6,12 @@ this.authContent = 'My Profile';
 this.websiteUrl = 'https://www.indiegala.com';
 this.authLink = 'https://www.indiegala.com/login';
 this.settings.ending = { type: 'number', trans: this.transPath('ending'), min: 0, max: 720, default: this.getConfig('ending', 0) };
+this.settings.join_qty = { type: 'number', trans: this.transPath('join_qty'), min: 1, max: 100, default: this.getConfig('join_qty', 1) };
+this.settings.min_entries = { type: 'ten_number', trans: 'service.min_entries', min: 0, max: 10000, default: this.getConfig('min_entries', 0) };
 this.settings.min_level = { type: 'number', trans: 'service.min_level', min: 0, max: this.getConfig('max_level', 0), default: this.getConfig('min_level', 0) };
 this.settings.max_level = { type: 'number', trans: 'service.max_level', min: this.getConfig('min_level', 0), max: 8, default: this.getConfig('max_level', 0) };
 this.settings.min_cost = { type: 'number', trans: 'service.min_cost', min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
 this.settings.max_cost = { type: 'number', trans: 'service.max_cost', min: this.getConfig('min_cost', 0), max: 240, default: this.getConfig('max_cost', 0) };
-this.settings.join_qty = { type: 'number', trans: this.transPath('join_qty'), min: 1, max: 100, default: this.getConfig('join_qty', 1) };
 this.settings.points_reserve = { type: 'number', trans: 'service.points_reserve', min: 0, max: 500, default: this.getConfig('points_reserve', 0) };
 this.settings.ending_first = { type: 'checkbox', trans: this.transPath('ending_first'), default: this.getConfig('ending_first', false) };
 this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
@@ -89,6 +90,7 @@ let page = 1;
 _this.ua = mainWindow.webContents.session.getUserAgent();
 _this.lvlmax = _this.getConfig('max_level', 0);
 _this.lvlmin = _this.getConfig('min_level', 0);
+_this.entmin = _this.getConfig('min_entries', 0);
 _this.pagemax = _this.getConfig('pages', 1);
 _this.sort = _this.getConfig('sort_by_level', false);
 _this.ending = _this.getConfig('ending', 0);
@@ -197,6 +199,11 @@ json: false
 $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
 success: function (data) {
+if (data.indexOf('CONTENT="NOINDEX, NOFOLLOW"') >= 0) {
+setTimeout(function () {
+_this.enterOnPage(page, callback);
+}, (Math.floor(Math.random() * 4000)) + 5000);
+}
 let tickets = $(JSON.parse(data).content).find('.tickets-col'),
 igcurr = 0,
 igrtry = 0;
@@ -206,7 +213,7 @@ _this.pagemax = page;
 }
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === _this.reserve) {
 if (_this.getConfig('log', true)) {
-if (tickets.length < 12 && !_this.sort) {
+if (igcurr < 12 && !_this.sort && _this.started) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
 if (page === _this.pagemax) {
@@ -247,6 +254,7 @@ id = ticket.find('.ticket-right .relative').attr('rel'),
 igsteam = ticket.find('.giv-game-img').attr('data-src'),
 name = ticket.find('h2 a').text(),
 time = ticket.find('.box_pad_5 > .info-row:nth-of-type(5)').text(),
+sold = ticket.find('.box_pad_5 > .info-row:nth-of-type(3) > .tickets-sold').text().trim(),
 entered = false,
 enterTimes = 0,
 igtime = '';
@@ -281,6 +289,7 @@ if (
 (_this.lvlmin > level) ||
 (_this.curr_value < price) ||
 (_this.reserve > _this.curr_value - price) ||
+(_this.entmin > sold) ||
 (price < _this.getConfig('min_cost', 0) && _this.getConfig('min_cost', 0) !== 0) ||
 (price > _this.getConfig('max_cost', 0) && _this.getConfig('max_cost', 0) !== 0) ||
 (time > _this.ending && _this.ending !== 0 && !_this.sort) ||
