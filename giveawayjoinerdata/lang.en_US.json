@@ -26,6 +26,7 @@
 		"clear_log": "Clear log",
 		"log_cleared": "Log cleared",
 		"open_website": "Visit current service's website",
+		"add_tbl": "Add to blacklist",
 		"btn_start": "Start",
 		"btn_stop": "Stop",
 		"btn_work": "Working",
@@ -70,7 +71,7 @@
 		"sort_by_level": "Sort by level",
 		"sort_by_level_title": "Enter giveaways sorted from high to low level",
 		"min_entries": "Min. entries",
-		"min_entries_title": "Don't enter giveaways where required number of entries less than the selected. 0 - don't consider a number of entries",
+		"min_entries_title": "Don't enter giveaways where required number of entries less than the selected",
 		"min_level": "Min. level",
 		"min_level_title": "Do't enter giveaways where required level less than the selected",
 		"max_level": "Max. level",
@@ -256,6 +257,7 @@
 		"start_minimized": "Minimize at startup",
 		"autostart": "Autostart of services",
 		"log_autoclear": "Auto clear logs",
+		"autoscroll": "Autoscroll logs",
 		"timer_view": "Display timer",
 		"build_version": "Version"
 	}
