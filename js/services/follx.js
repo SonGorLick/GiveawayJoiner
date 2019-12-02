@@ -154,7 +154,7 @@ if (GJuser.black.includes(fxid + ',') && _this.getConfig('blacklist_on', false))
 fxown = 4;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (fxcurr + 1) + '№|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name), 'chk');
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (fxcurr + 1) + '№|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name) + _this.logBlack(fxid), 'chk');
 if (fxown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
@@ -181,7 +181,7 @@ headers: {
 success: function (data) {
 if (data.response) {
 _this.setValue(data.points);
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + fxcrr + '№|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name), 'enter');
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + fxcrr + '№|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name) + _this.logBlack(fxid), 'enter');
 }
 }
 });

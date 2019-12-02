@@ -223,7 +223,7 @@ else {
 GJuser.zp = GJuser.zp + zpnam + '(z=' + zpt + '),';
 }
 if (zpstm !== '') {
-_this.log(Lang.get('service.entered_in') + '|' + (zprnd + 1) + '№|' + _this.logLink(zpstm, zpid) + '|  ' + _this.logLink(zplink, zpname), 'enter');
+_this.log(Lang.get('service.entered_in') + '|' + (zprnd + 1) + '№|' + _this.logLink(zpstm, zpid) + '|  ' + _this.logLink(zplink, zpname) + _this.logBlack(zpid), 'enter');
 }
 else {
 _this.log(Lang.get('service.entered_in') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpname), 'enter');

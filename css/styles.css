@@ -70,7 +70,7 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-panel > ul li+li { margin-left: 6px; }
 .in-service-panel { font-size: 14px; display: none; background: rgba(47,61,68,1); height: 460px; padding: 15px; border-radius: 2px; border: 1px solid rgba(33,43,48,1); }
 .in-service-panel.active { display: block; }
-.service-logs { font-size: 12px; overflow-x: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.service-logs { font-size: 12px; overflow-x: auto; white-space: nowrap; text-overflow: ellipsis; }
 .service-logs .err { color: lightcoral; }
 .service-logs .win { color: hotpink; }
 .service-logs .enter { color: limegreen; }
@@ -82,6 +82,7 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-logs .chk { color: grey; }
 .service-logs span.time { color: #4db6ac; padding-right: 16px; margin: -11px; }
 .service-logs span.open-website { cursor: pointer; text-decoration: underline; }
+.service-logs span.add-to-blacklist { cursor: pointer; text-decoration: none; color: black; }
 .service-logs { -webkit-user-select: text; }
 .service-logs .clear-log { position: absolute; right: 18px; top: 4px; font-size: 16px; color: #4db6ac; cursor: pointer; }
 .service-logs .clear-log:hover { color: #00bcd4; }

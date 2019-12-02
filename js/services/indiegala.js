@@ -357,7 +357,7 @@ if (GJuser.black.includes(igid + ',') && _this.getConfig('blacklist_on', false))
 igown = 4;
 }
 if (_this.getConfig('log', true) && igrtry === 0) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name), 'chk');
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'chk');
 if (igown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
@@ -388,7 +388,7 @@ json: true
 if (response.status === 'ok') {
 igrtry = 0;
 _this.setValue(response.new_amount);
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name), 'enter');
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'enter');
 igcurr++;
 }
 else {

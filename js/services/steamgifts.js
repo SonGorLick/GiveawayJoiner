@@ -65,6 +65,7 @@ this.won = this.getConfig('won', 0);
 this.giveaways = [];
 this.gawf = [];
 this.gagf = [];
+this.gamf = [];
 this.url = 'https://www.steamgifts.com';
 let processCommon = () => {
 if (!this.started) {
@@ -285,7 +286,7 @@ if (GJuser.black.includes(sgid + ',') && _this.getConfig('blacklist_on', false))
 sgown = 4;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name), 'chk');
+_this.log(Lang.get('service.checking') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name) + _this.logBlack(sgid), 'chk');
 if (sgown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
@@ -334,7 +335,7 @@ code: GA.code
 },
 success: function (data) {
 if (data.type === 'success') {
-_this.log(Lang.get('service.entered_in') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name), 'enter');
+_this.log(Lang.get('service.entered_in') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name) + _this.logBlack(sgid), 'enter');
 _this.setValue(data.points);
 GA.entered = true;
 }

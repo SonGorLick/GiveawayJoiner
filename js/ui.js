@@ -90,6 +90,12 @@ reloadLangStrings();
 $(document).on('click', '.open-website[data-link]', function () {
 openWebsite($(this).attr('data-link'));
 });
+$(document).on('click', '.add-to-blacklist[black]', function () {
+if (GJuser.black !== '') {
+GJuser.black = GJuser.black + $(this).attr('black') + ',';
+fs.writeFile(storage.getDataPath().slice(0, -7) + 'blacklist.txt', GJuser.black, (err) => { });
+}
+});
 });
 function intervalSchedules() {
 if (intervalTicks % 600 === 0) {

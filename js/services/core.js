@@ -25,7 +25,7 @@ this.addIcon();
 this.addPanel();
 this.renderSettings();
 this.updateCookies();
-if (Config.get('autostart') && this.constructor.name !== 'ZP') {
+if (Config.get('autostart') && Config.get('zp_on')) {
 $.ajax({
 url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
 dataType: 'json',
@@ -40,7 +40,9 @@ if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt')) {
 let blacklist = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt');
 if (blacklist.length > 0) {
 GJuser.black = blacklist.toString();
+if (GJuser.black.slice(-1) !== ',') {
 GJuser.black = GJuser.black + ',';
+}
 }
 }
 this.startJoiner(true);
@@ -275,7 +277,9 @@ if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt')) {
 let blacklist = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt');
 if (blacklist.length > 0) {
 GJuser.black = blacklist.toString();
+if (GJuser.black.slice(-1) !== ',') {
 GJuser.black = GJuser.black + ',';
+}
 }
 }
 this.authCheck((authState) => {
@@ -517,6 +521,9 @@ wrap.find('.btn-up').addClass('disabled');
 logLink(address, anchor) {
 return '<span class="open-website" data-link="' + address + '">' + anchor + '</span>';
 }
+logBlack(steamappid) {
+return '<span class="add-to-blacklist" black="' + steamappid + '" title="' + Lang.get('service.add_tbl') + '">  [x]</span>';
+}
 updateCookies() {
 mainWindow.webContents.session.cookies.get({domain: this.domain}, (error, cookies) => {
 let newCookies = '';
@@ -575,7 +582,9 @@ if (logType === '' || logType === undefined) {
 logType = 'normal';
 }
 this.logField.append('<div class="' + logType + '"><span class="time">' + timeStr() + '</span>' + text + '</div>');
+if (Config.get('autoscroll')) {
 this.logWrap.scrollTop(this.logWrap[0].scrollHeight);
+}
 }
 joinService() {}
 getUserInfo(callback) {
