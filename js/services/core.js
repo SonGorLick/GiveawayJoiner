@@ -25,7 +25,7 @@ this.addIcon();
 this.addPanel();
 this.renderSettings();
 this.updateCookies();
-if (Config.get('autostart') && Config.get('zp_on')) {
+if (Config.get('autostart')) {
 $.ajax({
 url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
 dataType: 'json',
@@ -68,9 +68,7 @@ $(document.createElement('span'))
 .text(this.constructor.name)
 .appendTo(this.icon);
 this.icon.on('click', () => {
-if (this.constructor.name !== 'ZP' || this.getConfig('on', false)) {
 this.setActive();
-}
 });
 }
 addPanel() {
