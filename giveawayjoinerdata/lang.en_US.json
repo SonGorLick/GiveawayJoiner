@@ -12,6 +12,8 @@
 		"list_type_sw": "Change the type of display"
 	},
 	"service": {
+		"autostart": "Autostart service",
+		"autostart_title": "Autostart the service on program load",
 		"started": "Bot is running",
 		"stopped": "Bot is stopped",
 		"logs": "Log",
