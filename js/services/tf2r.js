@@ -7,6 +7,7 @@ this.websiteUrl = 'http://tf2r.com';
 this.authContent = 'Notifications';
 this.authLink = 'http://tf2r.com/login';
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
+this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
 this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
 this.withValue = false;
 this.getTimeout = 10000;

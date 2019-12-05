@@ -11,6 +11,7 @@ this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.
 this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
 this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
 this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
+this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -113,7 +114,9 @@ _this.pagemax = page;
 }
 if (afound.length <= acurr || !_this.started) {
 if (afound.length <= acurr && page === _this.pagemax) {
+setTimeout(function () {
 fs.writeFile(storage.getDataPath().slice(0, -7) + 'astats.txt', GJuser.as, (err) => { });
+}, _this.interval());
 }
 if (_this.getConfig('log', true)) {
 if (page === _this.pagemax) {

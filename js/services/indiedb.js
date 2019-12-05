@@ -6,6 +6,7 @@ this.websiteUrl = 'https://www.indiedb.com';
 this.authContent = 'View your profile';
 this.authLink = 'https://www.indiedb.com/members/login';
 this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
+this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
 this.withValue = false;
 delete this.settings.pages;
 delete this.settings.interval_from;

@@ -25,7 +25,7 @@ this.addIcon();
 this.addPanel();
 this.renderSettings();
 this.updateCookies();
-if (Config.get('autostart')) {
+if (this.getConfig('autostart')) {
 $.ajax({
 url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
 dataType: 'json',

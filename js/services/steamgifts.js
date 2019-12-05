@@ -31,6 +31,7 @@ this.settings.ignore_on_wish = { type: 'checkbox', trans: this.transPath('ignore
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.settings.ignore_on_group = { type: 'checkbox', trans: this.transPath('ignore_on_group'), default: this.getConfig('ignore_on_group', false) };
 this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
+this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
 this.token = '';
 this.giveaways = [];
 super.init();

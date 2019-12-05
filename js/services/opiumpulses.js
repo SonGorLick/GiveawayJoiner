@@ -10,6 +10,7 @@ this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.
 this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
 this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
 this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
+this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -106,7 +107,9 @@ _this.pagemax = page;
 }
 if (opfound.length <= opcurr || !_this.started || _this.curr_value === 0) {
 if (opfound.length <= opcurr && page === _this.pagemax) {
+setTimeout(function () {
 fs.writeFile(storage.getDataPath().slice(0, -7) + 'opiumpulses.txt', GJuser.op, (err) => { });
+}, _this.interval());
 }
 if (_this.getConfig('log', true)) {
 if (opfound.length < 40) {

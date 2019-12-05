@@ -13,6 +13,7 @@ this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_stea
 this.settings.check_all = { type: 'checkbox', trans: this.transPath('check_all'), default: this.getConfig('check_all', false) };
 this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
+this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
 this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
 this.withValue = false;
 delete this.settings.pages;
@@ -50,6 +51,7 @@ url: 'https://www.zeepond.com',
 success: function (data) {
 data = data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
 userData.avatar = $(data).find('.profile-pic').attr('style').replace('background-color:transparent; background-image:url(', '').replace(');', '');
+userData.username = 'Profile';
 },
 complete: function () {
 callback(userData);
@@ -87,7 +89,9 @@ random[j] = temp;
 function giveawayEnter() {
 if (comp.length <= zpcurr || _this.skip || !_this.started) {
 if (comp.length <= zpcurr) {
+setTimeout(function () {
 fs.writeFile(storage.getDataPath().slice(0, -7) + 'zp.txt', GJuser.zp, (err) => { });
+}, _this.interval());
 }
 if (_this.getConfig('log', true)) {
 if (_this.started && !_this.skip) {
@@ -110,7 +114,11 @@ zptnw = (zpdtnw.getHours() * 60) + zpdtnw.getMinutes(),
 zpdnw = zpdtnw.getDate(),
 zpdga = parseInt(zpga.slice(0, 2)),
 zptga = parseInt(zpga.slice(2, 6));
-if (zpdnw === zpdga || (zpdnw === (zpdga + 1) && zptnw < zptga)) {
+if (
+(zpdnw === zpdga) ||
+(zpdnw === (zpdga + 1) && zptnw < zptga)
+)
+{
 njoin = 3;
 }
 }
