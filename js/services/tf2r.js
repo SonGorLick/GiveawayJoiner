@@ -107,7 +107,12 @@ json: true
 })
 .then((body) => {
 if (body.status === 'ok') {
+if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.entered_in') + '|' + (tfrnd + 1) + '№|  ' + _this.logLink(link, name), 'enter');
+}
+else {
+_this.log(Lang.get('service.entered_in') + _this.logLink(link, name), 'enter');
+}
 GJuser.tf = GJuser.tf + rid + ',';
 }
 else {

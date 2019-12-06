@@ -389,7 +389,12 @@ json: true
 if (response.status === 'ok') {
 igrtry = 0;
 _this.setValue(response.new_amount);
+if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'enter');
+}
+else {
+_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'enter');
+}
 igcurr++;
 }
 else {

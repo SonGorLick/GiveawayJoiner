@@ -197,7 +197,12 @@ data: {raffle: id, captha: '', hash: hash, csrf: _this.csrf},
 success: function (response) {
 let spmess = JSON.stringify(response.message);
 if (spmess === '"Entered raffle!"') {
+if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + splink, spname), 'enter');
+}
+else {
+_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + splink, spname), 'enter');
+}
 }
 else {
 spnext = 61000;

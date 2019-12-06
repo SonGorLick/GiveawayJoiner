@@ -216,7 +216,12 @@ method: 'POST',
 data: 'Comment=&JoinGiveaway=Join',
 success: function () {
 GJuser.as = GJuser.as + asjoin + ',';
+if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (arnd + 1) + '№|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname) + _this.logBlack(asid), 'enter');
+}
+else {
+_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + alink, aname) + _this.logBlack(asid), 'enter');
+}
 }
 });
 }, (Math.floor(Math.random() * 2000)) + 1000);

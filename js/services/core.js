@@ -25,7 +25,7 @@ this.addIcon();
 this.addPanel();
 this.renderSettings();
 this.updateCookies();
-if (this.getConfig('autostart')) {
+if (Config.get('autostart') || this.getConfig('autostart')) {
 $.ajax({
 url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
 dataType: 'json',
@@ -520,7 +520,12 @@ logLink(address, anchor) {
 return '<span class="open-website" data-link="' + address + '">' + anchor + '</span>';
 }
 logBlack(steamappid) {
-return '<span class="add-to-blacklist" black="' + steamappid + '" title="' + Lang.get('service.add_tbl') + '">  [x]</span>';
+if (!GJuser.black.includes(steamappid + ',')) {
+return '<span class="add-to-blacklist" black="' + steamappid + '" title="' + Lang.get('service.add_tbl') + '">  [+]</span>';
+}
+else {
+return '<span class="add-to-blacklist" black="' + steamappid + '" title="' + Lang.get('service.rmv_tbl') + '">  [-]</span>';
+}
 }
 updateCookies() {
 mainWindow.webContents.session.cookies.get({domain: this.domain}, (error, cookies) => {

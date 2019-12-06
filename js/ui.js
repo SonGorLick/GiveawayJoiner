@@ -92,7 +92,12 @@ openWebsite($(this).attr('data-link'));
 });
 $(document).on('click', '.add-to-blacklist[black]', function () {
 if (GJuser.black !== '') {
+if (!GJuser.black.includes($(this).attr('black') + ',')) {
 GJuser.black = GJuser.black + $(this).attr('black') + ',';
+}
+else {
+GJuser.black = GJuser.black.replace(',' + $(this).attr('black') + ',', ',');
+}
 fs.writeFile(storage.getDataPath().slice(0, -7) + 'blacklist.txt', GJuser.black, (err) => { });
 }
 });

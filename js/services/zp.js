@@ -230,11 +230,16 @@ GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zptold, ',' + zpnam + '(z=' 
 else {
 GJuser.zp = GJuser.zp + zpnam + '(z=' + zpt + '),';
 }
+if (_this.getConfig('log', true)) {
 if (zpstm !== '') {
 _this.log(Lang.get('service.entered_in') + '|' + (zprnd + 1) + '№|' + _this.logLink(zpstm, zpid) + '|  ' + _this.logLink(zplink, zpname) + _this.logBlack(zpid), 'enter');
 }
 else {
 _this.log(Lang.get('service.entered_in') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpname), 'enter');
+}
+}
+else {
+_this.log(Lang.get('service.entered_in') + _this.logLink(zplink, zpname), 'enter');
 }
 }
 });

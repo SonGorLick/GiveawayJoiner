@@ -286,7 +286,7 @@ sgown = 1;
 if (GJuser.black.includes(sgid + ',') && _this.getConfig('blacklist_on', false)) {
 sgown = 4;
 }
-if (_this.getConfig('log', true)) {
+if (_this.getConfig('log', true) && _this.curr_value > 0) {
 _this.log(Lang.get('service.checking') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name) + _this.logBlack(sgid), 'chk');
 if (sgown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
@@ -336,7 +336,12 @@ code: GA.code
 },
 success: function (data) {
 if (data.type === 'success') {
-_this.log(Lang.get('service.entered_in') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name) + _this.logBlack(sgid), 'enter');
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.entered_in') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  ' + _this.logLink(GA.link, GA.name) + _this.logBlack(sgid), 'enter');
+}
+else {
+_this.log(Lang.get('service.entered_in') + _this.logLink(GA.link, GA.name) + _this.logBlack(sgid), 'enter');
+}
 _this.setValue(data.points);
 GA.entered = true;
 }
