@@ -29,6 +29,7 @@
 		"log_cleared": "Log cleared",
 		"open_website": "Visit current service's website",
 		"add_tbl": "Add to blacklist",
+		"rmv_tbl": "Remove from blacklist",
 		"btn_start": "Start",
 		"btn_stop": "Stop",
 		"btn_work": "Working",
@@ -257,7 +258,7 @@
 	},
 	"profile": {
 		"start_minimized": "Minimize at startup",
-		"autostart": "Autostart of services",
+		"autostart": "Autostart all services",
 		"log_autoclear": "Auto clear logs",
 		"autoscroll": "Autoscroll logs",
 		"timer_view": "Display timer",
