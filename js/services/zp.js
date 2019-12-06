@@ -88,7 +88,7 @@ random[j] = temp;
 }
 function giveawayEnter() {
 if (comp.length <= zpcurr || _this.skip || !_this.started) {
-if (comp.length <= zpcurr) {
+if (comp.length <= zpcurr || _this.skip) {
 setTimeout(function () {
 fs.writeFile(storage.getDataPath().slice(0, -7) + 'zp.txt', GJuser.zp, (err) => { });
 }, _this.interval());
@@ -108,17 +108,12 @@ zplink = _this.url + zpcomp.find('.bv-item-image a').attr('href'),
 zpnam = zplink.replace('https://www.zeepond.com/zeepond/giveaways/enter-a-competition/', ''),
 njoin = 0;
 if (GJuser.zp.includes(',' + zpnam + '(z=') && !_this.getConfig('check_all', false)) {
-let zpga = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0],
-zpdtnw = new Date(),
-zptnw = (zpdtnw.getHours() * 60) + zpdtnw.getMinutes(),
-zpdnw = zpdtnw.getDate(),
-zpdga = parseInt(zpga.slice(0, 2)),
-zptga = parseInt(zpga.slice(2, 6));
-if (
-(zpdnw === zpdga) ||
-(zpdnw === (zpdga + 1) && zptnw < zptga)
-)
-{
+let zpdga = parseInt(GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0]),
+zpdtnow = new Date();
+zpdtnow.setDate(zpdtnow.getUTCDate());
+zpdtnow.setHours(zpdtnow.getUTCHours() + 11);
+let zpdnow = zpdtnow.getDate();
+if (zpdnow === zpdga) {
 njoin = 3;
 }
 }
@@ -162,6 +157,17 @@ if (_this.getConfig('skip_after', true)) {
 _this.skip = true;
 }
 zpown = 5;
+let zpdtchk = new Date();
+zpdtchk.setDate(zpdtchk.getUTCDate());
+zpdtchk.setHours(zpdtchk.getUTCHours() + 11);
+let zpdchk = ('0' + zpdtchk.getDate().toString()).slice(-2);
+if (GJuser.zp.includes(',' + zpnam + '(z=')) {
+let zpdga = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];
+GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zpdga, ',' + zpnam + '(z=' + zpdchk);
+}
+else {
+GJuser.zp = GJuser.zp + zpnam + '(z=' + zpdchk + '),';
+}
 }
 if (zpsteam !== undefined) {
 if (zpsteam.includes('app/')) {
@@ -218,17 +224,16 @@ $.ajax({
 url: zplink + '/enter_competition',
 success: function (response) {
 response = $(response.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
-let zpdt = new Date(),
-zph = zpdt.getHours(),
-zpm = (zpdt.getMinutes() + 1),
-zpd = zpdt.getDate(),
-zpt = ('0' + zpd.toString()).slice(-2) + ('0000' + ((zph * 60) + zpm).toString()).slice(-4);
+let zpdtnew = new Date();
+zpdtnew.setDate(zpdtnew.getUTCDate());
+zpdtnew.setHours(zpdtnew.getUTCHours() + 11);
+let zpdnew = ('0' + zpdtnew.getDate().toString()).slice(-2);
 if (GJuser.zp.includes(',' + zpnam + '(z=')) {
-let zptold = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];
-GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zptold, ',' + zpnam + '(z=' + zpt);
+let zpdold = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];
+GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zpdold, ',' + zpnam + '(z=' + zpdnew);
 }
 else {
-GJuser.zp = GJuser.zp + zpnam + '(z=' + zpt + '),';
+GJuser.zp = GJuser.zp + zpnam + '(z=' + zpdnew + '),';
 }
 if (_this.getConfig('log', true)) {
 if (zpstm !== '') {
@@ -238,8 +243,13 @@ else {
 _this.log(Lang.get('service.entered_in') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpname), 'enter');
 }
 }
+if (!_this.getConfig('log', true)) {
+if (zpstm !== '') {
+_this.log(Lang.get('service.entered_in') + _this.logLink(zplink, zpname) + _this.logBlack(zpid), 'enter');
+}
 else {
 _this.log(Lang.get('service.entered_in') + _this.logLink(zplink, zpname), 'enter');
+}
 }
 }
 });
