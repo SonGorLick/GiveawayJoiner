@@ -11,8 +11,6 @@ this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getC
 this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
 this.withValue = false;
 delete this.settings.pages;
-delete this.settings.interval_from;
-delete this.settings.interval_to;
 super.init();
 }
 authCheck(callback) {
@@ -35,10 +33,13 @@ callback(userData);
 }
 joinService() {
 let _this = this;
+if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
+let chtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
+_this.stimer = chtimer;
+}
 _this.ua = mainWindow.webContents.session.getUserAgent();
 _this.url = 'https://api.chrono.gg';
-let chcurr = 1,
-chnext = 1000;
+let chcurr = 1;
 _this.check = true;
 function giveawayEnter() {
 if (!_this.check || !_this.started) {
@@ -48,6 +49,7 @@ _this.log(Lang.get('service.checked') + 'ChronoGG', 'srch');
 return;
 }
 if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'chronogg' + chcurr + '.txt')) {
+let chnext = _this.interval();
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.open_file') + ' /giveawayjoinerdata/chronogg' + chcurr + '.txt');
 }

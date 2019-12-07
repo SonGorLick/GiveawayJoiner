@@ -13,6 +13,10 @@ this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', defaul
 this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
 this.withValue = false;
 super.init();
+this.log(this.logLink('https://scrap.tf/login', Lang.get('service.login')));
+}
+authCheck(callback) {
+callback(1);
 }
 getUserInfo(callback) {
 let userData = {
@@ -20,12 +24,11 @@ avatar: __dirname + '/images/ScrapTF.png',
 username: 'ScrapTF User'
 };
 $.ajax({
-url: 'https://scrap.tf',
+url: 'https://scrap.tf/raffles/puzzle',
 success: function (data) {
 data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 userData.avatar = data.substring(data.indexOf('style="" src="')+14,data.indexOf('class="nav-username"')).slice(0, 121);
 userData.username = $(data).find('.nav-username').text();
-GJuser.sp = userData.avatar;
 },
 complete: function () {
 callback(userData);
@@ -88,6 +91,11 @@ data: spdata,
 success: function (data) {
 if (page === 1) {
 data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
+let logined = data.indexOf('Logout') >= 0;
+if (!logined) {
+_this.log(Lang.get('service.ses_not_found'), 'err');
+_this.stopJoiner(true);
+}
 _this.csrf = data.substring(data.indexOf("ScrapTF.User.Hash =")+21,data.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 let spwon = $(data).find('.nav-notice a').text().trim();
 if (spwon.length > 0 && spwon.includes("You've won")) {
@@ -162,11 +170,11 @@ return;
 let spnext = _this.interval(),
 sprnd = random[spcurr],
 spcont = sptent.eq(sprnd),
+spname = spcont.find('.panel-heading .raffle-name a').text().trim().slice(0, 120),
 splink = spcont.find('.panel-heading .raffle-name a').attr('href'),
 spended = spcont.find('.panel-heading .raffle-details span.raffle-state-ended').text().trim(),
-id = splink.replace('/raffles/', ''),
-spname = spcont.find('.panel-heading .raffle-name a').text().trim();
-if (spname === undefined || spname === '' || spname.length === 0 || spname.length > 105) {
+id = splink.replace('/raffles/', '');
+if (spname === undefined || spname === '' || spname.length === 0 || spname.length > 100) {
 spname = '?????? ' + '(' + id + ')';
 }
 if (_this.getConfig('log', true)) {
@@ -180,6 +188,7 @@ data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 let enter = data.indexOf('>Enter Raffle<') >= 0,
 entered = data.indexOf('>Leave Raffle<') >= 0,
 hash = data.substring(data.indexOf("ScrapTF.Raffles.EnterRaffle(")+39,data.indexOf("<i18n>Enter Raffle</i18n></button>")).slice(0, 64);
+_this.csrf = data.substring(data.indexOf("ScrapTF.User.Hash =")+21,data.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 if (enter) {
 let tmout = Math.floor(Math.random() * Math.floor(spnext / 4)) + Math.floor(spnext / 2);
 setTimeout(function () {

@@ -286,7 +286,7 @@ sgown = 1;
 if (GJuser.black.includes(sgid + ',') && _this.getConfig('blacklist_on', false)) {
 sgown = 4;
 }
-if (_this.getConfig('log', true) && _this.curr_value > 0) {
+if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name) + _this.logBlack(sgid), 'chk');
 if (sgown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
@@ -320,7 +320,7 @@ if (
 (!GA.entered && sgown === 0) &&
 (_this.curr_value >= GA.cost) &&
 (GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_level', 0) === 0 || GA.level >= _this.getConfig('min_level', 0) && GA.level <= _this.getConfig('max_level', 0) && _this.getConfig('max_level', 0) > 0) &&
-(GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || GA.cost >= _this.getConfig('min_cost', 0)) &&
+(GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || GA.cost >= _this.getConfig('min_cost', 0) || GA.cost === 0) &&
 (GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_cost', 0) === 0 || GA.cost <= _this.getConfig('max_cost', 0)) &&
 (GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || _this.getConfig('points_reserve', 0) === 0 || ((_this.curr_value - GA.cost) >= _this.getConfig('points_reserve', 0)))
 )

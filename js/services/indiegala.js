@@ -209,10 +209,10 @@ let tickets = $(JSON.parse(data).content).find('.tickets-col'),
 igcurr = 0,
 igrtry = 0;
 function giveawayEnter() {
-if (tickets.length < 12 || _this.curr_value === _this.reserve || !_this.started) {
+if (tickets.length < 12 || _this.curr_value === 0 || !_this.started) {
 _this.pagemax = page;
 }
-if (tickets.length <= igcurr || !_this.started || _this.curr_value === _this.reserve) {
+if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0) {
 if (_this.getConfig('log', true)) {
 if (igcurr < 12 && !_this.sort && _this.started) {
 _this.log(Lang.get('service.reach_end'), 'skip');
@@ -258,7 +258,21 @@ time = ticket.find('.box_pad_5 > .info-row:nth-of-type(5)').text(),
 sold = ticket.find('.box_pad_5 > .info-row:nth-of-type(3) > .tickets-sold').text().trim(),
 entered = false,
 enterTimes = 0,
+igapp = 0,
+igsub = 0,
+igid = '???',
+igstm = '',
 igtime = '';
+if (igsteam.includes('apps/')) {
+igapp = parseInt(igsteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
+igid = 'app/' + igapp;
+igstm = 'https://store.steampowered.com/app/' + igapp;
+}
+if (igsteam.includes('sub/')) {
+igsub = parseInt(igsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
+igid = 'sub/' + igsub;
+igstm = 'https://store.steampowered.com/sub/' + igsub;
+}
 if (time.includes('day')) {
 igtime = time.replace('day left','').replace('days left','').trim();
 time = (24 * igtime);
@@ -298,7 +312,7 @@ if (
 )
 {
 if (_this.getConfig('log', true) && igrtry === 0) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name), 'chk');
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'chk');
 }
 if (
 (time > _this.ending && _this.ending !== 0 && !_this.sort) ||
@@ -327,21 +341,7 @@ igrtry = 0;
 igcurr++;
 }
 else {
-let igown = 0,
-igapp = 0,
-igsub = 0,
-igid = '???',
-igstm = '';
-if (igsteam.includes('apps/')) {
-igapp = parseInt(igsteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
-igid = 'app/' + igapp;
-igstm = 'https://store.steampowered.com/app/' + igapp;
-}
-if (igsteam.includes('sub/')) {
-igsub = parseInt(igsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
-igid = 'sub/' + igsub;
-igstm = 'https://store.steampowered.com/sub/' + igsub;
-}
+let igown = 0;
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
 _this.log(Lang.get('service.steam_error'), 'err');
