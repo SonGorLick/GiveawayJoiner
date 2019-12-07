@@ -42,6 +42,7 @@ _this.url = 'https://api.chrono.gg';
 let chcurr = 1;
 _this.check = true;
 function giveawayEnter() {
+let chnext = _this.interval();
 if (!_this.check || !_this.started) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checked') + 'ChronoGG', 'srch');
@@ -49,7 +50,6 @@ _this.log(Lang.get('service.checked') + 'ChronoGG', 'srch');
 return;
 }
 if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'chronogg' + chcurr + '.txt')) {
-let chnext = _this.interval();
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.open_file') + ' /giveawayjoinerdata/chronogg' + chcurr + '.txt');
 }
