@@ -19,8 +19,9 @@ this.settings.sort_by_level = { type: 'checkbox', trans: 'service.sort_by_level'
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.settings.sbl_ending_ig = { type: 'checkbox', trans: this.transPath('sbl_ending_ig'), default: this.getConfig('sbl_ending_ig', false) };
 this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
-this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
+this.settings.multi_join = { type: 'checkbox', trans: this.transPath('multi_join'), default: this.getConfig('multi_join', false) };
 this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
+this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
 super.init();
 this.log(this.logLink('https://www.indiegala.com/login', Lang.get('service.login')));
 }
@@ -207,7 +208,8 @@ _this.enterOnPage(page, callback);
 }
 let tickets = $(JSON.parse(data).content).find('.tickets-col'),
 igcurr = 0,
-igrtry = 0;
+igrtry = 0,
+Times = 0;
 function giveawayEnter() {
 if (tickets.length < 12 || _this.curr_value === 0 || !_this.started) {
 _this.pagemax = page;
@@ -257,7 +259,7 @@ name = ticket.find('h2 a').text(),
 time = ticket.find('.box_pad_5 > .info-row:nth-of-type(5)').text(),
 sold = ticket.find('.box_pad_5 > .info-row:nth-of-type(3) > .tickets-sold').text().trim(),
 entered = false,
-enterTimes = 0,
+enterTimes = 1,
 igapp = 0,
 igsub = 0,
 igid = '???',
@@ -290,12 +292,18 @@ time = 0;
 }
 }
 }
+if (Times === 0) {
 if (single) {
 entered = ticket.find('.giv-coupon').length === 0;
+enterTimes = 0;
 }
 else {
 enterTimes = parseInt(ticket.find('.giv-coupon .palette-color-11').text());
-entered = enterTimes > (_this.getConfig('join_qty', 1) - 1);
+entered = enterTimes >= _this.getConfig('join_qty', 1);
+}
+}
+else {
+entered = false;
 }
 if (
 (entered) ||
@@ -338,6 +346,7 @@ _this.log(Lang.get('service.time'), 'skip');
 }
 ignext = 100;
 igrtry = 0;
+Times = 0;
 igcurr++;
 }
 else {
@@ -357,7 +366,7 @@ igown = 1;
 if (GJuser.black.includes(igid + ',') && _this.getConfig('blacklist_on', false)) {
 igown = 4;
 }
-if (_this.getConfig('log', true) && igrtry === 0) {
+if (_this.getConfig('log', true) && igrtry === 0 && Times === 0) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'chk');
 if (igown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
@@ -365,6 +374,9 @@ _this.log(Lang.get('service.have_on_steam'), 'steam');
 if (igown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');
 }
+}
+if (Times === 0) {
+Times = enterTimes;
 }
 if (igown === 0) {
 igrtry++;
@@ -390,12 +402,24 @@ if (response.status === 'ok') {
 igrtry = 0;
 _this.setValue(response.new_amount);
 if (_this.getConfig('log', true)) {
+if (Times === 0) {
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'enter');
+}
+else {
+_this.log('[' + (Times + 1) + '] ' + Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'enter');
+}
 }
 else {
 _this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'enter');
 }
+Times++;
+if (_this.getConfig('multi_join', false) && Times < _this.getConfig('join_qty', 1)) {
+ignext = (Math.floor(Math.random() * 400)) + 600;
+}
+else {
+Times = 0;
 igcurr++;
+}
 }
 else {
 ignext = (Math.floor(Math.random() * 400)) + 600;
