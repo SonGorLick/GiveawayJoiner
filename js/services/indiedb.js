@@ -5,6 +5,8 @@ super();
 this.websiteUrl = 'https://www.indiedb.com';
 this.authContent = 'View your profile';
 this.authLink = 'https://www.indiedb.com/members/login';
+this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 700), default: this.getConfig('timer_from', 500) };
+this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 500), max: 2880, default: this.getConfig('timer_to', 700) };
 this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
 this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
 this.withValue = false;
@@ -32,8 +34,8 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-if (_this.getConfig('timer_to', 70) !== _this.getConfig('timer_from', 50)) {
-let idbtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 70) - _this.getConfig('timer_from', 50))) + _this.getConfig('timer_from', 50));
+if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
+let idbtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = idbtimer;
 }
 _this.url = 'https://www.indiedb.com';

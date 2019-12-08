@@ -6,6 +6,8 @@ this.domain = 'tf2r.com';
 this.websiteUrl = 'http://tf2r.com';
 this.authContent = 'Notifications';
 this.authLink = 'http://tf2r.com/login';
+this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 700), default: this.getConfig('timer_from', 500) };
+this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 500), max: 2880, default: this.getConfig('timer_to', 700) };
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
 this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
 this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
@@ -48,8 +50,8 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-if (_this.getConfig('timer_to', 70) !== _this.getConfig('timer_from', 50)) {
-let tftimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 70) - _this.getConfig('timer_from', 50))) + _this.getConfig('timer_from', 50));
+if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
+let tftimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = tftimer;
 }
 _this.url = 'http://tf2r.com';

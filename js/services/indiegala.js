@@ -200,7 +200,7 @@ json: false
 $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
 success: function (data) {
-if (data.indexOf('CONTENT="NOINDEX, NOFOLLOW"') >= 0) {
+if (data.indexOf('CONTENT="NOINDEX, NOFOLLOW"') >= 0 || data.indexOf('CONTENT="noindex,nofollow"') >= 0) {
 setTimeout(function () {
 _this.enterOnPage(page, callback);
 }, (Math.floor(Math.random() * 4000)) + 5000);

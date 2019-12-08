@@ -2,12 +2,12 @@
 class ZP extends Joiner {
 constructor() {
 super();
-this.settings.timer_to.default = 700;
-this.settings.timer_from.default = 500;
 this.settings.interval_from.min = 9;
 this.websiteUrl = 'https://www.zeepond.com';
 this.authContent = 'My Account';
 this.authLink = 'https://www.zeepond.com/cb-login';
+this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 700), default: this.getConfig('timer_from', 500) };
+this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 500), max: 2880, default: this.getConfig('timer_to', 700) };
 this.settings.skip_after = { type: 'checkbox', trans: this.transPath('skip_after'), default: this.getConfig('skip_after', true) };
 this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
 this.settings.check_all = { type: 'checkbox', trans: this.transPath('check_all'), default: this.getConfig('check_all', false) };

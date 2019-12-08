@@ -2,11 +2,11 @@
 class ChronoGG extends Joiner {
 constructor() {
 super();
-this.settings.timer_to.default = 700;
-this.settings.timer_from.default = 500;
 this.websiteUrl = 'https://www.chrono.gg';
 this.authContent = 'Coin Shop';
 this.authLink = 'https://www.chrono.gg';
+this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 700), default: this.getConfig('timer_from', 500) };
+this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 500), max: 2880, default: this.getConfig('timer_to', 700) };
 this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
 this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
 this.withValue = false;
@@ -106,11 +106,13 @@ if (_this.getConfig('log', true)) {
 if (err.statusCode === 420) {
 _this.log(_this.trans('spinned'), 'skip');
 }
-if (err.statusCode === 401) {
-_this.log(Lang.get('service.session_expired'), 'err');
-}
 }
 });
+})
+.catch((err) => {
+if (err.statusCode === 401) {
+_this.log(Lang.get('service.ses_not_found'), 'err');
+}
 });
 }
 else {
@@ -122,10 +124,8 @@ _this.log(_this.trans('jwt_err'), 'err');
 else {
 _this.check = false;
 if (chcurr === 1) {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.open_file') + ' /giveawayjoinerdata/chronogg1.txt');
-_this.log(Lang.get('service.file_not_found'), 'err');
-}
+fs.writeFile(storage.getDataPath().slice(0, -7) + 'chronogg1.txt', '', (err) => { });
+_this.log(_this.trans('jwt_no') + ' /giveawayjoinerdata/chronogg1.txt', 'err');
 _this.stopJoiner(true);
 }
 }
