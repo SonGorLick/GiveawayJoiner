@@ -121,7 +121,8 @@
 			"streak": "Days: ",
 			"chest": "Chest: ",
 			"total": "Total: ",
-			"jwt_err": "JWT data not found in file"
+			"jwt_err": "JWT data of account not found in file",
+			"jwt_no": "Add JWT data of account in file"
 		},
 		"zp": {
 			"skip_after": "Safe search",
