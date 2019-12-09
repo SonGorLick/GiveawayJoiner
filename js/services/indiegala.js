@@ -13,15 +13,17 @@ this.settings.max_level = { type: 'number', trans: 'service.max_level', min: thi
 this.settings.min_cost = { type: 'number', trans: 'service.min_cost', min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
 this.settings.max_cost = { type: 'number', trans: 'service.max_cost', min: this.getConfig('min_cost', 0), max: 240, default: this.getConfig('max_cost', 0) };
 this.settings.points_reserve = { type: 'number', trans: 'service.points_reserve', min: 0, max: 500, default: this.getConfig('points_reserve', 0) };
+this.settings.multi_join = { type: 'checkbox', trans: this.transPath('multi_join'), default: this.getConfig('multi_join', false) };
+this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
 this.settings.ending_first = { type: 'checkbox', trans: this.transPath('ending_first'), default: this.getConfig('ending_first', false) };
 this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
 this.settings.sort_by_level = { type: 'checkbox', trans: 'service.sort_by_level', default: this.getConfig('sort_by_level', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.settings.sbl_ending_ig = { type: 'checkbox', trans: this.transPath('sbl_ending_ig'), default: this.getConfig('sbl_ending_ig', false) };
 this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
-this.settings.multi_join = { type: 'checkbox', trans: this.transPath('multi_join'), default: this.getConfig('multi_join', false) };
+this.settings.reserve_on_sbl = { type: 'checkbox', trans: this.transPath('reserve_on_sbl'), default: this.getConfig('reserve_on_sbl', false) };
 this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
-this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
+this.settings.reserve_for_smpl = { type: 'checkbox', trans: this.transPath('reserve_for_smpl'), default: this.getConfig('reserve_for_smpl', false) };
 super.init();
 this.log(this.logLink('https://www.indiegala.com/login', Lang.get('service.login')));
 }
@@ -260,6 +262,7 @@ time = ticket.find('.box_pad_5 > .info-row:nth-of-type(5)').text(),
 sold = ticket.find('.box_pad_5 > .info-row:nth-of-type(3) > .tickets-sold').text().trim(),
 entered = false,
 enterTimes = 1,
+igown = 0,
 igapp = 0,
 igsub = 0,
 igid = '???',
@@ -292,65 +295,23 @@ time = 0;
 }
 }
 }
-if (Times === 0) {
 if (single) {
 entered = ticket.find('.giv-coupon').length === 0;
 enterTimes = 0;
 }
-else {
+if (!single && Times === 0) {
 enterTimes = parseInt(ticket.find('.giv-coupon .palette-color-11').text());
 entered = enterTimes >= _this.getConfig('join_qty', 1);
 }
+if (_this.getConfig('log', true) && igrtry === 0 && Times === 0) {
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'chk');
+}
+if (Times === 0) {
+Times = enterTimes;
 }
 else {
 entered = false;
 }
-if (
-(entered) ||
-(_this.lvlmax < level && _this.lvlmax !== 0) ||
-(GJuser.iglvl < level) ||
-(_this.lvlmin > level) ||
-(_this.curr_value < price) ||
-(_this.reserve > _this.curr_value - price) ||
-(_this.entmin > sold) ||
-(price < _this.getConfig('min_cost', 0) && _this.getConfig('min_cost', 0) !== 0) ||
-(price > _this.getConfig('max_cost', 0) && _this.getConfig('max_cost', 0) !== 0) ||
-(time > _this.ending && _this.ending !== 0 && !_this.sort) ||
-(time > _this.ending && _this.ending !== 0 && _this.sort && !_this.getConfig('sbl_ending_ig', false))
-)
-{
-if (_this.getConfig('log', true) && igrtry === 0) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'chk');
-}
-if (
-(time > _this.ending && _this.ending !== 0 && !_this.sort) ||
-(time > _this.ending && _this.ending !== 0 && _this.sort && !_this.getConfig('sbl_ending_ig', false))
-)
-{
-_this.pagemax = page;
-igcurr = 100;
-}
-if (_this.getConfig('log', true) && igrtry === 0) {
-if (entered && igcurr !== 100) {
-_this.log(Lang.get('service.already_joined'), 'skip');
-}
-if (!entered && _this.curr_value < price && igcurr !== 100) {
-_this.log(Lang.get('service.points_low'), 'skip');
-}
-if (!entered && _this.curr_value >= price && igcurr !== 100) {
-_this.log(Lang.get('service.skipped'), 'skip');
-}
-if (igcurr === 100) {
-_this.log(Lang.get('service.time'), 'skip');
-}
-}
-ignext = 100;
-igrtry = 0;
-Times = 0;
-igcurr++;
-}
-else {
-let igown = 0;
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
 _this.log(Lang.get('service.steam_error'), 'err');
@@ -366,19 +327,57 @@ igown = 1;
 if (GJuser.black.includes(igid + ',') && _this.getConfig('blacklist_on', false)) {
 igown = 4;
 }
-if (_this.getConfig('log', true) && igrtry === 0 && Times === 0) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'chk');
+if (
+(entered) ||
+(igown > 0) ||
+(_this.entmin > sold) ||
+(GJuser.iglvl < level) ||
+(_this.lvlmin > level) ||
+(_this.curr_value < price) ||
+(_this.lvlmax < level && _this.lvlmax !== 0) ||
+(price < _this.getConfig('min_cost', 0) && _this.getConfig('min_cost', 0) !== 0) ||
+(price > _this.getConfig('max_cost', 0) && _this.getConfig('max_cost', 0) !== 0) ||
+(_this.reserve > (_this.curr_value - price) && !single && _this.getConfig('reserve_for_smpl', false)) ||
+(_this.reserve > (_this.curr_value - price) && !_this.sort && !_this.getConfig('reserve_for_smpl', false)) ||
+(_this.reserve > (_this.curr_value - price) && _this.sort && !_this.getConfig('reserve_on_sbl', false)) ||
+(time > _this.ending && _this.ending !== 0 && !_this.sort) ||
+(time > _this.ending && _this.ending !== 0 && _this.sort && !_this.getConfig('sbl_ending_ig', false))
+)
+{
+if (
+(time > _this.ending && _this.ending !== 0 && !_this.sort) ||
+(time > _this.ending && _this.ending !== 0 && _this.sort && !_this.getConfig('sbl_ending_ig', false))
+)
+{
+_this.pagemax = page;
+igcurr = 100;
+}
+if (_this.getConfig('log', true)) {
 if (igown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
 if (igown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');
 }
+if (entered && igown === 0 && igcurr !== 100) {
+_this.log(Lang.get('service.already_joined'), 'skip');
 }
-if (Times === 0) {
-Times = enterTimes;
+if (!entered && igown === 0 && _this.curr_value < price && igcurr !== 100) {
+_this.log(Lang.get('service.points_low'), 'skip');
 }
-if (igown === 0) {
+if (!entered && igown === 0 && _this.curr_value >= price && igcurr !== 100) {
+_this.log(Lang.get('service.skipped'), 'skip');
+}
+if (igcurr === 100) {
+_this.log(Lang.get('service.time'), 'skip');
+}
+}
+ignext = 100;
+igrtry = 0;
+Times = 0;
+igcurr++;
+}
+else {
 igrtry++;
 rq({
 method: 'POST',
@@ -425,12 +424,6 @@ else {
 ignext = (Math.floor(Math.random() * 400)) + 600;
 }
 });
-}
-else {
-ignext = 100;
-igrtry = 0;
-igcurr++;
-}
 }
 if (igrtry >= 12) {
 igrtry = 0;
