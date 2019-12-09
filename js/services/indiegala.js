@@ -303,8 +303,11 @@ if (!single && Times === 0) {
 enterTimes = parseInt(ticket.find('.giv-coupon .palette-color-11').text());
 entered = enterTimes >= _this.getConfig('join_qty', 1);
 }
-if (_this.getConfig('log', true) && igrtry === 0 && Times === 0) {
+if (_this.getConfig('log', true) && igrtry === 0 && single) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'chk');
+}
+if (_this.getConfig('log', true) && igrtry === 0 && Times === 0 && !single) {
+_this.log('[' + enterTimes + '] ' + Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'chk');
 }
 if (Times === 0) {
 Times = enterTimes;
@@ -401,7 +404,7 @@ if (response.status === 'ok') {
 igrtry = 0;
 _this.setValue(response.new_amount);
 if (_this.getConfig('log', true)) {
-if (Times === 0) {
+if (Times === 0 && single) {
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|' + _this.logLink(igstm, igid) + '|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'enter');
 }
 else {
@@ -412,7 +415,7 @@ else {
 _this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'enter');
 }
 Times++;
-if (_this.getConfig('multi_join', false) && Times < _this.getConfig('join_qty', 1)) {
+if (_this.getConfig('multi_join', false) && Times < _this.getConfig('join_qty', 1) && !single) {
 ignext = (Math.floor(Math.random() * 400)) + 600;
 }
 else {
@@ -427,6 +430,7 @@ ignext = (Math.floor(Math.random() * 400)) + 600;
 }
 if (igrtry >= 12) {
 igrtry = 0;
+Times = 0;
 igcurr++;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
