@@ -271,6 +271,12 @@ if (GA.sgsteam.includes('sub/')) {
 sgsub = parseInt(GA.sgsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 sgid = 'sub/' + sgsub;
 }
+if (_this.curr_value < GA.cost && GA.cost > 0) {
+sgown = 3;
+}
+if (GA.entered) {
+sgown = 5;
+}
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
 _this.log(Lang.get('service.steam_error'), 'err');
@@ -291,17 +297,18 @@ _this.log(Lang.get('service.checking') + '|'+ GA.copies + 'x|' + GA.level + 'L|'
 if (sgown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
+if (sgown === 3) {
+_this.log(Lang.get('service.points_low'), 'skip');
+}
 if (sgown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');
 }
-if (GA.entered) {
+if (sgown === 5) {
 _this.log(Lang.get('service.already_joined'), 'skip');
-}
-if (!GA.entered && sgown === 0 && _this.curr_value < GA.cost) {
-_this.log(Lang.get('service.points_low'), 'skip');
 }
 }
 if (sgown === 1 && _this.getConfig('hide_ga', false)) {
+sgown = 6;
 $.ajax({
 url: _this.url + '/ajax.php',
 method: 'POST',
@@ -317,8 +324,7 @@ _this.log(Lang.get('service.hided') + '|' + _this.logLink(GA.sgsteam, sgid) + '|
 });
 }
 if (
-(!GA.entered && sgown === 0) &&
-(_this.curr_value >= GA.cost) &&
+(sgown === 0) &&
 (GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_level', 0) === 0 || GA.level >= _this.getConfig('min_level', 0) && GA.level <= _this.getConfig('max_level', 0) && _this.getConfig('max_level', 0) > 0) &&
 (GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || GA.cost >= _this.getConfig('min_cost', 0) || GA.cost === 0) &&
 (GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_cost', 0) === 0 || GA.cost <= _this.getConfig('max_cost', 0)) &&
@@ -349,10 +355,12 @@ GA.entered = true;
 });
 }
 else {
-if (!GA.entered && sgown === 0 && _this.curr_value >= GA.cost && _this.getConfig('log', true)) {
+if (sgown === 0 && _this.getConfig('log', true)) {
 _this.log(Lang.get('service.skipped'), 'skip');
 }
+if (sgown !== 6) {
 sgnext = 100;
+}
 }
 sgcurr++;
 setTimeout(processOne, sgnext);

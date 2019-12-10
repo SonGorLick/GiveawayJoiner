@@ -200,15 +200,25 @@ success: function (html) {
 html = $(html.replace(/<img/gi, '<noload'));
 let ajoin = html.find('.input-group-btn').text().trim();
 if (ajoin === 'Add') {
+asown = 3;
 GJuser.as = GJuser.as + asjoin + ',';
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.already_joined'), 'skip');
 }
-}
-if (ajoin !== 'Add' && ajoin !== 'Join' && _this.getConfig('log', true)) {
-_this.log(Lang.get('service.cant_join'), 'cant');
+if (ajoin !== 'Add' && ajoin !== 'Join') {
+asown = 5;
 }
 if (ajoin === 'Join') {
+asown = 0;
+}
+if (_this.getConfig('log', true)) {
+if (asown === 3) {
+_this.log(Lang.get('service.already_joined'), 'skip');
+}
+if (asown === 5) {
+_this.log(Lang.get('service.cant_join'), 'cant');
+}
+}
+if (asown === 0) {
+let tmout = Math.floor(Math.random() * Math.floor(asnext / 10)) + Math.floor(asnext / 5);
 setTimeout(function () {
 $.ajax({
 url: _this.url + alink,
@@ -224,7 +234,7 @@ _this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + alink, anam
 }
 }
 });
-}, (Math.floor(Math.random() * 2000)) + 1000);
+}, tmout);
 }
 else {
 asnext = 1000;

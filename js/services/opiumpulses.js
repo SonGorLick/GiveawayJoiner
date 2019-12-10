@@ -246,6 +246,7 @@ _this.log(Lang.get('service.blacklisted'), 'black');
 }
 }
 if (opown === 0) {
+let tmout = Math.floor(Math.random() * Math.floor(opnext / 10)) + Math.floor(opnext / 5);
 setTimeout(function () {
 $.ajax({
 url: _this.url + eLink,
@@ -260,7 +261,7 @@ _this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + link, name)
 }
 }
 });
-}, (Math.floor(Math.random() * 2000)) + 1000);
+}, tmout);
 }
 else {
 opnext = 100;
