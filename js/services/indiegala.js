@@ -331,6 +331,9 @@ if (
 {
 igown = 5;
 }
+if (entered) {
+igown = 3;
+}
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
 _this.log(Lang.get('service.steam_error'), 'err');
@@ -345,9 +348,6 @@ igown = 1;
 }
 if (GJuser.black.includes(igid + ',') && _this.getConfig('blacklist_on', false)) {
 igown = 4;
-}
-if (entered) {
-igown = 3;
 }
 if (
 (time > _this.ending && _this.ending !== 0 && !_this.sort) ||

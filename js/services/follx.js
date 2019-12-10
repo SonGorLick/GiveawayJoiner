@@ -112,20 +112,12 @@ callback();
 }
 return;
 }
-let fxnext = _this.interval();
-let card = fxfound.eq(fxcurr),
+let fxnext = _this.interval(),
+card = fxfound.eq(fxcurr),
 link = card.find('.head_info a').attr('href'),
 name = card.find('.head_info').attr('title'),
-entered = card.find('.entered').length > 0;
-if (entered) {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (fxcurr + 1) + '№|  ' + _this.logLink(link, name), 'chk');
-_this.log(Lang.get('service.already_joined'), 'skip');
-}
-fxnext = 100;
-}
-else {
-let fxsteam = card.find('.head_info').attr('style'),
+entered = card.find('.entered').length > 0,
+fxsteam = card.find('.head_info').attr('style'),
 fxown = 0,
 fxapp = 0,
 fxsub = 0,
@@ -140,6 +132,9 @@ if (fxsteam.includes('sub/')) {
 fxsub = parseInt(fxsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 fxid = 'sub/' + fxsub;
 fxstm = 'https://store.steampowered.com/sub/' + fxsub;
+}
+if (entered) {
+fxown = 3;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
@@ -160,6 +155,9 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (fxcurr + 1) + '№|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name) + _this.logBlack(fxid), 'chk');
 if (fxown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
+}
+if (fxown === 3) {
+_this.log(Lang.get('service.already_joined'), 'skip');
 }
 if (fxown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');
@@ -199,7 +197,6 @@ _this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + _this.log
 }
 else {
 fxnext = 100;
-}
 }
 fxcurr++;
 setTimeout(giveawayEnter, fxnext);

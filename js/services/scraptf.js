@@ -172,11 +172,20 @@ return;
 let spnext = _this.interval(),
 sprnd = random[spcurr],
 spcont = sptent.eq(sprnd),
-spname = spcont.find('.panel-heading .raffle-name a').text().trim().slice(0, 120),
+spname = spcont.find('.panel-heading .raffle-name a').text().trim(),
 splink = spcont.find('.panel-heading .raffle-name a').attr('href'),
 spended = spcont.find('.panel-heading .raffle-details span.raffle-state-ended').text().trim(),
 id = splink.replace('/raffles/', '');
-if (spname === undefined || spname === '' || spname.length === 0 || spname.length > 100) {
+if (spname === undefined) {
+spname = '?????? ' + '(' + id + ')';
+}
+if (spname.includes('<noload')) {
+spname = spcont.find('.panel-heading .raffle-name a noload').text().trim();
+}
+if (spname.length >= 95) {
+spname = spname.slice(0, 92) + '...';
+}
+if (spname === '') {
 spname = '?????? ' + '(' + id + ')';
 }
 if (_this.getConfig('log', true)) {
