@@ -464,7 +464,7 @@ btnUp.on('mousedown', () =>{
 let func = function () {
 iterations++;
 up();
-if (iterations > 5 ? iterations = 5 : iterations);
+if (iterations > 5 ? iterations = 5 : iterations)
 pressTimeout = setTimeout(func, 200 / (iterations / 2));
 };
 func();
@@ -477,7 +477,7 @@ btnDn.on('mousedown', () => {
 let func = function () {
 iterations++;
 dn();
-if (iterations > 5 ? iterations = 5: iterations);
+if (iterations > 5 ? iterations = 5: iterations)
 pressTimeout = setTimeout(func, 200 / (iterations / 2));
 };
 func();
