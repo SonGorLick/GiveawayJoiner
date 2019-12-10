@@ -6,6 +6,8 @@ this.settings.interval_from.min = 9;
 this.websiteUrl = 'https://scrap.tf';
 this.authContent = 'Logout';
 this.authLink = 'https://scrap.tf/login';
+this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
+this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
 this.settings.sort_by_end = { type: 'checkbox', trans: this.transPath('sort_by_end'), default: this.getConfig('sort_by_end', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
@@ -37,8 +39,8 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-if (_this.getConfig('timer_to', 70) !== _this.getConfig('timer_from', 50)) {
-let sptimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 70) - _this.getConfig('timer_from', 50))) + _this.getConfig('timer_from', 50));
+if (_this.getConfig('timer_to', 90) !== _this.getConfig('timer_from', 70)) {
+let sptimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
 _this.stimer = sptimer;
 }
 _this.url = 'https://scrap.tf';

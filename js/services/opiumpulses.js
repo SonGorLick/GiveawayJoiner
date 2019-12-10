@@ -5,6 +5,7 @@ super();
 this.websiteUrl = 'https://www.opiumpulses.com';
 this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
+this.settings.max_cost = { type: 'number', trans: 'service.max_cost', min: 0, max: 1000, default: this.getConfig('max_cost', 0) };
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
@@ -49,6 +50,7 @@ _this.stimer = optimer;
 }
 let page = 1;
 _this.pagemax = _this.getConfig('pages', 1);
+_this.costmax = _this.getConfig('max_cost', 0);
 _this.check = 0;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.opiumpulses.com';
@@ -140,6 +142,12 @@ njoin = 0;
 if (isNaN(cost)) {
 cost = 0;
 }
+if (_this.curr_value < cost) {
+njoin = 4;
+}
+if (_this.costmax < cost && _this.costmax !== 0) {
+njoin = 5;
+}
 if (GJuser.op.includes(',' + code + '-n,')) {
 njoin = 1;
 }
@@ -149,10 +157,12 @@ njoin = 2;
 if (GJuser.op.includes(',' + code + '-b,') && _this.getConfig('blacklist_on', false)) {
 njoin = 3;
 }
-if (_this.curr_value < cost || entered.includes('ENTERED') || njoin > 0) {
+if (entered.includes('ENTERED')) {
+njoin = 6;
+}
+if (njoin > 0) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name), 'chk');
-if (!entered.includes('ENTERED')) {
 if (njoin === 1) {
 _this.log(Lang.get('service.cant_join'), 'cant');
 }
@@ -162,11 +172,13 @@ _this.log(Lang.get('service.have_on_steam'), 'steam');
 if (njoin === 3) {
 _this.log(Lang.get('service.blacklisted'), 'black');
 }
-if (_this.curr_value < cost && njoin === 0) {
+if (njoin === 4) {
 _this.log(Lang.get('service.points_low'), 'skip');
 }
+if (njoin === 5) {
+_this.log(Lang.get('service.skipped'), 'skip');
 }
-else {
+if (njoin === 6) {
 _this.log(Lang.get('service.already_joined'), 'skip');
 }
 }

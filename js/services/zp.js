@@ -140,17 +140,35 @@ $.ajax({
 url: zplink,
 success: function (html) {
 html = html.replace(/<img/gi, '<noload');
-let zpname = $(html).find('.mycompetition .form-group .span8 > h1').text().trim(),
-zpsteam = html.substring(html.indexOf('href="https://store.steam')+6, html.indexOf('</a></p>')).slice(0, 55),
-entered = html.indexOf('You have already entered today') >= 0,
+let entered = html.indexOf('You have already entered today') >= 0,
 enter = html.indexOf('>Enter this competition<') >= 0,
-zpown = 0,
+zpname = zpnam.replace(/-/g, ' '),
+zpsteam = '';
+if (enter || entered) {
+zpname = $(html).find('.mycompetition .form-group .span8 > h1').text().trim();
+zpsteam = html.substring(html.indexOf('href="https://store.steam')+6, html.indexOf('</a></p>')).slice(0, 55);
+}
+let zpown = 0,
 zpapp = 0,
 zpsub = 0,
 zpid = '???',
 zpstm = '';
 if (!zpsteam.includes('https://store.steam')) {
 zpsteam = undefined;
+}
+if (!enter && !entered) {
+zpown = 6;
+let zpdtskp = new Date();
+zpdtskp.setDate(zpdtskp.getUTCDate());
+zpdtskp.setHours(zpdtskp.getUTCHours() + 11);
+let zpdskp = ('0' + zpdtskp.getDate().toString()).slice(-2);
+if (GJuser.zp.includes(',' + zpnam + '(z=')) {
+let zpdga = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];
+GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zpdga, ',' + zpnam + '(z=' + zpdskp);
+}
+else {
+GJuser.zp = GJuser.zp + zpnam + '(z=' + zpdskp + '),';
+}
 }
 if (entered) {
 if (_this.getConfig('skip_after', true)) {
@@ -202,13 +220,16 @@ zpown = 4;
 }
 if (_this.getConfig('log', true)) {
 if (zpstm !== '') {
-_this.log(Lang.get('service.checking') + '|' + (zprnd + 1) + '№|' + _this.logLink(zpstm, zpid) + '|  ' + _this.logLink(zplink, zpname), 'chk');
+_this.log(Lang.get('service.checking') + '|' + (zprnd + 1) + '№|' + _this.logLink(zpstm, zpid) + '|  ' + _this.logLink(zplink, zpname) + _this.logBlack(zpid), 'chk');
 }
 else {
 _this.log(Lang.get('service.checking') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpname), 'chk');
 }
 if (entered && zpown === 5) {
 _this.log(Lang.get('service.already_joined'), 'skip');
+}
+if (zpown === 6) {
+_this.log(Lang.get('service.cant_join'), 'cant');
 }
 if (zpown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
