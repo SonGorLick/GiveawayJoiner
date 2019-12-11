@@ -14,16 +14,18 @@
 	"service": {
 		"autostart": "Autostart service",
 		"autostart_title": "Autostart the service on program load",
+		"cant_start": "Can't autostart - session not found",
+		"ses_not_found": "Session not found",
 		"started": "Bot is running",
 		"stopped": "Bot is stopped",
+		"value_label": "Points",
 		"logs": "Log",
 		"win": "!!! Congrats, you won !!!",
 		"qty": "quantity",
-		"login": "Click, if you need to login",
+		"login": "Click, if you need to sign in",
 		"browser_loading": "loading",
-		"steam_login": "Login to Steam",
+		"steam_login": "Sign in to Steam (Sign in for the second time with save this device checkbox to save session)",
 		"ua_check": "To check User-Agent (you can change it in file /giveawayjoinerdata/user-agent.txt)",
-		"ses_not_found": "Session not found",
 		"settings": "Settings",
 		"clear_log": "Clear log",
 		"log_cleared": "Log cleared",
@@ -93,7 +95,6 @@
 		"rnd_title": "Random join giveaways on page, not how on site",
 		"log": "Logging",
 		"log_title": "Detailed log of the service",
-		"cant_start": "Can't autostart - session not found",
 		"astats": {
 			"sound": "Sound notifications",
 			"sound_title": "Play sound when winning a giveaway",
@@ -125,6 +126,7 @@
 			"jwt_no": "Add JWT data of account in file"
 		},
 		"zp": {
+			"login": "(Sign in by login-password with save password checkbox, otherwise session not will be saved)",
 			"skip_after": "Safe search",
 			"skip_after_title": "If can't enter in giveaway, checking of other giveaways will be skipped",
 			"check_all": "Force check",
@@ -149,7 +151,7 @@
 			"log_title": "Detailed log of the service"
 		},
 		"follx": {
-			"value_label": "Energy",
+			"value_label": "Points",
 			"sound": "Sound notifications",
 			"sound_title": "Play sound when winning a giveaway",
 			"blacklist_on": "Enable blacklist",
@@ -160,8 +162,7 @@
 			"log_title": "Detailed log of the service"
 		},
 		"indiegala": {
-			"value_label": "GalaCoins",
-			"captcha": "To join giveaways You need solve ",
+			"value_label": "Points",
 			"sound": "Sound notifications",
 			"sound_title": "Play sound when winning a giveaway",
 			"join_qty": "Entries quantity",
@@ -201,6 +202,8 @@
 		},
 		"opiumpulses": {
 			"value_label": "Points",
+			"maxcost": "Max. Cost",
+			"maxcost_title": "Don't join giveaways with a cost higher than your set max.cost. 0 - don't consider a cost",
 			"sound": "Sound notifications",
 			"sound_title": "Play sound when won the giveaway",
 			"blacklist_on": "Enable blacklist",
@@ -220,7 +223,6 @@
 			"ending_title": "Don't join giveaways before the end of which more than the specified time. 0 - don't consider a time ending",
 			"hide_ga": "Hide giveaways on site",
 			"hide_ga_title": "Hide on site, if you own giveaway in Steam (use site option)",
-			"chance": "Chance",
 			"sort_by_copies": "Sort by copies number",
 			"sort_by_copies_title": "Enter sorted from high to low number of copies in one giveaway",
 			"sort_by_level": "Sort by level",
