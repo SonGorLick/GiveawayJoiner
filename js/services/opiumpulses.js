@@ -5,13 +5,14 @@ super();
 this.websiteUrl = 'https://www.opiumpulses.com';
 this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
-this.settings.max_cost = { type: 'number', trans: 'service.max_cost', min: 0, max: 1000, default: this.getConfig('max_cost', 0) };
-this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
+this.settings.maxcost = { type: 'number', trans: this.transPath('maxcost'), min: 0, max: 1000, default: this.getConfig('maxcost', 0) };
+this.settings.free_only = { type: 'checkbox', trans: this.transPath('free_only'), default: this.getConfig('free_only', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
-this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
+this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
 this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
-this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
+this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
 this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
+this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -50,7 +51,7 @@ _this.stimer = optimer;
 }
 let page = 1;
 _this.pagemax = _this.getConfig('pages', 1);
-_this.costmax = _this.getConfig('max_cost', 0);
+_this.costmax = _this.getConfig('maxcost', 0);
 _this.check = 0;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.opiumpulses.com';
@@ -146,6 +147,9 @@ if (_this.curr_value < cost) {
 njoin = 4;
 }
 if (_this.costmax < cost && _this.costmax !== 0) {
+njoin = 5;
+}
+if (cost !== 0 && _this.getConfig('free_only', false)) {
 njoin = 5;
 }
 if (GJuser.op.includes(',' + code + '-n,')) {

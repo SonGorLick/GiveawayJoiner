@@ -113,7 +113,7 @@ this.userInfo = $(document.createElement('div'))
 if (this.withValue) {
 let value = $(document.createElement('span'))
 .addClass('value')
-.html('<span data-lang="' + this.transPath('value_label') + '">' + this.trans('value_label') + '</span>: ')
+.html('<span data-lang="' + Lang.get('service.value_label') + '">' + Lang.get('service.value_label') + '</span>: ')
 .appendTo(this.userInfo);
 this.value_label = $(document.createElement('span'))
 .text(this.curr_value)

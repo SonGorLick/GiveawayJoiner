@@ -175,11 +175,11 @@ if (GJuser.ownsubs.includes(',' + assub + ',') && assub > 0) {
 asown = 1;
 }
 }
-if (GJuser.as.includes(',' + asjoin + ',')) {
-asown = 3;
-}
 if (GJuser.black.includes(asid + ',') && _this.getConfig('blacklist_on', false)) {
 asown = 4;
+}
+if (GJuser.as.includes(',' + asjoin + ',')) {
+asown = 3;
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (arnd + 1) + '№|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname) + _this.logBlack(asid), 'chk');

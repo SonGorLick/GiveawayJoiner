@@ -274,9 +274,6 @@ sgid = 'sub/' + sgsub;
 if (_this.curr_value < GA.cost && GA.cost > 0) {
 sgown = 3;
 }
-if (GA.entered) {
-sgown = 5;
-}
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
 _this.log(Lang.get('service.steam_error'), 'err');
@@ -291,6 +288,9 @@ sgown = 1;
 }
 if (GJuser.black.includes(sgid + ',') && _this.getConfig('blacklist_on', false)) {
 sgown = 4;
+}
+if (GA.entered) {
+sgown = 5;
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name) + _this.logBlack(sgid), 'chk');

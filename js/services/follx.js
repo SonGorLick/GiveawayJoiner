@@ -133,9 +133,6 @@ fxsub = parseInt(fxsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')
 fxid = 'sub/' + fxsub;
 fxstm = 'https://store.steampowered.com/sub/' + fxsub;
 }
-if (entered) {
-fxown = 3;
-}
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
 _this.log(Lang.get('service.steam_error'), 'err');
@@ -150,6 +147,9 @@ fxown = 1;
 }
 if (GJuser.black.includes(fxid + ',') && _this.getConfig('blacklist_on', false)) {
 fxown = 4;
+}
+if (entered) {
+fxown = 3;
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (fxcurr + 1) + '№|' + _this.logLink(fxstm, fxid) + '|  ' + _this.logLink(link, name) + _this.logBlack(fxid), 'chk');

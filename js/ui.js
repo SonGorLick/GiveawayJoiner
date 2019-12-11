@@ -147,12 +147,12 @@ lang_select.append(option);
 let info_links = $('.content-item .info-links');
 $(document.createElement('button'))
 .addClass('open-website')
-.html('<div class="fab fa-steam" title="Steam"></div>')
+.html('<div class="fab fa-steam" title="' + Lang.get('service.steam_login') + '"></div>')
 .attr('data-link', 'https://store.steampowered.com/login')
 .appendTo(info_links);
 $(document.createElement('button'))
 .addClass('open-website')
-.html('<div class="fa fa-user-secret" title="User-Agent: /giveawayjoinerdata/user-agent.txt"></div>')
+.html('<div class="fa fa-user-secret" title="' + Lang.get('service.ua_check') + '"></div>')
 .css('margin-left', '10px')
 .attr('data-link', 'https://www.whatsmyua.info')
 .appendTo(info_links);

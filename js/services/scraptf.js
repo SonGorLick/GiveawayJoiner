@@ -2,10 +2,11 @@
 class ScrapTF extends Joiner {
 constructor() {
 super();
-this.settings.interval_from.min = 9;
 this.websiteUrl = 'https://scrap.tf';
 this.authContent = 'Logout';
 this.authLink = 'https://scrap.tf/login';
+this.settings.interval_from = { type: 'number', trans: 'service.interval_from', min: 10, max: this.getConfig('interval_to', 15), default: this.getConfig('interval_from', 10) };
+this.settings.interval_to = { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 10), max: 60, default: this.getConfig('interval_to', 15) };
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
 this.settings.sort_by_end = { type: 'checkbox', trans: this.transPath('sort_by_end'), default: this.getConfig('sort_by_end', false) };
@@ -78,6 +79,7 @@ type = 'post';
 head = {
 'authority': 'scrap.tf',
 'accept': 'application/json, text/javascript, */*; q=0.01',
+'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
 'x-requested-with': 'XMLHttpRequest',
 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
 };
@@ -210,10 +212,11 @@ url: _this.url + '/ajax/viewraffle/EnterRaffle',
 headers: {
 'authority': 'scrap.tf',
 'accept': 'application/json, text/javascript, */*; q=0.01',
+'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
 'x-requested-with': 'XMLHttpRequest',
 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
 },
-data: {raffle: id, captha: '', hash: hash, csrf: _this.csrf},
+data: {raffle: id, captcha: '', hash: hash, csrf: _this.csrf},
 success: function (response) {
 let spmess = JSON.stringify(response.message);
 if (spmess === '"Entered raffle!"') {
