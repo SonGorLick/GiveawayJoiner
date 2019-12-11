@@ -271,10 +271,15 @@
 	},
 	"profile": {
 		"start_minimized": "Minimize at startup",
+		"start_minimized_title": "Minimize to tray on program load",
 		"autostart": "Autostart all services",
+		"autostart_title": "Autostart all services on program load",
 		"log_autoclear": "Auto clear logs",
+		"log_autoclear_title": "Clear the service log before each giveaways search",
 		"autoscroll": "Autoscroll logs",
+		"autoscroll_title": "Scroll down on a new entry in the service log",
 		"timer_view": "Display timer",
+		"timer_view_title": "Display the remaining time until the next giveaways search",
 		"build_version": "Version"
 	}
 }
