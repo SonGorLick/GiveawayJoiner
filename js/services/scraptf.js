@@ -19,7 +19,9 @@ super.init();
 this.log(this.logLink('https://scrap.tf/login', Lang.get('service.login')));
 }
 authCheck(callback) {
+setTimeout(function () {
 callback(1);
+}, 1000);
 }
 getUserInfo(callback) {
 let userData = {
