@@ -81,7 +81,6 @@ type = 'post';
 head = {
 'authority': 'scrap.tf',
 'accept': 'application/json, text/javascript, */*; q=0.01',
-'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
 'x-requested-with': 'XMLHttpRequest',
 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
 };
@@ -186,8 +185,8 @@ spname = '?????? ' + '(' + id + ')';
 if (spname.includes('<noload')) {
 spname = spcont.find('.panel-heading .raffle-name a noload').text().trim();
 }
-if (spname.length >= 95) {
-spname = spname.slice(0, 92) + '...';
+if (spname.length >= 90) {
+spname = spname.slice(0, 87) + '...';
 }
 if (spname === '') {
 spname = '?????? ' + '(' + id + ')';
@@ -214,7 +213,6 @@ url: _this.url + '/ajax/viewraffle/EnterRaffle',
 headers: {
 'authority': 'scrap.tf',
 'accept': 'application/json, text/javascript, */*; q=0.01',
-'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
 'x-requested-with': 'XMLHttpRequest',
 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
 },
