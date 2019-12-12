@@ -18,8 +18,7 @@ this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_stea
 this.withValue = false;
 delete this.settings.pages;
 super.init();
-this.log(this.logLink('https://www.zeepond.com/cb-login', Lang.get('service.login')));
-this.log(Lang.get('service.zp.login'));
+this.log(this.logLink('https://www.zeepond.com/cb-login', Lang.get('service.login')) + '<br>' + Lang.get('service.zp.login'));
 }
 authCheck(callback) {
 if (GJuser.zp === '') {
