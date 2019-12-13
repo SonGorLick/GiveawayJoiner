@@ -28,7 +28,7 @@ this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.
 this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
 this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
 super.init();
-this.log(this.logLink('https://www.indiegala.com/login', Lang.get('service.login')));
+this.log(this.logLink('https://www.indiegala.com/login', Lang.get('service.login')), 'info');
 }
 authCheck(callback) {
 $.ajax({

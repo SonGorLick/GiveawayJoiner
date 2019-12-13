@@ -112,6 +112,9 @@ if (opfound.length <= opcurr || !_this.started || _this.curr_value === 0) {
 if (opfound.length <= opcurr && page === _this.pagemax) {
 setTimeout(function () {
 fs.writeFile(storage.getDataPath().slice(0, -7) + 'opiumpulses.txt', GJuser.op, (err) => { });
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.data_saved'), 'info');
+}
 }, _this.interval());
 }
 if (_this.getConfig('log', true)) {

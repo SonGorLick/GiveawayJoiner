@@ -16,7 +16,7 @@ this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', defaul
 this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
 this.withValue = false;
 super.init();
-this.log(this.logLink('https://scrap.tf/login', Lang.get('service.login')));
+this.log(this.logLink('https://scrap.tf/login', Lang.get('service.login')), 'info');
 }
 authCheck(callback) {
 setTimeout(function () {

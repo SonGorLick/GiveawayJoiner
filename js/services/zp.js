@@ -19,7 +19,7 @@ this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_stea
 this.withValue = false;
 delete this.settings.pages;
 super.init();
-this.log(this.logLink('https://www.zeepond.com/cb-login', Lang.get('service.login')) + '<br>' + Lang.get('service.zp.login'));
+this.log(this.logLink('https://www.zeepond.com/cb-login', Lang.get('service.login')) + '<br>' + Lang.get('service.zp.login'), 'info');
 }
 authCheck(callback) {
 if (GJuser.zp === '') {
@@ -92,6 +92,9 @@ if (comp.length <= zpcurr || _this.skip || !_this.started) {
 if (comp.length <= zpcurr || _this.skip) {
 setTimeout(function () {
 fs.writeFile(storage.getDataPath().slice(0, -7) + 'zp.txt', GJuser.zp, (err) => { });
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.data_saved'), 'info');
+}
 }, _this.interval());
 }
 if (_this.getConfig('log', true)) {
