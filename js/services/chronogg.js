@@ -12,7 +12,7 @@ this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', defaul
 this.withValue = false;
 delete this.settings.pages;
 super.init();
-this.log(this.logLink('https://github.com/pumPCin/GiveawayJoiner/wiki/Chrono', 'Wiki Chrono'), 'info');
+this.log(this.logLink('https://github.com/pumPCin/GiveawayJoiner/wiki/Chrono', 'Wiki'), 'info');
 }
 authCheck(callback) {
 $.ajax({
