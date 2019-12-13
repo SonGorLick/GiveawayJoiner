@@ -123,6 +123,7 @@
 			"streak": "Days: ",
 			"chest": "Chest: ",
 			"total": "Total: ",
+			"jwt_wiki": "Click, to know how to use the service",
 			"jwt_err": "JWT data of account not found in file",
 			"jwt_no": "Add JWT data of account in file"
 		},
