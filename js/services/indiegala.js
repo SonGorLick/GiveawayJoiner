@@ -1,4 +1,5 @@
 'use strict';
+require('v8-compile-cache');
 class IndieGala extends Joiner {
 constructor() {
 super();
@@ -217,7 +218,7 @@ _this.pagemax = page;
 }
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0) {
 if (_this.getConfig('log', true)) {
-if (igcurr < 12 && !_this.sort && _this.started) {
+if (tickets.length < 12 && !_this.sort && _this.started) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
 if (page === _this.pagemax) {

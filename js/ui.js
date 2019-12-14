@@ -1,4 +1,6 @@
 'use strict';
+require('v8-compile-cache');
+window.$ = window.jQuery = require('jquery');
 const remote = require('electron').remote;
 const ipc = require('electron').ipcRenderer;
 const shared = remote.getGlobal('sharedData');
@@ -158,8 +160,20 @@ $(document.createElement('button'))
 .appendTo(info_links);
 }
 function renderUser(userData) {
-$('.content-item .info .avatar').css({'background-image': 'url("' + userData.avatar + '")'});
 $('.content-item .info .username').html(userData.username);
+$.ajax({
+url: 'https://store.steampowered.com/account',
+success: function (data) {
+data = $(data.replace(/<img/gi, '<noload'));
+let logo = data.find('#global_actions > a > noload').attr('src');
+if (logo !== undefined) {
+$('.content-item .info .avatar').css({'background-image': 'url("' + logo.replace('fb1.jpg', 'fb1_full.jpg') + '")'});
+}
+else {
+$('.content-item .info .avatar').css({'background-image': 'url("' + userData.avatar + '")'});
+}
+}
+});
 }
 function openWebsite(url) {
 Browser.loadURL(url);

@@ -1,4 +1,5 @@
 'use strict';
+require('v8-compile-cache');
 const storage = require('electron-json-storage');
 const fs = require('fs');
 class Joiner {
