@@ -80,7 +80,6 @@ if (page !== 1) {
 spurl = _this.url + '/ajax/raffles/Paginate';
 type = 'post';
 head = {
-'authority': 'scrap.tf',
 'accept': 'application/json, text/javascript, */*; q=0.01',
 'x-requested-with': 'XMLHttpRequest',
 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -212,7 +211,6 @@ type: 'POST',
 dataType: 'json',
 url: _this.url + '/ajax/viewraffle/EnterRaffle',
 headers: {
-'authority': 'scrap.tf',
 'accept': 'application/json, text/javascript, */*; q=0.01',
 'x-requested-with': 'XMLHttpRequest',
 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
