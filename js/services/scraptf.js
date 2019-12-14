@@ -12,11 +12,11 @@ this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.
 this.settings.sort_by_end = { type: 'checkbox', trans: this.transPath('sort_by_end'), default: this.getConfig('sort_by_end', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
-this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
-this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
 this.withValue = false;
+delete this.settings.check_in_steam;
+delete this.settings.blacklist_on;
 super.init();
-this.log(this.logLink('https://scrap.tf/login', Lang.get('service.login')));
+this.log(this.logLink('https://scrap.tf/login', Lang.get('service.login')), 'info');
 }
 authCheck(callback) {
 setTimeout(function () {
@@ -81,7 +81,6 @@ type = 'post';
 head = {
 'authority': 'scrap.tf',
 'accept': 'application/json, text/javascript, */*; q=0.01',
-'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
 'x-requested-with': 'XMLHttpRequest',
 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
 };
@@ -186,8 +185,8 @@ spname = '?????? ' + '(' + id + ')';
 if (spname.includes('<noload')) {
 spname = spcont.find('.panel-heading .raffle-name a noload').text().trim();
 }
-if (spname.length >= 95) {
-spname = spname.slice(0, 92) + '...';
+if (spname.length >= 90) {
+spname = spname.slice(0, 87) + '...';
 }
 if (spname === '') {
 spname = '?????? ' + '(' + id + ')';
@@ -214,7 +213,6 @@ url: _this.url + '/ajax/viewraffle/EnterRaffle',
 headers: {
 'authority': 'scrap.tf',
 'accept': 'application/json, text/javascript, */*; q=0.01',
-'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
 'x-requested-with': 'XMLHttpRequest',
 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
 },

@@ -9,10 +9,6 @@ this.settings.maxcost = { type: 'number', trans: this.transPath('maxcost'), min:
 this.settings.free_only = { type: 'checkbox', trans: this.transPath('free_only'), default: this.getConfig('free_only', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
-this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
-this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
-this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
-this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -112,6 +108,9 @@ if (opfound.length <= opcurr || !_this.started || _this.curr_value === 0) {
 if (opfound.length <= opcurr && page === _this.pagemax) {
 setTimeout(function () {
 fs.writeFile(storage.getDataPath().slice(0, -7) + 'opiumpulses.txt', GJuser.op, (err) => { });
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.data_saved'), 'info');
+}
 }, _this.interval());
 }
 if (_this.getConfig('log', true)) {

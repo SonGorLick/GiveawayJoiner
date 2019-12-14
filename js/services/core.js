@@ -17,7 +17,11 @@ timer_from: { type: 'number', trans: 'service.timer_from', min: 5, max: this.get
 timer_to: { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 50), max: 2880, default: this.getConfig('timer_to', 70) },
 interval_from: { type: 'number', trans: 'service.interval_from', min: 0, max: this.getConfig('interval_to', 15), default: this.getConfig('interval_from', 10) },
 interval_to: { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 10), max: 60, default: this.getConfig('interval_to', 15) },
-pages: { type: 'number', trans: 'service.pages', min: 1, max: 30, default: this.getConfig('pages', 1) }
+pages: { type: 'number', trans: 'service.pages', min: 1, max: 30, default: this.getConfig('pages', 1) },
+check_in_steam: { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) },
+autostart: { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) },
+blacklist_on: { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) },
+log: { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) }
 };
 }
 init() {
@@ -331,7 +335,7 @@ case 'float_number':
 case 'ten_number':
 let step = 1;
 if (input.type === 'float_number') {
-step = 0.1;
+step = 0.01;
 }
 if (input.type === 'ten_number') {
 step = 10;
@@ -369,7 +373,7 @@ val = val + step;
 btnDn.removeClass('disabled');
 }
 if (input.type === 'float_number') {
-val = parseFloat(val.toFixed(1));
+val = parseFloat(val.toFixed(2));
 }
 if (val === input.max) {
 btnUp.addClass('disabled');
@@ -418,7 +422,7 @@ val = val - step;
 btnUp.removeClass('disabled');
 }
 if (input.type === 'float_number') {
-val = parseFloat(val.toFixed(1));
+val = parseFloat(val.toFixed(2));
 }
 if (val === input.min) {
 btnDn.addClass('disabled');
@@ -462,10 +466,11 @@ break;
 };
 btnUp.on('mousedown', () =>{
 let func = function () {
+if (iterations < 20) {
 iterations++;
+}
 up();
-if (iterations > 5 ? iterations = 5 : iterations)
-pressTimeout = setTimeout(func, 200 / (iterations / 2));
+pressTimeout = setTimeout(func, 420 / iterations);
 };
 func();
 })
@@ -475,10 +480,11 @@ clearTimeout(pressTimeout);
 });
 btnDn.on('mousedown', () => {
 let func = function () {
+if (iterations < 20) {
 iterations++;
+}
 dn();
-if (iterations > 5 ? iterations = 5: iterations)
-pressTimeout = setTimeout(func, 200 / (iterations / 2));
+pressTimeout = setTimeout(func, 420 / iterations);
 };
 func();
 })
@@ -542,9 +548,9 @@ this.cookies = newCookies;
 });
 }
 interval() {
-let min = this.getConfig('interval_from', this.settings.interval_from.default);
-let max = this.getConfig('interval_to', this.settings.interval_to.default) + 1;
-return (Math.floor(Math.random() * (max - min)) + min) * 1000;
+let min = this.getConfig('interval_from', this.settings.interval_from.default) * 1000;
+let max = this.getConfig('interval_to', this.settings.interval_to.default) * 1000;
+return (Math.floor(Math.random() * (max - min)) + min);
 }
 doTimer() {
 return this.stimer * 60;
