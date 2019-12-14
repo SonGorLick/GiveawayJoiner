@@ -167,7 +167,7 @@ success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 let logo = data.find('#global_actions > a > noload').attr('src');
 if (logo !== undefined) {
-$('.content-item .info .avatar').css({'background-image': 'url("' + logo.replace('fb1.jpg', 'fb1_full.jpg') + '")'});
+$('.content-item .info .avatar').css({'background-image': 'url("' + logo.replace('.jpg', '_full.jpg') + '")'});
 }
 else {
 $('.content-item .info .avatar').css({'background-image': 'url("' + userData.avatar + '")'});
