@@ -7,12 +7,12 @@ this.authContent = 'View your profile';
 this.authLink = 'https://www.indiedb.com/members/login';
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 700), default: this.getConfig('timer_from', 500) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 500), max: 2880, default: this.getConfig('timer_to', 700) };
+this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
+this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
 this.withValue = false;
 delete this.settings.pages;
 delete this.settings.interval_from;
 delete this.settings.interval_to;
-delete this.settings.check_in_steam;
-delete this.settings.blacklist_on;
 super.init();
 }
 getUserInfo(callback) {

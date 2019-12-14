@@ -8,6 +8,10 @@ this.authLink = 'https://astats.astats.nl/astats/profile/Login.php';
 this.withValue = false;
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
+this.settings.check_in_steam = { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) };
+this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
+this.settings.blacklist_on = { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) };
+this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -112,9 +116,6 @@ if (afound.length <= acurr || !_this.started) {
 if (afound.length <= acurr && page === _this.pagemax) {
 setTimeout(function () {
 fs.writeFile(storage.getDataPath().slice(0, -7) + 'astats.txt', GJuser.as, (err) => { });
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.data_saved'), 'info');
-}
 }, _this.interval());
 }
 if (_this.getConfig('log', true)) {
