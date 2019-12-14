@@ -12,9 +12,9 @@ this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.
 this.settings.sort_by_end = { type: 'checkbox', trans: this.transPath('sort_by_end'), default: this.getConfig('sort_by_end', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
-this.settings.autostart = { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) };
-this.settings.log = { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) };
 this.withValue = false;
+delete this.settings.check_in_steam;
+delete this.settings.blacklist_on;
 super.init();
 this.log(this.logLink('https://scrap.tf/login', Lang.get('service.login')), 'info');
 }
