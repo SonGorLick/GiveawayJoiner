@@ -47,7 +47,6 @@ let optimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 70) - _th
 _this.stimer = optimer;
 }
 let page = 1;
-_this.ua = mainWindow.webContents.session.getUserAgent();
 _this.pagemax = _this.getConfig('pages', 1);
 _this.costmax = _this.getConfig('maxcost', 0);
 _this.check = 0;
