@@ -3,7 +3,6 @@ require('v8-compile-cache');
 class OpiumPulses extends Joiner {
 constructor() {
 super();
-//this.domain = 'opiumpulses.com';
 this.websiteUrl = 'https://www.opiumpulses.com';
 this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
