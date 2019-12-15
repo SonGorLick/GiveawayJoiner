@@ -3,6 +3,7 @@ require('v8-compile-cache');
 class OpiumPulses extends Joiner {
 constructor() {
 super();
+//this.domain = 'opiumpulses.com';
 this.websiteUrl = 'https://www.opiumpulses.com';
 this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
@@ -47,6 +48,7 @@ let optimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 70) - _th
 _this.stimer = optimer;
 }
 let page = 1;
+_this.ua = mainWindow.webContents.session.getUserAgent();
 _this.pagemax = _this.getConfig('pages', 1);
 _this.costmax = _this.getConfig('maxcost', 0);
 _this.check = 0;
@@ -136,6 +138,7 @@ opway = opfound.eq(oprnd),
 link = opway.find('.giveaways-page-item-img-btn-more').attr('href'),
 name = opway.find('.giveaways-page-item-footer-name').text().trim(),
 entered = opway.find('.giveaways-page-item-img-btn-wrapper').text(),
+check = opway.find('.giveaways-page-item-img-btn-wrapper a').attr('onclick'),
 eLink = opway.find('.giveaways-page-item-img-btn-enter').attr('href'),
 cost = parseInt(opway.find('.giveaways-page-item-header-points').text().replace('points', '').trim()),
 code = link.slice(11, 16),
@@ -252,6 +255,11 @@ _this.log(Lang.get('service.blacklisted'), 'black');
 if (opown === 0) {
 let tmout = Math.floor(Math.random() * Math.floor(opnext / 10)) + Math.floor(opnext / 5);
 setTimeout(function () {
+if (check !== undefined) {
+check = check.replace('checkUser(', '').replace(')', '');
+let opcookie = { url: 'https://www.opiumpulses.com', name: 'checkUser', value: check };
+mainWindow.webContents.session.cookies.set(opcookie, (error) => { });
+}
 $.ajax({
 url: _this.url + eLink,
 success: function () {
