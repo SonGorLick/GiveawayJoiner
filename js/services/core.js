@@ -1,5 +1,4 @@
 'use strict';
-require('v8-compile-cache');
 const storage = require('electron-json-storage');
 const fs = require('fs');
 class Joiner {
@@ -9,13 +8,14 @@ this.totalTicks = 0;
 this.usrUpdTimer = 60;
 this.started = false;
 this.waitAuth = false;
+this.domain = 'google.com';
 this.cookies = '';
 this.withValue = true;
 this.curr_value = 0;
 this.getTimeout = 15000;
 this.settings = {
-timer_from: { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 70), default: this.getConfig('timer_from', 50) },
-timer_to: { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 50), max: 2880, default: this.getConfig('timer_to', 70) },
+timer_from: { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) },
+timer_to: { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) },
 interval_from: { type: 'number', trans: 'service.interval_from', min: 0, max: this.getConfig('interval_to', 15), default: this.getConfig('interval_from', 10) },
 interval_to: { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 10), max: 60, default: this.getConfig('interval_to', 15) },
 pages: { type: 'number', trans: 'service.pages', min: 1, max: 30, default: this.getConfig('pages', 1) },
@@ -211,7 +211,8 @@ this.buttonState(Lang.get('service.btn_awaiting'), 'disabled');
 this.waitAuth = true;
 Browser.webContents.on('did-finish-load', () => {
 if (this.waitAuth && Browser.getURL().indexOf(this.websiteUrl) >= 0) {
-Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML', (body) => {
+Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML')
+.then(body => {
 if (body.indexOf(this.authContent) >= 0) {
 Browser.close();
 this.waitAuth = false;
@@ -319,6 +320,13 @@ this.totalTicks++;
 }
 updateUserInfo() {
 this.getUserInfo((userData) => {
+if (userData.avatar === undefined) {
+userData.avatar = __dirname + '/icons/icon.png';
+}
+if (userData.avatar.includes('electron.asar')) {
+userData.avatar = userData.avatar.replace('electron.asar/renderer', 'app.asar');
+userData.avatar = userData.avatar.replace('electron.asar', 'app.asar');
+}
 this.userInfo.find('.avatar').css('background-image', "url('" + userData.avatar + "')");
 this.userInfo.find('.username').text(userData.username);
 if (this.withValue) {
@@ -535,7 +543,8 @@ return '<span class="add-to-blacklist" black="' + steamappid + '" title="' + Lan
 }
 }
 updateCookies() {
-mainWindow.webContents.session.cookies.get({domain: this.domain}, (error, cookies) => {
+mainWindow.webContents.session.cookies.get({domain: this.domain})
+.then((cookies) => {
 let newCookies = '';
 for (let one in cookies) {
 if (newCookies.length !== 0) {
@@ -547,9 +556,9 @@ this.cookies = newCookies;
 });
 }
 interval() {
-let min = this.getConfig('interval_from', this.settings.interval_from.default) * 1000;
-let max = this.getConfig('interval_to', this.settings.interval_to.default) * 1000;
-return (Math.floor(Math.random() * (max - min)) + min);
+let min = this.getConfig('interval_from', this.settings.interval_from.default);
+let max = this.getConfig('interval_to', this.settings.interval_to.default) + 1;
+return (Math.floor(Math.random() * (max - min)) + min) * 1000;
 }
 doTimer() {
 return this.stimer * 60;

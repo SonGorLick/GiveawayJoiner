@@ -1,5 +1,4 @@
 'use strict';
-require('v8-compile-cache');
 window.timeStr = function () {
 let date = new Date();
 let h = date.getHours(), i = date.getMinutes(), s = date.getSeconds();

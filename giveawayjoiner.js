@@ -1,10 +1,9 @@
 'use strict';
-require('v8-compile-cache');
 const { app, nativeImage, shell, session, Tray, BrowserWindow, Menu, ipcMain, ipcRenderer } = require('electron');
 const storage = require('electron-json-storage');
 const fs = require('fs');
-const rq = require('request-promise');
-const devMode = app.getVersion() === '4.2.12';
+const rq = require('request-promise-native');
+const devMode = app.getVersion() === '7.1.5';
 let _ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/78.0.3904.67 Mobile/15E148 Safari/605.1';
 let appLoaded = false;
 let mainWindow = null;
@@ -19,7 +18,6 @@ let _bmd = 'true';
 let _bfr = 'false';
 let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
-app.commandLine.appendSwitch('in-process-gpu');
 app.commandLine.appendSwitch('disable-software-rasterizer');
 app.commandLine.appendSwitch('disk-cache-size', 60);
 app.disableHardwareAcceleration();
@@ -79,6 +77,9 @@ frame: false,
 webPreferences: {
 session: _session,
 devTools: devMode,
+contextIsolation: false,
+nodeIntegration: true,
+webviewTag: true,
 webSecurity: false,
 webaudio: false
 }
@@ -101,7 +102,8 @@ center: true,
 webPreferences: {
 session: _session,
 devTools: devMode,
-nodeIntegration: false,
+contextIsolation: false,
+webviewTag: true,
 webSecurity: false,
 webaudio: false
 }

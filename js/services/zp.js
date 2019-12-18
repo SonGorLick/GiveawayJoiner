@@ -1,5 +1,4 @@
 'use strict';
-require('v8-compile-cache');
 class ZP extends Joiner {
 constructor() {
 super();
@@ -16,7 +15,8 @@ this.settings.check_all = { type: 'checkbox', trans: this.transPath('check_all')
 this.withValue = false;
 delete this.settings.pages;
 super.init();
-this.log(this.logLink('https://www.zeepond.com/cb-login', Lang.get('service.login')) + '<br>' + Lang.get('service.zp.login'), 'info');
+this.log(this.logLink('https://www.zeepond.com/cb-login', Lang.get('service.login')), 'info');
+this.log(Lang.get('service.zp.login'), 'info');
 }
 authCheck(callback) {
 if (GJuser.zp === '') {
@@ -63,6 +63,7 @@ let zptimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _t
 _this.stimer = zptimer;
 }
 _this.skip = false;
+_this.zpuser = ',';
 _this.url = 'https://www.zeepond.com';
 $.ajax({
 url: _this.url + '/zeepond/giveaways/enter-a-competition',
@@ -88,7 +89,8 @@ function giveawayEnter() {
 if (comp.length <= zpcurr || _this.skip || !_this.started) {
 if (comp.length <= zpcurr || _this.skip) {
 setTimeout(function () {
-fs.writeFile(storage.getDataPath().slice(0, -7) + 'zp.txt', GJuser.zp, (err) => { });
+fs.writeFile(storage.getDataPath().slice(0, -7) + 'zp.txt', _this.zpuser, (err) => { });
+GJuser.zp = _this.zpuser;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
 }
@@ -115,13 +117,16 @@ zpdtnow.setDate(zpdtnow.getUTCDate());
 zpdtnow.setHours(zpdtnow.getUTCHours() + 11);
 let zpdnow = zpdtnow.getDate();
 if (zpdnow === zpdga) {
+_this.zpuser = _this.zpuser + zpnam + '(z=' + zpdga + '),';
 njoin = 3;
 }
 }
 if (GJuser.zp.includes(',' + zpnam + '(s),') && _this.getConfig('check_in_steam', true)) {
+_this.zpuser = _this.zpuser + zpnam + '(s),';
 njoin = 1;
 }
 if (GJuser.zp.includes(',' + zpnam + '(b),') && _this.getConfig('blacklist_on', false)) {
+_this.zpuser = _this.zpuser + zpnam + '(b),';
 njoin = 2;
 }
 if (_this.getConfig('log', true) && njoin > 0) {
@@ -163,13 +168,7 @@ let zpdtskp = new Date();
 zpdtskp.setDate(zpdtskp.getUTCDate());
 zpdtskp.setHours(zpdtskp.getUTCHours() + 11);
 let zpdskp = ('0' + zpdtskp.getDate().toString()).slice(-2);
-if (GJuser.zp.includes(',' + zpnam + '(z=')) {
-let zpdga = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];
-GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zpdga, ',' + zpnam + '(z=' + zpdskp);
-}
-else {
-GJuser.zp = GJuser.zp + zpnam + '(z=' + zpdskp + '),';
-}
+_this.zpuser = _this.zpuser + zpnam + '(z=' + zpdskp + '),';
 }
 if (entered) {
 if (_this.getConfig('skip_after', true)) {
@@ -180,13 +179,7 @@ let zpdtchk = new Date();
 zpdtchk.setDate(zpdtchk.getUTCDate());
 zpdtchk.setHours(zpdtchk.getUTCHours() + 11);
 let zpdchk = ('0' + zpdtchk.getDate().toString()).slice(-2);
-if (GJuser.zp.includes(',' + zpnam + '(z=')) {
-let zpdga = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];
-GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zpdga, ',' + zpnam + '(z=' + zpdchk);
-}
-else {
-GJuser.zp = GJuser.zp + zpnam + '(z=' + zpdchk + '),';
-}
+_this.zpuser = _this.zpuser + zpnam + '(z=' + zpdchk + '),';
 }
 if (zpsteam !== undefined) {
 if (zpsteam.includes('app/')) {
@@ -211,11 +204,11 @@ if (GJuser.ownsubs.includes(',' + zpsub + ',') && zpsub > 0) {
 zpown = 1;
 }
 if (zpown === 1) {
-GJuser.zp = GJuser.zp + zpnam + '(s),';
+_this.zpuser = _this.zpuser + zpnam + '(s),';
 }
 }
 if (GJuser.black.includes(zpid + ',') && _this.getConfig('blacklist_on', false)) {
-GJuser.zp = GJuser.zp + zpnam + '(b),';
+_this.zpuser = _this.zpuser + zpnam + '(b),';
 zpown = 4;
 }
 }
@@ -250,13 +243,7 @@ let zpdtnew = new Date();
 zpdtnew.setDate(zpdtnew.getUTCDate());
 zpdtnew.setHours(zpdtnew.getUTCHours() + 11);
 let zpdnew = ('0' + zpdtnew.getDate().toString()).slice(-2);
-if (GJuser.zp.includes(',' + zpnam + '(z=')) {
-let zpdold = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];
-GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zpdold, ',' + zpnam + '(z=' + zpdnew);
-}
-else {
-GJuser.zp = GJuser.zp + zpnam + '(z=' + zpdnew + '),';
-}
+_this.zpuser = _this.zpuser + zpnam + '(z=' + zpdnew + '),';
 if (_this.getConfig('log', true)) {
 if (zpstm !== '') {
 _this.log(Lang.get('service.entered_in') + '|' + (zprnd + 1) + '№|' + _this.logLink(zpstm, zpid) + '|  ' + _this.logLink(zplink, zpname) + _this.logBlack(zpid), 'enter');

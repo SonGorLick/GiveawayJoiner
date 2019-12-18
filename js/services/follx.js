@@ -1,5 +1,4 @@
 'use strict';
-require('v8-compile-cache');
 class Follx extends Joiner {
 constructor() {
 super();

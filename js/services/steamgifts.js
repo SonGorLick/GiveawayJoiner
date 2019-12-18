@@ -1,5 +1,4 @@
 'use strict';
-require('v8-compile-cache');
 class SteamGifts extends Joiner {
 constructor() {
 super();
@@ -54,8 +53,8 @@ callback(userData);
 }
 joinService() {
 let page = 1;
-if (this.getConfig('timer_to', 70) !== this.getConfig('timer_from', 50)) {
-let sgtimer = (Math.floor(Math.random() * (this.getConfig('timer_to', 70) - this.getConfig('timer_from', 50))) + this.getConfig('timer_from', 50));
+if (this.getConfig('timer_to', 90) !== this.getConfig('timer_from', 70)) {
+let sgtimer = (Math.floor(Math.random() * (this.getConfig('timer_to', 90) - this.getConfig('timer_from', 70))) + this.getConfig('timer_from', 70));
 this.stimer = sgtimer;
 }
 this.check = 0;

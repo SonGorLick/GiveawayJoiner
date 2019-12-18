@@ -1,5 +1,4 @@
 'use strict';
-require('v8-compile-cache');
 class Astats extends Joiner {
 constructor() {
 super();
@@ -14,7 +13,7 @@ super.init();
 getUserInfo(callback) {
 if (GJuser.as === '' && fs.existsSync(storage.getDataPath().slice(0, -7) + 'astats.txt')) {
 let asdata = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'astats.txt');
-if (asdata.length > 1 && asdata.length < 2000) {
+if (asdata.length > 1 && asdata.length < 4000) {
 GJuser.as = asdata.toString();
 }
 }
@@ -36,14 +35,15 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-if (_this.getConfig('timer_to', 70) !== _this.getConfig('timer_from', 50)) {
-let astimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 70) - _this.getConfig('timer_from', 50))) + _this.getConfig('timer_from', 50));
+if (_this.getConfig('timer_to', 90) !== _this.getConfig('timer_from', 70)) {
+let astimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
 _this.stimer = astimer;
 }
 let page = 1;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://astats.astats.nl';
 _this.pagemax = _this.getConfig('pages', 1);
+_this.asuser = ',';
 if (GJuser.as === '') {
 GJuser.as = ',';
 $.ajax({
@@ -112,7 +112,8 @@ _this.pagemax = page;
 if (afound.length <= acurr || !_this.started) {
 if (afound.length <= acurr && page === _this.pagemax) {
 setTimeout(function () {
-fs.writeFile(storage.getDataPath().slice(0, -7) + 'astats.txt', GJuser.as, (err) => { });
+fs.writeFile(storage.getDataPath().slice(0, -7) + 'astats.txt', _this.asuser, (err) => { });
+GJuser.as = _this.asuser;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
 }
@@ -147,7 +148,6 @@ let aname = data.find('[href="' + alink + '"]').text().trim(),
 ended = data.find('[href="' + alink + '"] > span').text().trim(),
 asjoin = alink.replace('/astats/Giveaway.php?GiveawayID=','');
 if (aname.includes('This giveaway has ended.') || ended === 'This giveaway has ended.') {
-GJuser.as = GJuser.as.replace(',' + asjoin + ',', ',');
 _this.pagemax = page;
 asnext = 50;
 }
@@ -179,6 +179,7 @@ if (GJuser.black.includes(asid + ',') && _this.getConfig('blacklist_on', false))
 asown = 4;
 }
 if (GJuser.as.includes(',' + asjoin + ',')) {
+_this.asuser = _this.asuser + asjoin + ',';
 asown = 3;
 }
 if (_this.getConfig('log', true)) {
@@ -201,7 +202,7 @@ html = $(html.replace(/<img/gi, '<noload'));
 let ajoin = html.find('.input-group-btn').text().trim();
 if (ajoin === 'Add') {
 asown = 3;
-GJuser.as = GJuser.as + asjoin + ',';
+_this.asuser = _this.asuser + asjoin + ',';
 }
 if (ajoin !== 'Add' && ajoin !== 'Join') {
 asown = 5;
@@ -225,7 +226,7 @@ url: _this.url + alink,
 method: 'POST',
 data: 'Comment=&JoinGiveaway=Join',
 success: function () {
-GJuser.as = GJuser.as + asjoin + ',';
+_this.asuser = _this.asuser + asjoin + ',';
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (arnd + 1) + '№|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname) + _this.logBlack(asid), 'enter');
 }

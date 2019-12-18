@@ -1,5 +1,4 @@
 'use strict';
-require('v8-compile-cache');
 class ChronoGG extends Joiner {
 constructor() {
 super();

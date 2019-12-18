@@ -1,6 +1,4 @@
 'use strict';
-require('v8-compile-cache');
-window.$ = window.jQuery = require('jquery');
 const remote = require('electron').remote;
 const ipc = require('electron').ipcRenderer;
 const shared = remote.getGlobal('sharedData');
