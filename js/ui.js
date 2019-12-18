@@ -90,6 +90,9 @@ reloadLangStrings();
 $(document).on('click', '.open-website[data-link]', function () {
 openWebsite($(this).attr('data-link'));
 });
+$(document).on('click', '.login[data-link]', function () {
+openWebsite($(this).attr('data-link'));
+});
 $(document).on('click', '.add-to-blacklist[black]', function () {
 if (GJuser.black !== '') {
 if (!GJuser.black.includes($(this).attr('black') + ',')) {

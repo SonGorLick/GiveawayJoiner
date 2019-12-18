@@ -4,7 +4,8 @@ constructor() {
 super();
 this.websiteUrl = 'https://www.chrono.gg';
 this.authContent = 'Coin Shop';
-this.authLink = 'https://www.chrono.gg';
+this.authLink = 'https://github.com/pumPCin/GiveawayJoiner/wiki/Chrono';
+this.auth = Lang.get('service.chronogg.jwt_wiki');
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 700), default: this.getConfig('timer_from', 500) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 500), max: 2880, default: this.getConfig('timer_to', 700) };
 this.withValue = false;
@@ -12,7 +13,6 @@ delete this.settings.pages;
 delete this.settings.check_in_steam;
 delete this.settings.blacklist_on;
 super.init();
-this.log(this.logLink('https://github.com/pumPCin/GiveawayJoiner/wiki/Chrono', Lang.get('service.chronogg.jwt_wiki')), 'info');
 }
 authCheck(callback) {
 $.ajax({

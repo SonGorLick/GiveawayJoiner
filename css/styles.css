@@ -112,7 +112,10 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-user-panel .user-info > span { display: block; }
 button.open-website { font-size: 21px; background: transparent; cursor: pointer; border: none; color: #4db6ac; }
 button.open-website:hover { color: #00bcd4; }
-.service-user-panel button.open-website { position: absolute; right: 150px; bottom: 13px; }
+button.login { font-size: 21px; background: transparent; cursor: pointer; border: none; color: #4db6ac; }
+button.login:hover { color: #00bcd4; }
+.service-user-panel button.open-website { position: absolute; right: 200px; bottom: 13px; }
+.service-user-panel button.login { position: absolute; right: 150px; bottom: 13px; }
 .input-wrap { position: relative; line-height: 20px; }
 .input-wrap.checkbox input,
 .input-wrap.checkbox label { display: inline-block; vertical-align: middle; cursor: pointer; color: #4db6ac; font-size: 12px; }
@@ -124,6 +127,7 @@ input-wrap.checkbox input[disabled] { cursor: default; }
 .fa-database:before { content: '\f1c0'; }
 .fa-ellipsis-v:before { content: '\f142'; }
 .fa-history:before { content: '\f1da'; }
+.fa-id-card:before { content: '\f2c2'; }
 .fa-list-ul:before { content: '\f0c9'; }
 .fa-minus:before { content: '\f053'; }
 .fa-stop:before { content: '\f04d'; }

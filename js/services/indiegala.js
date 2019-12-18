@@ -23,7 +23,6 @@ this.settings.reserve_no_multi = { type: 'checkbox', trans: this.transPath('rese
 this.settings.sbl_ending_ig = { type: 'checkbox', trans: this.transPath('sbl_ending_ig'), default: this.getConfig('sbl_ending_ig', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 super.init();
-this.log(this.logLink('https://www.indiegala.com/login', Lang.get('service.login')), 'info');
 }
 authCheck(callback) {
 $.ajax({

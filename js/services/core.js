@@ -8,6 +8,7 @@ this.totalTicks = 0;
 this.usrUpdTimer = 60;
 this.started = false;
 this.waitAuth = false;
+this.auth = Lang.get('service.login');
 this.domain = 'google.com';
 this.cookies = '';
 this.withValue = true;
@@ -128,6 +129,11 @@ $(document.createElement('button'))
 .addClass('open-website')
 .html('<div class="fab fa-chrome" data-lang-title="service.open_website"></div>')
 .attr('data-link', this.websiteUrl)
+.appendTo(this.userPanel);
+$(document.createElement('button'))
+.addClass('login')
+.html('<div class="fa fa-id-card" data-lang-title="' + this.auth + '"></div>')
+.attr('data-link', this.authLink)
 .appendTo(this.userPanel);
 this.mainButton = $('<button>' + Lang.get('service.btn_start') + '</button>')
 .addClass('joiner-button start-button')

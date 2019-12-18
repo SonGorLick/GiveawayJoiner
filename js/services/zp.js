@@ -5,6 +5,7 @@ super();
 this.websiteUrl = 'https://www.zeepond.com';
 this.authContent = 'My Account';
 this.authLink = 'https://www.zeepond.com/cb-login';
+this.auth = this.auth + Lang.get('service.zp.login');
 this.settings.interval_from = { type: 'number', trans: 'service.interval_from', min: 10, max: this.getConfig('interval_to', 15), default: this.getConfig('interval_from', 10) };
 this.settings.interval_to = { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 10), max: 60, default: this.getConfig('interval_to', 15) };
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 700), default: this.getConfig('timer_from', 500) };
@@ -15,8 +16,6 @@ this.settings.check_all = { type: 'checkbox', trans: this.transPath('check_all')
 this.withValue = false;
 delete this.settings.pages;
 super.init();
-this.log(this.logLink('https://www.zeepond.com/cb-login', Lang.get('service.login')), 'info');
-this.log(Lang.get('service.zp.login'), 'info');
 }
 authCheck(callback) {
 $.ajax({
