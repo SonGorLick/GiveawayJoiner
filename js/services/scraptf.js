@@ -23,20 +23,10 @@ callback(1);
 }
 getUserInfo(callback) {
 let userData = {
-avatar: __dirname + '/images/ScrapTF.png',
-username: 'ScrapTF User'
+avatar: GJuser.avatar,
+username: GJuser.username
 };
-$.ajax({
-url: 'https://scrap.tf/raffles/puzzle',
-success: function (data) {
-data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
-userData.avatar = data.substring(data.indexOf('style="" src="')+14,data.indexOf('class="nav-username"')).slice(0, 121);
-userData.username = $(data).find('.nav-username').text();
-},
-complete: function () {
 callback(userData);
-}
-});
 }
 joinService() {
 let _this = this;

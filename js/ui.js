@@ -158,14 +158,23 @@ $(document.createElement('button'))
 .appendTo(info_links);
 }
 function renderUser(userData) {
-$('.content-item .info .username').html(userData.username);
+
 $.ajax({
 url: 'https://store.steampowered.com/account',
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
-let logo = data.find('#global_actions > a > noload').attr('src');
+let name = data.find('.responsive_menu_user_persona.persona.offline > a').text(),
+logo = data.find('#global_actions > a > noload').attr('src').replace('.jpg', '_full.jpg');
+if (name !== undefined) {
+userData.username = name;
+$('.content-item .info .username').html(name);
+}
+else {
+$('.content-item .info .username').html(userData.username);
+}
 if (logo !== undefined) {
-$('.content-item .info .avatar').css({'background-image': 'url("' + logo.replace('.jpg', '_full.jpg') + '")'});
+userData.avatar = logo;
+$('.content-item .info .avatar').css({'background-image': 'url("' + logo + '")'});
 }
 else {
 $('.content-item .info .avatar').css({'background-image': 'url("' + userData.avatar + '")'});

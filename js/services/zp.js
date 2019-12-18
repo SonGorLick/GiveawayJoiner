@@ -49,7 +49,7 @@ url: 'https://www.zeepond.com',
 success: function (data) {
 data = data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
 userData.avatar = $(data).find('.profile-pic').attr('style').replace('background-color:transparent; background-image:url(', '').replace(');', '');
-userData.username = 'Profile';
+userData.username = GJuser.username;
 },
 complete: function () {
 callback(userData);
