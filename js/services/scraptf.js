@@ -14,12 +14,6 @@ this.withValue = false;
 delete this.settings.check_in_steam;
 delete this.settings.blacklist_on;
 super.init();
-this.log(this.logLink('https://scrap.tf/login', Lang.get('service.login')), 'info');
-}
-authCheck(callback) {
-setTimeout(function () {
-callback(1);
-}, 1000);
 }
 getUserInfo(callback) {
 let userData = {
@@ -83,11 +77,6 @@ data: spdata,
 success: function (data) {
 if (page === 1) {
 data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
-let logined = data.indexOf('Logout') >= 0;
-if (!logined) {
-_this.log(Lang.get('service.ses_not_found'), 'err');
-_this.stopJoiner(true);
-}
 _this.csrf = data.substring(data.indexOf("ScrapTF.User.Hash =")+21,data.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 let spwon = $(data).find('.nav-notice a').text().trim();
 if (spwon.length > 0 && spwon.includes("You've won")) {

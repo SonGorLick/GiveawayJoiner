@@ -49,7 +49,6 @@ let page = 1;
 _this.pagemax = _this.getConfig('pages', 1);
 _this.costmax = _this.getConfig('maxcost', 0);
 _this.check = 0;
-_this.opuser = ',';
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.opiumpulses.com';
 $.ajax({
@@ -108,8 +107,7 @@ _this.pagemax = page;
 if (opfound.length <= opcurr || !_this.started || _this.curr_value === 0) {
 if (opfound.length <= opcurr && page === _this.pagemax) {
 setTimeout(function () {
-fs.writeFile(storage.getDataPath().slice(0, -7) + 'opiumpulses.txt', _this.opuser, (err) => { });
-GJuser.op = _this.opuser;
+fs.writeFile(storage.getDataPath().slice(0, -7) + 'opiumpulses.txt', GJuser.op, (err) => { });
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
 }
@@ -155,15 +153,12 @@ if (cost !== 0 && _this.getConfig('free_only', false)) {
 njoin = 5;
 }
 if (GJuser.op.includes(',' + code + '-n,')) {
-_this.opuser = _this.opuser + code + '-n,';
 njoin = 1;
 }
 if (GJuser.op.includes(',' + code + '-s,') && _this.getConfig('check_in_steam', true)) {
-_this.opuser = _this.opuser + code + '-s,';
 njoin = 2;
 }
 if (GJuser.op.includes(',' + code + '-b,') && _this.getConfig('blacklist_on', false)) {
-_this.opuser = _this.opuser + code + '-b,';
 njoin = 3;
 }
 if (entered.includes('ENTERED')) {
@@ -234,13 +229,13 @@ if (GJuser.black.includes(opid + ',') && _this.getConfig('blacklist_on', false))
 opown = 4;
 }
 if (opown === 1) {
-_this.opuser = _this.opuser + code + '-s,';
+GJuser.op = GJuser.op + code + '-s,';
 }
 if (opown === 3) {
-_this.opuser = _this.opuser + code + '-n,';
+GJuser.op = GJuser.op + code + '-n,';
 }
 if (opown === 4) {
-_this.opuser = _this.opuser + code + '-b,';
+GJuser.op = GJuser.op + code + '-b,';
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|' + _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name) + _this.logBlack(opid), 'chk');

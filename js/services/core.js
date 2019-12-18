@@ -227,6 +227,7 @@ Browser.webContents.removeAllListeners('did-finish-load');
 this.waitAuth = false;
 this.authCheck((authState) => {
 if (authState === 1) {
+this.updateUserInfo();
 this.runTimer();
 }
 else {
@@ -257,7 +258,6 @@ let atimer = this.getConfig('timer_from', 50);
 this.stimer = atimer;
 this.setStatus('good');
 this.log(Lang.get('service.started'));
-this.updateUserInfo();
 if (this.intervalVar) {
 clearInterval(this.intervalVar);
 }
@@ -266,7 +266,6 @@ if (!this.started) {
 clearInterval(this.intervalVar);
 }
 if (this.totalTicks % this.doTimer() === 0) {
-this.updateUserInfo();
 $.ajax({
 url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
 dataType: 'json',
@@ -288,6 +287,7 @@ GJuser.black = GJuser.black + ',';
 }
 this.authCheck((authState) => {
 if (authState === 1) {
+this.updateUserInfo();
 if (Config.get('log_autoclear', false)) {
 this.logField.html('<div></div>');
 }
