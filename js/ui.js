@@ -158,7 +158,6 @@ $(document.createElement('button'))
 .appendTo(info_links);
 }
 function renderUser(userData) {
-
 $.ajax({
 url: 'https://store.steampowered.com/account',
 success: function (data) {
