@@ -162,6 +162,9 @@ assub = parseInt(assteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')
 asid = 'sub/' + assub;
 asstm = 'https://store.steampowered.com/sub/' + assub;
 }
+if (ahave === '#FF0000') {
+asown = 1;
+}
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
 _this.log(Lang.get('service.steam_error'), 'err');
@@ -192,7 +195,8 @@ if (asown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');
 }
 }
-if (asown === 0 && ahave === undefined) {
+_this.log(ahave);
+if (asown === 0) {
 $.ajax({
 url: _this.url + alink,
 success: function (html) {
