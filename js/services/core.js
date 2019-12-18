@@ -323,10 +323,6 @@ this.getUserInfo((userData) => {
 if (userData.avatar === undefined) {
 userData.avatar = __dirname + '/icons/icon.png';
 }
-if (userData.avatar.includes('electron.asar')) {
-userData.avatar = userData.avatar.replace('electron.asar/renderer', 'app.asar');
-userData.avatar = userData.avatar.replace('electron.asar', 'app.asar');
-}
 this.userInfo.find('.avatar').css('background-image', "url('" + userData.avatar + "')");
 this.userInfo.find('.username').text(userData.username);
 if (this.withValue) {
