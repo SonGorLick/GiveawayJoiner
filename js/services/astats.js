@@ -195,7 +195,6 @@ if (asown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');
 }
 }
-_this.log(ahave);
 if (asown === 0) {
 $.ajax({
 url: _this.url + alink,
