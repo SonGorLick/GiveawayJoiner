@@ -20,7 +20,7 @@
 		"logs": "Log",
 		"win": "!!! Congrats, you won !!!",
 		"qty": "quantity",
-		"login": "Click, if you need to sign in",
+		"login": "Click, if you need to Sign in ",
 		"browser_loading": "loading",
 		"steam_login": "Sign in to Steam (Sign in for the second time with save this device checkbox to save session)",
 		"ua_check": "To check User-Agent (You can change it in file /giveawayjoinerdata/user-agent.txt)",
