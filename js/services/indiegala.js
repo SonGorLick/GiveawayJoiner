@@ -356,7 +356,6 @@ igcurr++;
 }
 else {
 igrtry++;
-_this.log(_this.url + '/giveaways/' + page + '/expiry/asc/level/' + _this.lvl);
 rq({
 method: 'POST',
 uri: _this.url + '/giveaways/new_entry',
