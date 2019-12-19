@@ -122,6 +122,7 @@ let igwon = $(html).find('p').eq(1).text().trim();
 if (igwon.includes('Congratulations! You won')) {
 igwon = igwon.replace('Congratulations! You won','').replace('Giveaways','').trim();
 _this.log(_this.logLink(_this.url + '/profile?user_id=' + GJuser.ig, Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + igwon + ')'), 'win');
+_this.setStatus('win');
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }

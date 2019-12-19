@@ -129,6 +129,7 @@ this.setConfig('won', sgwon);
 }
 if (sgwon > 0 && sgwon > this.won) {
 this.log(this.logLink(this.url + '/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (sgwon) + ')'), 'win');
+this.setStatus('win');
 this.setConfig('won', sgwon);
 if (this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();

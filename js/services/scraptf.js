@@ -90,6 +90,7 @@ _this.setConfig('won', spwon);
 }
 if (spwon > 0 && spwon > _this.won) {
 _this.log(_this.logLink(_this.url + '/notices', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (spwon) + ')'), 'win');
+_this.setStatus('win');
 _this.setConfig('won', spwon);
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();

@@ -83,6 +83,7 @@ _this.check = 1;
 let opwon = parseInt(data.find('[href="/user/giveawaykeys"] > span').text().trim());
 if (opwon > 0 && opwon > _this.won) {
 _this.log(_this.logLink(_this.url + '/user/giveawaykeys', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (opwon - _this.won) + ')'), 'win');
+_this.setStatus('win');
 _this.setConfig('won', opwon);
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();

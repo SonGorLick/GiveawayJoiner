@@ -80,6 +80,7 @@ _this.check = 1;
 let fxwon = html.find('.hide-on-med-and-down.user-panel.s6.col > .icons > .has.marker.cup').attr('href');
 if (fxwon !== undefined) {
 _this.log(_this.logLink('https://follx.com/giveaways/won', Lang.get('service.win')), 'win');
+_this.setStatus('win');
 if (_this.getConfig('sound', true)) {
 new Audio(__dirname + '/sounds/won.wav').play();
 }
