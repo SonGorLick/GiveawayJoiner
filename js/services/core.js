@@ -8,12 +8,12 @@ this.totalTicks = 0;
 this.usrUpdTimer = 60;
 this.started = false;
 this.waitAuth = false;
-this.auth = Lang.get('service.login');
-this.domain = 'google.com';
 this.cookies = '';
 this.withValue = true;
 this.curr_value = 0;
 this.getTimeout = 15000;
+this.domain = 'google.com';
+this.auth = Lang.get('service.login') + this.constructor.name;
 this.settings = {
 timer_from: { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) },
 timer_to: { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) },
@@ -127,7 +127,7 @@ this.value_label = $(document.createElement('span'))
 }
 $(document.createElement('button'))
 .addClass('open-website')
-.html('<div class="fab fa-chrome" data-lang-title="service.open_website"></div>')
+.html('<div class="fab fa-chrome" data-lang-title="' + Lang.get('service.open_website') + this.constructor.name + '"></div>')
 .attr('data-link', this.websiteUrl)
 .appendTo(this.userPanel);
 $(document.createElement('button'))
@@ -328,6 +328,9 @@ updateUserInfo() {
 this.getUserInfo((userData) => {
 if (userData.avatar === undefined) {
 userData.avatar = __dirname + '/icons/icon.png';
+}
+if (userData.avatar.includes('electron.asar/renderer')) {
+userData.avatar = userData.avatar.replace('electron.asar/renderer', 'app.asar');
 }
 this.userInfo.find('.avatar').css('background-image', "url('" + userData.avatar + "')");
 this.userInfo.find('.username').text(userData.username);
