@@ -3,7 +3,7 @@ class ZP extends Joiner {
 constructor() {
 super();
 this.websiteUrl = 'https://www.zeepond.com';
-this.authContent = 'My Account';
+this.authContent = 'profile-pic';
 this.authLink = 'https://www.zeepond.com/cb-login';
 this.auth = this.auth + Lang.get('service.zp.login');
 this.settings.interval_from = { type: 'number', trans: 'service.interval_from', min: 10, max: this.getConfig('interval_to', 15), default: this.getConfig('interval_from', 10) };
@@ -13,21 +13,10 @@ this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.
 this.settings.skip_after = { type: 'checkbox', trans: this.transPath('skip_after'), default: this.getConfig('skip_after', true) };
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
 this.settings.check_all = { type: 'checkbox', trans: this.transPath('check_all'), default: this.getConfig('check_all', false) };
+this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.withValue = false;
 delete this.settings.pages;
 super.init();
-}
-authCheck(callback) {
-$.ajax({
-url: 'https://www.zeepond.com',
-success: function (html) {
-html = html.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload').replace(/<script/gi, '<noload');
-callback(1);
-},
-error: function () {
-callback(-1);
-}
-});
 }
 getUserInfo(callback) {
 if (GJuser.zp === '') {
@@ -52,16 +41,36 @@ let zptimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _t
 _this.stimer = zptimer;
 }
 _this.skip = false;
+_this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.zeepond.com';
+$.ajax({
+url: _this.url + '/my-account/my-prizes',
+success: function (data) {
+data = $(data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
+let zpwon = data.find('.form-group');
+if (zpwon === undefined) {
+zpwon = 0;
+}
+else {
+zpwon = zpwon.length;
+}
+if (zpwon < _this.won) {
+_this.setConfig('won', zpwon);
+}
+if (zpwon > 0 && zpwon > _this.won) {
+_this.log(_this.logLink(_this.url + '/my-account/my-prizes', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (zpwon) + ')'), 'win');
+_this.setStatus('win');
+_this.setConfig('won', zpwon);
+if (_this.getConfig('sound', true)) {
+new Audio(__dirname + '/sounds/won.wav').play();
+}
+}
+}
+});
 $.ajax({
 url: _this.url + '/zeepond/giveaways/enter-a-competition',
 success: function (data) {
 data = data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
-let logined = data.indexOf('My Account') >= 0;
-if (!logined) {
-_this.log(Lang.get('service.ses_not_found'), 'err');
-_this.stopJoiner(true);
-}
 let comp = $(data).find('.bv-item-wrapper'),
 zpcurr = 0,
 random = Array.from(Array(comp.length).keys());
