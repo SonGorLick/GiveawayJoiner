@@ -27,7 +27,7 @@
 		"settings": "Settings",
 		"clear_log": "Clear log",
 		"log_cleared": "Log cleared",
-		"open_website": "Visit current service's website",
+		"open_website": "Visit website of the selected service ",
 		"add_tbl": "Add to blacklist",
 		"rmv_tbl": "Remove from blacklist",
 		"btn_start": "Start",
@@ -105,7 +105,7 @@
 			"jwt_no": "Add JWT data of account in file"
 		},
 		"zp": {
-			"login": "(Sign in by login-password with save password checkbox, otherwise session not will be saved)",
+			"login": " (Sign in by login-password with save password checkbox, otherwise session not will be saved)",
 			"skip_after": "Safe search",
 			"skip_after_title": "If can't enter in giveaway, checking of other giveaways will be skipped",
 			"check_all": "Force check",
