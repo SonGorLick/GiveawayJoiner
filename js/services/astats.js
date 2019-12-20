@@ -187,7 +187,7 @@ if (asown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
 if (asown === 3) {
-_this.log(Lang.get('service.already_joined'), 'skip');
+_this.log(Lang.get('service.already_joined'), 'jnd');
 }
 if (asown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');
@@ -211,7 +211,7 @@ asown = 0;
 }
 if (_this.getConfig('log', true)) {
 if (asown === 3) {
-_this.log(Lang.get('service.already_joined'), 'skip');
+_this.log(Lang.get('service.already_joined'), 'jnd');
 }
 if (asown === 5) {
 _this.log(Lang.get('service.cant_join'), 'cant');

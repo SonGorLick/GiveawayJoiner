@@ -76,13 +76,14 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-logs .err { color: lightcoral; }
 .service-logs .win { color: hotpink; }
 .service-logs .enter { color: limegreen; }
+.service-logs .jnd { color: darkgreen; }
 .service-logs .steam { color: midnightblue; }
 .service-logs .black { color: black; }
-.service-logs .skip { color: dimgray ; }
-.service-logs .info { color: lightskyblue ; }
+.service-logs .skip { color: dimgray; }
+.service-logs .info { color: lightskyblue; }
 .service-logs .srch { color: orange; }
 .service-logs .cant { color: saddlebrown; }
-.service-logs .chk { color: grey; }
+.service-logs .chk { color: gray; }
 .service-logs span.time { color: #4db6ac; padding-right: 16px; margin: -11px; }
 .service-logs span.open-website { cursor: pointer; text-decoration: underline; }
 .service-logs span.add-to-blacklist { cursor: pointer; text-decoration: none; color: black; }

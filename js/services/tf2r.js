@@ -89,7 +89,7 @@ _this.log(Lang.get('service.checking') + '|' + (tfrnd + 1) + '№|  ' + _this.lo
 let entered = html.find('#enbut').length === 0;
 if (entered || GJuser.tf.includes(rid + ',')) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.already_joined'), 'skip');
+_this.log(Lang.get('service.already_joined'), 'jnd');
 }
 return;
 }

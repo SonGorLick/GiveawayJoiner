@@ -214,7 +214,7 @@ else {
 _this.log(Lang.get('service.checking') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpname), 'chk');
 }
 if (entered && zpown === 5) {
-_this.log(Lang.get('service.already_joined'), 'skip');
+_this.log(Lang.get('service.already_joined'), 'jnd');
 }
 if (zpown === 6) {
 _this.log(Lang.get('service.cant_join'), 'cant');

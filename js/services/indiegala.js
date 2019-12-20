@@ -331,7 +331,7 @@ if (igown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
 if (igown === 3) {
-_this.log(Lang.get('service.already_joined'), 'skip');
+_this.log(Lang.get('service.already_joined'), 'jnd');
 }
 if (igown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');

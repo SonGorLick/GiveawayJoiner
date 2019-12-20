@@ -304,7 +304,7 @@ if (sgown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');
 }
 if (sgown === 5) {
-_this.log(Lang.get('service.already_joined'), 'skip');
+_this.log(Lang.get('service.already_joined'), 'jnd');
 }
 if (sgown === 6) {
 _this.log(Lang.get('service.already_joined'), 'err');

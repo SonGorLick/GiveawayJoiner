@@ -184,7 +184,7 @@ if (njoin === 5) {
 _this.log(Lang.get('service.skipped'), 'skip');
 }
 if (njoin === 6) {
-_this.log(Lang.get('service.already_joined'), 'skip');
+_this.log(Lang.get('service.already_joined'), 'jnd');
 }
 }
 opnext = 100;

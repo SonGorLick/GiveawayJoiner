@@ -60,7 +60,7 @@ _this.log(Lang.get('service.checking') + ' ' + _this.logLink(link, name), 'chk')
 let enter = data.indexOf('"buttonenter buttongiveaway">Join Giveaway<') >= 0,
 entered = data.indexOf('"buttonenter buttonentered buttongiveaway">Success - Giveaway joined<') >= 0;
 if (_this.getConfig('log', true) && entered) {
-_this.log(Lang.get('service.already_joined'), 'skip');
+_this.log(Lang.get('service.already_joined'), 'jnd');
 }
 if (enter) {
 let eLink = cont.find('p a.buttonenter').attr('href');
@@ -118,7 +118,7 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 _this.log(Lang.get('service.checked') + 'Giveaways', 'srch');
 }
-}, 15000);
+}, 12000);
 return;
 }
 }

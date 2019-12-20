@@ -215,7 +215,7 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 else {
 if (entered && _this.getConfig('log', true)) {
-_this.log(Lang.get('service.already_joined'), 'skip');
+_this.log(Lang.get('service.already_joined'), 'jnd');
 }
 else {
 if (_this.getConfig('log', true)) {
@@ -229,7 +229,7 @@ _this.log(Lang.get('service.cant_join'), 'cant');
 else {
 spnext = 100;
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.already_joined'), 'skip');
+_this.log(Lang.get('service.already_joined'), 'jnd');
 }
 }
 spcurr++;
