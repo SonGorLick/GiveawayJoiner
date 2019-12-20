@@ -185,7 +185,7 @@ if (GJuser.as.includes(',' + asjoin + ',')) {
 asown = 3;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (arnd + 1) + '№|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname) + _this.logBlack(asid), 'chk');
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (arnd + 1) + '№|  ' + _this.logLink(_this.url + alink, aname) + _this.logBlack(asid), 'chk');
 if (asown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
@@ -230,7 +230,7 @@ data: 'Comment=&JoinGiveaway=Join',
 success: function () {
 GJuser.as = GJuser.as + asjoin + ',';
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (arnd + 1) + '№|' + _this.logLink(asstm, asid) + '|  ' + _this.logLink(_this.url + alink, aname) + _this.logBlack(asid), 'enter');
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (arnd + 1) + '№|  ' + _this.logLink(_this.url + alink, aname) + _this.logBlack(asid), 'enter');
 }
 else {
 _this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + alink, aname) + _this.logBlack(asid), 'enter');

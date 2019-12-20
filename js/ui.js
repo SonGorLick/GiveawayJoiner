@@ -168,7 +168,7 @@ data = $(data.replace(/<img/gi, '<noload'));
 let logo = data.find('#global_actions > a > noload').attr('src');
 if (logo !== undefined) {
 userData.avatar = logo.replace('.jpg', '_full.jpg');
-let name = data.find('.responsive_menu_user_persona.persona.offline > a').text();
+let name = data.find('.responsive_menu_user_persona.persona.offline > a').text().trim();
 if (name !== undefined) {
 userData.username = name;
 }

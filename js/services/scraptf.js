@@ -162,8 +162,8 @@ spname = '?????? ' + '(' + id + ')';
 if (spname.includes('<noload')) {
 spname = spcont.find('.panel-heading .raffle-name a noload').text().trim();
 }
-if (spname.length >= 90) {
-spname = spname.slice(0, 87) + '...';
+if (spname.length > 70) {
+spname = spname.slice(0, 70) + '...';
 }
 if (spname === '') {
 spname = '?????? ' + '(' + id + ')';

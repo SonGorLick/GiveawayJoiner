@@ -239,7 +239,7 @@ if (opown === 4) {
 GJuser.op = GJuser.op + code + '-b,';
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|' + _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name) + _this.logBlack(opid), 'chk');
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name) + _this.logBlack(opid), 'chk');
 if (opown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
@@ -264,7 +264,7 @@ success: function () {
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|' + _this.logLink(opsteam, opid) + '|  ' + _this.logLink(_this.url + link, name) + _this.logBlack(opid), 'enter');
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name) + _this.logBlack(opid), 'enter');
 }
 else {
 _this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + link, name) + _this.logBlack(opid), 'enter');

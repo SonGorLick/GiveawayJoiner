@@ -211,7 +211,7 @@ zpown = 4;
 }
 if (_this.getConfig('log', true)) {
 if (zpstm !== '') {
-_this.log(Lang.get('service.checking') + '|' + (zprnd + 1) + '№|' + _this.logLink(zpstm, zpid) + '|  ' + _this.logLink(zplink, zpname) + _this.logBlack(zpid), 'chk');
+_this.log(Lang.get('service.checking') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpname) + _this.logBlack(zpid), 'chk');
 }
 else {
 _this.log(Lang.get('service.checking') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpname), 'chk');
@@ -249,7 +249,7 @@ GJuser.zp = GJuser.zp + zpnam + '(z=' + zpdnew + '),';
 }
 if (_this.getConfig('log', true)) {
 if (zpstm !== '') {
-_this.log(Lang.get('service.entered_in') + '|' + (zprnd + 1) + '№|' + _this.logLink(zpstm, zpid) + '|  ' + _this.logLink(zplink, zpname) + _this.logBlack(zpid), 'enter');
+_this.log(Lang.get('service.entered_in') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpname) + _this.logBlack(zpid), 'enter');
 }
 else {
 _this.log(Lang.get('service.entered_in') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpname), 'enter');

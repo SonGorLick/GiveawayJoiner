@@ -544,10 +544,10 @@ return '<span class="open-website" data-link="' + address + '">' + anchor + '</s
 }
 logBlack(steamappid) {
 if (!GJuser.black.includes(steamappid + ',')) {
-return '<span class="add-to-blacklist" black="' + steamappid + '" title="' + Lang.get('service.add_tbl') + '">  [+]</span>';
+return '<span class="add-to-blacklist" black="' + steamappid + '" title="' + Lang.get('service.add_tbl') + ' (' + steamappid + ')">  [+]</span>';
 }
 else {
-return '<span class="add-to-blacklist" black="' + steamappid + '" title="' + Lang.get('service.rmv_tbl') + '">  [-]</span>';
+return '<span class="add-to-blacklist" black="' + steamappid + '" title="' + Lang.get('service.rmv_tbl') + ' (' + steamappid + ')">  [-]</span>';
 }
 }
 updateCookies() {
