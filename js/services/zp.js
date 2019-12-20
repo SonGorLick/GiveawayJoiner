@@ -150,8 +150,7 @@ zpsteam = html.substring(html.indexOf('href="https://store.steam')+6, html.index
 let zpown = 0,
 zpapp = 0,
 zpsub = 0,
-zpid = '???',
-zpstm = '';
+zpid = '???';
 if (!zpsteam.includes('https://store.steam')) {
 zpsteam = undefined;
 }
@@ -182,12 +181,10 @@ if (zpsteam !== undefined) {
 if (zpsteam.includes('app/')) {
 zpapp = parseInt(zpsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
 zpid = 'app/' + zpapp;
-zpstm = 'https://store.steampowered.com/app/' + zpapp;
 }
 if (zpsteam.includes('sub/')) {
 zpsub = parseInt(zpsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 zpid = 'sub/' + zpsub;
-zpstm = 'https://store.steampowered.com/sub/' + zpsub;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
@@ -210,7 +207,7 @@ zpown = 4;
 }
 }
 if (_this.getConfig('log', true)) {
-if (zpstm !== '') {
+if (zpid !== '???') {
 _this.log(Lang.get('service.checking') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpname) + _this.logBlack(zpid), 'chk');
 }
 else {
@@ -248,7 +245,7 @@ else {
 GJuser.zp = GJuser.zp + zpnam + '(z=' + zpdnew + '),';
 }
 if (_this.getConfig('log', true)) {
-if (zpstm !== '') {
+if (zpid !== '???') {
 _this.log(Lang.get('service.entered_in') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpname) + _this.logBlack(zpid), 'enter');
 }
 else {
@@ -256,7 +253,7 @@ _this.log(Lang.get('service.entered_in') + '|' + (zprnd + 1) + '№|  ' + _this.
 }
 }
 if (!_this.getConfig('log', true)) {
-if (zpstm !== '') {
+if (zpid !== '???') {
 _this.log(Lang.get('service.entered_in') + _this.logLink(zplink, zpname) + _this.logBlack(zpid), 'enter');
 }
 else {

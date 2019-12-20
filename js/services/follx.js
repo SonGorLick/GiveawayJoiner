@@ -118,17 +118,14 @@ fxsteam = card.find('.head_info').attr('style'),
 fxown = 0,
 fxapp = 0,
 fxsub = 0,
-fxid = '???',
-fxstm = '';
+fxid = '???';
 if (fxsteam.includes('apps/')) {
 fxapp = parseInt(fxsteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
 fxid = 'app/' + fxapp;
-fxstm = 'https://store.steampowered.com/app/' + fxapp;
 }
 if (fxsteam.includes('sub/')) {
 fxsub = parseInt(fxsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 fxid = 'sub/' + fxsub;
-fxstm = 'https://store.steampowered.com/sub/' + fxsub;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {

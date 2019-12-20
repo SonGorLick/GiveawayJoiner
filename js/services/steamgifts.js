@@ -157,13 +157,13 @@ let chance = parseFloat(((copies / entries) * 100).toFixed(2));
 let GA = {
 chance: (chance === Infinity ? 0 : chance),
 pinned: sgaway.closest('.pinned-giveaways__outer-wrap').length > 0,
-link: link,
+lnk: link,
 left: (parseInt(left[0]) * factor),
 copies: copies,
 entries: entries,
 code: link.match(/away\/(.*)\//)[1],
 gameid: sgaway.attr('data-game-id'),
-name: sgaway.find('a.giveaway__heading__name').text(),
+nam: sgaway.find('a.giveaway__heading__name').text(),
 level: sgaway.find('.giveaway__column--contributor-level').length > 0 ? parseInt(sgaway.find('.giveaway__column--contributor-level').text().replace('+', '').replace('Level ', '')) : 0,
 levelPass: sgaway.find('.giveaway__column--contributor-level--negative').length === 0,
 cost: parseInt(sgaway.find('a.giveaway__icon[rel]').prev().text().replace(/[^0-9]/g, '')),
@@ -293,7 +293,7 @@ if (GA.entered && sgown === 1) {
 sgown = 6;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|  '+ _this.logLink(GA.link, GA.name) + _this.logBlack(sgid), 'chk');
+_this.log(Lang.get('service.checking') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|  ' + _this.logLink(GA.lnk, GA.nam) + _this.logBlack(sgid), 'chk');
 if (sgown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
@@ -323,7 +323,7 @@ do: 'hide_giveaways_by_game_id',
 game_id: GA.gameid
 },
 success: function () {
-_this.log(Lang.get('service.hided') + '|' + _this.logLink(GA.sgsteam, sgid) + '|  '+ _this.logLink(GA.link, GA.name), 'cant');
+_this.log(Lang.get('service.hided') + _this.logLink(GA.lnk, GA.nam) + _this.logBlack(sgid), 'cant');
 }
 });
 }
@@ -347,10 +347,10 @@ code: GA.code
 success: function (data) {
 if (data.type === 'success') {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.entered_in') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|  ' + _this.logLink(GA.link, GA.name) + _this.logBlack(sgid), 'enter');
+_this.log(Lang.get('service.entered_in') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|  ' + _this.logLink(GA.lnk, GA.nam) + _this.logBlack(sgid), 'enter');
 }
 else {
-_this.log(Lang.get('service.entered_in') + _this.logLink(GA.link, GA.name) + _this.logBlack(sgid), 'enter');
+_this.log(Lang.get('service.entered_in') + _this.logLink(GA.lnk, GA.nam) + _this.logBlack(sgid), 'enter');
 }
 _this.setValue(data.points);
 GA.entered = true;

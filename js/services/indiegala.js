@@ -239,17 +239,14 @@ igown = 0,
 igapp = 0,
 igsub = 0,
 igid = '???',
-igstm = '',
 igtime = '';
 if (igsteam.includes('apps/')) {
 igapp = parseInt(igsteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
 igid = 'app/' + igapp;
-igstm = 'https://store.steampowered.com/app/' + igapp;
 }
 if (igsteam.includes('sub/')) {
 igsub = parseInt(igsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 igid = 'sub/' + igsub;
-igstm = 'https://store.steampowered.com/sub/' + igsub;
 }
 if (time.includes('day')) {
 igtime = time.replace('day left','').replace('days left','').trim();

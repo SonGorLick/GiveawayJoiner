@@ -140,8 +140,7 @@ assteam = away.find('a noload').attr('src'),
 asown = 0,
 asapp = 0,
 assub = 0,
-asid = '???',
-asstm = '';
+asid = '???';
 if (alink !== undefined || assteam !== undefined) {
 let aname = data.find('[href="' + alink + '"]').text().trim(),
 ended = data.find('[href="' + alink + '"] > span').text().trim(),
@@ -156,12 +155,10 @@ let ahave = data.find('[href="' + alink + '"] font').attr('color');
 if (assteam.includes('apps/')) {
 asapp = parseInt(assteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'app/' + asapp;
-asstm = 'https://store.steampowered.com/app/' + asapp;
 }
 if (assteam.includes('sub/')) {
 assub = parseInt(assteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'sub/' + assub;
-asstm = 'https://store.steampowered.com/sub/' + assub;
 }
 if (ahave === '#FF0000') {
 asown = 1;
