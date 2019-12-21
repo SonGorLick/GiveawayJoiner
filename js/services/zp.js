@@ -245,12 +245,7 @@ else {
 GJuser.zp = GJuser.zp + zpnam + '(z=' + zpdnew + '),';
 }
 if (_this.getConfig('log', true)) {
-if (zpid !== '???') {
-_this.log(Lang.get('service.entered_in') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpname) + _this.logBlack(zpid), 'enter');
-}
-else {
 _this.log(Lang.get('service.entered_in') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpname), 'enter');
-}
 }
 if (!_this.getConfig('log', true)) {
 if (zpid !== '???') {

@@ -323,7 +323,7 @@ do: 'hide_giveaways_by_game_id',
 game_id: GA.gameid
 },
 success: function () {
-_this.log(Lang.get('service.hided') + _this.logLink(GA.lnk, GA.nam) + _this.logBlack(sgid), 'cant');
+_this.log(Lang.get('service.hided') + _this.logLink(GA.lnk, GA.nam), 'cant');
 }
 });
 }
@@ -347,7 +347,7 @@ code: GA.code
 success: function (data) {
 if (data.type === 'success') {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.entered_in') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|  ' + _this.logLink(GA.lnk, GA.nam) + _this.logBlack(sgid), 'enter');
+_this.log(Lang.get('service.entered_in') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|  ' + _this.logLink(GA.lnk, GA.nam), 'enter');
 }
 else {
 _this.log(Lang.get('service.entered_in') + _this.logLink(GA.lnk, GA.nam) + _this.logBlack(sgid), 'enter');

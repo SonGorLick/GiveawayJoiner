@@ -177,7 +177,7 @@ success: function (data) {
 if (data.response) {
 _this.setValue(data.points);
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + fxcrr + '№|  ' + _this.logLink(link, name) + _this.logBlack(fxid), 'enter');
+_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + fxcrr + '№|  ' + _this.logLink(link, name), 'enter');
 }
 else {
 _this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + _this.logBlack(fxid), 'enter');
