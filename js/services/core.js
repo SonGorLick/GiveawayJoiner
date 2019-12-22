@@ -132,7 +132,7 @@ $(document.createElement('button'))
 .appendTo(this.userPanel);
 $(document.createElement('button'))
 .addClass('login')
-.html('<div class="fa fa-id-card" data-lang-title="' + this.auth + '"></div>')
+.html('<div class="fa fa-user-circle" data-lang-title="' + this.auth + '"></div>')
 .attr('data-link', this.authLink)
 .appendTo(this.userPanel);
 this.mainButton = $('<button>' + Lang.get('service.btn_start') + '</button>')
@@ -543,12 +543,9 @@ logLink(address, anchor) {
 return '<span class="open-website" data-link="' + address + '">' + anchor + '</span>';
 }
 logBlack(steamappid) {
-if (!GJuser.black.includes(steamappid + ',')) {
-return '<span class="add-to-blacklist" black="' + steamappid + '" title="' + Lang.get('service.add_tbl') + ' (' + steamappid + ')">  [+]</span>';
-}
-else {
-return '<span class="add-to-blacklist" black="' + steamappid + '" title="' + Lang.get('service.rmv_tbl') + ' (' + steamappid + ')">  [-]</span>';
-}
+let addblack = '<span class="add-blacklist" black="' + steamappid + '" title="' + Lang.get('service.add_tbl') + ' (' + steamappid + ')">  [+]</span>',
+rmvblack ='<span class="rmv-blacklist" black="' + steamappid + '" title="' + Lang.get('service.rmv_tbl') + ' (' + steamappid + ')">[-]</span>';
+return addblack + rmvblack;
 }
 updateCookies() {
 mainWindow.webContents.session.cookies.get({domain: this.domain})

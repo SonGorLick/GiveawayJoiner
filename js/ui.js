@@ -93,15 +93,20 @@ openWebsite($(this).attr('data-link'));
 $(document).on('click', '.login[data-link]', function () {
 openWebsite($(this).attr('data-link'));
 });
-$(document).on('click', '.add-to-blacklist[black]', function () {
+$(document).on('click', '.add-blacklist[black]', function () {
 if (GJuser.black !== '') {
 if (!GJuser.black.includes($(this).attr('black') + ',')) {
 GJuser.black = GJuser.black + $(this).attr('black') + ',';
-}
-else {
-GJuser.black = GJuser.black.replace(',' + $(this).attr('black') + ',', ',');
-}
 fs.writeFile(storage.getDataPath().slice(0, -7) + 'blacklist.txt', GJuser.black, (err) => { });
+}
+}
+});
+$(document).on('click', '.rmv-blacklist[black]', function () {
+if (GJuser.black !== '') {
+if (GJuser.black.includes($(this).attr('black') + ',')) {
+GJuser.black = GJuser.black.replace(',' + $(this).attr('black') + ',', ',');
+fs.writeFile(storage.getDataPath().slice(0, -7) + 'blacklist.txt', GJuser.black, (err) => { });
+}
 }
 });
 });
@@ -168,7 +173,7 @@ data = $(data.replace(/<img/gi, '<noload'));
 let logo = data.find('#global_actions > a > noload').attr('src');
 if (logo !== undefined) {
 userData.avatar = logo.replace('.jpg', '_full.jpg');
-let name = data.find('.responsive_menu_user_persona.persona.offline > a').text().trim();
+let name = data.find('.responsive_menu_user_persona > a').text().trim();
 if (name !== undefined) {
 userData.username = name;
 }

@@ -86,7 +86,8 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-logs .chk { color: gray; }
 .service-logs span.time { color: #4db6ac; padding-right: 16px; margin: -11px; }
 .service-logs span.open-website { cursor: pointer; text-decoration: underline; }
-.service-logs span.add-to-blacklist { cursor: pointer; text-decoration: none; color: black; }
+.service-logs span.add-blacklist { cursor: pointer; text-decoration: none; color: black; }
+.service-logs span.rmv-blacklist { cursor: pointer; text-decoration: none; color: black; }
 .service-logs { -webkit-user-select: text; }
 .service-logs .clear-log { position: absolute; right: 18px; top: 4px; font-size: 16px; color: #4db6ac; cursor: pointer; }
 .service-logs .clear-log:hover { color: #00bcd4; }
@@ -129,7 +130,6 @@ input-wrap.checkbox input[disabled] { cursor: default; }
 .fa-database:before { content: '\f1c0'; }
 .fa-ellipsis-v:before { content: '\f142'; }
 .fa-history:before { content: '\f1da'; }
-.fa-id-card:before { content: '\f2c2'; }
 .fa-list-ul:before { content: '\f0c9'; }
 .fa-minus:before { content: '\f053'; }
 .fa-stop:before { content: '\f04d'; }
@@ -138,6 +138,7 @@ input-wrap.checkbox input[disabled] { cursor: default; }
 .fa-steam:before { content: '\f1b6'; }
 .fa-times:before { content: '\f00d'; }
 .fa-trash-alt:before { content: '\f2ed'; }
+.fa-user-circle:before { content: '\f2bd'; }
 .fa-user-cog:before { content: '\f4fe'; }
 .fa-user-secret:before { content: '\f21b'; }
 .fa-window-minimize:before { content: '\f2d1'; }

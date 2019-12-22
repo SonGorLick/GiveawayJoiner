@@ -124,7 +124,7 @@ mainWindow.on('closed', () => {
 mainWindow = null;
 });
 tray = new Tray(nativeImage.createFromPath(_itr));
-tray.setToolTip('Giveaway Joiner');
+tray.setToolTip('GiveawayJoiner');
 tray.on('click', () => {
 mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
 });
@@ -147,7 +147,7 @@ return;
 let afterLangs = function () {
 let data = {
 response: {
-username: 'Giveaway Joiner',
+username: 'GiveawayJoiner',
 avatar: __dirname + '/icons/icon.png',
 steamid: '1'
 }

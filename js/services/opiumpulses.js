@@ -2,7 +2,7 @@
 class OpiumPulses extends Joiner {
 constructor() {
 super();
-this.websiteUrl = 'https://www.opiumpulses.com';
+this.websiteUrl = 'https://www.opiumpulses.com/treasure';
 this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
 this.settings.maxcost = { type: 'number', trans: this.transPath('maxcost'), min: 0, max: 1000, default: this.getConfig('maxcost', 0) };
