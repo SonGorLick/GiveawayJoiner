@@ -118,7 +118,7 @@ button.open-website:hover { color: #00bcd4; }
 button.login { font-size: 21px; background: transparent; cursor: pointer; border: none; color: #4db6ac; }
 button.login:hover { color: #00bcd4; }
 .service-user-panel button.open-website { position: absolute; right: 200px; bottom: 13px; }
-.service-user-panel button.login { position: absolute; right: 150px; bottom: 13px; }
+.service-user-panel button.login { position: absolute; right: 160px; bottom: 13px; }
 .input-wrap { position: relative; line-height: 20px; }
 .input-wrap.checkbox input,
 .input-wrap.checkbox label { display: inline-block; vertical-align: middle; cursor: pointer; color: #4db6ac; font-size: 12px; }
