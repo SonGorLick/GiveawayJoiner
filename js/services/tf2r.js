@@ -37,16 +37,10 @@ if (GJuser.tf.length > 301) {
 GJuser.tf = ',';
 }
 let userData = {
-avatar: __dirname + '/images/TF2R.png',
-username: 'TF2R User'
+avatar: GJuser.avatar,
+username: GJuser.username
 };
-this.ajaxReq('http://tf2r.com/notifications.html', (response) => {
-if (response.success) {
-userData.username = $(response.data).find('#nameho').text();
-userData.avatar = $(response.data).find('#avatar a noload').attr('src');
-}
 callback(userData);
-});
 }
 joinService() {
 let _this = this;

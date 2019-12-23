@@ -18,20 +18,10 @@ GJuser.as = asdata.toString();
 }
 }
 let userData = {
-avatar: __dirname + '/images/Astats.png',
-username: 'Astats User',
+avatar: GJuser.avatar,
+username: GJuser.username
 };
-$.ajax({
-url: 'https://astats.astats.nl/astats/User_Info.php',
-success: function (data) {
-data = $(data.replace(/<img/gi, '<noload'));
-userData.username = data.find('.dropdown-toggle > b').text();
-userData.avatar = data.find('.d0 > td:nth-of-type(1) > center > noload').attr('src');
-},
-complete: function () {
 callback(userData);
-}
-});
 }
 joinService() {
 let _this = this;
