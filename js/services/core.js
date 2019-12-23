@@ -66,7 +66,7 @@ this.statusIcon = $(document.createElement('div'))
 .attr('data-status', 'normal')
 .html(
 '<span class="fa fa-play"></span>' +
-'<span class="fa fa-stop"></span>'
+'<span class="fa fa-play"></span>'
 )
 .appendTo(this.icon);
 $(document.createElement('span'))

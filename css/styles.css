@@ -33,12 +33,10 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .content-item[data-id=profile] .settings .setter#lang { width: 100%; cursor: pointer; margin-bottom: 5px; height: 24px; }
 .content-item[data-id=profile] .settings .build { width: 100%; position: absolute; bottom: 10px; left: 0; text-align: center; }
 .content-item[data-id=profile] .joiner-button.logout { position: absolute; right: 10px; bottom: 10px;  text-align: right; }
-.services_switcher { background-color: #29353b; width: 110px; height: 100%; position: absolute; left: 0; top: 0; border-right: 1px solid #222d32; overflow: hidden; }
-.services-icons { padding-top: 4px; position: absolute; z-index: 1; width: 100%; top: 34px; left: 0; }
+.services_switcher { background-color: #29353b; width: 110px; height: 100%; position: absolute; left: 0; top: 26px; border-right: 1px solid #222d32; border-top: 1px solid #222d32; overflow: hidden; }
 .service-icon { border: 1px solid transparent; cursor: pointer; position: relative; width: 105px; height: 60px; margin: 0 auto 3px; font-size: 12px; }
 .service-icon.active { border-color: #29353b; background: rgba(77,182,172,0.7); }
 .service-icon:hover:not(.active) { background: rgba(0,188,212,0.7); border-color: #29353b; }
-.service-icon .bg { margin: 5px auto 2px; width: 32px; height: 32px; background: center center/contain no-repeat; }
 .service-icon .service-name { display: inline-flex; font-size: 12px; font-weight: bold; }
 .service-icon .service-status { width: 16px; height: 16px; line-height: 16px; text-align: center; font-size: 14px; position: absolute; right: 2px; bottom: 2px; background: center/contain no-repeat; }
 .service-icon .service-status span { display: none; color: #b8c1c6; }
@@ -46,14 +44,9 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-icon .service-status[data-status=win] span:first-child { display: inline; color: hotpink; }
 .service-icon .service-status[data-status=normal] span + span { display: inline; }
 .service-icon .service-status[data-status=bad] span + span { display: inline; color: orangered; }
-.list_type { cursor: pointer; width: 100%; height: 34px; padding: 3px 4px 4px; text-align: center; font-size: 0; background-color: #29353b; position: relative; z-index: 5; }
-.list_type span { vertical-align: top; color: #b9c2c7; display: inline-block; width: 48%; height: 92%; line-height: 25px; border: 1px solid #222d32; font-size: 18px; }
-.list_type span:first-child { margin-right: 2px; font-size: 16px; }
 .list_type:not(.state) span:first-child { color: #4db6ac; }
 .list_type.state span+span { color: #4db6ac; }
-.list_type span:hover { color: #00bcd4; }
-.list_type.state span+span:hover { color: #00bcd4; }
-.list_type.state + .services-icons { padding-top: 0; }
+.list_type.state + .services-icons { padding-top: 7px; }
 .list_type.state + .services-icons .service-icon { width: 102px; height: 20px; margin: 0 auto 7px; }
 .list_type.state + .services-icons .service-icon .bg { display: none; }
 .list_type.state + .services-icons .service-icon .service-name { left: 22px; top: 0; line-height: 20px; display: inline-block; vertical-align: middle; }
@@ -132,7 +125,6 @@ input-wrap.checkbox input[disabled] { cursor: default; }
 .fa-history:before { content: '\f1da'; }
 .fa-list-ul:before { content: '\f0c9'; }
 .fa-minus:before { content: '\f053'; }
-.fa-stop:before { content: '\f04d'; }
 .fa-play:before { content: '\f111'; }
 .fa-plus:before { content: '\f054'; }
 .fa-steam:before { content: '\f1b6'; }

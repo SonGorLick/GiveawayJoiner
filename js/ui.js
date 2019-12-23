@@ -31,10 +31,6 @@ item.prop('checked', Config.get(item.attr('id')));
 break;
 }
 });
-let menu_switcher = $('.list_type');
-if (!Config.get('menu_as_list')) {
-menu_switcher.removeClass('state');
-}
 mainWindow.show();
 if (Config.get('start_minimized')) {
 mainWindow.hide();
@@ -42,24 +38,6 @@ mainWindow.hide();
 else {
 mainWindow.focus();
 }
-let icons = $('.services-icons');
-let maxTop = parseInt(icons.css('top').replace('px', ''));
-$('.services_switcher').bind('mousewheel', function (e) {
-let scroll = e.originalEvent.wheelDelta / 150 > 0 ? 30 : -30;
-let height = icons.height();
-let minTop = $(this).height() - height;
-let top = parseInt(icons.css('top').replace('px', ''));
-let newTop = top + scroll;
-if (scroll > 0 && newTop <= maxTop || scroll < 0 && newTop >= minTop) {
-top = newTop;
-}
-icons.css('top', top + 'px');
-});
-menu_switcher.click(function () {
-$(this).toggleClass('state');
-icons.css('top', maxTop + 'px');
-Config.set('menu_as_list', $(this).hasClass('state'));
-});
 $('.menu li span').click(function () {
 let parent = $(this).parent();
 $('.menu li, .content-item').removeClass('active');
