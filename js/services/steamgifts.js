@@ -22,9 +22,10 @@ this.settings.sort_by_level = { type: 'checkbox', trans: 'service.sort_by_level'
 this.settings.wishlist_only = { type: 'checkbox', trans: this.transPath('wishlist_only'), default: this.getConfig('wishlist_only', false) };
 this.settings.sort_by_chance = { type: 'checkbox', trans: this.transPath('sort_by_chance'), default: this.getConfig('sort_by_chance', false) };
 this.settings.group_only = { type: 'checkbox', trans: this.transPath('group_only'), default: this.getConfig('group_only', false) };
+this.settings.free_ga = { type: 'checkbox', trans: this.transPath('free_ga'), default: this.getConfig('free_ga', false) };
 this.settings.reserve_on_wish = { type: 'checkbox', trans: this.transPath('reserve_on_wish'), default: this.getConfig('reserve_on_wish', false) };
-this.settings.reserve_on_group = { type: 'checkbox', trans: this.transPath('reserve_on_group'), default: this.getConfig('reserve_on_group', false) };
 this.settings.hide_ga = { type: 'checkbox', trans: this.transPath('hide_ga'), default: this.getConfig('hide_ga', false) };
+this.settings.reserve_on_group = { type: 'checkbox', trans: this.transPath('reserve_on_group'), default: this.getConfig('reserve_on_group', false) };
 this.settings.ignore_on_wish = { type: 'checkbox', trans: this.transPath('ignore_on_wish'), default: this.getConfig('ignore_on_wish', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.settings.ignore_on_group = { type: 'checkbox', trans: this.transPath('ignore_on_group'), default: this.getConfig('ignore_on_group', false) };
@@ -173,12 +174,10 @@ wish: this.wish,
 group: this.group
 };
 if (
-(!GA.entered && !GA.pinned && GA.levelPass) &&
+(!GA.pinned && GA.levelPass) &&
 (!GA.wish || this.getConfig('wishlist_first', false) || this.getConfig('wishlist_only', false)) &&
 (!GA.group || this.getConfig('group_first', false) || this.getConfig('group_only', false)) &&
-(this.getConfig('ending', 0) === 0 || GA.left <= this.getConfig('ending', 0)) &&
-(this.getConfig('min_chance', 0) === 0 || GA.chance >= this.getConfig('min_chance', 0) || GA.wish && this.getConfig('ignore_on_wish', false) || GA.group && this.getConfig('ignore_on_group', false)) &&
-(this.getConfig('min_entries', 0) === 0 || GA.entries >= this.getConfig('min_entries', 0) || GA.wish && this.getConfig('ignore_on_wish', false) || GA.group && this.getConfig('ignore_on_group', false))
+(this.getConfig('ending', 0) === 0 || GA.left <= this.getConfig('ending', 0))
 )
 this.giveaways.push(GA);
 });
@@ -192,7 +191,8 @@ callback();
 }
 giveawaysEnter(callback) {
 let _this = this;
-let sgcurr = 0;
+let sgcurr = 0,
+sgprize = 1000;
 if (this.getConfig('sort_by_chance', false) && (this.wish || this.group)) {
 this.giveaways.sort((a, b) => {
 return b.chance - a.chance;
@@ -269,7 +269,15 @@ sgsub = parseInt(GA.sgsteam.split('sub/')[1].split('/')[0].split('?')[0].split('
 sgid = 'sub/' + sgsub;
 }
 if (_this.curr_value < GA.cost && GA.cost > 0) {
+if (sgprize > GA.cost) {
 sgown = 3;
+}
+else {
+sgown = 7;
+}
+}
+if (!GA.wish && !GA.group && _this.getConfig('points_reserve', 0) > 0 && (_this.curr_value - GA.cost) < _this.getConfig('points_reserve', 0) && GA.cost > 0) {
+sgown = 7;
 }
 if (GA.entered) {
 sgown = 5;
@@ -292,13 +300,14 @@ sgown = 4;
 if (GA.entered && sgown === 1) {
 sgown = 6;
 }
-if (_this.getConfig('log', true)) {
+if (_this.getConfig('log', true) && sgown !== 7) {
 _this.log(Lang.get('service.checking') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|  ' + _this.logLink(GA.lnk, GA.nam) + _this.logBlack(sgid), 'chk');
 if (sgown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
 if (sgown === 3) {
 _this.log(Lang.get('service.points_low'), 'skip');
+sgprize = GA.cost;
 }
 if (sgown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');
@@ -330,9 +339,11 @@ _this.log(Lang.get('service.hided') + _this.logLink(GA.lnk, GA.nam), 'cant');
 if (
 (sgown === 0) &&
 (GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_level', 0) === 0 || GA.level >= _this.getConfig('min_level', 0) && GA.level <= _this.getConfig('max_level', 0) && _this.getConfig('max_level', 0) > 0) &&
-(GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || GA.cost >= _this.getConfig('min_cost', 0) || GA.cost === 0) &&
+(GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || GA.cost >= _this.getConfig('min_cost', 0) || GA.cost === 0 && _this.getConfig('free_ga', false)) &&
 (GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_cost', 0) === 0 || GA.cost <= _this.getConfig('max_cost', 0)) &&
-(GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || _this.getConfig('points_reserve', 0) === 0 || ((_this.curr_value - GA.cost) >= _this.getConfig('points_reserve', 0)))
+(GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || _this.getConfig('points_reserve', 0) === 0 || (_this.curr_value - GA.cost) >= _this.getConfig('points_reserve', 0) || GA.cost === 0) &&
+(GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || _this.getConfig('min_chance', 0) === 0 || GA.chance >= _this.getConfig('min_chance', 0)) &&
+(GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || _this.getConfig('min_entries', 0) === 0 || GA.entries >= _this.getConfig('min_entries', 0))
 )
 {
 $.ajax({
