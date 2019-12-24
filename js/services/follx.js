@@ -186,6 +186,12 @@ _this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + _this.log
 }
 });
 }
+else {
+fxnext = 100;
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.cant_join'), 'cant');
+}
+}
 }
 });
 }
