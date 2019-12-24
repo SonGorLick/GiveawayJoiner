@@ -374,7 +374,7 @@ if (sgown === 0 && _this.getConfig('log', true)) {
 _this.log(Lang.get('service.skipped'), 'skip');
 }
 if (sgown !== 6) {
-sgnext = 100;
+sgnext = 50;
 }
 }
 sgcurr++;
