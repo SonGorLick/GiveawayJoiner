@@ -16,24 +16,6 @@ delete this.settings.check_in_steam;
 delete this.settings.blacklist_on;
 super.init();
 }
-authCheck(callback) {
-let authContent = this.authContent;
-$.ajax({
-url: 'http://tf2r.com',
-success: function (data) {
-data = data.replace(/<img/gi, '<noload');
-if (data.indexOf(authContent) >= 0) {
-callback(1);
-}
-else {
-callback(0);
-}
-},
-error: function () {
-callback(-1);
-}
-});
-}
 getUserInfo(callback) {
 if (GJuser.tf === '') {
 GJuser.tf = ',';
@@ -105,6 +87,8 @@ success: function (data) {
 let html = $('<div>' + data + '</div>'),
 entered = html.find('#enbut').length === 0;
 if (!entered) {
+let tmout = Math.floor(Math.random() * Math.floor(tfnext / 10)) + Math.floor(tfnext / 5);
+setTimeout(function () {
 rq({
 method: 'POST',
 uri: _this.url + '/job.php',
@@ -136,6 +120,7 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 }
 });
+}, tmout)
 }
 else {
 tfnext = 100;
