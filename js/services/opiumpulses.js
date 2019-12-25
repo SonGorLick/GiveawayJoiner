@@ -51,21 +51,6 @@ _this.costmax = _this.getConfig('maxcost', 0);
 _this.check = 0;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.opiumpulses.com';
-$.ajax({
-url: _this.url + '/arcade',
-success: function (data) {
-data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
-let arfound = data.find('.arcade-item-img-btn-wrapper'),
-arlnk = arfound.eq(Math.floor(Math.random() * 28)).find('a').attr('href');
-if (arlnk !== undefined) {
-setTimeout(function () {
-$.ajax({
-url: _this.url + arlnk
-});
-}, Math.floor(Math.random() * 4000) + 5000);
-}
-}
-});
 let callback = function () {
 page++;
 if (page <= _this.pagemax) {
@@ -76,8 +61,12 @@ this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback) {
 let _this = this;
+let oppage = '&Giveaway_page=' + page;
+if (page === 1) {
+oppage = '';
+}
 $.ajax({
-url: _this.url + '/giveaways?ajax=giveawaylistview&Giveaway_page=' + page,
+url: _this.url + '/giveaways?ajax=giveawaylistview' + oppage,
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
 if (_this.check === 0) {
@@ -109,6 +98,19 @@ _this.pagemax = page;
 }
 if (opfound.length <= opcurr || !_this.started || _this.curr_value === 0) {
 if (opfound.length <= opcurr && page === _this.pagemax) {
+$.ajax({
+url: _this.url + '/arcade',
+success: function (data) {
+data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
+let arfound = data.find('.arcade-item-img-btn-wrapper'),
+arlnk = arfound.eq(Math.floor(Math.random() * 28)).find('a').attr('href');
+if (arlnk !== undefined) {
+$.ajax({
+url: _this.url + arlnk
+});
+}
+}
+});
 setTimeout(function () {
 fs.writeFile(storage.getDataPath().slice(0, -7) + 'opiumpulses.txt', GJuser.op, (err) => { });
 if (_this.getConfig('log', true)) {

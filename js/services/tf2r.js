@@ -18,16 +18,18 @@ super.init();
 }
 authCheck(callback) {
 let authContent = this.authContent;
-this.ajaxReq(this.websiteUrl, (response) => {
-if (response.success) {
-if (response.data.indexOf(authContent) >= 0) {
+$.ajax({
+url: 'http://tf2r.com',
+success: function (data) {
+data = data.replace(/<img/gi, '<noload');
+if (data.indexOf(authContent) >= 0) {
 callback(1);
 }
 else {
 callback(0);
 }
-}
-else {
+},
+error: function () {
 callback(-1);
 }
 });
@@ -50,11 +52,14 @@ _this.stimer = tftimer;
 }
 _this.url = 'http://tf2r.com';
 _this.ua = mainWindow.webContents.session.getUserAgent();
-_this.ajaxReq(_this.url + '/raffles.html', (response) => {
-let giveaways = $(response.data).find('.pubrhead-text-right');
-let tfcurr = 0;
-let random = Array.from(Array(giveaways.length).keys());
-if (_this.getConfig('rnd', true)) {
+$.ajax({
+url: _this.url + '/raffles.html',
+success: function (data) {
+data = data.replace(/<img/gi, '<noload');
+let giveaways = $(data).find('.pubrhead-text-right'),
+tfcurr = 0,
+random = Array.from(Array(giveaways.length).keys());
+if (_this.getConfig('rnd', false)) {
 for(let i = random.length - 1; i > 0; i--){
 const j = Math.floor(Math.random() * i);
 const temp = random[i];
@@ -70,24 +75,21 @@ _this.log(Lang.get('service.checked') + 'Public Raffles', 'srch');
 }
 return;
 }
-let tfrnd = random[tfcurr],
+let tfnext = _this.interval(),
+tfrnd = random[tfcurr],
 giveaway = giveaways.eq(tfrnd),
 link = giveaway.find('a').attr('href'),
 name = giveaway.find('a').text(),
 rid = link.replace('http://tf2r.com/k', '').replace('.html', '');
-_this.ajaxReq(link, (response) => {
-if (response.success) {
-let html = $('<div>' + response.data + '</div>');
+$.ajax({
+url: link,
+success: function (data) {
+let html = $('<div>' + data + '</div>');
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + (tfrnd + 1) + '№|  ' + _this.logLink(link, name), 'chk');
 }
 let entered = html.find('#enbut').length === 0;
-if (entered || GJuser.tf.includes(rid + ',')) {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.already_joined'), 'jnd');
-}
-return;
-}
+if (!entered && !GJuser.tf.includes(rid + ',')) {
 rq({
 method: 'POST',
 uri: _this.url + '/job.php',
@@ -113,40 +115,25 @@ _this.log(Lang.get('service.entered_in') + _this.logLink(link, name), 'enter');
 GJuser.tf = GJuser.tf + rid + ',';
 }
 else {
+tfnext = 100;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
 }
 });
 }
+else {
+tfnext = 100;
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.already_joined'), 'jnd');
+}
+}
+}
 });
 tfcurr++;
-setTimeout(giveawayEnter, _this.interval());
+setTimeout(giveawayEnter, tfnext);
 }
 giveawayEnter();
-});
-}
-ajaxReq(url, callback) {
-let response = {
-success: false,
-data: ''
-};
-$.ajax({
-url: url,
-timeout: this.getTimeout,
-success: function (html) {
-response.success = true;
-html = html.replace(/<img/gi, '<noload');
-response.data = html;
-},
-error: function (error) {
-if (error.responseText !== undefined && error.responseText.indexOf('!DOCTYPE') >= 0) {
-response.success = true;
-response.data = error.responseText;
-}
-},
-complete: function () {
-callback(response);
 }
 });
 }
