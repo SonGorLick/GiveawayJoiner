@@ -120,7 +120,7 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 }
 });
-}, tmout)
+}, tmout);
 }
 else {
 tfnext = 100;
