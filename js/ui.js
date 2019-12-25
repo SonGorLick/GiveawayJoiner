@@ -16,7 +16,7 @@ GJuser.ig = '';
 GJuser.as = '';
 GJuser.op = '';
 GJuser.sp = '';
-GJuser.tf = ',';
+GJuser.tf = '';
 GJuser.zp = '';
 GJuser.iglvl = undefined;
 $(function () {

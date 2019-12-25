@@ -35,8 +35,14 @@ callback(-1);
 });
 }
 getUserInfo(callback) {
-if (GJuser.tf.length > 301) {
+if (GJuser.tf === '') {
 GJuser.tf = ',';
+if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'tf2r.txt')) {
+let tfdata = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'tf2r.txt');
+if (tfdata.length > 1 && tfdata.length < 4000) {
+GJuser.tf = tfdata.toString();
+}
+}
 }
 let userData = {
 avatar: GJuser.avatar,
@@ -69,6 +75,14 @@ random[j] = temp;
 }
 function giveawayEnter() {
 if (giveaways.length <= tfcurr || !_this.started) {
+if (giveaways.length <= tfcurr) {
+setTimeout(function () {
+fs.writeFile(storage.getDataPath().slice(0, -7) + 'tf2r.txt', GJuser.tf, (err) => { });
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.data_saved'), 'info');
+}
+}, _this.interval());
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 _this.log(Lang.get('service.checked') + 'Public Raffles', 'srch');
@@ -81,15 +95,16 @@ giveaway = giveaways.eq(tfrnd),
 link = giveaway.find('a').attr('href'),
 name = giveaway.find('a').text(),
 rid = link.replace('http://tf2r.com/k', '').replace('.html', '');
-$.ajax({
-url: link,
-success: function (data) {
-let html = $('<div>' + data + '</div>');
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + (tfrnd + 1) + '№|  ' + _this.logLink(link, name), 'chk');
 }
-let entered = html.find('#enbut').length === 0;
-if (!entered && !GJuser.tf.includes(rid + ',')) {
+if (!GJuser.tf.includes(rid + ',')) {
+$.ajax({
+url: link,
+success: function (data) {
+let html = $('<div>' + data + '</div>'),
+entered = html.find('#enbut').length === 0;
+if (!entered) {
 rq({
 method: 'POST',
 uri: _this.url + '/job.php',
@@ -124,12 +139,20 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 else {
 tfnext = 100;
+GJuser.tf = GJuser.tf + rid + ',';
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
 }
 }
 }
 });
+}
+else {
+tfnext = 100;
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.already_joined'), 'jnd');
+}
+}
 tfcurr++;
 setTimeout(giveawayEnter, tfnext);
 }
