@@ -58,9 +58,11 @@ data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replac
 let arfound = data.find('.arcade-item-img-btn-wrapper'),
 arlnk = arfound.eq(Math.floor(Math.random() * 28)).find('a').attr('href');
 if (arlnk !== undefined) {
+setTimeout(function () {
 $.ajax({
 url: _this.url + arlnk
 });
+}, Math.floor(Math.random() * 4000) + 5000);
 }
 }
 });

@@ -49,6 +49,7 @@ let tftimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _t
 _this.stimer = tftimer;
 }
 _this.url = 'http://tf2r.com';
+_this.ua = mainWindow.webContents.session.getUserAgent();
 _this.ajaxReq(_this.url + '/raffles.html', (response) => {
 let giveaways = $(response.data).find('.pubrhead-text-right');
 let tfcurr = 0;
@@ -96,7 +97,7 @@ rid: rid,
 ass: 'yup, indeed'
 },
 headers: {
-'User-Agent': mainWindow.webContents.session.getUserAgent(),
+'User-Agent': _this.ua,
 Cookie: _this.cookies
 },
 json: true

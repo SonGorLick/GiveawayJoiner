@@ -7,6 +7,7 @@ this.authContent = 'View your profile';
 this.authLink = 'https://www.indiedb.com/members/login';
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 700), default: this.getConfig('timer_from', 500) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 500), max: 2880, default: this.getConfig('timer_to', 700) };
+this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.withValue = false;
 delete this.settings.pages;
 delete this.settings.interval_from;
@@ -38,7 +39,34 @@ if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let idbtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = idbtimer;
 }
+_this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.indiedb.com';
+$.ajax({
+url: _this.url + '/giveaways/prizes',
+success: function (html) {
+html = html.replace(/<img/gi, '<noload');
+let prizes = $(html).find('.body.clear .table .row.rowcontent span.subheading:nth-of-type(2)'),
+idbprize = '',
+idbwon = 0;
+for (let idbcurr = 0; idbcurr < prizes.length; idbcurr++) {
+idbprize = prizes.eq(idbcurr).text().trim();
+if (idbprize !== '-' && !idbprize.includes('Check in')) {
+idbwon++;
+}
+}
+if (idbwon < _this.won) {
+_this.setConfig('won', idbwon);
+}
+if (idbwon > 0 && idbwon > _this.won) {
+_this.log(_this.logLink(_this.url + '/giveaways/prizes', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (idbwon) + ')'), 'win');
+_this.setStatus('win');
+_this.setConfig('won', idbwon);
+if (_this.getConfig('sound', true)) {
+new Audio(__dirname + '/sounds/won.wav').play();
+}
+}
+}
+});
 $.ajax({
 url: _this.url + '/giveaways',
 success: function (data) {

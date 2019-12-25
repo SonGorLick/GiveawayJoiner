@@ -7,8 +7,8 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .styled-scrollbar::-webkit-scrollbar { width: 8px; background-color: #29353b; }
 .styled-scrollbar::-webkit-scrollbar-thumb { width: 8px; background-color: #5a656a; }
 .styled-scrollbar::-webkit-scrollbar-thumb:hover { width: 8px; background-color: #788388; }
-#head { position: relative; z-index: 10; background-color: #263238; height: 60px; border-bottom: 1px solid #222d32; -webkit-app-region: drag; }
-#head_decor { height: 10px; width: 670px; background-color: #222d33; position: absolute; left: 0; right: 0; margin: 0 auto; top: 0; border-radius: 0 0 3px 3px; }
+#head { position: relative; z-index: 10; background-color: #263238; height: 60px; border-top: 1px solid #222d32; border-bottom: 1px solid #222d32; -webkit-app-region: drag; }
+#head_decor { height: 10px; width: 680px; background-color: #222d33; position: absolute; left: 0; right: 0; margin: 0 auto; top: 0; border-radius: 0 0 3px 3px; }
 #head_decor:before,
 #head_decor:after { content: ''; display: block; background-color: inherit; height: 20px; width: 30px; position: absolute; left: -22px; bottom: 7px; transform: rotate(30deg); }
 #head_decor:after { left: auto; right: -22px; bottom: 7px; transform: rotate(-30deg); }
