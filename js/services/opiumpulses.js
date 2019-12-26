@@ -221,7 +221,11 @@ if (opsteam.includes('sub/')) {
 opsub = parseInt(opsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 opid = 'sub/' + opsub;
 }
-if (_this.getConfig('check_in_steam', true)) {
+if (openter === " You're not eligible to enter") {
+GJuser.op = GJuser.op + code + '-n,';
+opown = 3;
+}
+if (_this.getConfig('check_in_steam', true) && opown !== 3) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
 _this.log(Lang.get('service.steam_error'), 'err');
 opown = 2;
@@ -232,21 +236,13 @@ opown = 1;
 if (GJuser.ownsubs.includes(',' + opsub + ',') && opsub > 0) {
 opown = 1;
 }
-}
-if (openter === " You're not eligible to enter") {
-opown = 3;
-}
-if (GJuser.black.includes(opid + ',') && _this.getConfig('blacklist_on', false)) {
-opown = 4;
-}
 if (opown === 1) {
 GJuser.op = GJuser.op + code + '(s=' + opid + '),';
 }
-if (opown === 3) {
-GJuser.op = GJuser.op + code + '-n,';
 }
-if (opown === 4) {
+if (GJuser.black.includes(opid + ',') && _this.getConfig('blacklist_on', false) && opown !== 3) {
 GJuser.op = GJuser.op + code + '(b=' + opid + '),';
+opown = 4;
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name) + _this.logBlack(opid), 'chk');
