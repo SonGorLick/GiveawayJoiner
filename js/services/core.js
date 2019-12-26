@@ -297,13 +297,13 @@ GJuser.black = GJuser.black + ',';
 this.authCheck((authState) => {
 if (authState === 1) {
 this.updateUserInfo();
+this.updateCookies();
 if (Config.get('log_autoclear', false)) {
 this.logField.html('<div></div>');
 }
 this.log(Lang.get('service.connection_good'), 'srch');
 let atimer = this.getConfig('timer_from', 50);
 this.stimer = atimer;
-this.updateCookies();
 this.joinService();
 }
 else if (authState === 0) {
@@ -329,9 +329,6 @@ this.totalTicks++;
 }
 updateUserInfo() {
 this.getUserInfo((userData) => {
-if (userData.avatar === undefined) {
-userData.avatar = __dirname + '/icons/icon.png';
-}
 if (userData.avatar.includes('electron.asar/renderer')) {
 userData.avatar = userData.avatar.replace('electron.asar/renderer', 'app.asar');
 }
@@ -613,8 +610,8 @@ this.logWrap.scrollTop(this.logWrap[0].scrollHeight);
 joinService() {}
 getUserInfo(callback) {
 callback({
-avatar: __dirname + '/icons/icon.png',
-username: 'GJ User',
+avatar: __dirname + '/images/' + this.constructor.name + '.png',
+username: this.constructor.name + ' User',
 value: 0
 });
 }

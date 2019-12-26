@@ -84,6 +84,7 @@ if (!GJuser.tf.includes(rid + ',')) {
 $.ajax({
 url: link,
 success: function (data) {
+data = data.replace(/<img/gi, '<noload');
 let html = $('<div>' + data + '</div>'),
 entered = html.find('#enbut').length === 0;
 if (!entered) {
