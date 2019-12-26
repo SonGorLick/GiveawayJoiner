@@ -144,7 +144,8 @@ check = opway.find('.giveaways-page-item-img-btn-wrapper a').attr('onclick'),
 eLink = opway.find('.giveaways-page-item-img-btn-enter').attr('href'),
 cost = parseInt(opway.find('.giveaways-page-item-header-points').text().replace('points', '').trim()),
 code = link.slice(11, 16),
-njoin = 0;
+njoin = 0,
+opblack = '';
 if (isNaN(cost)) {
 cost = 0;
 }
@@ -160,18 +161,23 @@ njoin = 5;
 if (GJuser.op.includes(',' + code + '-n,')) {
 njoin = 1;
 }
-if (GJuser.op.includes(',' + code + '-s,') && _this.getConfig('check_in_steam', true)) {
+if (GJuser.op.includes(',' + code + '(s=') && _this.getConfig('check_in_steam', true)) {
+opblack = parseInt(GJuser.op.split(',' + code + '(s=')[1].split('),')[0]);
 njoin = 2;
 }
-if (GJuser.op.includes(',' + code + '-b,') && _this.getConfig('blacklist_on', false)) {
+if (GJuser.op.includes(',' + code + '(b=') && _this.getConfig('blacklist_on', false)) {
+opblack = parseInt(GJuser.op.split(',' + code + '(b=')[1].split('),')[0]);
 njoin = 3;
 }
 if (entered.includes('ENTERED')) {
 njoin = 6;
 }
+if (opblack !== '') {
+opblack = _this.logBlack(opblack);
+}
 if (njoin > 0) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name), 'chk');
+_this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name) + opblack, 'chk');
 if (njoin === 1) {
 _this.log(Lang.get('service.cant_join'), 'cant');
 }
@@ -234,13 +240,13 @@ if (GJuser.black.includes(opid + ',') && _this.getConfig('blacklist_on', false))
 opown = 4;
 }
 if (opown === 1) {
-GJuser.op = GJuser.op + code + '-s,';
+GJuser.op = GJuser.op + code + '(s=' + opid + '),';
 }
 if (opown === 3) {
 GJuser.op = GJuser.op + code + '-n,';
 }
 if (opown === 4) {
-GJuser.op = GJuser.op + code + '-b,';
+GJuser.op = GJuser.op + code + '(b=' + opid + '),';
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name) + _this.logBlack(opid), 'chk');

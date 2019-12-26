@@ -58,7 +58,7 @@ if (idbwon < _this.won) {
 _this.setConfig('won', idbwon);
 }
 if (idbwon > 0 && idbwon > _this.won) {
-_this.log(_this.logLink(_this.url + '/giveaways/prizes', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (idbwon) + ')'), 'win');
+_this.log(_this.logLink(_this.url + '/giveaways/prizes', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (idbwon - _this.won) + ')'), 'win');
 _this.setStatus('win');
 _this.setConfig('won', idbwon);
 if (_this.getConfig('sound', true)) {

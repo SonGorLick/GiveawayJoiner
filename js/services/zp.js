@@ -58,7 +58,7 @@ if (zpwon < _this.won) {
 _this.setConfig('won', zpwon);
 }
 if (zpwon > 0 && zpwon > _this.won) {
-_this.log(_this.logLink(_this.url + '/my-account/my-prizes', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (zpwon) + ')'), 'win');
+_this.log(_this.logLink(_this.url + '/my-account/my-prizes', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (zpwon - _this.won) + ')'), 'win');
 _this.setStatus('win');
 _this.setConfig('won', zpwon);
 if (_this.getConfig('sound', true)) {
@@ -106,6 +106,7 @@ zpcomp = comp.eq(zprnd),
 zplink = _this.url + zpcomp.find('.bv-item-image a').attr('href'),
 zpnam = zplink.replace('https://www.zeepond.com/zeepond/giveaways/enter-a-competition/', ''),
 njoin = 0,
+zpblack = '',
 zpdtnow = new Date();
 zpdtnow.setDate(zpdtnow.getUTCDate());
 zpdtnow.setHours(zpdtnow.getUTCHours() + 11);
@@ -116,14 +117,19 @@ if (zpdnow === zpdga) {
 njoin = 3;
 }
 }
-if (GJuser.zp.includes(',' + zpnam + '(s),') && _this.getConfig('check_in_steam', true)) {
+if (GJuser.zp.includes(',' + zpnam + '(s=') && _this.getConfig('check_in_steam', true)) {
+zpblack = parseInt(GJuser.zp.split(',' + zpnam + '(s=')[1].split('),')[0]);
 njoin = 1;
 }
-if (GJuser.zp.includes(',' + zpnam + '(b),') && _this.getConfig('blacklist_on', false)) {
+if (GJuser.zp.includes(',' + zpnam + '(b=') && _this.getConfig('blacklist_on', false)) {
+zpblack = parseInt(GJuser.zp.split(',' + zpnam + '(b=')[1].split('),')[0]);
 njoin = 2;
 }
+if (zpblack !== '') {
+zpblack = _this.logBlack(zpblack);
+}
 if (_this.getConfig('log', true) && njoin > 0) {
-_this.log(Lang.get('service.checking') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpnam.replace(/-/g, ' ')), 'chk');
+_this.log(Lang.get('service.checking') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpnam.replace(/-/g, ' ')) + zpblack, 'chk');
 if (njoin === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
@@ -198,11 +204,11 @@ if (GJuser.ownsubs.includes(',' + zpsub + ',') && zpsub > 0) {
 zpown = 1;
 }
 if (zpown === 1) {
-GJuser.zp = GJuser.zp + zpnam + '(s),';
+GJuser.zp = GJuser.zp + zpnam + '(s=' + zpid + '),';
 }
 }
 if (GJuser.black.includes(zpid + ',') && _this.getConfig('blacklist_on', false)) {
-GJuser.zp = GJuser.zp + zpnam + '(b),';
+GJuser.zp = GJuser.zp + zpnam + '(b=' + zpid + '),';
 zpown = 4;
 }
 }

@@ -54,7 +54,7 @@ if (aswon < _this.won) {
 _this.setConfig('won', aswon);
 }
 if (aswon > 0 && aswon > _this.won) {
-_this.log(_this.logLink(_this.url + '/astats/profile/User_Inbox.php', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (aswon) + ')'), 'win');
+_this.log(_this.logLink(_this.url + '/astats/profile/User_Inbox.php', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (aswon - _this.won) + ')'), 'win');
 _this.setStatus('win');
 _this.setConfig('won', aswon);
 if (_this.getConfig('sound', true)) {
