@@ -104,6 +104,16 @@
 			"jwt_err": "JWT data of account not found in file",
 			"jwt_no": "Add JWT data of account in file"
 		},
+		"lootboy": {
+			"gems": "Diamonds: ",
+			"coins": "Coins: ",
+			"done": "Received - ",
+			"offer": "Offer: ",
+			"skip": "Skipped - offer already done",
+			"brr_wiki": "Click, to know how to use the service",
+			"brr_err": "Bearer data of account not found in file",
+			"brr_no": "Add Bearer data of account in file"
+		},
 		"zp": {
 			"login": " (By login-password with save password checkbox, otherwise session not will be saved)",
 			"skip_after": "Safe search",
