@@ -5,7 +5,7 @@ super();
 this.websiteUrl = 'https://www.lootboy.de';
 this.authContent = 'Download the free app now';
 this.authLink = 'https://github.com/pumPCin/GiveawayJoiner/wiki/LootBoy';
-this.auth = Lang.get('service.lootboy.brr_wiki') + ' LootBoy';
+this.auth = Lang.get('service.wiki') + 'LootBoy';
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 700), default: this.getConfig('timer_from', 500) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 500), max: 2880, default: this.getConfig('timer_to', 700) };
 this.withValue = false;
@@ -52,7 +52,7 @@ return;
 }
 if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'lootboy' + lbcurr + '.txt')) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.open_file') + ' /giveawayjoinerdata/lootboy' + lbcurr + '.txt');
+_this.log(Lang.get('service.open_file') + 'lootboy' + lbcurr + '.txt', 'info');
 }
 let lbdata = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'lootboy' + lbcurr + '.txt');
 if (lbdata.includes('Bearer')) {
@@ -75,7 +75,8 @@ json: true
 })
 .then((stat) => {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + stat.username + '  ' + _this.trans('gems') + stat.lootgemBalance + '  ' + _this.trans('coins') + stat.lootcoinBalance, 'skip');
+_this.log(Lang.get('service.acc') + stat.username + ' - ' + stat.lootgemBalance + Lang.get('service.gems') + ', ' + stat.lootcoinBalance + Lang.get('service.coins'));
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Coins', 'chk');
 }
 rq({
 method: 'GET',
@@ -109,10 +110,17 @@ json: true
 })
 .then((coin) => {
 if (stat.lootcoinBalance - coin.newLootcoinBalance > 0) {
-_this.log(stat.username + '  ' + _this.trans('offer') + 'Daily Coins  ' + _this.trans('done') + _this.trans('coins') + (stat.lootcoinBalance - coin.newLootcoinBalance), 'enter');
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.done') + (stat.lootcoinBalance - coin.newLootcoinBalance) + Lang.get('service.coins'), 'enter');
 }
 else {
-_this.log(stat.username + '  ' + _this.trans('offer') + 'Daily Coins  ' + _this.trans('skip'), 'skip');
+_this.log(Lang.get('service.acc') + stat.username + ' - ' + Lang.get('service.done') + (stat.lootcoinBalance - coin.newLootcoinBalance) + Lang.get('service.coins'), 'enter');
+}
+}
+else {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.skip'), 'skip');
+}
 }
 });
 offers.forEach(function(offer) {
@@ -132,11 +140,21 @@ headers: {
 json: true
 })
 .then((gem) => {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim(), 'chk');
+}
 if (!gem.alreadyTaken) {
-_this.log(stat.username + '  ' + _this.trans('offer') + offer.description.trim() + '  ' + _this.trans('done') + _this.trans('gems') + offer.diamondBonus, 'enter');
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.done') + offer.diamondBonus + Lang.get('service.gems'), 'enter');
 }
 else {
-_this.log(stat.username + '  ' + _this.trans('offer') + offer.description.trim() + '  ' + _this.trans('skip'), 'skip');
+_this.log(Lang.get('service.acc') + stat.username + ' - ' + Lang.get('service.done') + offer.diamondBonus + Lang.get('service.gems'), 'enter');
+}
+}
+else {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.skip'), 'skip');
+}
 }
 });
 });
@@ -148,7 +166,7 @@ _this.log(Lang.get('service.ses_not_found'), 'err');
 }
 else {
 if (_this.getConfig('log', true)) {
-_this.log(_this.trans('brr_err'), 'err');
+_this.log(Lang.get('service.dt_err'), 'err');
 }
 }
 }
@@ -156,7 +174,7 @@ else {
 _this.check = false;
 if (lbcurr === 1) {
 fs.writeFile(storage.getDataPath().slice(0, -7) + 'lootboy1.txt', '', (err) => { });
-_this.log(_this.trans('brr_no') + ' /giveawayjoinerdata/lootboy1.txt', 'err');
+_this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/lootboy1.txt', 'err');
 _this.stopJoiner(true);
 }
 }

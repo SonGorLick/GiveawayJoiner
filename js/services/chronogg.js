@@ -5,7 +5,7 @@ super();
 this.websiteUrl = 'https://www.chrono.gg';
 this.authContent = 'Coin Shop';
 this.authLink = 'https://github.com/pumPCin/GiveawayJoiner/wiki/Chrono';
-this.auth = Lang.get('service.chronogg.jwt_wiki') + ' ChronoGG';
+this.auth = Lang.get('service.wiki') + 'ChronoGG';
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 700), default: this.getConfig('timer_from', 500) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 500), max: 2880, default: this.getConfig('timer_to', 700) };
 this.withValue = false;
@@ -52,7 +52,7 @@ return;
 }
 if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'chronogg' + chcurr + '.txt')) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.open_file') + ' /giveawayjoinerdata/chronogg' + chcurr + '.txt');
+_this.log(Lang.get('service.open_file') + 'chronogg' + chcurr + '.txt', 'info');
 }
 let chdata = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'chronogg' + chcurr + '.txt');
 if (chdata.includes('JWT')) {
@@ -75,7 +75,8 @@ json: true
 if (acc.status === 200) {
 let chacc = acc.coins;
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + acc.email + '  ' + _this.trans('spins') + chacc.spins + '  ' + _this.trans('legendaries') + chacc.legendaries + '  ' + _this.trans('balance') + chacc.balance, 'skip');
+_this.log(Lang.get('service.acc') + acc.email + ' - ' + chacc.balance + Lang.get('service.coins'));
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Spin Coin', 'chk');
 }
 }
 rq({
@@ -93,19 +94,23 @@ headers: {
 json: true
 })
 .then((spin) => {
-let chquest = spin.quest;
-let chchest = spin.chest;
-if (!chchest.base) {
-_this.log(acc.email + '  ' + _this.trans('quest') + (chquest.value + chquest.bonus) + '  ' + _this.trans('total') + (acc.coins.balance + chquest.value + chquest.bonus), 'enter');
+let chquest = spin.quest,
+chchest = spin.chest,
+chcoins = chquest.value + chquest.bonus;
+if (chchest.base) {
+chcoins = chcoins + chchest.base + chchest.bonus;
+}
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.done') + chcoins + Lang.get('service.coins'), 'enter');
 }
 else {
-_this.log(acc.email + '  ' + _this.trans('quest') + (chquest.value + chquest.bonus) + '  ' + _this.trans('chest') + (chchest.base + chchest.bonus) + '  ' + _this.trans('streak') + chchest.kind + '  ' + _this.trans('total') + (acc.coins.balance + chquest.value + chquest.bonus + chchest.base + chchest.bonus), 'enter');
+_this.log(Lang.get('service.acc') + acc.email + ' - ' + Lang.get('service.done') + chcoins + Lang.get('service.coins'), 'enter');
 }
 })
 .catch((err) => {
 if (_this.getConfig('log', true)) {
 if (err.statusCode === 420) {
-_this.log(_this.trans('spinned'), 'skip');
+_this.log(Lang.get('service.skip'), 'skip');
 }
 }
 });
@@ -118,7 +123,7 @@ _this.log(Lang.get('service.ses_not_found'), 'err');
 }
 else {
 if (_this.getConfig('log', true)) {
-_this.log(_this.trans('jwt_err'), 'err');
+_this.log(Lang.get('service.dt_err'), 'err');
 }
 }
 }
@@ -126,7 +131,7 @@ else {
 _this.check = false;
 if (chcurr === 1) {
 fs.writeFile(storage.getDataPath().slice(0, -7) + 'chronogg1.txt', '', (err) => { });
-_this.log(_this.trans('jwt_no') + ' /giveawayjoinerdata/chronogg1.txt', 'err');
+_this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/chronogg1.txt', 'err');
 _this.stopJoiner(true);
 }
 }
