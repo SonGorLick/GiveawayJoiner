@@ -18,9 +18,13 @@ GJuser.as = asdata.toString();
 }
 }
 let userData = {
-avatar: GJuser.avatar,
-username: GJuser.username
+avatar: __dirname + '/images/Astats.png',
+username: 'Astats User'
 };
+if (GJuser.username !== 'GiveawayJoiner') {
+userData.avatar = GJuser.avatar;
+userData.username = GJuser.username;
+}
 callback(userData);
 }
 joinService() {

@@ -27,9 +27,13 @@ GJuser.tf = tfdata.toString();
 }
 }
 let userData = {
-avatar: GJuser.avatar,
-username: GJuser.username
+avatar: __dirname + '/images/TF2R.png',
+username: 'TF2R User'
 };
+if (GJuser.username !== 'GiveawayJoiner') {
+userData.avatar = GJuser.avatar;
+userData.username = GJuser.username;
+}
 callback(userData);
 }
 joinService() {

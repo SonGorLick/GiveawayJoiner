@@ -21,17 +21,11 @@ let userData = {
 avatar: __dirname + '/images/IndieDB.png',
 username: 'IndieDB User'
 };
-$.ajax({
-url: 'https://www.indiedb.com/messages/updates',
-success: function (data) {
-data = $(data.replace(/<img/gi, '<noload'));
-userData.avatar = data.find('li.avatar a noload').attr('src');
-userData.username = data.find('li.username a').text();
-},
-complete: function () {
-callback(userData);
+if (GJuser.username !== 'GiveawayJoiner') {
+userData.avatar = GJuser.avatar;
+userData.username = GJuser.username;
 }
-});
+callback(userData);
 }
 joinService() {
 let _this = this;

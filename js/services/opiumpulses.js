@@ -23,7 +23,7 @@ GJuser.op = opdata.toString();
 }
 let userData = {
 avatar: __dirname + '/images/OpiumPulses.png',
-username: 'OP User',
+username: 'OpiumPulses User',
 value: 0
 };
 $.ajax({

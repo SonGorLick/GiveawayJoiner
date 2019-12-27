@@ -75,7 +75,7 @@ json: true
 if (acc.status === 200) {
 let chacc = acc.coins;
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + acc.email + '  |' + _this.trans('spins') + chacc.spins + '|' + _this.trans('legendaries') + chacc.legendaries + '|' + _this.trans('balance') + chacc.balance + '|', 'skip');
+_this.log(Lang.get('service.checking') + acc.email + '  ' + _this.trans('spins') + chacc.spins + '  ' + _this.trans('legendaries') + chacc.legendaries + '  ' + _this.trans('balance') + chacc.balance, 'skip');
 }
 }
 rq({
@@ -96,10 +96,10 @@ json: true
 let chquest = spin.quest;
 let chchest = spin.chest;
 if (!chchest.base) {
-_this.log(acc.email + '  |' + _this.trans('quest') + (chquest.value + chquest.bonus) + '|' + _this.trans('total') + (acc.coins.balance + chquest.value + chquest.bonus) + '|', 'enter');
+_this.log(acc.email + '  ' + _this.trans('quest') + (chquest.value + chquest.bonus) + '  ' + _this.trans('total') + (acc.coins.balance + chquest.value + chquest.bonus), 'enter');
 }
 else {
-_this.log(acc.email + '  |' + _this.trans('quest') + (chquest.value + chquest.bonus) + '|' + _this.trans('chest') + (chchest.base + chchest.bonus) + '|' + _this.trans('streak') + chchest.kind + '|' + _this.trans('total') + (acc.coins.balance + chquest.value + chquest.bonus + chchest.base + chchest.bonus) + '|', 'enter');
+_this.log(acc.email + '  ' + _this.trans('quest') + (chquest.value + chquest.bonus) + '  ' + _this.trans('chest') + (chchest.base + chchest.bonus) + '  ' + _this.trans('streak') + chchest.kind + '  ' + _this.trans('total') + (acc.coins.balance + chquest.value + chquest.bonus + chchest.base + chchest.bonus), 'enter');
 }
 })
 .catch((err) => {

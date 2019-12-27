@@ -29,9 +29,13 @@ GJuser.zp = zpdata.toString();
 }
 }
 let userData = {
-avatar: GJuser.avatar,
-username: GJuser.username
+avatar: __dirname + '/images/ZP.png',
+username: 'ZP User'
 };
+if (GJuser.username !== 'GiveawayJoiner') {
+userData.avatar = GJuser.avatar;
+userData.username = GJuser.username;
+}
 callback(userData);
 }
 joinService() {

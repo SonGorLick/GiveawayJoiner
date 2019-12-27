@@ -17,9 +17,13 @@ super.init();
 }
 getUserInfo(callback) {
 let userData = {
-avatar: GJuser.avatar,
-username: GJuser.username
+avatar: __dirname + '/images/ScrapTF.png',
+username: 'ScrapTF User'
 };
+if (GJuser.username !== 'GiveawayJoiner') {
+userData.avatar = GJuser.avatar;
+userData.username = GJuser.username;
+}
 callback(userData);
 }
 joinService() {
