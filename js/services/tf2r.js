@@ -9,6 +9,7 @@ this.authLink = 'http://tf2r.com/login';
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 700), default: this.getConfig('timer_from', 500) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 500), max: 2880, default: this.getConfig('timer_to', 700) };
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
+this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.withValue = false;
 this.getTimeout = 10000;
 delete this.settings.pages;
@@ -43,7 +44,37 @@ let tftimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _t
 _this.stimer = tftimer;
 }
 _this.url = 'http://tf2r.com';
+_this.won = _this.getConfig('won', 0);
 _this.ua = mainWindow.webContents.session.getUserAgent();
+$.ajax({
+url: _this.url + '/notifications.html',
+success: function (html) {
+html = html.replace(/<img/gi, '<noload');
+let tfprizes = $(html).find('#content .indent .notif'),
+tfprize = '',
+tfwon = 0;
+if (tfprizes === undefined) {
+tfprizes = '';
+}
+for (let tfi = 0; tfi < tfprizes.length; tfi++) {
+tfprize = tfprizes.eq(tfi).text().trim();
+if (!tfprize.includes('sadly you didnt win')) {
+tfwon++;
+}
+}
+if (tfwon < _this.won) {
+_this.setConfig('won', tfwon);
+}
+if (tfwon > 0 && tfwon > _this.won) {
+_this.log(_this.logLink(_this.url + '/notifications.html', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (tfwon - _this.won) + ')'), 'win');
+_this.setStatus('win');
+_this.setConfig('won', tfwon);
+if (_this.getConfig('sound', true)) {
+new Audio(__dirname + '/sounds/won.wav').play();
+}
+}
+}
+});
 $.ajax({
 url: _this.url + '/raffles.html',
 success: function (data) {

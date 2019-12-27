@@ -42,6 +42,9 @@ html = html.replace(/<img/gi, '<noload');
 let prizes = $(html).find('.body.clear .table .row.rowcontent span.subheading:nth-of-type(2)'),
 idbprize = '',
 idbwon = 0;
+if (prizes === undefined) {
+prizes = '';
+}
 for (let idbcurr = 0; idbcurr < prizes.length; idbcurr++) {
 idbprize = prizes.eq(idbcurr).text().trim();
 if (idbprize !== '-' && !idbprize.includes('Check in')) {
