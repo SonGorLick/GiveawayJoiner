@@ -91,6 +91,15 @@
 		"rnd_title": "Random join giveaways on page, not how on site",
 		"log": "Detailed log",
 		"log_title": "Detailed log of the service",
+		"acc": "Account ",
+		"gems": " diamonds",
+		"coins": " coins",
+		"done": "Received ",
+		"offer": "оffer ",
+		"skip": "Skipped - offer already done",
+		"wiki": "How to use the service ",
+		"dt_err": "Account data not found in file",
+		"dt_no": "Add account data to file ",
 		"chronogg": {
 			"balance": "Balance: ",
 			"spins": "Spins: ",
@@ -103,16 +112,6 @@
 			"jwt_wiki": "Click, to know how to use the service",
 			"jwt_err": "JWT data of account not found in file",
 			"jwt_no": "Add JWT data of account in file"
-		},
-		"lootboy": {
-			"gems": "Diamonds: ",
-			"coins": "Coins: ",
-			"done": "Received - ",
-			"offer": "Offer: ",
-			"skip": "Skipped - offer already done",
-			"brr_wiki": "Click, to know how to use the service",
-			"brr_err": "Bearer data of account not found in file",
-			"brr_no": "Add Bearer data of account in file"
 		},
 		"zp": {
 			"login": " (By login-password with save password checkbox, otherwise session not will be saved)",
