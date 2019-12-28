@@ -28,11 +28,11 @@ value: 0
 };
 $.ajax({
 url: 'https://www.opiumpulses.com/user/account',
-success: function (data) {
-data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
-userData.username = data.find('.page-header__nav-func-user-wrapper a').text().split('Account')[0].trim();
-userData.avatar = 'https://www.opiumpulses.com' + data.find('.input-group noload').attr('src');
-userData.value = data.find('.points-items li a').first().text().replace('Points:', '').trim();
+success: function (html) {
+html = $(html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
+userData.username = html.find('.page-header__nav-func-user-wrapper a').text().split('Account')[0].trim();
+userData.avatar = 'https://www.opiumpulses.com' + html.find('.input-group noload').attr('src');
+userData.value = html.find('.points-items li a').first().text().replace('Points:', '').trim();
 },
 complete: function () {
 callback(userData);
@@ -68,7 +68,7 @@ oppage = '';
 $.ajax({
 url: _this.url + '/giveaways?ajax=giveawaylistview' + oppage,
 success: function (data) {
-data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
+data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
 if (_this.check === 0) {
 _this.check = 1;
 let opwon = parseInt(data.find('[href="/user/giveawaykeys"] > span').text().trim());
@@ -101,7 +101,7 @@ if (opfound.length <= opcurr && page === _this.pagemax) {
 $.ajax({
 url: _this.url + '/arcade',
 success: function (data) {
-data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
+data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
 let arfound = data.find('.arcade-item-img-btn-wrapper'),
 arlnk = arfound.eq(Math.floor(Math.random() * 28)).find('a').attr('href');
 if (arlnk !== undefined) {
@@ -203,7 +203,7 @@ else {
 $.ajax({
 url: _this.url + link,
 success: function (data) {
-data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload').replace(/<source/gi, '<noload'));
+data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
 let opsteam = data.find('.giveaways-single-sponsored h1 a').attr('href');
 if (opsteam === undefined) {
 opsteam = $(data).find('.giveaways-single-sponsored h4 a').attr('href');

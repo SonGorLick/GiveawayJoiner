@@ -124,6 +124,8 @@ _this.log(Lang.get('service.skip'), 'skip');
 }
 });
 offers.forEach(function(offer) {
+let tmout = Math.floor(Math.random() * Math.floor(lbnext / 10)) + Math.floor(lbnext / 5);
+setTimeout(function () {
 rq({
 method: 'PUT',
 uri: _this.url + '/v1/offers/' + offer.id + '?lang=en',
@@ -157,6 +159,7 @@ _this.log(Lang.get('service.skip'), 'skip');
 }
 }
 });
+}, tmout);
 });
 });
 })
