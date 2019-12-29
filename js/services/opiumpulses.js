@@ -7,8 +7,9 @@ this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
 this.settings.maxcost = { type: 'number', trans: this.transPath('maxcost'), min: 0, max: 1000, default: this.getConfig('maxcost', 0) };
 this.settings.free_only = { type: 'checkbox', trans: this.transPath('free_only'), default: this.getConfig('free_only', false) };
-this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
+this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
+this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 super.init();
 }
 getUserInfo(callback) {
@@ -165,6 +166,7 @@ njoin = 5;
 if (cost !== 0 && _this.getConfig('free_only', false)) {
 njoin = 5;
 }
+if (!_this.getConfig('check_all', false)) {
 if (GJuser.op.includes(',' + code + '-n,')) {
 njoin = 1;
 }
@@ -176,6 +178,7 @@ if (GJuser.op.includes(',' + code + '(b=') && _this.getConfig('blacklist_on', fa
 opblack = parseInt(GJuser.op.split(',' + code + '(b=')[1].split('),')[0]);
 njoin = 3;
 }
+}
 if (entered.includes('ENTERED')) {
 njoin = 6;
 }
@@ -186,13 +189,13 @@ if (njoin > 0) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name) + opblack, 'chk');
 if (njoin === 1) {
-_this.log(Lang.get('service.cant_join'), 'cant');
+_this.log(Lang.get('service.cant_join') + Lang.get('service.data_have'), 'cant');
 }
 if (njoin === 2) {
-_this.log(Lang.get('service.have_on_steam'), 'steam');
+_this.log(Lang.get('service.have_on_steam') + Lang.get('service.data_have'), 'steam');
 }
 if (njoin === 3) {
-_this.log(Lang.get('service.blacklisted'), 'black');
+_this.log(Lang.get('service.blacklisted') + Lang.get('service.data_have'), 'black');
 }
 if (njoin === 4) {
 _this.log(Lang.get('service.points_low'), 'skip');
@@ -229,7 +232,9 @@ opsub = parseInt(opsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')
 opid = 'sub/' + opsub;
 }
 if (openter === " You're not eligible to enter") {
+if (!GJuser.op.includes(',' + code + '-n,')) {
 GJuser.op = GJuser.op + code + '-n,';
+}
 opown = 3;
 }
 if (_this.getConfig('check_in_steam', true) && opown !== 3) {
@@ -243,12 +248,14 @@ opown = 1;
 if (GJuser.ownsubs.includes(',' + opsub + ',') && opsub > 0) {
 opown = 1;
 }
-if (opown === 1) {
+if (opown === 1 && !GJuser.op.includes(',' + code + '(s=')) {
 GJuser.op = GJuser.op + code + '(s=' + opid + '),';
 }
 }
 if (GJuser.black.includes(opid + ',') && _this.getConfig('blacklist_on', false) && opown !== 3) {
+if (!GJuser.op.includes(',' + code + '(b=')) {
 GJuser.op = GJuser.op + code + '(b=' + opid + '),';
+}
 opown = 4;
 }
 if (_this.getConfig('log', true)) {

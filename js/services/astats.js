@@ -6,8 +6,9 @@ this.websiteUrl = 'https://astats.astats.nl/astats/';
 this.authContent = 'Log out';
 this.authLink = 'https://astats.astats.nl/astats/profile/Login.php';
 this.withValue = false;
-this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
+this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
+this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -172,7 +173,7 @@ asown = 1;
 if (GJuser.black.includes(asid + ',') && _this.getConfig('blacklist_on', false)) {
 asown = 4;
 }
-if (GJuser.as.includes(',' + asjoin + ',')) {
+if (GJuser.as.includes(',' + asjoin + ',') && !_this.getConfig('check_all', false)) {
 asown = 3;
 }
 if (_this.getConfig('log', true)) {
@@ -181,7 +182,7 @@ if (asown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
 if (asown === 3) {
-_this.log(Lang.get('service.already_joined'), 'jnd');
+_this.log(Lang.get('service.already_joined') + Lang.get('service.data_have'), 'jnd');
 }
 if (asown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');
@@ -195,7 +196,9 @@ html = $(html.replace(/<img/gi, '<noload'));
 let ajoin = html.find('.input-group-btn').text().trim();
 if (ajoin === 'Add') {
 asown = 3;
+if (!GJuser.as.includes(',' + asjoin + ',')) {
 GJuser.as = GJuser.as + asjoin + ',';
+}
 }
 if (ajoin !== 'Add' && ajoin !== 'Join') {
 asown = 5;
@@ -219,7 +222,9 @@ url: _this.url + alink,
 method: 'POST',
 data: 'Comment=&JoinGiveaway=Join',
 success: function () {
+if (!GJuser.as.includes(',' + asjoin + ',')) {
 GJuser.as = GJuser.as + asjoin + ',';
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (arnd + 1) + '№|  ' + _this.logLink(_this.url + alink, aname), 'enter');
 }

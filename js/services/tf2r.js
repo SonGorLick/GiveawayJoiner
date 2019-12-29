@@ -8,8 +8,9 @@ this.authContent = 'Notifications';
 this.authLink = 'http://tf2r.com/login';
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 700), default: this.getConfig('timer_from', 500) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 500), max: 2880, default: this.getConfig('timer_to', 700) };
-this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
+this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
+this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
 this.withValue = false;
 this.getTimeout = 10000;
 delete this.settings.pages;
@@ -115,7 +116,7 @@ rid = link.replace('http://tf2r.com/k', '').replace('.html', '');
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + (tfrnd + 1) + '№|  ' + _this.logLink(link, name), 'chk');
 }
-if (!GJuser.tf.includes(rid + ',')) {
+if (!GJuser.tf.includes(rid + ',') && !_this.getConfig('check_all', false)) {
 $.ajax({
 url: link,
 success: function (data) {
@@ -147,7 +148,9 @@ _this.log(Lang.get('service.entered_in') + '|' + (tfrnd + 1) + '№|  ' + _this.
 else {
 _this.log(Lang.get('service.entered_in') + _this.logLink(link, name), 'enter');
 }
+if (!GJuser.tf.includes(',' + rid + ',')) {
 GJuser.tf = GJuser.tf + rid + ',';
+}
 }
 else {
 tfnext = 100;
@@ -160,7 +163,9 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 else {
 tfnext = 100;
+if (!GJuser.tf.includes(',' + rid + ',')) {
 GJuser.tf = GJuser.tf + rid + ',';
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
 }
@@ -171,7 +176,7 @@ _this.log(Lang.get('service.already_joined'), 'jnd');
 else {
 tfnext = 100;
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.already_joined'), 'jnd');
+_this.log(Lang.get('service.already_joined') + Lang.get('service.data_have'), 'jnd');
 }
 }
 tfcurr++;
