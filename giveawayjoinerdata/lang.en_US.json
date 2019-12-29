@@ -88,6 +88,8 @@
 		"blacklist_on_title": "Don't join if the giveaway in blacklist file /giveawayjoinerdata/blacklist.txt",
 		"check_in_steam": "Check owned on Steam",
 		"check_in_steam_title": "Don't join if the giveaway owned on account (need to be logined in Steam on Profile tab)",
+		"check_all": "Force check giveaways",
+		"check_all_title": "Force check giveaways, ignore the saved giveaways data",
 		"rnd": "Random",
 		"rnd_title": "Random join giveaways on page, not how on site",
 		"log": "Detailed log",
@@ -118,7 +120,7 @@
 			"login": " (By login-password with save password checkbox, otherwise session not will be saved)",
 			"skip_after": "Safe search",
 			"skip_after_title": "If can't join in giveaway, checking of other giveaways will be skipped",
-			"check_all": "Force check",
+			"check_all": "Force check giveaways",
 			"check_all_title": "Force check giveaways, ignore the saved time of the last entry"
 		},
 		"scraptf": {
