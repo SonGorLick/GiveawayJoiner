@@ -60,7 +60,7 @@ callback(-1);
 }
 getUserInfo(callback) {
 let userData = {
-avatar: __dirname + '/images/IndieGala.png',
+avatar: dirapp + '/images/IndieGala.png',
 username: 'IG User',
 value: 0
 };
@@ -124,7 +124,7 @@ igwon = igwon.replace('Congratulations! You won','').replace('Giveaways','').tri
 _this.log(_this.logLink(_this.url + '/profile?user_id=' + GJuser.ig, Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + igwon + ')'), 'win');
 _this.setStatus('win');
 if (_this.getConfig('sound', true)) {
-new Audio(__dirname + '/sounds/won.wav').play();
+new Audio(dirapp + '/sounds/won.wav').play();
 }
 }
 });

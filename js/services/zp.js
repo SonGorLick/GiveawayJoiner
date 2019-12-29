@@ -21,15 +21,15 @@ super.init();
 getUserInfo(callback) {
 if (GJuser.zp === '') {
 GJuser.zp = ',';
-if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'zp.txt')) {
-let zpdata = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'zp.txt');
+if (fs.existsSync(dirdata + 'zp.txt')) {
+let zpdata = fs.readFileSync(dirdata + 'zp.txt');
 if (zpdata.length > 1 && zpdata.length < 20000) {
 GJuser.zp = zpdata.toString();
 }
 }
 }
 let userData = {
-avatar: __dirname + '/images/ZP.png',
+avatar: dirapp + '/images/ZP.png',
 username: 'ZP User'
 };
 if (GJuser.username !== 'GiveawayJoiner') {
@@ -66,7 +66,7 @@ _this.log(_this.logLink(_this.url + '/my-account/my-prizes', Lang.get('service.w
 _this.setStatus('win');
 _this.setConfig('won', zpwon);
 if (_this.getConfig('sound', true)) {
-new Audio(__dirname + '/sounds/won.wav').play();
+new Audio(dirapp + '/sounds/won.wav').play();
 }
 }
 }
@@ -90,7 +90,7 @@ function giveawayEnter() {
 if (comp.length <= zpcurr || _this.skip || !_this.started) {
 if (comp.length <= zpcurr || _this.skip) {
 setTimeout(function () {
-fs.writeFile(storage.getDataPath().slice(0, -7) + 'zp.txt', GJuser.zp, (err) => { });
+fs.writeFile(dirdata + 'zp.txt', GJuser.zp, (err) => { });
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
 }
@@ -142,6 +142,7 @@ _this.log(Lang.get('service.blacklisted'), 'black');
 }
 if (njoin === 3) {
 _this.log(Lang.get('service.time'), 'skip');
+_this.log(Lang.get('service.data_have'), 'info');
 }
 }
 if (njoin === 0) {

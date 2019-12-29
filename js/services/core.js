@@ -1,6 +1,8 @@
 'use strict';
-const storage = require('electron-json-storage');
-const fs = require('fs');
+const storage = require('electron').remote.require('electron-json-storage');
+const fs = require('electron').remote.require('fs');
+const dirapp = (__dirname).replace('electron.asar/renderer', 'app.asar');
+const dirdata = storage.getDataPath() + '/';
 class Joiner {
 constructor() {
 this.intervalVar = undefined;
@@ -42,8 +44,8 @@ GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']
 }
 }
 });
-if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt')) {
-let blacklist = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt');
+if (fs.existsSync(dirdata + 'blacklist.txt')) {
+let blacklist = fs.readFileSync(dirdata + 'blacklist.txt');
 if (blacklist.length > 0) {
 GJuser.black = blacklist.toString();
 if (GJuser.black.slice(-1) !== ',') {
@@ -285,8 +287,8 @@ GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']
 }
 }
 });
-if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt')) {
-let blacklist = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'blacklist.txt');
+if (fs.existsSync(dirdata + 'blacklist.txt')) {
+let blacklist = fs.readFileSync(dirdata + 'blacklist.txt');
 if (blacklist.length > 0) {
 GJuser.black = blacklist.toString();
 if (GJuser.black.slice(-1) !== ',') {
@@ -329,9 +331,6 @@ this.totalTicks++;
 }
 updateUserInfo() {
 this.getUserInfo((userData) => {
-if (userData.avatar.includes('electron.asar/renderer')) {
-userData.avatar = userData.avatar.replace('electron.asar/renderer', 'app.asar');
-}
 this.userInfo.find('.avatar').css('background-image', "url('" + userData.avatar + "')");
 this.userInfo.find('.username').text(userData.username);
 if (this.withValue) {
@@ -478,7 +477,7 @@ _this.reinitNumber('timer_from');
 break;
 }
 };
-btnUp.on('mousedown', () =>{
+btnUp.on('mousedown', () => {
 let func = function () {
 iterations++;
 up();
@@ -610,7 +609,7 @@ this.logWrap.scrollTop(this.logWrap[0].scrollHeight);
 joinService() {}
 getUserInfo(callback) {
 callback({
-avatar: __dirname + '/images/' + this.constructor.name + '.png',
+avatar: dirapp + '/images/' + this.constructor.name + '.png',
 username: this.constructor.name + ' User',
 value: 0
 });

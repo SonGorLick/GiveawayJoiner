@@ -12,14 +12,14 @@ this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getC
 super.init();
 }
 getUserInfo(callback) {
-if (GJuser.as === '' && fs.existsSync(storage.getDataPath().slice(0, -7) + 'astats.txt')) {
-let asdata = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'astats.txt');
+if (GJuser.as === '' && fs.existsSync(dirdata + 'astats.txt')) {
+let asdata = fs.readFileSync(dirdata + 'astats.txt');
 if (asdata.length > 1 && asdata.length < 4000) {
 GJuser.as = asdata.toString();
 }
 }
 let userData = {
-avatar: __dirname + '/images/Astats.png',
+avatar: dirapp + '/images/Astats.png',
 username: 'Astats User'
 };
 if (GJuser.username !== 'GiveawayJoiner') {
@@ -63,7 +63,7 @@ _this.log(_this.logLink(_this.url + '/astats/profile/User_Inbox.php', Lang.get('
 _this.setStatus('win');
 _this.setConfig('won', aswon);
 if (_this.getConfig('sound', true)) {
-new Audio(__dirname + '/sounds/won.wav').play();
+new Audio(dirapp + '/sounds/won.wav').play();
 }
 }
 }
@@ -107,7 +107,7 @@ _this.pagemax = page;
 if (afound.length <= acurr || !_this.started) {
 if (afound.length <= acurr && page === _this.pagemax) {
 setTimeout(function () {
-fs.writeFile(storage.getDataPath().slice(0, -7) + 'astats.txt', GJuser.as, (err) => { });
+fs.writeFile(dirdata + 'astats.txt', GJuser.as, (err) => { });
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
 }
@@ -182,7 +182,8 @@ if (asown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
 if (asown === 3) {
-_this.log(Lang.get('service.already_joined') + Lang.get('service.data_have'), 'jnd');
+_this.log(Lang.get('service.already_joined'), 'jnd');
+_this.log(Lang.get('service.data_have'), 'info');
 }
 if (asown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');

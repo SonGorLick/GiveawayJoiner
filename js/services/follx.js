@@ -12,7 +12,7 @@ super.init();
 }
 getUserInfo(callback) {
 let userData = {
-avatar: __dirname + '/images/Follx.png',
+avatar: dirapp + '/images/Follx.png',
 username: 'Follx User',
 value: 0
 };
@@ -82,7 +82,7 @@ if (fxwon !== undefined) {
 _this.log(_this.logLink('https://follx.com/giveaways/won', Lang.get('service.win')), 'win');
 _this.setStatus('win');
 if (_this.getConfig('sound', true)) {
-new Audio(__dirname + '/sounds/won.wav').play();
+new Audio(dirapp + '/sounds/won.wav').play();
 }
 }
 }

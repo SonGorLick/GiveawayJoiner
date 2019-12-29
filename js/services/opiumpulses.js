@@ -2,7 +2,7 @@
 class OpiumPulses extends Joiner {
 constructor() {
 super();
-this.websiteUrl = 'https://www.opiumpulses.com/treasure';
+this.websiteUrl = 'https://www.opiumpulses.com/giveaways';
 this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
 this.settings.maxcost = { type: 'number', trans: this.transPath('maxcost'), min: 0, max: 1000, default: this.getConfig('maxcost', 0) };
@@ -15,15 +15,15 @@ super.init();
 getUserInfo(callback) {
 if (GJuser.op === '') {
 GJuser.op = ',';
-if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'opiumpulses.txt')) {
-let opdata = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'opiumpulses.txt');
+if (fs.existsSync(dirdata + 'opiumpulses.txt')) {
+let opdata = fs.readFileSync(dirdata + 'opiumpulses.txt');
 if (opdata.length > 1 && opdata.length < 4000) {
 GJuser.op = opdata.toString();
 }
 }
 }
 let userData = {
-avatar: __dirname + '/images/OpiumPulses.png',
+avatar: dirapp + '/images/OpiumPulses.png',
 username: 'OpiumPulses User',
 value: 0
 };
@@ -62,19 +62,18 @@ this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback) {
 let _this = this;
-let oppage = '&Giveaway_page=' + page;
+let oppage = '?&Giveaway_page=' + page;
 if (page === 1) {
 oppage = '';
 }
 $.ajax({
-url: _this.url + '/giveaways?ajax=giveawaylistview' + oppage,
-timeout: 20000,
+url: _this.url + '/giveaways' + oppage,
 success: function (data) {
-data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
-let opfound = $(data).find('.giveaways-page-item');
+data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
+let opfound = data.find('.giveaways-page-item');
 if (_this.check === 0) {
 _this.check = 1;
-let opwon = $(data).find('[href="/user/giveawaykeys"] > span').text().trim();
+let opwon = data.find('[href="/user/giveawaykeys"] > span').text().trim();
 if (opwon === undefined) {
 opwon = 0;
 }
@@ -86,7 +85,7 @@ _this.log(_this.logLink(_this.url + '/user/giveawaykeys', Lang.get('service.win'
 _this.setStatus('win');
 _this.setConfig('won', opwon);
 if (_this.getConfig('sound', true)) {
-new Audio(__dirname + '/sounds/won.wav').play();
+new Audio(dirapp + '/sounds/won.wav').play();
 }
 }
 }
@@ -120,7 +119,7 @@ url: _this.url + arlnk
 }
 });
 setTimeout(function () {
-fs.writeFile(storage.getDataPath().slice(0, -7) + 'opiumpulses.txt', GJuser.op, (err) => { });
+fs.writeFile(dirdata + 'opiumpulses.txt', GJuser.op, (err) => { });
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
 }
@@ -189,13 +188,16 @@ if (njoin > 0) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name) + opblack, 'chk');
 if (njoin === 1) {
-_this.log(Lang.get('service.cant_join') + Lang.get('service.data_have'), 'cant');
+_this.log(Lang.get('service.cant_join'), 'cant');
+_this.log(Lang.get('service.data_have'), 'info');
 }
 if (njoin === 2) {
-_this.log(Lang.get('service.have_on_steam') + Lang.get('service.data_have'), 'steam');
+_this.log(Lang.get('service.have_on_steam'), 'steam');
+_this.log(Lang.get('service.data_have'), 'info');
 }
 if (njoin === 3) {
-_this.log(Lang.get('service.blacklisted') + Lang.get('service.data_have'), 'black');
+_this.log(Lang.get('service.blacklisted'), 'black');
+_this.log(Lang.get('service.data_have'), 'info');
 }
 if (njoin === 4) {
 _this.log(Lang.get('service.points_low'), 'skip');

@@ -27,7 +27,7 @@ callback(-1);
 }
 getUserInfo(callback) {
 let userData = {
-avatar: __dirname + '/images/LootBoy.png',
+avatar: dirapp + '/images/LootBoy.png',
 username: 'LootBoy'
 };
 callback(userData);
@@ -50,11 +50,11 @@ _this.log(Lang.get('service.checked') + 'LootBoy', 'srch');
 }
 return;
 }
-if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'lootboy' + lbcurr + '.txt')) {
+if (fs.existsSync(dirdata + 'lootboy' + lbcurr + '.txt')) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.open_file') + 'lootboy' + lbcurr + '.txt', 'info');
 }
-let lbdata = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'lootboy' + lbcurr + '.txt');
+let lbdata = fs.readFileSync(dirdata + 'lootboy' + lbcurr + '.txt');
 if (lbdata.includes('Bearer')) {
 let lbd = (lbdata.toString()).split(','),
 lbauth = lbd[0],
@@ -176,7 +176,7 @@ _this.log(Lang.get('service.dt_err'), 'err');
 else {
 _this.check = false;
 if (lbcurr === 1) {
-fs.writeFile(storage.getDataPath().slice(0, -7) + 'lootboy1.txt', '', (err) => { });
+fs.writeFile(dirdata + 'lootboy1.txt', '', (err) => { });
 _this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/lootboy1.txt', 'err');
 _this.stopJoiner(true);
 }

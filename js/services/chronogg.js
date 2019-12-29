@@ -27,7 +27,7 @@ callback(-1);
 }
 getUserInfo(callback) {
 let userData = {
-avatar: __dirname + '/images/ChronoGG.png',
+avatar: dirapp + '/images/ChronoGG.png',
 username: 'ChronoGG'
 };
 callback(userData);
@@ -50,11 +50,11 @@ _this.log(Lang.get('service.checked') + 'ChronoGG', 'srch');
 }
 return;
 }
-if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'chronogg' + chcurr + '.txt')) {
+if (fs.existsSync(dirdata + 'chronogg' + chcurr + '.txt')) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.open_file') + 'chronogg' + chcurr + '.txt', 'info');
 }
-let chdata = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'chronogg' + chcurr + '.txt');
+let chdata = fs.readFileSync(dirdata + 'chronogg' + chcurr + '.txt');
 if (chdata.includes('JWT')) {
 let chauth = chdata.toString();
 rq({
@@ -130,7 +130,7 @@ _this.log(Lang.get('service.dt_err'), 'err');
 else {
 _this.check = false;
 if (chcurr === 1) {
-fs.writeFile(storage.getDataPath().slice(0, -7) + 'chronogg1.txt', '', (err) => { });
+fs.writeFile(dirdata + 'chronogg1.txt', '', (err) => { });
 _this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/chronogg1.txt', 'err');
 _this.stopJoiner(true);
 }

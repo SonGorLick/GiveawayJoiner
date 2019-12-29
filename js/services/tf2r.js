@@ -21,15 +21,15 @@ super.init();
 getUserInfo(callback) {
 if (GJuser.tf === '') {
 GJuser.tf = ',';
-if (fs.existsSync(storage.getDataPath().slice(0, -7) + 'tf2r.txt')) {
-let tfdata = fs.readFileSync(storage.getDataPath().slice(0, -7) + 'tf2r.txt');
+if (fs.existsSync(dirdata + 'tf2r.txt')) {
+let tfdata = fs.readFileSync(dirdata + 'tf2r.txt');
 if (tfdata.length > 1 && tfdata.length < 4000) {
 GJuser.tf = tfdata.toString();
 }
 }
 }
 let userData = {
-avatar: __dirname + '/images/TF2R.png',
+avatar: dirapp + '/images/TF2R.png',
 username: 'TF2R User'
 };
 if (GJuser.username !== 'GiveawayJoiner') {
@@ -71,7 +71,7 @@ _this.log(_this.logLink(_this.url + '/notifications.html', Lang.get('service.win
 _this.setStatus('win');
 _this.setConfig('won', tfwon);
 if (_this.getConfig('sound', true)) {
-new Audio(__dirname + '/sounds/won.wav').play();
+new Audio(dirapp + '/sounds/won.wav').play();
 }
 }
 }
@@ -95,7 +95,7 @@ function giveawayEnter() {
 if (giveaways.length <= tfcurr || !_this.started) {
 if (giveaways.length <= tfcurr) {
 setTimeout(function () {
-fs.writeFile(storage.getDataPath().slice(0, -7) + 'tf2r.txt', GJuser.tf, (err) => { });
+fs.writeFile(dirdata + 'tf2r.txt', GJuser.tf, (err) => { });
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
 }
@@ -176,7 +176,8 @@ _this.log(Lang.get('service.already_joined'), 'jnd');
 else {
 tfnext = 100;
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.already_joined') + Lang.get('service.data_have'), 'jnd');
+_this.log(Lang.get('service.already_joined'), 'jnd');
+_this.log(Lang.get('service.data_have'), 'info');
 }
 }
 tfcurr++;

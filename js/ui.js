@@ -75,7 +75,7 @@ $(document).on('click', '.add-blacklist[black]', function () {
 if (GJuser.black !== '') {
 if (!GJuser.black.includes($(this).attr('black') + ',')) {
 GJuser.black = GJuser.black + $(this).attr('black') + ',';
-fs.writeFile(storage.getDataPath().slice(0, -7) + 'blacklist.txt', GJuser.black, (err) => { });
+fs.writeFile(dirdata + 'blacklist.txt', GJuser.black, (err) => { });
 }
 }
 });
@@ -83,7 +83,7 @@ $(document).on('click', '.rmv-blacklist[black]', function () {
 if (GJuser.black !== '') {
 if (GJuser.black.includes($(this).attr('black') + ',')) {
 GJuser.black = GJuser.black.replace(',' + $(this).attr('black') + ',', ',');
-fs.writeFile(storage.getDataPath().slice(0, -7) + 'blacklist.txt', GJuser.black, (err) => { });
+fs.writeFile(dirdata + 'blacklist.txt', GJuser.black, (err) => { });
 }
 }
 });
