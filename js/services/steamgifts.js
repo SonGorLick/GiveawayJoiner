@@ -26,6 +26,7 @@ this.settings.free_ga = { type: 'checkbox', trans: this.transPath('free_ga'), de
 this.settings.reserve_on_wish = { type: 'checkbox', trans: this.transPath('reserve_on_wish'), default: this.getConfig('reserve_on_wish', false) };
 this.settings.hide_ga = { type: 'checkbox', trans: this.transPath('hide_ga'), default: this.getConfig('hide_ga', false) };
 this.settings.reserve_on_group = { type: 'checkbox', trans: this.transPath('reserve_on_group'), default: this.getConfig('reserve_on_group', false) };
+this.settings.remove_ga = { type: 'checkbox', trans: this.transPath('remove_ga'), default: this.getConfig('remove_ga', true) };
 this.settings.ignore_on_wish = { type: 'checkbox', trans: this.transPath('ignore_on_wish'), default: this.getConfig('ignore_on_wish', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.settings.ignore_on_group = { type: 'checkbox', trans: this.transPath('ignore_on_group'), default: this.getConfig('ignore_on_group', false) };
@@ -320,6 +321,21 @@ _this.log(Lang.get('service.already_joined'), 'err');
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
 }
+if (sgown === 6 && _this.getConfig('remove_ga', true)) {
+$.ajax({
+url: _this.url + '/ajax.php',
+method: 'POST',
+dataType: 'json',
+data: {
+xsrf_token: _this.token,
+do: 'entry_delete',
+code: GA.code
+},
+success: function () {
+_this.log(Lang.get('service.removed') + _this.logLink(GA.lnk, GA.nam), 'info');
+}
+});
+}
 if ((sgown === 1 || sgown === 6) && _this.getConfig('hide_ga', false)) {
 sgown = 6;
 $.ajax({
@@ -332,7 +348,7 @@ do: 'hide_giveaways_by_game_id',
 game_id: GA.gameid
 },
 success: function () {
-_this.log(Lang.get('service.hided') + _this.logLink(GA.lnk, GA.nam), 'cant');
+_this.log(Lang.get('service.hided') + _this.logLink(GA.lnk, GA.nam), 'info');
 }
 });
 }

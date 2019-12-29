@@ -3,7 +3,7 @@ const { app, nativeImage, shell, session, Tray, BrowserWindow, Menu, ipcMain, ip
 const storage = require('electron-json-storage');
 const fs = require('fs');
 const rq = require('request-promise-native');
-const devMode = app.getVersion() === '7.1.7';
+let _devMode = false;
 let _ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/78.0.3904.84 Mobile/15E148 Safari/604.1';
 let appLoaded = false;
 let mainWindow = null;
@@ -35,6 +35,9 @@ udata = (udata.slice(0, -34)).toLowerCase();
 _icn = _itr;
 app.setPath('userData', udata + 'data');
 storage.setDataPath(udata + 'data');
+if (fs.existsSync(storage.getDataPath() + '/devmode')) {
+_devMode = true;
+}
 if (fs.existsSync(storage.getDataPath() + '/user-agent.txt')) {
 let content = fs.readFileSync(storage.getDataPath() + '/user-agent.txt');
 if (content.length > 0) {
@@ -76,7 +79,7 @@ resizable: false,
 frame: false,
 webPreferences: {
 session: _session,
-devTools: devMode,
+devTools: _devMode,
 contextIsolation: false,
 nodeIntegration: true,
 webviewTag: true,
@@ -84,7 +87,7 @@ webSecurity: false,
 webaudio: false
 }
 });
-if (devMode) {
+if (_devMode) {
 mainWindow.webContents.openDevTools({ mode: 'detach' });
 }
 Browser = new BrowserWindow({
@@ -101,7 +104,7 @@ show: false,
 center: true,
 webPreferences: {
 session: _session,
-devTools: devMode,
+devTools: false,
 contextIsolation: false,
 webviewTag: true,
 webSecurity: false,
@@ -129,7 +132,7 @@ tray.on('click', () => {
 mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
 });
 global.sharedData = {
-devMode: devMode,
+_devMode: _devMode,
 shell: shell,
 TrayIcon: tray,
 ipcMain: ipcMain,

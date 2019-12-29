@@ -67,11 +67,18 @@ oppage = '';
 }
 $.ajax({
 url: _this.url + '/giveaways?ajax=giveawaylistview' + oppage,
+timeout: 15000,
 success: function (data) {
-data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
+data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 if (_this.check === 0) {
 _this.check = 1;
-let opwon = parseInt(data.find('[href="/user/giveawaykeys"] > span').text().trim());
+let opwon = $(data).find('[href="/user/giveawaykeys"] > span').text().trim();
+if (opwon === undefined) {
+opwon = 0;
+}
+else {
+opwon = parseInt(opwon);
+}
 if (opwon > 0 && opwon > _this.won) {
 _this.log(_this.logLink(_this.url + '/user/giveawaykeys', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (opwon - _this.won) + ')'), 'win');
 _this.setStatus('win');
@@ -81,8 +88,8 @@ new Audio(__dirname + '/sounds/won.wav').play();
 }
 }
 }
-let opfound = data.find('.giveaways-page-item');
-let opcurr = 0,
+let opfound = $(data).find('.giveaways-page-item'),
+opcurr = 0,
 random = Array.from(Array(opfound.length).keys());
 if (_this.getConfig('rnd', false)) {
 for(let i = random.length - 1; i > 0; i--){
