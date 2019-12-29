@@ -68,9 +68,10 @@ oppage = '';
 }
 $.ajax({
 url: _this.url + '/giveaways?ajax=giveawaylistview' + oppage,
-timeout: 15000,
+timeout: 20000,
 success: function (data) {
 data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
+let opfound = $(data).find('.giveaways-page-item');
 if (_this.check === 0) {
 _this.check = 1;
 let opwon = $(data).find('[href="/user/giveawaykeys"] > span').text().trim();
@@ -89,8 +90,7 @@ new Audio(__dirname + '/sounds/won.wav').play();
 }
 }
 }
-let opfound = $(data).find('.giveaways-page-item'),
-opcurr = 0,
+let opcurr = 0,
 random = Array.from(Array(opfound.length).keys());
 if (_this.getConfig('rnd', false)) {
 for(let i = random.length - 1; i > 0; i--){
