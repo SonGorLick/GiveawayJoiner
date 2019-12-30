@@ -29,7 +29,7 @@ GJuser.tf = tfdata.toString();
 }
 }
 let userData = {
-avatar: dirapp + '/images/TF2R.png',
+avatar: dirapp + 'images/TF2R.png',
 username: 'TF2R User'
 };
 if (GJuser.username !== 'GiveawayJoiner') {
@@ -71,7 +71,7 @@ _this.log(_this.logLink(_this.url + '/notifications.html', Lang.get('service.win
 _this.setStatus('win');
 _this.setConfig('won', tfwon);
 if (_this.getConfig('sound', true)) {
-new Audio(dirapp + '/sounds/won.wav').play();
+new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 }

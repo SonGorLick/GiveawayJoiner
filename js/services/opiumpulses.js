@@ -23,7 +23,7 @@ GJuser.op = opdata.toString();
 }
 }
 let userData = {
-avatar: dirapp + '/images/OpiumPulses.png',
+avatar: dirapp + 'images/OpiumPulses.png',
 username: 'OpiumPulses User',
 value: 0
 };
@@ -85,7 +85,7 @@ _this.log(_this.logLink(_this.url + '/user/giveawaykeys', Lang.get('service.win'
 _this.setStatus('win');
 _this.setConfig('won', opwon);
 if (_this.getConfig('sound', true)) {
-new Audio(dirapp + '/sounds/won.wav').play();
+new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 }

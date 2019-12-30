@@ -18,7 +18,7 @@ super.init();
 }
 getUserInfo(callback) {
 let userData = {
-avatar: dirapp + '/images/IndieDB.png',
+avatar: dirapp + 'images/IndieDB.png',
 username: 'IndieDB User'
 };
 if (GJuser.username !== 'GiveawayJoiner') {
@@ -59,7 +59,7 @@ _this.log(_this.logLink(_this.url + '/giveaways/prizes', Lang.get('service.win')
 _this.setStatus('win');
 _this.setConfig('won', idbwon);
 if (_this.getConfig('sound', true)) {
-new Audio(dirapp + '/sounds/won.wav').play();
+new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 }

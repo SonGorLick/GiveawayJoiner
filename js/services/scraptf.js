@@ -17,7 +17,7 @@ super.init();
 }
 getUserInfo(callback) {
 let userData = {
-avatar: dirapp + '/images/ScrapTF.png',
+avatar: dirapp + 'images/ScrapTF.png',
 username: 'ScrapTF User'
 };
 if (GJuser.username !== 'GiveawayJoiner') {
@@ -97,7 +97,7 @@ _this.log(_this.logLink(_this.url + '/notices', Lang.get('service.win') + ' (' +
 _this.setStatus('win');
 _this.setConfig('won', spwon);
 if (_this.getConfig('sound', true)) {
-new Audio(dirapp + '/sounds/won.wav').play();
+new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 }

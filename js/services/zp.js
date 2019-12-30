@@ -29,7 +29,7 @@ GJuser.zp = zpdata.toString();
 }
 }
 let userData = {
-avatar: dirapp + '/images/ZP.png',
+avatar: dirapp + 'images/ZP.png',
 username: 'ZP User'
 };
 if (GJuser.username !== 'GiveawayJoiner') {
@@ -66,7 +66,7 @@ _this.log(_this.logLink(_this.url + '/my-account/my-prizes', Lang.get('service.w
 _this.setStatus('win');
 _this.setConfig('won', zpwon);
 if (_this.getConfig('sound', true)) {
-new Audio(dirapp + '/sounds/won.wav').play();
+new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 }

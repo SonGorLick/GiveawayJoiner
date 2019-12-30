@@ -27,7 +27,7 @@ callback(-1);
 }
 getUserInfo(callback) {
 let userData = {
-avatar: dirapp + '/images/ChronoGG.png',
+avatar: dirapp + 'images/ChronoGG.png',
 username: 'ChronoGG'
 };
 callback(userData);

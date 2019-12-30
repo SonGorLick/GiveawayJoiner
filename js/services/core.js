@@ -1,7 +1,7 @@
 'use strict';
 const storage = require('electron').remote.require('electron-json-storage');
 const fs = require('electron').remote.require('fs');
-const dirapp = (__dirname).replace('electron.asar/renderer', 'app.asar');
+const dirapp = (__dirname).replace('electron.asar/renderer', 'app.asar') + '/';
 const dirdata = storage.getDataPath() + '/';
 class Joiner {
 constructor() {
@@ -609,7 +609,7 @@ this.logWrap.scrollTop(this.logWrap[0].scrollHeight);
 joinService() {}
 getUserInfo(callback) {
 callback({
-avatar: dirapp + '/images/' + this.constructor.name + '.png',
+avatar: dirapp + 'images/' + this.constructor.name + '.png',
 username: this.constructor.name + ' User',
 value: 0
 });

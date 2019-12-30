@@ -19,7 +19,7 @@ GJuser.as = asdata.toString();
 }
 }
 let userData = {
-avatar: dirapp + '/images/Astats.png',
+avatar: dirapp + 'images/Astats.png',
 username: 'Astats User'
 };
 if (GJuser.username !== 'GiveawayJoiner') {
@@ -63,7 +63,7 @@ _this.log(_this.logLink(_this.url + '/astats/profile/User_Inbox.php', Lang.get('
 _this.setStatus('win');
 _this.setConfig('won', aswon);
 if (_this.getConfig('sound', true)) {
-new Audio(dirapp + '/sounds/won.wav').play();
+new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 }

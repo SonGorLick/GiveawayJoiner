@@ -27,7 +27,7 @@ callback(-1);
 }
 getUserInfo(callback) {
 let userData = {
-avatar: dirapp + '/images/LootBoy.png',
+avatar: dirapp + 'images/LootBoy.png',
 username: 'LootBoy'
 };
 callback(userData);
