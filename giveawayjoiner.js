@@ -80,10 +80,13 @@ frame: false,
 webPreferences: {
 session: _session,
 devTools: _devMode,
+backgroundThrottling: false,
 contextIsolation: false,
 nodeIntegration: true,
+nodeIntegrationInWorker: true,
 webviewTag: true,
 webSecurity: false,
+webgl: false,
 webaudio: false
 }
 });
