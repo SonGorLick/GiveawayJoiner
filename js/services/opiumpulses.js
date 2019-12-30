@@ -189,15 +189,15 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name) + opblack, 'chk');
 if (njoin === 1) {
 _this.log(Lang.get('service.cant_join'), 'cant');
-_this.log(Lang.get('service.data_have'), 'info');
+_this.log(Lang.get('service.data_have'), 'skip');
 }
 if (njoin === 2) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
-_this.log(Lang.get('service.data_have'), 'info');
+_this.log(Lang.get('service.data_have'), 'skip');
 }
 if (njoin === 3) {
 _this.log(Lang.get('service.blacklisted'), 'black');
-_this.log(Lang.get('service.data_have'), 'info');
+_this.log(Lang.get('service.data_have'), 'skip');
 }
 if (njoin === 4) {
 _this.log(Lang.get('service.points_low'), 'skip');

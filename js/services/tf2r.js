@@ -177,7 +177,7 @@ else {
 tfnext = 100;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
-_this.log(Lang.get('service.data_have'), 'info');
+_this.log(Lang.get('service.data_have'), 'skip');
 }
 }
 tfcurr++;

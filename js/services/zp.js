@@ -142,7 +142,7 @@ _this.log(Lang.get('service.blacklisted'), 'black');
 }
 if (njoin === 3) {
 _this.log(Lang.get('service.time'), 'skip');
-_this.log(Lang.get('service.data_have'), 'info');
+_this.log(Lang.get('service.data_have'), 'skip');
 }
 }
 if (njoin === 0) {

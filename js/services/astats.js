@@ -183,7 +183,7 @@ _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
 if (asown === 3) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
-_this.log(Lang.get('service.data_have'), 'info');
+_this.log(Lang.get('service.data_have'), 'skip');
 }
 if (asown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');

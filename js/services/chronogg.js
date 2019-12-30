@@ -75,7 +75,7 @@ json: true
 if (acc.status === 200) {
 let chacc = acc.coins;
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.acc') + acc.email + ' - ' + chacc.balance + Lang.get('service.coins'));
+_this.log(Lang.get('service.acc') + acc.email + ' -' + Lang.get('service.coins') + chacc.balance);
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Spin Coin', 'chk');
 }
 }
@@ -101,10 +101,10 @@ if (chchest.base) {
 chcoins = chcoins + chchest.base + chchest.bonus;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.done') + chcoins + Lang.get('service.coins'), 'enter');
+_this.log(Lang.get('service.done') + Lang.get('service.coins') + chcoins, 'enter');
 }
 else {
-_this.log(Lang.get('service.acc') + acc.email + ' - ' + Lang.get('service.done') + chcoins + Lang.get('service.coins'), 'enter');
+_this.log(Lang.get('service.acc') + acc.email + ' - ' + Lang.get('service.done') + Lang.get('service.coins') + chcoins, 'enter');
 }
 })
 .catch((err) => {

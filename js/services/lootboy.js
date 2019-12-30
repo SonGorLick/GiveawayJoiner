@@ -75,7 +75,7 @@ json: true
 })
 .then((stat) => {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.acc') + stat.username + ' - ' + stat.lootgemBalance + Lang.get('service.gems') + ', ' + stat.lootcoinBalance + Lang.get('service.coins'));
+_this.log(Lang.get('service.acc') + stat.username + ' -' + Lang.get('service.gems') + stat.lootgemBalance + ',' + Lang.get('service.coins') + stat.lootcoinBalance);
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Coins', 'chk');
 }
 rq({
@@ -111,10 +111,10 @@ json: true
 .then((coin) => {
 if (stat.lootcoinBalance - coin.newLootcoinBalance > 0) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.done') + (stat.lootcoinBalance - coin.newLootcoinBalance) + Lang.get('service.coins'), 'enter');
+_this.log(Lang.get('service.done') + Lang.get('service.coins') + (stat.lootcoinBalance - coin.newLootcoinBalance), 'enter');
 }
 else {
-_this.log(Lang.get('service.acc') + stat.username + ' - ' + Lang.get('service.done') + (stat.lootcoinBalance - coin.newLootcoinBalance) + Lang.get('service.coins'), 'enter');
+_this.log(Lang.get('service.acc') + stat.username + ' - ' + Lang.get('service.done') + Lang.get('service.coins') + (stat.lootcoinBalance - coin.newLootcoinBalance), 'enter');
 }
 }
 else {
@@ -147,10 +147,10 @@ _this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.descr
 }
 if (!gem.alreadyTaken) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.done') + offer.diamondBonus + Lang.get('service.gems'), 'enter');
+_this.log(Lang.get('service.done') + Lang.get('service.gems') + offer.diamondBonus, 'enter');
 }
 else {
-_this.log(Lang.get('service.acc') + stat.username + ' - ' + Lang.get('service.done') + offer.diamondBonus + Lang.get('service.gems'), 'enter');
+_this.log(Lang.get('service.acc') + stat.username + ' - ' + Lang.get('service.done') + Lang.get('service.gems') + offer.diamondBonus, 'enter');
 }
 }
 else {
