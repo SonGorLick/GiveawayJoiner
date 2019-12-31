@@ -113,8 +113,10 @@ giveaway = giveaways.eq(tfrnd),
 link = giveaway.find('a').attr('href'),
 name = giveaway.find('a').text(),
 rid = link.replace('http://tf2r.com/k', '').replace('.html', '');
+let tflog = _this.logLink(link, name);
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + (tfrnd + 1) + '№|  ' + _this.logLink(link, name), 'chk');
+tflog = '|' + (tfrnd + 1) + '№|  ' + tflog;
+_this.log(Lang.get('service.checking') + tflog, 'chk');
 }
 if (!GJuser.tf.includes(rid + ',') && !_this.getConfig('check_all', false)) {
 $.ajax({
@@ -142,12 +144,7 @@ json: true
 })
 .then((body) => {
 if (body.status === 'ok') {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.entered_in') + '|' + (tfrnd + 1) + '№|  ' + _this.logLink(link, name), 'enter');
-}
-else {
-_this.log(Lang.get('service.entered_in') + _this.logLink(link, name), 'enter');
-}
+_this.log(Lang.get('service.entered_in') + tflog, 'enter');
 if (!GJuser.tf.includes(',' + rid + ',')) {
 GJuser.tf = GJuser.tf + rid + ',';
 }

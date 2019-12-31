@@ -113,7 +113,7 @@ $.ajax({
 url: url,
 method: 'GET',
 success: (data) => {
-data = $('<div>' + data + '</div>');
+data = $('<div>' + data.replace(/<img/gi, '<noload') + '</div>');
 this.token = data.find('input[name="xsrf_token"]').val();
 if (this.token.length < 10) {
 this.log(this.trans('token_error'), 'err');
@@ -301,8 +301,10 @@ sgown = 4;
 if (GA.entered && sgown === 1) {
 sgown = 6;
 }
+let sglog = _this.logLink(GA.lnk, GA.nam);
 if (_this.getConfig('log', true) && sgown !== 7) {
-_this.log(Lang.get('service.checking') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|  ' + _this.logLink(GA.lnk, GA.nam) + _this.logBlack(sgid), 'chk');
+sglog = '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|  ' + sglog;
+_this.log(Lang.get('service.checking') + sglog + _this.logBlack(sgid), 'chk');
 if (sgown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
@@ -320,6 +322,9 @@ if (sgown === 6) {
 _this.log(Lang.get('service.already_joined'), 'err');
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
+}
+else {
+sglog = sglog + _this.logBlack(sgid);
 }
 if (sgown === 6 && _this.getConfig('remove_ga', true)) {
 $.ajax({
@@ -373,12 +378,7 @@ code: GA.code
 },
 success: function (data) {
 if (data.type === 'success') {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.entered_in') + '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|  ' + _this.logLink(GA.lnk, GA.nam), 'enter');
-}
-else {
-_this.log(Lang.get('service.entered_in') + _this.logLink(GA.lnk, GA.nam) + _this.logBlack(sgid), 'enter');
-}
+_this.log(Lang.get('service.entered_in') + sglog, 'enter');
 _this.setValue(data.points);
 GA.entered = true;
 }

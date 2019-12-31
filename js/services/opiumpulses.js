@@ -103,7 +103,7 @@ function giveawayEnter() {
 if (opfound.length < 40) {
 _this.pagemax = page;
 }
-if (opfound.length <= opcurr || !_this.started || _this.curr_value === 0) {
+if (opfound.length <= opcurr || !_this.started) {
 if (opfound.length <= opcurr && page === _this.pagemax) {
 $.ajax({
 url: _this.url + '/arcade',
@@ -184,9 +184,13 @@ njoin = 6;
 if (opblack !== '') {
 opblack = _this.logBlack(opblack);
 }
+let oplog = _this.logLink(_this.url + link, name);
+if (_this.getConfig('log', true)) {
+oplog = '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + oplog;
+}
 if (njoin > 0) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name) + opblack, 'chk');
+_this.log(Lang.get('service.checking') + oplog + opblack, 'chk');
 if (njoin === 1) {
 _this.log(Lang.get('service.cant_join'), 'cant');
 _this.log(Lang.get('service.data_have'), 'skip');
@@ -261,7 +265,7 @@ GJuser.op = GJuser.op + code + '(b=' + opid + '),';
 opown = 4;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name) + _this.logBlack(opid), 'chk');
+_this.log(Lang.get('service.checking') + oplog + _this.logBlack(opid), 'chk');
 if (opown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
@@ -271,6 +275,9 @@ _this.log(Lang.get('service.cant_join'), 'cant');
 if (opown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');
 }
+}
+else {
+oplog = oplog + _this.logBlack(opid);
 }
 if (opown === 0) {
 let tmout = Math.floor(Math.random() * Math.floor(opnext / 10)) + Math.floor(opnext / 5);
@@ -285,12 +292,7 @@ url: _this.url + eLink,
 success: function () {
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + _this.logLink(_this.url + link, name), 'enter');
-}
-else {
-_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + link, name) + _this.logBlack(opid), 'enter');
-}
+_this.log(Lang.get('service.entered_in') + oplog, 'enter');
 }
 });
 }, tmout);

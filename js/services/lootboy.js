@@ -109,12 +109,12 @@ headers: {
 json: true
 })
 .then((coin) => {
-if (stat.lootcoinBalance - coin.newLootcoinBalance > 0) {
+if (coin.newLootcoinBalance - stat.lootcoinBalance > 0) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.done') + Lang.get('service.coins') + (stat.lootcoinBalance - coin.newLootcoinBalance), 'enter');
+_this.log(Lang.get('service.done') + Lang.get('service.coins') + (coin.newLootcoinBalance - stat.lootcoinBalance), 'enter');
 }
 else {
-_this.log(Lang.get('service.acc') + stat.username + ' - ' + Lang.get('service.done') + Lang.get('service.coins') + (stat.lootcoinBalance - coin.newLootcoinBalance), 'enter');
+_this.log(Lang.get('service.acc') + stat.username + ' - ' + Lang.get('service.done') + Lang.get('service.coins') + (coin.newLootcoinBalance - stat.lootcoinBalance), 'enter');
 }
 }
 else {

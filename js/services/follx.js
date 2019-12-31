@@ -145,8 +145,10 @@ fxown = 4;
 if (entered) {
 fxown = 3;
 }
+let fxlog = _this.logLink(link, name);
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (fxcurr + 1) + '№|  ' + _this.logLink(link, name) + _this.logBlack(fxid), 'chk');
+fxlog = '|' + page + '#|' + (fxcurr + 1) + '№|  ' + fxlog;
+_this.log(Lang.get('service.checking') + fxlog + _this.logBlack(fxid), 'chk');
 if (fxown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
@@ -157,8 +159,10 @@ if (fxown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');
 }
 }
+else {
+fxlog = fxlog + _this.logBlack(fxid);
+}
 if (fxown === 0) {
-let fxcrr = fxcurr + 1;
 $.ajax({
 url: link,
 success: function (html) {
@@ -176,12 +180,7 @@ headers: {
 success: function (data) {
 if (data.response) {
 _this.setValue(data.points);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + fxcrr + '№|  ' + _this.logLink(link, name), 'enter');
-}
-else {
-_this.log(Lang.get('service.entered_in') + _this.logLink(link, name) + _this.logBlack(fxid), 'enter');
-}
+_this.log(Lang.get('service.entered_in') + fxlog, 'enter');
 }
 }
 });

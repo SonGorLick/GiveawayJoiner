@@ -155,9 +155,6 @@ if (assteam.includes('sub/')) {
 assub = parseInt(assteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'sub/' + assub;
 }
-if (ahave === '#FF0000') {
-asown = 1;
-}
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
 _this.log(Lang.get('service.steam_error'), 'err');
@@ -176,8 +173,13 @@ asown = 4;
 if (GJuser.as.includes(',' + asjoin + ',') && !_this.getConfig('check_all', false)) {
 asown = 3;
 }
+if (ahave === '#FF0000') {
+asown = 1;
+}
+let aslog = _this.logLink(_this.url + alink, aname);
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (arnd + 1) + '№|  ' + _this.logLink(_this.url + alink, aname) + _this.logBlack(asid), 'chk');
+aslog = '|' + page + '#|' + (arnd + 1) + '№|  ' + aslog;
+_this.log(Lang.get('service.checking') + aslog + _this.logBlack(asid), 'chk');
 if (asown === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
@@ -188,6 +190,9 @@ _this.log(Lang.get('service.data_have'), 'skip');
 if (asown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');
 }
+}
+else {
+aslog = aslog + _this.logBlack(asid);
 }
 if (asown === 0) {
 $.ajax({
@@ -226,12 +231,7 @@ success: function () {
 if (!GJuser.as.includes(',' + asjoin + ',')) {
 GJuser.as = GJuser.as + asjoin + ',';
 }
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (arnd + 1) + '№|  ' + _this.logLink(_this.url + alink, aname), 'enter');
-}
-else {
-_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + alink, aname) + _this.logBlack(asid), 'enter');
-}
+_this.log(Lang.get('service.entered_in') + aslog, 'enter');
 }
 });
 }, tmout);

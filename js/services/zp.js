@@ -132,8 +132,10 @@ njoin = 2;
 if (zpblack !== '') {
 zpblack = _this.logBlack(zpblack);
 }
+let zplog = _this.logLink(zplink, zpnam.replace(/-/g, ' '));
 if (_this.getConfig('log', true) && njoin > 0) {
-_this.log(Lang.get('service.checking') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpnam.replace(/-/g, ' ')) + zpblack, 'chk');
+zplog = '|' + (zprnd + 1) + '№|  ' + zplog;
+_this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
 if (njoin === 1) {
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 }
@@ -161,7 +163,7 @@ zpsteam = html.substring(html.indexOf('href="https://store.steam')+6, html.index
 let zpown = 0,
 zpapp = 0,
 zpsub = 0,
-zpid = '???';
+zpid = '';
 if (!zpsteam.includes('https://store.steam')) {
 zpsteam = undefined;
 }
@@ -217,13 +219,13 @@ GJuser.zp = GJuser.zp + zpnam + '(b=' + zpid + '),';
 zpown = 4;
 }
 }
+if (zpid !== '') {
+zpid = _this.logBlack(zpid);
+}
+zplog = _this.logLink(zplink, zpname);
 if (_this.getConfig('log', true)) {
-if (zpid !== '???') {
-_this.log(Lang.get('service.checking') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpname) + _this.logBlack(zpid), 'chk');
-}
-else {
-_this.log(Lang.get('service.checking') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpname), 'chk');
-}
+zplog = '|' + (zprnd + 1) + '№|  ' + zplog;
+_this.log(Lang.get('service.checking') + zplog + zpid, 'chk');
 if (entered && zpown === 5) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
 }
@@ -236,6 +238,9 @@ _this.log(Lang.get('service.have_on_steam'), 'steam');
 if (zpown === 4) {
 _this.log(Lang.get('service.blacklisted'), 'black');
 }
+}
+else {
+zplog = zplog + zpid;
 }
 if (enter && zpown === 0) {
 let tmout = Math.floor(Math.random() * Math.floor(zpnext / 3)) + Math.floor(zpnext / 3);
@@ -255,17 +260,7 @@ GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zpdold, ',' + zpnam + '(z=' 
 else {
 GJuser.zp = GJuser.zp + zpnam + '(z=' + zpdnew + '),';
 }
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.entered_in') + '|' + (zprnd + 1) + '№|  ' + _this.logLink(zplink, zpname), 'enter');
-}
-if (!_this.getConfig('log', true)) {
-if (zpid !== '???') {
-_this.log(Lang.get('service.entered_in') + _this.logLink(zplink, zpname) + _this.logBlack(zpid), 'enter');
-}
-else {
-_this.log(Lang.get('service.entered_in') + _this.logLink(zplink, zpname), 'enter');
-}
-}
+_this.log(Lang.get('service.entered_in') + zplog, 'enter');
 }
 });
 }, tmout);

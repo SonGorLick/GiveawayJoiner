@@ -172,8 +172,10 @@ spname = spname.slice(0, 70) + '...';
 if (spname === '') {
 spname = '?????? ' + '(' + id + ')';
 }
+let splog = _this.logLink(_this.url + splink, spname);
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + splink, spname), 'chk');
+splog = '|' + page + '#|' + (sprnd + 1) + '№|  ' + splog;
+_this.log(Lang.get('service.checking') + splog, 'chk');
 }
 if (!GJuser.sp.includes(',' + id + ',') && !spended.includes('Ended')) {
 $.ajax({
@@ -200,12 +202,7 @@ data: {raffle: id, captcha: '', hash: hash, csrf: _this.csrf},
 success: function (response) {
 let spmess = JSON.stringify(response.message);
 if (spmess === '"Entered raffle!"') {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (sprnd + 1) + '№|  ' + _this.logLink(_this.url + splink, spname), 'enter');
-}
-else {
-_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + splink, spname), 'enter');
-}
+_this.log(Lang.get('service.entered_in') + splog, 'enter');
 }
 else {
 spnext = 61000;

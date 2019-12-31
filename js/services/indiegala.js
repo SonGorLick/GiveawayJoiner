@@ -275,11 +275,18 @@ if (!_this.getConfig('multi_join', false)) {
 entered = enterTimes >= _this.getConfig('join_qty', 1);
 }
 }
-if (_this.getConfig('log', true) && igrtry === 0 && single) {
-_this.log(Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'chk');
+let iglog = _this.logLink(_this.url + '/giveaways/detail/' + id, name);
+if (_this.getConfig('log', true)) {
+iglog = '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|  ' + iglog;
+if (igrtry === 0 && single) {
+_this.log(Lang.get('service.checking') + iglog + _this.logBlack(igid), 'chk');
 }
-if (_this.getConfig('log', true) && igrtry === 0 && Times === 0 && !single) {
-_this.log('[' + enterTimes + '] ' + Lang.get('service.checking') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'chk');
+if (igrtry === 0 && Times === 0 && !single) {
+_this.log('[' + enterTimes + '] ' + Lang.get('service.checking') + iglog + _this.logBlack(igid), 'chk');
+}
+}
+else {
+iglog = iglog +  _this.logBlack(igid);
 }
 if (_this.curr_value < price) {
 igown = 7;
@@ -374,16 +381,11 @@ json: true
 if (response.status === 'ok') {
 igrtry = 0;
 _this.setValue(response.new_amount);
-if (_this.getConfig('log', true)) {
 if (Times === 0 && single) {
-_this.log(Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name), 'enter');
+_this.log(Lang.get('service.entered_in') + iglog, 'enter');
 }
 else {
-_this.log('[' + (Times + 1) + '] ' + Lang.get('service.entered_in') + '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|  ' + _this.logLink(_this.url + '/giveaways/detail/' + id, name), 'enter');
-}
-}
-else {
-_this.log(Lang.get('service.entered_in') + _this.logLink(_this.url + '/giveaways/detail/' + id, name) + _this.logBlack(igid), 'enter');
+_this.log('[' + (Times + 1) + '] ' + Lang.get('service.entered_in') + iglog, 'enter');
 }
 Times++;
 if (_this.getConfig('multi_join', false) && Times < _this.getConfig('join_qty', 1) && !single) {
