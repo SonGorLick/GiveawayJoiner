@@ -16,6 +16,7 @@ let user = null;
 let _icn = null;
 let _bmd = 'true';
 let _bfr = 'false';
+let _opt = true;
 let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
 app.commandLine.appendSwitch('disable-software-rasterizer');
@@ -37,6 +38,9 @@ app.setPath('userData', udata + 'data');
 storage.setDataPath(udata + 'data');
 if (fs.existsSync(storage.getDataPath() + '/devmode')) {
 _devMode = true;
+}
+if (fs.existsSync(storage.getDataPath() + '/noidle')) {
+_opt = false;
 }
 if (fs.existsSync(storage.getDataPath() + '/user-agent.txt')) {
 let content = fs.readFileSync(storage.getDataPath() + '/user-agent.txt');
@@ -80,7 +84,7 @@ frame: false,
 webPreferences: {
 session: _session,
 devTools: _devMode,
-backgroundThrottling: false,
+backgroundThrottling: _opt,
 contextIsolation: false,
 nodeIntegration: true,
 nodeIntegrationInWorker: true,
@@ -135,6 +139,7 @@ tray.on('click', () => {
 mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
 });
 global.sharedData = {
+_opt: _opt,
 _devMode: _devMode,
 shell: shell,
 TrayIcon: tray,
