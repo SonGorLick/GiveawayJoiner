@@ -384,6 +384,13 @@ headers: {
 json: true
 })
 .then((response) => {
+if (response.status === 'duplicate') {
+igcurr++;
+igrtry = 0;
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.already_joined'), 'jnd');
+}
+}
 if (response.status === 'ok') {
 igrtry = 0;
 _this.setValue(response.new_amount);

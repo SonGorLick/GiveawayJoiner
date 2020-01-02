@@ -203,7 +203,6 @@ lbcomics = lbcomics.filter(comic => comic.have === true);
 if (lbcomics.length > 4) {
 lbcomics.length = 4;
 }
-_this.log(lbcomics.length);
 lbcomics.forEach(function(comic) {
 let pmout = Math.floor(Math.random() * Math.floor(lbnext / 5)) + Math.floor(lbnext / 3);
 setTimeout(function () {
