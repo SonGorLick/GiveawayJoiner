@@ -388,7 +388,7 @@ if (response.status === 'duplicate') {
 igcurr++;
 igrtry = 0;
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.already_joined'), 'jnd');
+_this.log(Lang.get('service.entered_in') + iglog, 'enter');
 }
 }
 if (response.status === 'ok') {
