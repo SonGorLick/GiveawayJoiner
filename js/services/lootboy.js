@@ -226,8 +226,6 @@ json: true
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Comics #' + comic.number + ' - ' + comic.title, 'chk');
 }
-if (comread.limitExceeded) {
-}
 if (comread.gotBonus) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.done') + Lang.get('service.coins') + comread.lootcoinBonus, 'enter');
