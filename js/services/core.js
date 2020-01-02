@@ -299,13 +299,13 @@ GJuser.black = GJuser.black + ',';
 this.authCheck((authState) => {
 if (authState === 1) {
 this.updateUserInfo();
-this.updateCookies();
 if (Config.get('log_autoclear', false)) {
 this.logField.html('<div></div>');
 }
 this.log(Lang.get('service.connection_good'), 'srch');
 let atimer = this.getConfig('timer_from', 50);
 this.stimer = atimer;
+this.updateCookies();
 this.joinService();
 }
 else if (authState === 0) {

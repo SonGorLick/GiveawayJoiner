@@ -113,14 +113,7 @@ $(this).attr('title', Lang.get($(this).attr('data-lang-title')));
 }
 function profileSection() {
 renderUser(GJuser);
-let setopt = '';
-if (shared._devMode) {
-setopt = setopt + ' DevMode';
-}
-if (!shared._opt) {
-setopt = setopt + ' NoIdle';
-}
-$('.build .version').text(currentBuild + ' (Electron ' + process.versions.electron + ')' + setopt);
+$('.build .version').text(currentBuild + ' (Electron ' + process.versions.electron + ')');
 let lang_select = $('select#lang');
 let lang_list = Lang.list();
 if (Lang.count() <= 1) {

@@ -176,15 +176,21 @@ _this.lvl = 'all';
 $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
 success: function (data) {
+let tickets = '';
 if (data.indexOf('CONTENT="NOINDEX, NOFOLLOW"') >= 0 || data.indexOf('CONTENT="noindex,nofollow"') >= 0) {
 setTimeout(function () {
 _this.enterOnPage(page, callback);
 }, (Math.floor(Math.random() * 4000)) + 5000);
 }
-let tickets = $(JSON.parse(data).content).find('.tickets-col'),
-igcurr = 0,
+else {
+tickets = $(JSON.parse(data).content).find('.tickets-col');
+}
+let igcurr = 0,
 igrtry = 0,
 Times = 0;
+if (page > 1 && data.indexOf('prev-next palette-background-7') >= 0) {
+_this.pagemax = page;
+}
 function giveawayEnter() {
 if (tickets.length < 12 || _this.curr_value === 0 || !_this.started) {
 _this.pagemax = page;
@@ -286,7 +292,7 @@ _this.log('[' + enterTimes + '] ' + Lang.get('service.checking') + iglog + _this
 }
 }
 else {
-iglog = iglog +  _this.logBlack(igid);
+iglog = iglog + _this.logBlack(igid);
 }
 if (_this.curr_value < price) {
 igown = 7;
@@ -382,13 +388,13 @@ if (response.status === 'ok') {
 igrtry = 0;
 _this.setValue(response.new_amount);
 if (Times === 0 && single) {
+igcurr++;
 _this.log(Lang.get('service.entered_in') + iglog, 'enter');
 }
 else {
-_this.log('[' + (Times + 1) + '] ' + Lang.get('service.entered_in') + iglog, 'enter');
-}
 Times++;
-if (_this.getConfig('multi_join', false) && Times < _this.getConfig('join_qty', 1) && !single) {
+_this.log('[' + (Times) + '] ' + Lang.get('service.entered_in') + iglog, 'enter');
+if (_this.getConfig('multi_join', false) && Times < _this.getConfig('join_qty', 1)) {
 ignext = (Math.floor(Math.random() * 400)) + 600;
 }
 else {
@@ -396,8 +402,9 @@ Times = 0;
 igcurr++;
 }
 }
+}
 else {
-ignext = (Math.floor(Math.random() * 400)) + 600;
+ignext = (Math.floor(Math.random() * 600)) + 800;
 }
 });
 }

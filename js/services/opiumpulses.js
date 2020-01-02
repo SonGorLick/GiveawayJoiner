@@ -69,11 +69,14 @@ oppage = '';
 $.ajax({
 url: _this.url + '/giveaways' + oppage,
 success: function (data) {
-data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
-let opfound = data.find('.giveaways-page-item');
+data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
+let opfound = $(data).find('.giveaways-page-item');
+if (data.indexOf('li class="next"') < 0) {
+_this.pagemax = page;
+}
 if (_this.check === 0) {
 _this.check = 1;
-let opwon = data.find('[href="/user/giveawaykeys"] > span').text().trim();
+let opwon = $(data).find('[href="/user/giveawaykeys"] > span').text().trim();
 if (opwon === undefined) {
 opwon = 0;
 }

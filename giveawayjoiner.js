@@ -3,7 +3,7 @@ const { app, nativeImage, shell, session, Tray, BrowserWindow, Menu, ipcMain, ip
 const storage = require('electron-json-storage');
 const fs = require('fs');
 const rq = require('request-promise-native');
-let _devMode = false;
+const devMode = false;
 let _ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/78.0.3904.84 Mobile/15E148 Safari/604.1';
 let appLoaded = false;
 let mainWindow = null;
@@ -16,11 +16,11 @@ let user = null;
 let _icn = null;
 let _bmd = 'true';
 let _bfr = 'false';
-let _opt = true;
+let _opt = 'true';
 let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
 app.commandLine.appendSwitch('disable-software-rasterizer');
-app.commandLine.appendSwitch('disk-cache-size', 60);
+app.commandLine.appendSwitch('disk-cache-size', 30);
 app.disableHardwareAcceleration();
 if (process.platform === 'win32') {
 _itr = __dirname + '/icons/icon.ico';
@@ -36,11 +36,8 @@ udata = (udata.slice(0, -34)).toLowerCase();
 _icn = _itr;
 app.setPath('userData', udata + 'data');
 storage.setDataPath(udata + 'data');
-if (fs.existsSync(storage.getDataPath() + '/devmode')) {
-_devMode = true;
-}
 if (fs.existsSync(storage.getDataPath() + '/noidle')) {
-_opt = false;
+_opt = 'false';
 }
 if (fs.existsSync(storage.getDataPath() + '/user-agent.txt')) {
 let content = fs.readFileSync(storage.getDataPath() + '/user-agent.txt');
@@ -83,18 +80,17 @@ resizable: false,
 frame: false,
 webPreferences: {
 session: _session,
-devTools: _devMode,
+devTools: devMode,
 backgroundThrottling: _opt,
 contextIsolation: false,
 nodeIntegration: true,
-nodeIntegrationInWorker: true,
 webviewTag: true,
 webSecurity: false,
 webgl: false,
 webaudio: false
 }
 });
-if (_devMode) {
+if (devMode) {
 mainWindow.webContents.openDevTools({ mode: 'detach' });
 }
 Browser = new BrowserWindow({
@@ -139,8 +135,7 @@ tray.on('click', () => {
 mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
 });
 global.sharedData = {
-_opt: _opt,
-_devMode: _devMode,
+devMode: devMode,
 shell: shell,
 TrayIcon: tray,
 ipcMain: ipcMain,
