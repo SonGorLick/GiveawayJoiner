@@ -17,11 +17,10 @@ let user = null;
 let _icn = null;
 let _bmd = 'true';
 let _bfr = 'false';
-let _opt = 'true';
 let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
 app.commandLine.appendSwitch('disable-software-rasterizer');
-app.commandLine.appendSwitch('disk-cache-size', 30);
+app.commandLine.appendSwitch('disk-cache-size', 100);
 app.disableHardwareAcceleration();
 if (process.platform === 'win32') {
 _itr = __dirname + '/icons/icon.ico';
@@ -37,9 +36,6 @@ udata = (udata.slice(0, -34)).toLowerCase();
 _icn = _itr;
 app.setPath('userData', udata + 'data');
 storage.setDataPath(udata + 'data');
-if (fs.existsSync(storage.getDataPath() + '/noidle')) {
-_opt = 'false';
-}
 if (fs.existsSync(storage.getDataPath() + '/user-agent.txt')) {
 let content = fs.readFileSync(storage.getDataPath() + '/user-agent.txt');
 if (content.length > 0) {
@@ -82,7 +78,7 @@ frame: false,
 webPreferences: {
 session: _session,
 devTools: devMode,
-backgroundThrottling: _opt,
+backgroundThrottling: false,
 contextIsolation: false,
 nodeIntegration: true,
 webviewTag: true,

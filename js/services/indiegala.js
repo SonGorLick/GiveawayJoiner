@@ -36,7 +36,7 @@ show_coins: 'True'
 },
 dataType: 'json',
 success: function (data) {
-if (data.steamnick) {
+if (data.status === 'ok') {
 GJuser.ig = data.profile;
 if (data.giveaways_user_lever !== undefined || GJuser.iglvl === undefined) {
 GJuser.iglvl = data.giveaways_user_lever;
@@ -72,9 +72,18 @@ show_coins: 'True'
 },
 dataType: 'json',
 success: function (data) {
+userData.value = data.silver_coins_tot;
+if (data.use_steam_username_avatar === 'true') {
 userData.avatar = data.steamavatar.replace('.jpg', '_medium.jpg');
 userData.username = data.steamnick;
-userData.value = data.silver_coins_tot;
+}
+else {
+userData.avatar = 'https://www.indiegala.com' + data.cookie_useravatar;
+userData.username = data.cookie_username;
+if (userData.username === '...') {
+userData.username = data.email;
+}
+}
 },
 complete: function () {
 callback(userData);
@@ -88,6 +97,8 @@ let igtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _th
 _this.stimer = igtimer;
 }
 let page = 1;
+_this.igprtry = 0;
+_this.iglast = 0;
 _this.ua = mainWindow.webContents.session.getUserAgent();
 _this.lvlmax = _this.getConfig('max_level', 0);
 _this.lvlmin = _this.getConfig('min_level', 0);
@@ -173,14 +184,16 @@ let _this = this;
 if (!_this.sort && GJuser.iglvl > 0) {
 _this.lvl = 'all';
 }
+if (_this.igprtry > 0) {
+page = page - 1;
+_this.igprtry = 0;
+}
 $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
 success: function (data) {
-let tickets = '';
-if (data.indexOf('CONTENT="NOINDEX, NOFOLLOW"') >= 0 || data.indexOf('CONTENT="noindex,nofollow"') >= 0) {
-setTimeout(function () {
-_this.enterOnPage(page, callback);
-}, (Math.floor(Math.random() * 4000)) + 5000);
+let tickets = 'Incapsula_Resource';
+if (data.indexOf(tickets) >= 0) {
+_this.igprtry++;
 }
 else {
 tickets = $(JSON.parse(data).content).find('.tickets-col');
@@ -190,34 +203,36 @@ igrtry = 0,
 Times = 0;
 if (page > 1 && data.indexOf('prev-next palette-background-7') >= 0) {
 _this.pagemax = page;
+_this.iglast = 1;
 }
 function giveawayEnter() {
-if (tickets.length < 12 || _this.curr_value === 0 || !_this.started) {
+if (tickets.length < 12 && _this.igprtry === 0 || _this.curr_value === 0 || !_this.started) {
 _this.pagemax = page;
 }
-if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0) {
+if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igprtry !== 0) {
 if (_this.getConfig('log', true)) {
-if (tickets.length < 12 && !_this.sort && _this.started) {
+if (
+(tickets.length < 12 && !_this.sort && _this.started) ||
+(_this.iglast !== 0 && !_this.sort && _this.started)
+)
+{
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
+let igplog = Lang.get('service.checked');
+if (_this.sort) {
+igplog = igplog + _this.lvl + 'L|';
+}
 if (page === _this.pagemax) {
-if (_this.sort) {
-_this.log(Lang.get('service.checked') + _this.lvl + 'L|' + page + '#-' + _this.getConfig('pages', 1) + '#', 'srch');
+igplog = igplog + page + '#-' + _this.getConfig('pages', 1) + '#';
 }
 else {
-_this.log(Lang.get('service.checked') + page + '#-' + _this.getConfig('pages', 1) + '#', 'srch');
+igplog = igplog + page + '#';
+}
+if (_this.igprtry === 0) {
+_this.log(igplog, 'srch');
 }
 }
-else {
-if (_this.sort) {
-_this.log(Lang.get('service.checked') + _this.lvl + 'L|' + page + '#', 'srch');
-}
-else {
-_this.log(Lang.get('service.checked') + page + '#', 'srch');
-}
-}
-}
-if (_this.sort_after && page === _this.pagemax) {
+if (_this.sort_after && page === _this.pagemax && _this.igprtry === 0) {
 page = 1;
 _this.pagemax = _this.getConfig('pages', 1);
 _this.sort = true;
@@ -279,6 +294,10 @@ if (!single && Times === 0) {
 enterTimes = parseInt(ticket.find('.giv-coupon .palette-color-11').text());
 if (!_this.getConfig('multi_join', false)) {
 entered = enterTimes >= _this.getConfig('join_qty', 1);
+}
+if (isNaN(enterTimes)) {
+enterTimes = 0;
+igown = 8;
 }
 }
 let iglog = _this.logLink(_this.url + '/giveaways/detail/' + id, name);
@@ -358,6 +377,9 @@ _this.log(Lang.get('service.time'), 'skip');
 if (igown === 7) {
 _this.log(Lang.get('service.points_low'), 'skip');
 }
+if (igown === 8) {
+_this.log(Lang.get('service.cant_join'), 'cant');
+}
 }
 ignext = 100;
 igrtry = 0;
@@ -413,11 +435,14 @@ igcurr++;
 else {
 ignext = (Math.floor(Math.random() * 600)) + 800;
 }
+})
+.catch(() => {
 });
 }
 if (igrtry >= 12) {
 igrtry = 0;
 Times = 0;
+ignext = 61000;
 igcurr++;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');

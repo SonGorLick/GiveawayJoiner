@@ -170,11 +170,11 @@ asown = 1;
 if (GJuser.black.includes(asid + ',') && _this.getConfig('blacklist_on', false)) {
 asown = 4;
 }
-if (GJuser.as.includes(',' + asjoin + ',') && !_this.getConfig('check_all', false)) {
-asown = 3;
-}
 if (ahave === '#FF0000') {
 asown = 1;
+}
+if (GJuser.as.includes(',' + asjoin + ',') && !_this.getConfig('check_all', false)) {
+asown = 3;
 }
 let aslog = _this.logLink(_this.url + alink, aname);
 if (_this.getConfig('log', true)) {

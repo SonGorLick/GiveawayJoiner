@@ -319,8 +319,7 @@ if (sgown === 5) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
 }
 if (sgown === 6) {
-_this.log(Lang.get('service.already_joined'), 'err');
-_this.log(Lang.get('service.have_on_steam'), 'steam');
+_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.have_on_steam').split('-')[1], 'err');
 }
 }
 else {

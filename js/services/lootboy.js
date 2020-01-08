@@ -75,7 +75,7 @@ json: true
 })
 .then((stat) => {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.acc') + stat.username + ' -' + Lang.get('service.gems') + stat.lootgemBalance + ',' + Lang.get('service.coins') + stat.lootcoinBalance);
+_this.log(Lang.get('service.acc') + stat.username + ':' + Lang.get('service.gems') + '- ' + stat.lootgemBalance + ',' + Lang.get('service.coins') + '- ' + stat.lootcoinBalance);
 }
 rq({
 method: 'GET',
@@ -113,10 +113,10 @@ _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Coin
 }
 if (coin.newLootcoinBalance - stat.lootcoinBalance > 0) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.done') + Lang.get('service.coins') + (coin.newLootcoinBalance - stat.lootcoinBalance), 'enter');
+_this.log(Lang.get('service.done') + Lang.get('service.coins') + '- ' + (coin.newLootcoinBalance - stat.lootcoinBalance), 'enter');
 }
 else {
-_this.log(Lang.get('service.acc') + stat.username + ' - ' + Lang.get('service.done') + Lang.get('service.coins') + (coin.newLootcoinBalance - stat.lootcoinBalance), 'enter');
+_this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.done') + Lang.get('service.coins') + '- ' + (coin.newLootcoinBalance - stat.lootcoinBalance), 'enter');
 }
 }
 else {
@@ -126,7 +126,7 @@ _this.log(Lang.get('service.skip'), 'skip');
 }
 });
 offers.forEach(function(offer) {
-let tmout = Math.floor(Math.random() * Math.floor(lbnext / 10)) + Math.floor(lbnext / 5);
+let tmout = Math.floor(lbnext / 4);
 setTimeout(function () {
 rq({
 method: 'PUT',
@@ -149,10 +149,10 @@ _this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.descr
 }
 if (!gem.alreadyTaken) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.done') + Lang.get('service.gems') + offer.diamondBonus, 'enter');
+_this.log(Lang.get('service.done') + Lang.get('service.gems') + '- ' + offer.diamondBonus, 'enter');
 }
 else {
-_this.log(Lang.get('service.acc') + stat.username + ' - ' + Lang.get('service.done') + Lang.get('service.gems') + offer.diamondBonus, 'enter');
+_this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.done') + Lang.get('service.gems') + '- ' + offer.diamondBonus, 'enter');
 }
 }
 else {
@@ -199,12 +199,12 @@ let lbreaded = JSON.stringify(readed);
 for (let i = 0; i < lbcomics.length; i++) {
 lbcomics[i].have = lbreaded.includes(lbcomics[i].id);
 }
-lbcomics = lbcomics.filter(comic => comic.have === true);
+lbcomics = lbcomics.filter(cmc => cmc.have === false);
 if (lbcomics.length > 4) {
 lbcomics.length = 4;
 }
 lbcomics.forEach(function(comic) {
-let pmout = Math.floor(Math.random() * Math.floor(lbnext / 5)) + Math.floor(lbnext / 3);
+let pmout = Math.floor(lbnext / 2);
 setTimeout(function () {
 rq({
 method: 'PUT',
@@ -223,14 +223,14 @@ json: true
 })
 .then((comread) => {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Comics #' + comic.number + ' - ' + comic.title, 'chk');
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Comics #' + comic.number + ' ' + comic.title, 'chk');
 }
 if (comread.gotBonus) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.done') + Lang.get('service.coins') + comread.lootcoinBonus, 'enter');
+_this.log(Lang.get('service.done') + Lang.get('service.coins') + '- ' + comread.lootcoinBonus, 'enter');
 }
 else {
-_this.log(Lang.get('service.acc') + stat.username + ' - ' + Lang.get('service.coins') + comread.lootcoinBonus, 'enter');
+_this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.coins') + '- ' + comread.lootcoinBonus, 'enter');
 }
 }
 else {
