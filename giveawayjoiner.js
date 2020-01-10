@@ -83,7 +83,6 @@ contextIsolation: false,
 nodeIntegration: true,
 webviewTag: true,
 webSecurity: false,
-webgl: false,
 webaudio: false
 }
 });

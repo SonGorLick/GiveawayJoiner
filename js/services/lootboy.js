@@ -203,6 +203,12 @@ lbcomics = lbcomics.filter(cmc => cmc.have === false);
 if (lbcomics.length > 4) {
 lbcomics.length = 4;
 }
+if (lbcomics.length === 0) {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.no_offer') + 'Comics', 'cant');
+}
+}
+else {
 lbcomics.forEach(function(comic) {
 let pmout = Math.floor(lbnext / 2);
 setTimeout(function () {
@@ -241,11 +247,12 @@ _this.log(Lang.get('service.skip'), 'skip');
 });
 }, pmout);
 });
+}
 });
 });
 })
 .catch((err) => {
-_this.log(Lang.get('service.ses_not_found'), 'err');
+_this.log(Lang.get('service.ses_not_found') + ' - ' + Lang.get('service.session_expired'), 'err');
 });
 }
 else {

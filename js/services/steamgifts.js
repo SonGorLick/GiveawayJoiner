@@ -285,7 +285,6 @@ sgown = 5;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
-_this.log(Lang.get('service.steam_error'), 'err');
 sgown = 2;
 }
 if (GJuser.ownapps.includes(',' + sgapp + ',') && sgapp > 0) {
@@ -305,21 +304,26 @@ let sglog = _this.logLink(GA.lnk, GA.nam);
 if (_this.getConfig('log', true) && sgown !== 7) {
 sglog = '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|  ' + sglog;
 _this.log(Lang.get('service.checking') + sglog + _this.logBlack(sgid), 'chk');
-if (sgown === 1) {
+switch (sgown) {
+case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
-}
-if (sgown === 3) {
+break;
+case 2:
+_this.log(Lang.get('service.steam_error'), 'err');
+break;
+case 3:
 _this.log(Lang.get('service.points_low'), 'skip');
 sgprize = GA.cost;
-}
-if (sgown === 4) {
+break;
+case 4:
 _this.log(Lang.get('service.blacklisted'), 'black');
-}
-if (sgown === 5) {
+break;
+case 5:
 _this.log(Lang.get('service.already_joined'), 'jnd');
-}
-if (sgown === 6) {
+break;
+case 6:
 _this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.have_on_steam').split('-')[1], 'err');
+break;
 }
 }
 else {

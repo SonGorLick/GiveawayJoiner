@@ -117,7 +117,7 @@ _this.log(Lang.get('service.skip'), 'skip');
 })
 .catch((err) => {
 if (err.statusCode === 401) {
-_this.log(Lang.get('service.ses_not_found'), 'err');
+_this.log(Lang.get('service.ses_not_found') + ' - ' + Lang.get('service.session_expired'), 'err');
 }
 });
 }

@@ -129,7 +129,6 @@ fxid = 'sub/' + fxsub;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
-_this.log(Lang.get('service.steam_error'), 'err');
 fxown = 2;
 }
 if (GJuser.ownapps.includes(',' + fxapp + ',') && fxapp > 0) {
@@ -149,14 +148,19 @@ let fxlog = _this.logLink(link, name);
 if (_this.getConfig('log', true)) {
 fxlog = '|' + page + '#|' + (fxcurr + 1) + '№|  ' + fxlog;
 _this.log(Lang.get('service.checking') + fxlog + _this.logBlack(fxid), 'chk');
-if (fxown === 1) {
+switch (fxown) {
+case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
-}
-if (fxown === 3) {
+break;
+case 2:
+_this.log(Lang.get('service.steam_error'), 'err');
+break;
+case 3:
 _this.log(Lang.get('service.already_joined'), 'jnd');
-}
-if (fxown === 4) {
+break;
+case 4:
 _this.log(Lang.get('service.blacklisted'), 'black');
+break;
 }
 }
 else {

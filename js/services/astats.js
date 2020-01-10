@@ -157,7 +157,6 @@ asid = 'sub/' + assub;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
-_this.log(Lang.get('service.steam_error'), 'err');
 asown = 2;
 }
 if (GJuser.ownapps.includes(',' + asapp + ',') && asapp > 0) {
@@ -180,15 +179,20 @@ let aslog = _this.logLink(_this.url + alink, aname);
 if (_this.getConfig('log', true)) {
 aslog = '|' + page + '#|' + (arnd + 1) + '№|  ' + aslog;
 _this.log(Lang.get('service.checking') + aslog + _this.logBlack(asid), 'chk');
-if (asown === 1) {
+switch (asown) {
+case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
-}
-if (asown === 3) {
+break;
+case 2:
+_this.log(Lang.get('service.steam_error'), 'err');
+break;
+case 3:
 _this.log(Lang.get('service.already_joined'), 'jnd');
 _this.log(Lang.get('service.data_have'), 'skip');
-}
-if (asown === 4) {
+break;
+case 4:
 _this.log(Lang.get('service.blacklisted'), 'black');
+break;
 }
 }
 else {
@@ -201,23 +205,25 @@ success: function (html) {
 html = $(html.replace(/<img/gi, '<noload'));
 let ajoin = html.find('.input-group-btn').text().trim();
 if (ajoin === 'Add') {
-asown = 3;
+asown = 1;
 if (!GJuser.as.includes(',' + asjoin + ',')) {
 GJuser.as = GJuser.as + asjoin + ',';
 }
 }
 if (ajoin !== 'Add' && ajoin !== 'Join') {
-asown = 5;
+asown = 2;
 }
 if (ajoin === 'Join') {
 asown = 0;
 }
 if (_this.getConfig('log', true)) {
-if (asown === 3) {
+switch (asown) {
+case 1:
 _this.log(Lang.get('service.already_joined'), 'jnd');
-}
-if (asown === 5) {
+break;
+case 2:
 _this.log(Lang.get('service.cant_join'), 'cant');
+break;
 }
 }
 if (asown === 0) {

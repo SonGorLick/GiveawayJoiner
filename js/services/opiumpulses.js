@@ -194,26 +194,28 @@ oplog = '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + oplog;
 if (njoin > 0) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + oplog + opblack, 'chk');
-if (njoin === 1) {
+switch (njoin) {
+case 1:
 _this.log(Lang.get('service.cant_join'), 'cant');
 _this.log(Lang.get('service.data_have'), 'skip');
-}
-if (njoin === 2) {
+break;
+case 2:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
 _this.log(Lang.get('service.data_have'), 'skip');
-}
-if (njoin === 3) {
+break;
+case 3:
 _this.log(Lang.get('service.blacklisted'), 'black');
 _this.log(Lang.get('service.data_have'), 'skip');
-}
-if (njoin === 4) {
+break;
+case 4:
 _this.log(Lang.get('service.points_low'), 'skip');
-}
-if (njoin === 5) {
+break;
+case 5:
 _this.log(Lang.get('service.skipped'), 'skip');
-}
-if (njoin === 6) {
+break;
+case 6:
 _this.log(Lang.get('service.already_joined'), 'jnd');
+break;
 }
 }
 opnext = 100;
@@ -248,7 +250,6 @@ opown = 3;
 }
 if (_this.getConfig('check_in_steam', true) && opown !== 3) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
-_this.log(Lang.get('service.steam_error'), 'err');
 opown = 2;
 }
 if (GJuser.ownapps.includes(',' + opapp + ',') && opapp > 0) {
@@ -269,14 +270,19 @@ opown = 4;
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + oplog + _this.logBlack(opid), 'chk');
-if (opown === 1) {
+switch (opown) {
+case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
-}
-if (opown === 3) {
+break;
+case 2:
+_this.log(Lang.get('service.steam_error'), 'err');
+break;
+case 3:
 _this.log(Lang.get('service.cant_join'), 'cant');
-}
-if (opown === 4) {
+break;
+case 4:
 _this.log(Lang.get('service.blacklisted'), 'black');
+break;
 }
 }
 else {

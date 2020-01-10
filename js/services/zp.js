@@ -136,15 +136,17 @@ let zplog = _this.logLink(zplink, zpnam.replace(/-/g, ' '));
 if (_this.getConfig('log', true) && njoin > 0) {
 zplog = '|' + (zprnd + 1) + '№|  ' + zplog;
 _this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
-if (njoin === 1) {
+switch (njoin) {
+case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
-}
-if (njoin === 2) {
+break;
+case 2:
 _this.log(Lang.get('service.blacklisted'), 'black');
-}
-if (njoin === 3) {
+break;
+case 3:
 _this.log(Lang.get('service.time'), 'skip');
 _this.log(Lang.get('service.data_have'), 'skip');
+break;
 }
 }
 if (njoin === 0) {
@@ -168,7 +170,7 @@ if (!zpsteam.includes('https://store.steam')) {
 zpsteam = undefined;
 }
 if (!enter && !entered) {
-zpown = 6;
+zpown = 3;
 if (GJuser.zp.includes(',' + zpnam + '(z=')) {
 let zpdga = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];
 GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zpdga, ',' + zpnam + '(z=' + zpdnow);
@@ -178,10 +180,10 @@ GJuser.zp = GJuser.zp + zpnam + '(z=' + zpdnow + '),';
 }
 }
 if (entered) {
+zpown = 5;
 if (_this.getConfig('skip_after', true)) {
 _this.skip = true;
 }
-zpown = 5;
 if (GJuser.zp.includes(',' + zpnam + '(z=')) {
 let zpdga = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];
 GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zpdga, ',' + zpnam + '(z=' + zpdnow);
@@ -201,7 +203,6 @@ zpid = 'sub/' + zpsub;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
-_this.log(Lang.get('service.steam_error'), 'err');
 zpown = 2;
 }
 if (GJuser.ownapps.includes(',' + zpapp + ',') && zpapp > 0) {
@@ -226,17 +227,22 @@ zplog = _this.logLink(zplink, zpname);
 if (_this.getConfig('log', true)) {
 zplog = '|' + (zprnd + 1) + '№|  ' + zplog;
 _this.log(Lang.get('service.checking') + zplog + zpid, 'chk');
-if (entered && zpown === 5) {
-_this.log(Lang.get('service.already_joined'), 'jnd');
-}
-if (zpown === 6) {
-_this.log(Lang.get('service.cant_join'), 'cant');
-}
-if (zpown === 1) {
+switch (zpown) {
+case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
-}
-if (zpown === 4) {
+break;
+case 2:
+_this.log(Lang.get('service.steam_error'), 'err');
+break;
+case 3:
+_this.log(Lang.get('service.cant_join'), 'cant');
+break;
+case 4:
 _this.log(Lang.get('service.blacklisted'), 'black');
+break;
+case 5:
+_this.log(Lang.get('service.already_joined'), 'jnd');
+break;
 }
 }
 else {

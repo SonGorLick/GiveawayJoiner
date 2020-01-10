@@ -210,12 +210,9 @@ if (tickets.length < 12 && _this.igprtry === 0 || _this.curr_value === 0 || !_th
 _this.pagemax = page;
 }
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igprtry !== 0) {
+if (_this.igprtry === 0) {
 if (_this.getConfig('log', true)) {
-if (
-(tickets.length < 12 && !_this.sort && _this.started) ||
-(_this.iglast !== 0 && !_this.sort && _this.started)
-)
-{
+if (_this.iglast !== 0 && !_this.sort && _this.started) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
 let igplog = Lang.get('service.checked');
@@ -228,16 +225,15 @@ igplog = igplog + page + '#-' + _this.getConfig('pages', 1) + '#';
 else {
 igplog = igplog + page + '#';
 }
-if (_this.igprtry === 0) {
 _this.log(igplog, 'srch');
 }
-}
-if (_this.sort_after && page === _this.pagemax && _this.igprtry === 0) {
+if (_this.sort_after && page === _this.pagemax) {
 page = 1;
 _this.pagemax = _this.getConfig('pages', 1);
 _this.sort = true;
 _this.lvl = _this.lvlmax + 1;
 _this.sort_after = false;
+}
 }
 if (callback) {
 callback();
@@ -332,7 +328,6 @@ igown = 5;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
-_this.log(Lang.get('service.steam_error'), 'err');
 igown = 2;
 }
 if (GJuser.ownapps.includes(',' + igapp + ',') && igapp > 0) {
@@ -359,32 +354,37 @@ igcurr = 100;
 }
 if (igown > 0) {
 if (_this.getConfig('log', true)) {
-if (igown === 1) {
+switch (igown) {
+case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
-}
-if (igown === 3) {
+break;
+case 2:
+_this.log(Lang.get('service.steam_error'), 'err');
+break;
+case 3:
 _this.log(Lang.get('service.already_joined'), 'jnd');
-}
-if (igown === 4) {
+break;
+case 4:
 _this.log(Lang.get('service.blacklisted'), 'black');
-}
-if (igown === 5) {
+break;
+case 5:
 _this.log(Lang.get('service.skipped'), 'skip');
-}
-if (igown === 6) {
+break;
+case 6:
 _this.log(Lang.get('service.time'), 'skip');
-}
-if (igown === 7) {
+break;
+case 7:
 _this.log(Lang.get('service.points_low'), 'skip');
-}
-if (igown === 8) {
+break;
+case 8:
 _this.log(Lang.get('service.cant_join'), 'cant');
-}
+break;
 }
 ignext = 100;
 igrtry = 0;
 Times = 0;
 igcurr++;
+}
 }
 else {
 igrtry++;
