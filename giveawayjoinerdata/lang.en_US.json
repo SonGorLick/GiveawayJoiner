@@ -100,6 +100,7 @@
 		"coins": " coins ",
 		"done": "Received ",
 		"offer": "оffer ",
+		"no_offer": "Skipped - no offers ",
 		"skip": "Skipped - offer already done",
 		"wiki": "How to use the service ",
 		"dt_err": "Account data not found in file",
