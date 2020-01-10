@@ -169,14 +169,16 @@ zpid = '';
 if (!zpsteam.includes('https://store.steam')) {
 zpsteam = undefined;
 }
-if (!enter && !entered) {
+if (!enter) {
 zpown = 3;
+if (!entered) {
 if (GJuser.zp.includes(',' + zpnam + '(z=')) {
 let zpdga = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];
 GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zpdga, ',' + zpnam + '(z=' + zpdnow);
 }
 else {
 GJuser.zp = GJuser.zp + zpnam + '(z=' + zpdnow + '),';
+}
 }
 }
 if (entered) {
@@ -248,7 +250,7 @@ break;
 else {
 zplog = zplog + zpid;
 }
-if (enter && zpown === 0) {
+if (zpown === 0) {
 let tmout = Math.floor(Math.random() * Math.floor(zpnext / 3)) + Math.floor(zpnext / 3);
 setTimeout(function () {
 $.ajax({

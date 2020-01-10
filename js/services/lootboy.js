@@ -92,6 +92,23 @@ headers: {
 json: true
 })
 .then((offers) => {
+let lboffers = offers;
+rq({
+method: 'GET',
+uri: _this.url + '/v1/offers/taken?lang=en',
+headers: {
+'accept': 'application/json',
+'origin': 'https://www.lootboy.de',
+'Authorization': lbbrr,
+'user-agent': _this.ua,
+'sec-fetch-site': 'same-site',
+'sec-fetch-mode': 'cors',
+'referer': 'https://www.lootboy.de/offers',
+},
+json: true
+})
+.then((taken) => {
+let lbtaken = JSON.stringify(taken.offers);
 rq({
 method: 'PUT',
 uri: _this.url + '/v2/users/self/appStart',
@@ -125,7 +142,17 @@ _this.log(Lang.get('service.skip'), 'skip');
 }
 }
 });
-offers.forEach(function(offer) {
+for (let i = 0; i < lboffers.length; i++) {
+lboffers[i].have = lbtaken.includes(lboffers[i].id);
+}
+lboffers = lboffers.filter(off => off.have === false);
+if (lboffers.length === 0) {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.no_offer') + 'Diamonds Quests', 'cant');
+}
+}
+else {
+lboffers.forEach(function(offer) {
 let tmout = Math.floor(lbnext / 4);
 setTimeout(function () {
 rq({
@@ -162,6 +189,8 @@ _this.log(Lang.get('service.skip'), 'skip');
 }
 });
 }, tmout);
+});
+}
 });
 });
 rq({
@@ -205,7 +234,7 @@ lbcomics.length = 4;
 }
 if (lbcomics.length === 0) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.no_offer') + 'Comics', 'cant');
+_this.log(Lang.get('service.no_offer') + 'Read Comics', 'cant');
 }
 }
 else {
