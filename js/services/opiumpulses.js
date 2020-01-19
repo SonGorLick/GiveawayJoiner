@@ -289,7 +289,7 @@ else {
 oplog = oplog + _this.logBlack(opid);
 }
 if (opown === 0) {
-let tmout = Math.floor(Math.random() * Math.floor(opnext / 10)) + Math.floor(opnext / 5);
+let tmout = Math.floor(opnext / 4);
 setTimeout(function () {
 if (check !== undefined) {
 check = check.replace('checkUser(', '').replace(')', '');

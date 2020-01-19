@@ -19,7 +19,6 @@ let _bmd = 'true';
 let _bfr = 'false';
 let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
-app.commandLine.appendSwitch('disable-software-rasterizer');
 app.commandLine.appendSwitch('disk-cache-size', 100);
 app.disableHardwareAcceleration();
 if (process.platform === 'win32') {
@@ -101,6 +100,7 @@ modal: _bmd,
 frame: _bfr,
 show: false,
 center: true,
+backgroundColor: '#263238',
 webPreferences: {
 session: _session,
 devTools: false,
@@ -110,10 +110,10 @@ webSecurity: false,
 webaudio: false
 }
 });
-Browser.loadFile('blank.html');
+Browser.loadURL('about:blank');
 Browser.on('close', (e) => {
+Browser.loadURL('about:blank');
 e.preventDefault();
-Browser.loadFile('blank.html');
 Browser.hide();
 if (mainWindow.hidden) {
 mainWindow.focus();

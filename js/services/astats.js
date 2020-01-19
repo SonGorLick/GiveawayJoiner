@@ -227,7 +227,7 @@ break;
 }
 }
 if (asown === 0) {
-let tmout = Math.floor(Math.random() * Math.floor(asnext / 10)) + Math.floor(asnext / 5);
+let tmout = Math.floor(asnext / 4);
 setTimeout(function () {
 $.ajax({
 url: _this.url + alink,

@@ -126,7 +126,7 @@ data = data.replace(/<img/gi, '<noload');
 let html = $('<div>' + data + '</div>'),
 entered = html.find('#enbut').length === 0;
 if (!entered) {
-let tmout = Math.floor(Math.random() * Math.floor(tfnext / 10)) + Math.floor(tfnext / 5);
+let tmout = Math.floor(tfnext / 4);
 setTimeout(function () {
 rq({
 method: 'POST',

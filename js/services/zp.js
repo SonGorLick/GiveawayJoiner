@@ -251,7 +251,7 @@ else {
 zplog = zplog + zpid;
 }
 if (zpown === 0) {
-let tmout = Math.floor(Math.random() * Math.floor(zpnext / 3)) + Math.floor(zpnext / 3);
+let tmout = Math.floor(zpnext / 2);
 setTimeout(function () {
 $.ajax({
 url: zplink + '/enter_competition',

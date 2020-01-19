@@ -146,11 +146,6 @@ $.ajax({
 url: _this.url + '/claimprofile/sync_username_avatar',
 type: 'POST'
 });
-if (_this.check === undefined) {
-setTimeout(function () {
-_this.check = 1;
-}, 10000);
-}
 if (GJuser.iglvl === 0) {
 _this.sort = false;
 }
@@ -185,18 +180,18 @@ if (!_this.sort && GJuser.iglvl > 0) {
 _this.lvl = 'all';
 }
 if (_this.igprtry > 0) {
-page = page - 1;
-_this.igprtry = 0;
+page = _this.igprtry;
 }
+let tickets = '';
 $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
 success: function (data) {
-let tickets = 'Incapsula_Resource';
-if (data.indexOf(tickets) >= 0) {
-_this.igprtry++;
+if (data.indexOf('Incapsula_Resource') >= 0) {
+_this.igprtry = page;
 }
 else {
 tickets = $(JSON.parse(data).content).find('.tickets-col');
+_this.igprtry = 0;
 }
 let igcurr = 0,
 igrtry = 0,
@@ -209,7 +204,7 @@ function giveawayEnter() {
 if (tickets.length < 12 && _this.igprtry === 0 || _this.curr_value === 0 || !_this.started) {
 _this.pagemax = page;
 }
-if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igprtry !== 0) {
+if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igprtry > 0) {
 if (_this.igprtry === 0) {
 if (_this.getConfig('log', true)) {
 if (_this.iglast !== 0 && !_this.sort && _this.started) {

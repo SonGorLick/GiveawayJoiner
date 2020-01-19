@@ -187,7 +187,7 @@ entered = data.indexOf('>Leave Raffle<') >= 0,
 hash = data.substring(data.indexOf("ScrapTF.Raffles.EnterRaffle(")+39,data.indexOf("<i18n>Enter Raffle</i18n></button>")).slice(0, 64);
 _this.csrf = data.substring(data.indexOf("ScrapTF.User.Hash =")+21,data.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 if (enter) {
-let tmout = Math.floor(Math.random() * Math.floor(spnext / 4)) + Math.floor(spnext / 2);
+let tmout = Math.floor(spnext / 1.5);
 setTimeout(function () {
 $.ajax({
 type: 'POST',

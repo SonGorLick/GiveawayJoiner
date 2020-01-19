@@ -142,6 +142,12 @@ $(document.createElement('button'))
 .css('margin-left', '10px')
 .attr('data-link', 'https://www.whatsmyua.info')
 .appendTo(info_links);
+$(document.createElement('button'))
+.addClass('open-website')
+.html('<div class="fa fa-user-secret" title="IP"></div>')
+.css('margin-left', '10px')
+.attr('data-link', 'https://whatsmyip.com')
+.appendTo(info_links);
 }
 function renderUser(userData) {
 $.ajax({
