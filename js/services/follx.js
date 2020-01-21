@@ -37,7 +37,7 @@ let fxtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _t
 _this.stimer = fxtimer;
 }
 let page = 1;
-_this.sync = 0;
+_this.check = 0;
 _this.url = 'https://follx.com';
 _this.pagemax = _this.getConfig('pages', 1);
 let callback = function () {
@@ -61,8 +61,8 @@ _this.log(this.trans('token_error'), 'err');
 _this.stopJoiner(true);
 return;
 }
-if (_this.sync === 0) {
-_this.sync = 1;
+if (_this.check === 0) {
+_this.check = 1;
 $.ajax({
 url: _this.url + '/ajax/syncAccount',
 method: 'POST',
@@ -74,9 +74,6 @@ headers: {
 },
 dataType: 'json'
 });
-}
-if (_this.check === 0) {
-_this.check = 1;
 let fxwon = html.find('.hide-on-med-and-down.user-panel.s6.col > .icons > .has.marker.cup').attr('href');
 if (fxwon !== undefined) {
 _this.log(_this.logLink('https://follx.com/giveaways/won', Lang.get('service.win')), 'win');

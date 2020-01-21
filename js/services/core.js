@@ -34,18 +34,34 @@ this.addPanel();
 this.renderSettings();
 this.updateCookies();
 if (Config.get('autostart') || this.getConfig('autostart')) {
-if (fs.existsSync(dirdata + 'steam_sub.txt')) {
-let ownsubs = fs.readFileSync(dirdata + 'steam_sub.txt');
-if (ownsubs.length > (GJuser.ownsubs).length) {
-GJuser.ownsubs = ownsubs.toString();
+$.ajax({
+url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
+dataType: 'json',
+success: function (data) {
+if (JSON.stringify(data.rgOwnedApps) !== '[]') {
+GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
+GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
+fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
+fs.writeFile(dirdata + 'steam_app.txt', GJuser.ownapps, (err) => { });
 }
+else {
+if (fs.existsSync(dirdata + 'steam_sub.txt')) {
+GJuser.ownsubs = fs.readFileSync(dirdata + 'steam_sub.txt').toString();
 }
 if (fs.existsSync(dirdata + 'steam_app.txt')) {
-let ownapps = fs.readFileSync(dirdata + 'steam_app.txt');
-if (ownapps.length > (GJuser.ownapps).length) {
-GJuser.ownapps = ownapps.toString();
+GJuser.ownapps = fs.readFileSync(dirdata + 'steam_app.txt').toString();
 }
 }
+},
+error: function () {
+if (GJuser.ownsubs === '[]' && fs.existsSync(dirdata + 'steam_sub.txt')) {
+GJuser.ownsubs = fs.readFileSync(dirdata + 'steam_sub.txt').toString();
+}
+if (GJuser.ownapps === '[]' && fs.existsSync(dirdata + 'steam_app.txt')) {
+GJuser.ownapps = fs.readFileSync(dirdata + 'steam_app.txt').toString();
+}
+}
+});
 if (fs.existsSync(dirdata + 'blacklist.txt')) {
 let blacklist = fs.readFileSync(dirdata + 'blacklist.txt');
 if (blacklist.length > 0) {
