@@ -164,7 +164,7 @@ $(document.createElement('button'))
 .addClass('open-website')
 .html('<div class="fa fa-user-secret" title="IP"></div>')
 .css('margin-left', '10px')
-.attr('data-link', 'https://whatsmyip.com')
+.attr('data-link', 'https://whatsmyip.com/your-ip-address')
 .appendTo(info_links);
 }
 function renderUser(userData) {

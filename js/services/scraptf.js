@@ -139,9 +139,14 @@ random[j] = temp;
 }
 function giveawayEnter() {
 if (sptent.length <= spcurr || !_this.started) {
+if (!_this.started) {
+_this.pagemax = page;
+}
 if (_this.getConfig('log', true)) {
 if (page === _this.pagemax) {
+if (_this.started) {
 _this.log(Lang.get('service.reach_end'), 'skip');
+}
 _this.log(Lang.get('service.checked') + page + '#-' + _this.getConfig('pages', 1) + '#', 'srch');
 }
 else {
