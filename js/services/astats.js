@@ -101,7 +101,7 @@ random[j] = temp;
 }
 }
 function giveawayEnter() {
-if (afound.length === 0) {
+if (afound.length === 0 || !_this.started) {
 _this.pagemax = page;
 }
 if (afound.length <= acurr || !_this.started) {

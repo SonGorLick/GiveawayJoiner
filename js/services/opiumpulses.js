@@ -103,7 +103,7 @@ random[j] = temp;
 }
 }
 function giveawayEnter() {
-if (opfound.length < 40) {
+if (opfound.length < 40 || !_this.started) {
 _this.pagemax = page;
 }
 if (opfound.length <= opcurr || !_this.started) {

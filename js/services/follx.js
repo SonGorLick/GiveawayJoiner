@@ -86,7 +86,7 @@ new Audio(dirapp + 'sounds/won.wav').play();
 let fxfound = html.find('.giveaway_card');
 let fxcurr = 0;
 function giveawayEnter() {
-if (fxfound.length < 20) {
+if (fxfound.length < 20 || !_this.started) {
 _this.pagemax = page;
 }
 if (fxfound.length <= fxcurr || !_this.started) {
