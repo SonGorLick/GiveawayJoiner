@@ -149,6 +149,9 @@ type: 'POST'
 if (GJuser.iglvl === 0) {
 _this.sort = false;
 }
+if (_this.curr_value === undefined) {
+_this.setValue(240);
+}
 if (_this.ending_first && _this.ending !== 0 && _this.sort) {
 _this.sort = false;
 _this.sort_after = true;
