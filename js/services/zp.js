@@ -251,7 +251,7 @@ else {
 zplog = zplog + zpid;
 }
 if (zpown === 0) {
-let tmout = Math.floor(zpnext / 2);
+let tmout = Math.floor(zpnext / 1.6);
 setTimeout(function () {
 $.ajax({
 url: zplink + '/enter_competition',
@@ -269,6 +269,11 @@ else {
 GJuser.zp = GJuser.zp + zpnam + '(z=' + zpdnew + '),';
 }
 _this.log(Lang.get('service.entered_in') + zplog, 'enter');
+},
+error: function () {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
 }
 });
 }, tmout);

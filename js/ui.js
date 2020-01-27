@@ -90,34 +90,30 @@ fs.writeFile(dirdata + 'blacklist.txt', GJuser.black, (err) => { });
 });
 function intervalSchedules() {
 if (intervalTicks % 600 === 0) {
+if (fs.existsSync(dirdata + 'steam_app.txt')) {
+let ownapps = fs.readFileSync(dirdata + 'steam_app.txt');
+GJuser.ownapps = ownapps.toString();
+}
+if (fs.existsSync(dirdata + 'steam_sub.txt')) {
+let ownsubs = fs.readFileSync(dirdata + 'steam_sub.txt');
+GJuser.ownsubs = ownsubs.toString();
+}
+if (!Config.get('steam_local', false)) {
 $.ajax({
 url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
 dataType: 'json',
 success: function (data) {
 if (JSON.stringify(data.rgOwnedApps) !== '[]') {
-GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
 GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
-fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
+GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
 fs.writeFile(dirdata + 'steam_app.txt', GJuser.ownapps, (err) => { });
-}
-else {
-if (fs.existsSync(dirdata + 'steam_sub.txt')) {
-GJuser.ownsubs = fs.readFileSync(dirdata + 'steam_sub.txt').toString();
-}
-if (fs.existsSync(dirdata + 'steam_app.txt')) {
-GJuser.ownapps = fs.readFileSync(dirdata + 'steam_app.txt').toString();
-}
+fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
 }
 },
 error: function () {
-if (GJuser.ownsubs === '[]' && fs.existsSync(dirdata + 'steam_sub.txt')) {
-GJuser.ownsubs = fs.readFileSync(dirdata + 'steam_sub.txt').toString();
-}
-if (GJuser.ownapps === '[]' && fs.existsSync(dirdata + 'steam_app.txt')) {
-GJuser.ownapps = fs.readFileSync(dirdata + 'steam_app.txt').toString();
-}
 }
 });
+}
 }
 intervalTicks++;
 }
