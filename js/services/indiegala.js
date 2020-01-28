@@ -378,11 +378,11 @@ case 8:
 _this.log(Lang.get('service.cant_join'), 'cant');
 break;
 }
+}
 ignext = 100;
 igrtry = 0;
 Times = 0;
 igcurr++;
-}
 }
 else {
 igrtry++;
