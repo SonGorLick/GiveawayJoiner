@@ -169,13 +169,17 @@ url: 'https://store.steampowered.com/account',
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 let name = data.find('.responsive_menu_user_persona > a').text().trim();
-if (name !== undefined) {
-userData.username = name;
-}
 let logo = data.find('#global_actions > a > noload').attr('src');
 if (logo !== undefined) {
 userData.avatar = logo.replace('.jpg', '_full.jpg');
 }
+if (name !== undefined) {
+userData.username = name;
+}
+$('.content-item .info .username').html(userData.username);
+$('.content-item .info .avatar').css({'background-image': 'url("' + userData.avatar + '")'});
+},
+error: function () {
 $('.content-item .info .username').html(userData.username);
 $('.content-item .info .avatar').css({'background-image': 'url("' + userData.avatar + '")'});
 }

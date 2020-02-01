@@ -39,7 +39,8 @@ let chtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _t
 _this.stimer = chtimer;
 }
 _this.ua = mainWindow.webContents.session.getUserAgent();
-_this.url = 'https://api.chrono.gg';
+_this.churl = 'https://api.chrono.gg';
+_this.url = 'https://www.chrono.gg';
 let chcurr = 1;
 _this.check = true;
 function giveawayEnter() {
@@ -59,15 +60,16 @@ if (chdata.includes('JWT')) {
 let chauth = chdata.toString();
 rq({
 method: 'GET',
-uri: _this.url + '/account',
+uri: _this.churl + '/account',
 headers: {
-'accept': 'application/json',
-'origin': 'https://www.chrono.gg',
-'Authorization': chauth,
 'user-agent': _this.ua,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'referer': 'https://www.chrono.gg/shop',
+'pragma': 'no-cache',
+'origin': _this.url,
+'accept-encoding': 'gzip, deflate, br',
+'accept': 'application/json',
+'cache-control': 'no-cache',
+'authorization': chauth,
+'referer': _this.url,
 },
 json: true
 })
@@ -81,15 +83,16 @@ _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Spin
 }
 rq({
 method: 'GET',
-uri: _this.url + '/quest/spin',
+uri: _this.churl + '/quest/spin',
 headers: {
-'accept': 'application/json',
-'origin': 'https://www.chrono.gg',
-'Authorization': chauth,
 'user-agent': _this.ua,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'referer': 'https://www.chrono.gg/?a=default',
+'pragma': 'no-cache',
+'origin': _this.url,
+'accept-encoding': 'gzip, deflate, br',
+'accept': 'application/json',
+'cache-control': 'no-cache',
+'authorization': chauth,
+'referer': _this.url,
 },
 json: true
 })
@@ -122,9 +125,7 @@ _this.log(Lang.get('service.ses_not_found') + ' - ' + Lang.get('service.session_
 });
 }
 else {
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.dt_err'), 'err');
-}
 }
 }
 else {

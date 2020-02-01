@@ -39,7 +39,8 @@ let lbtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _t
 _this.stimer = lbtimer;
 }
 _this.ua = mainWindow.webContents.session.getUserAgent();
-_this.url = 'https://api.lootboy.de';
+_this.lburl = 'https://api.lootboy.de';
+_this.url = 'https://www.lootboy.de';
 let lbcurr = 1;
 _this.check = true;
 function giveawayEnter() {
@@ -55,21 +56,21 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.open_file') + 'lootboy' + lbcurr + '.txt', 'info');
 }
 let lbdata = fs.readFileSync(dirdata + 'lootboy' + lbcurr + '.txt');
-if (lbdata.includes('Bearer')) {
+if (lbdata.includes('Bearer') && lbdata.includes(',')) {
 let lbd = (lbdata.toString()).split(','),
 lbauth = lbd[0],
 lbbrr = lbd[1];
 rq({
 method: 'GET',
-uri: _this.url + '/v2/users/' + lbauth,
+uri: _this.lburl + '/v2/users/' + lbauth,
 headers: {
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
 'accept': 'application/json',
-'origin': 'https://www.lootboy.de',
+'origin': _this.url,
 'Authorization': lbbrr,
 'user-agent': _this.ua,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'referer': 'https://www.lootboy.de',
+'referer': _this.url,
 },
 json: true
 })
@@ -79,15 +80,15 @@ _this.log(Lang.get('service.acc') + stat.username + ':' + Lang.get('service.gems
 }
 rq({
 method: 'GET',
-uri: _this.url + '/v1/offers?lang=en',
+uri: _this.lburl + '/v1/offers?lang=en',
 headers: {
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
 'accept': 'application/json',
-'origin': 'https://www.lootboy.de',
+'origin': _this.url,
 'Authorization': lbbrr,
 'user-agent': _this.ua,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'referer': 'https://www.lootboy.de/offers',
+'referer': _this.url + '/offers',
 },
 json: true
 })
@@ -95,15 +96,15 @@ json: true
 let lboffers = offers;
 rq({
 method: 'GET',
-uri: _this.url + '/v1/offers/taken?lang=en',
+uri: _this.lburl + '/v1/offers/taken?lang=en',
 headers: {
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
 'accept': 'application/json',
-'origin': 'https://www.lootboy.de',
+'origin': _this.url,
 'Authorization': lbbrr,
 'user-agent': _this.ua,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'referer': 'https://www.lootboy.de/offers',
+'referer': _this.url + '/offers',
 },
 json: true
 })
@@ -111,16 +112,16 @@ json: true
 let lbtaken = JSON.stringify(taken.offers);
 rq({
 method: 'PUT',
-uri: _this.url + '/v2/users/self/appStart',
+uri: _this.lburl + '/v2/users/self/appStart',
 headers: {
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
 'content-length': 0,
 'accept': 'application/json',
-'origin': 'https://www.lootboy.de',
+'origin': _this.url,
 'Authorization': lbbrr,
 'user-agent': _this.ua,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'referer': 'https://www.lootboy.de/offers',
+'referer': _this.url + '/offers',
 },
 json: true
 })
@@ -157,16 +158,16 @@ let tmout = Math.floor(lbnext / 4);
 setTimeout(function () {
 rq({
 method: 'PUT',
-uri: _this.url + '/v1/offers/' + offer.id + '?lang=en',
+uri: _this.lburl + '/v1/offers/' + offer.id + '?lang=en',
 headers: {
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
 'content-length': 0,
 'accept': 'application/json',
-'origin': 'https://www.lootboy.de',
+'origin': _this.url,
 'Authorization': lbbrr,
 'user-agent': _this.ua,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'referer': 'https://www.lootboy.de/offers',
+'referer': _this.url + '/offers',
 },
 json: true
 })
@@ -195,15 +196,15 @@ _this.log(Lang.get('service.skip'), 'skip');
 });
 rq({
 method: 'GET',
-uri: _this.url + '/v1/comics?lang=en',
+uri: _this.lburl + '/v1/comics?lang=en',
 headers: {
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
 'accept': 'application/json',
-'origin': 'https://www.lootboy.de',
+'origin': _this.url,
 'Authorization': lbbrr,
 'user-agent': _this.ua,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'referer': 'https://www.lootboy.de/comics',
+'referer': _this.url + '/comics',
 },
 json: true
 })
@@ -211,15 +212,15 @@ json: true
 let lbcomics = comics;
 rq({
 method: 'GET',
-uri: _this.url + '/v1/comics/readComics?lang=en',
+uri: _this.lburl + '/v1/comics/readComics?lang=en',
 headers: {
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
 'accept': 'application/json',
-'origin': 'https://www.lootboy.de',
+'origin': _this.url,
 'Authorization': lbbrr,
 'user-agent': _this.ua,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'referer': 'https://www.lootboy.de/comics',
+'referer': _this.url + '/comics',
 },
 json: true
 })
@@ -243,16 +244,16 @@ let pmout = Math.floor(lbnext / 2);
 setTimeout(function () {
 rq({
 method: 'PUT',
-uri: _this.url + '/v1/comics/' + comic.id + '/read?lang=en',
+uri: _this.lburl + '/v1/comics/' + comic.id + '/read?lang=en',
 headers: {
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
 'content-length': 0,
 'accept': 'application/json',
-'origin': 'https://www.lootboy.de',
+'origin': _this.url,
 'Authorization': lbbrr,
 'user-agent': _this.ua,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'referer': 'https://www.lootboy.de/comics/' + comic.id,
+'referer': _this.url + '/comics/' + comic.id,
 },
 json: true
 })
@@ -285,9 +286,7 @@ _this.log(Lang.get('service.ses_not_found') + ' - ' + Lang.get('service.session_
 });
 }
 else {
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.dt_err'), 'err');
-}
 }
 }
 else {
