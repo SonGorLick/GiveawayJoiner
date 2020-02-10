@@ -23,7 +23,6 @@ data = $(data.replace(/<img/gi, '<noload'));
 userData.username = data.find('.common-header .user .expander-content a.username.truncate').text().trim();
 userData.value = data.find('.common-header .user .expander-content .energy > span').text().trim();
 userData.avatar = data.find('.common-header .user span.avatar').attr('style').replace("background-image: url('",'').replace("')", '');
-GJuser.steamid = data.find('.common-header .user .expander-content a.username.truncate').attr('href').replace('https://follx.com/users/', '');
 },
 complete: function () {
 callback(userData);

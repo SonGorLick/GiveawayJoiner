@@ -154,11 +154,12 @@ $.ajax({
 url: zplink,
 success: function (html) {
 html = html.replace(/<img/gi, '<noload');
-let entered = html.indexOf('You have already entered today') >= 0,
+let won = html.indexOf('You have already won a prize in this competition') >= 0,
+entered = html.indexOf('You have already entered today') >= 0,
 enter = html.indexOf('>Enter this competition<') >= 0,
 zpname = zpnam.replace(/-/g, ' '),
 zpsteam = '';
-if (enter || entered) {
+if (enter || entered || won) {
 zpname = $(html).find('.mycompetition .form-group .span8 > h1').text().trim();
 zpsteam = html.substring(html.indexOf('href="https://store.steam')+6, html.indexOf('</a></p>')).slice(0, 55);
 }

@@ -275,7 +275,7 @@ igtime = time + 'h|';
 }
 else {
 if (time.includes('minute')) {
-igtime = time.replace('minute left','').replace('minutes left','').trim() + 'm|';
+igtime = time.replace('minute left','').replace('minutes left','').replace('Less than 1','0').trim() + 'm|';
 time = 0;
 }
 }

@@ -105,6 +105,9 @@ if (afound.length === 0 || !_this.started) {
 _this.pagemax = page;
 }
 if (afound.length <= acurr || !_this.started) {
+$.ajax({
+url: _this.url + '/astats/User_Info.php',
+});
 if (afound.length <= acurr && page === _this.pagemax) {
 setTimeout(function () {
 fs.writeFile(dirdata + 'astats.txt', GJuser.as, (err) => { });
