@@ -341,8 +341,11 @@ xsrf_token: _this.token,
 do: 'entry_delete',
 code: GA.code
 },
-success: function () {
+success: function (data) {
+if (data.type === 'success') {
 _this.log(Lang.get('service.removed') + _this.logLink(GA.lnk, GA.nam), 'info');
+_this.setValue(data.points);
+}
 }
 });
 }
