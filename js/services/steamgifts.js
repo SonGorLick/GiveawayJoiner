@@ -63,6 +63,7 @@ this.stimer = sgtimer;
 }
 this.check = 0;
 this.won = this.getConfig('won', 0);
+this.hided = ',';
 this.giveaways = [];
 this.gawf = [];
 this.gagf = [];
@@ -349,7 +350,7 @@ _this.setValue(data.points);
 }
 });
 }
-if ((sgown === 1 || sgown === 6) && _this.getConfig('hide_ga', false)) {
+if ((sgown === 1 || sgown === 6) && !_this.hided.includes(',' + sgid + ',') && _this.getConfig('hide_ga', false)) {
 sgown = 6;
 $.ajax({
 url: _this.url + '/ajax.php',
@@ -362,6 +363,7 @@ game_id: GA.gameid
 },
 success: function () {
 _this.log(Lang.get('service.hided') + _this.logLink(GA.lnk, GA.nam), 'info');
+_this.hided = _this.hided + sgid + ',';
 }
 });
 }
