@@ -158,7 +158,7 @@ $(document.createElement('button'))
 .appendTo(info_links);
 $(document.createElement('button'))
 .addClass('open-website')
-.html('<div class="fa fa-user-secret" title="IP"></div>')
+.html('<div class="fa fa-ip" title="IP"></div>')
 .css('margin-left', '10px')
 .attr('data-link', 'https://whatsmyip.com/your-ip-address')
 .appendTo(info_links);
@@ -172,16 +172,15 @@ let name = data.find('.responsive_menu_user_persona > a').text().trim(),
 logo = data.find('#global_actions > a > noload').attr('src');
 if (logo !== undefined) {
 userData.avatar = logo.replace('.jpg', '_full.jpg');
+$('.content-item .info .avatar').css({'background-image': 'url("' + userData.avatar + '")'});
 }
 if (name !== undefined && name.length > 0) {
 userData.username = name;
 }
 $('.content-item .info .username').html(userData.username);
-$('.content-item .info .avatar').css({'background-image': 'url("' + userData.avatar + '")'});
 },
 error: function () {
 $('.content-item .info .username').html(userData.username);
-$('.content-item .info .avatar').css({'background-image': 'url("' + userData.avatar + '")'});
 }
 });
 }

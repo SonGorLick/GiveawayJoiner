@@ -30,8 +30,8 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-if (_this.getConfig('timer_to', 90) !== _this.getConfig('timer_from', 70)) {
-let astimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
+if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
+let astimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = astimer;
 }
 let page = 1;
