@@ -109,8 +109,11 @@ let tfnext = _this.interval(),
 tfrnd = random[tfcurr],
 giveaway = giveaways.eq(tfrnd),
 link = giveaway.find('a').attr('href'),
-name = giveaway.find('a').text(),
+name = giveaway.find('a').text().trim(),
 rid = link.replace('http://tf2r.com/k', '').replace('.html', '');
+if (name.length === 0) {
+name = '?????? ' + '(' + rid + ')';
+}
 let tflog = _this.logLink(link, name);
 if (_this.getConfig('log', true)) {
 tflog = '|' + (tfrnd + 1) + '№|  ' + tflog;

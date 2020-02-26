@@ -257,6 +257,9 @@ igapp = 0,
 igsub = 0,
 igid = '???',
 igtime = '';
+if (name.length > 77) {
+name = name.slice(0, 77) + '...';
+}
 if (igsteam.includes('apps/')) {
 igapp = parseInt(igsteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
 igid = 'app/' + igapp;

@@ -304,7 +304,12 @@ if (GA.entered && sgown === 1) {
 sgown = 6;
 }
 let sglog = _this.logLink(GA.lnk, GA.nam);
-if (_this.getConfig('log', true) && !_this.hided.includes(',' + sgid + ',') && sgown !== 7) {
+if (
+(_this.getConfig('log', true)) &&
+(sgown !== 7) &&
+(!_this.hided.includes(',' + sgid + ',') || sgown === 6)
+)
+{
 sglog = '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|  ' + sglog;
 _this.log(Lang.get('service.checking') + sglog + _this.logBlack(sgid), 'chk');
 switch (sgown) {
