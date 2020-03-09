@@ -287,6 +287,10 @@ zpcurr++;
 setTimeout(giveawayEnter, zpnext);
 }
 giveawayEnter();
+},
+error: function () {
+this.log(Lang.get('service.connection_lost'), 'err');
+this.stimer = 10;
 }
 });
 }

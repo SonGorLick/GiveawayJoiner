@@ -3,9 +3,9 @@ class TF2R extends Joiner {
 constructor() {
 super();
 this.domain = 'tf2r.com';
-this.websiteUrl = 'http://tf2r.com';
+this.websiteUrl = 'https://tf2r.com';
 this.authContent = 'Notifications';
-this.authLink = 'http://tf2r.com/login';
+this.authLink = 'https://tf2r.com/login';
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
@@ -42,7 +42,7 @@ if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let tftimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = tftimer;
 }
-_this.url = 'http://tf2r.com';
+_this.url = 'https://tf2r.com';
 _this.won = _this.getConfig('won', 0);
 _this.ua = mainWindow.webContents.session.getUserAgent();
 $.ajax({
@@ -110,7 +110,7 @@ tfrnd = random[tfcurr],
 giveaway = giveaways.eq(tfrnd),
 link = giveaway.find('a').attr('href'),
 name = giveaway.find('a').text().trim(),
-rid = link.replace('http://tf2r.com/k', '').replace('.html', '');
+rid = link.replace('https://tf2r.com/k', '').replace('.html', '');
 if (name.length === 0) {
 name = '?????? ' + '(' + rid + ')';
 }
