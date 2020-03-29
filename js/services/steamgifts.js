@@ -177,6 +177,12 @@ entered: sgaway.find('.giveaway__row-inner-wrap.is-faded').length > 0,
 wish: this.wish,
 group: this.group
 };
+if (isNaN(GA.cost)) {
+GA.cost = parseInt(sgaway.find('a.giveaway__heading__name').next().text().replace(/[^0-9]/g, ''));
+}
+if (GA.sgsteam === undefined) {
+GA.sgsteam = '';
+}
 if (
 (!GA.pinned && GA.levelPass) &&
 (!GA.wish || this.getConfig('wishlist_first', false) || this.getConfig('wishlist_only', false)) &&
@@ -311,7 +317,12 @@ if (
 )
 {
 sglog = '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|  ' + sglog;
+if (sgid !== '???') {
 _this.log(Lang.get('service.checking') + sglog + _this.logBlack(sgid), 'chk');
+}
+else {
+_this.log(Lang.get('service.checking') + sglog, 'chk');
+}
 switch (sgown) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
@@ -335,7 +346,9 @@ break;
 }
 }
 else {
+if (sgid !== '???') {
 sglog = sglog + _this.logBlack(sgid);
+}
 }
 if (sgown === 6 && _this.getConfig('remove_ga', true)) {
 $.ajax({

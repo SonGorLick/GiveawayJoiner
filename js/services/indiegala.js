@@ -206,6 +206,13 @@ _this.pagemax = page;
 _this.iglast = 1;
 }
 function giveawayEnter() {
+if (_this.doTimer() - _this.totalTicks < 240) {
+let igtimer = _this.getConfig('timer_from', 70);
+if (_this.getConfig('timer_to', 90) !== _this.getConfig('timer_from', 70)) {
+igtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
+}
+_this.stimer = igtimer;
+}
 if (tickets.length < 12 && _this.igprtry === 0 || _this.curr_value === 0 || !_this.started) {
 _this.pagemax = page;
 }

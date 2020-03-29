@@ -140,6 +140,13 @@ random[j] = temp;
 }
 }
 function giveawayEnter() {
+if (_this.doTimer() - _this.totalTicks < 240) {
+let sptimer = _this.getConfig('timer_from', 70);
+if (_this.getConfig('timer_to', 90) !== _this.getConfig('timer_from', 70)) {
+sptimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
+}
+_this.stimer = sptimer;
+}
 if (sptent.length <= spcurr || !_this.started) {
 if (!_this.started) {
 _this.pagemax = page;

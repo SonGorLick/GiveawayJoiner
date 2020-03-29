@@ -108,15 +108,18 @@ _this.pagemax = page;
 }
 if (opfound.length <= opcurr || !_this.started) {
 if (opfound.length <= opcurr && page === _this.pagemax) {
+let arpage = Math.floor(Math.random() * 9) + 1;
 $.ajax({
-url: _this.url + '/arcade',
+url: _this.url + '/arcade/index?ArcadeGame_page=' + arpage,
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
 let arfound = data.find('.arcade-item-img-btn-wrapper'),
 arlnk = arfound.eq(Math.floor(Math.random() * 28)).find('a').attr('href');
 if (arlnk !== undefined) {
 $.ajax({
-url: _this.url + arlnk
+url: _this.url + arlnk,
+success: function () {
+}
 });
 }
 }
