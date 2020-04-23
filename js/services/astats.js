@@ -2,6 +2,7 @@
 class Astats extends Joiner {
 constructor() {
 super();
+this.settings.timer_from.min = 5;
 this.websiteUrl = 'https://astats.astats.nl/astats/';
 this.authContent = 'Log out';
 this.authLink = 'https://astats.astats.nl/astats/profile/Login.php';

@@ -3,7 +3,7 @@ class ScrapTF extends Joiner {
 constructor() {
 super();
 this.websiteUrl = 'https://scrap.tf';
-this.authContent = 'Logout';
+this.authContent = 'My Auctions';
 this.authLink = 'https://scrap.tf/login';
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };

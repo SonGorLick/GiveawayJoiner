@@ -19,7 +19,7 @@ let _bmd = 'true';
 let _bfr = 'false';
 let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
-app.commandLine.appendSwitch('disk-cache-size', 100);
+app.commandLine.appendSwitch('disk-cache-size', 150);
 app.disableHardwareAcceleration();
 if (process.platform === 'win32') {
 _itr = __dirname + '/icons/icon.ico';

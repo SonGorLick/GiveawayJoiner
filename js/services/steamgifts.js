@@ -2,7 +2,6 @@
 class SteamGifts extends Joiner {
 constructor() {
 super();
-this.settings.timer_from.min = 5;
 this.websiteUrl = 'https://www.steamgifts.com';
 this.authContent = 'Account';
 this.authLink = 'https://www.steamgifts.com/?login';

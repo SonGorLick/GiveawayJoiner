@@ -92,32 +92,32 @@ const currentBuild = require('electron').remote.app.getVersion();
 <script src="./js/functions.js"></script>
 <script src="./js/ui.js"></script>
 <script src="./js/services/core.js"></script>
-<script src="./js/services/steamgifts.js"></script>
-<script src="./js/services/indiegala.js"></script>
-<script src="./js/services/opiumpulses.js"></script>
 <script src="./js/services/astats.js"></script>
-<script src="./js/services/indiedb.js"></script>
+<script src="./js/services/chronogg.js"></script>
 <script src="./js/services/follx.js"></script>
+<script src="./js/services/indiedb.js"></script>
+<script src="./js/services/indiegala.js"></script>
+<script src="./js/services/lootboy.js"></script>
+<script src="./js/services/opiumpulses.js"></script>
 <script src="./js/services/scraptf.js"></script>
+<script src="./js/services/steamgifts.js"></script>
 <script src="./js/services/tf2r.js"></script>
 <script src="./js/services/zp.js"></script>
-<script src="./js/services/chronogg.js"></script>
-<script src="./js/services/lootboy.js"></script>
 <script>
 window.services = {
-steamgifts: new SteamGifts(),
-indiegala: new IndieGala(),
-opiumpulses: new OpiumPulses(),
 astats: new Astats(),
-astats: new IndieDB(),
-follx: new Follx(),
-scraptf: new ScrapTF(),
-tf2r: new TF2R(),
-zp: new ZP(),
 chronogg: new ChronoGG(),
-lootboy: new LootBoy()
+follx: new Follx(),
+indiedb: new IndieDB(),
+indiegala: new IndieGala(),
+lootboy: new LootBoy(),
+opiumpulses: new OpiumPulses(),
+scraptf: new ScrapTF(),
+steamgifts: new SteamGifts(),
+tf2r: new TF2R(),
+zp: new ZP()
 };
-window.services.steamgifts.setActive();
+window.services.astats.setActive();
 </script>
 </body>
 </html>
