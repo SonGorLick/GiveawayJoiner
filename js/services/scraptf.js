@@ -2,6 +2,7 @@
 class ScrapTF extends Joiner {
 constructor() {
 super();
+this.domain = 'scrap.tf';
 this.websiteUrl = 'https://scrap.tf';
 this.authContent = 'My Auctions';
 this.authLink = 'https://scrap.tf/login';
@@ -16,6 +17,39 @@ this.withValue = false;
 delete this.settings.check_in_steam;
 delete this.settings.blacklist_on;
 super.init();
+}
+authCheck(callback) {
+let ua = mainWindow.webContents.session.getUserAgent();
+rq({
+method: 'GET',
+uri: 'https://scrap.tf',
+headers: {
+'authority': 'scrap.tf',
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
+'upgrade-insecure-requests': '1',
+'user-agent': ua,
+'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+'sec-fetch-site': 'none',
+'sec-fetch-mode': 'navigate',
+'sec-fetch-user': '?1',
+'sec-fetch-dest': 'document',
+'cookie': this.cookies
+},
+json: false
+})
+.then((html) => {
+html = html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
+if (html.indexOf('My Auctions') >= 0) {
+callback(1);
+}
+else {
+callback(0);
+}
+})
+.catch((err) => {
+callback(-1);
+})
 }
 getUserInfo(callback) {
 let userData = {
@@ -34,6 +68,7 @@ if (_this.getConfig('timer_to', 90) !== _this.getConfig('timer_from', 70)) {
 let sptimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
 _this.stimer = sptimer;
 }
+_this.ua = mainWindow.webContents.session.getUserAgent();
 _this.url = 'https://scrap.tf';
 let page = 1;
 _this.spurl = '';
@@ -59,28 +94,52 @@ enterOnPage(page, callback) {
 let _this = this;
 GJuser.sp = ',';
 let spurl = _this.url + '/raffles' + _this.spurl,
-type = 'get',
-head = {},
-datatype = 'html',
+type = 'GET',
+head = {
+'authority': 'scrap.tf',
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
+'upgrade-insecure-requests': '1',
+'user-agent': _this.ua,
+'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'navigate',
+'sec-fetch-user': '?1',
+'sec-fetch-dest': 'document',
+'referer': 'https://scrap.tf/',
+'cookie': _this.cookies
+},
+datatype = false,
 spdata = {};
 if (page !== 1) {
 spurl = _this.url + '/ajax/raffles/Paginate';
-type = 'post';
+type = 'POST';
 head = {
+'authority': 'scrap.tf',
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
 'accept': 'application/json, text/javascript, */*; q=0.01',
 'x-requested-with': 'XMLHttpRequest',
-'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+'user-agent': _this.ua,
+'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+'origin': 'https://scrap.tf',
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'cors',
+'sec-fetch-dest': 'empty',
+'referer': _this.url + '/raffles' + _this.spurl,
+'cookie': _this.cookies
 };
-datatype = 'json';
+datatype = true;
 spdata = {start: _this.lastid, sort: _this.sort, puzzle: 0, csrf: _this.csrf};
 }
-$.ajax({
-type: type,
-dataType: datatype,
-url: spurl,
+rq({
+method: type,
+uri: spurl,
 headers: head,
-data: spdata,
-success: function (data) {
+json: datatype,
+form: spdata,
+})
+.then((data) => {
 if (page === 1) {
 data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 _this.csrf = data.substring(data.indexOf("ScrapTF.User.Hash =")+21,data.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
@@ -192,9 +251,26 @@ splog = '|' + page + '#|' + (sprnd + 1) + '№|  ' + splog;
 _this.log(Lang.get('service.checking') + splog, 'chk');
 }
 if (!GJuser.sp.includes(',' + id + ',') && !spended.includes('Ended')) {
-$.ajax({
-url: _this.url + splink,
-success: function (data) {
+rq({
+method: 'GET',
+uri: _this.url + splink,
+headers: {
+'authority': 'scrap.tf',
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
+'upgrade-insecure-requests': '1',
+'user-agent': _this.ua,
+'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'navigate',
+'sec-fetch-user': '?1',
+'sec-fetch-dest': 'document',
+'referer': _this.ua + '/raffles',
+'cookie': _this.cookies
+},
+json: false
+})
+.then((data) => {
 data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 let enter = data.indexOf('>Enter Raffle<') >= 0,
 entered = data.indexOf('>Leave Raffle<') >= 0,
@@ -203,17 +279,28 @@ _this.csrf = data.substring(data.indexOf("ScrapTF.User.Hash =")+21,data.indexOf(
 if (enter) {
 let tmout = Math.floor(spnext / 1.5);
 setTimeout(function () {
-$.ajax({
-type: 'POST',
-dataType: 'json',
-url: _this.url + '/ajax/viewraffle/EnterRaffle',
+rq({
+method: 'POST',
+uri: _this.url + '/ajax/viewraffle/EnterRaffle',
 headers: {
+'authority': 'scrap.tf',
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
 'accept': 'application/json, text/javascript, */*; q=0.01',
 'x-requested-with': 'XMLHttpRequest',
-'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+'user-agent': _this.ua,
+'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+'origin': 'https://scrap.tf',
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'cors',
+'sec-fetch-dest': 'empty',
+'referer': _this.url + '/raffles/' + id,
+'cookie': _this.cookies
 },
-data: {raffle: id, captcha: '', hash: hash, csrf: _this.csrf},
-success: function (response) {
+json: true,
+form: {raffle: id, captcha: '', hash: hash, flag: false, csrf: _this.csrf},
+})
+.then((response) => {
 let spmess = JSON.stringify(response.message);
 if (spmess === '"Entered raffle!"') {
 _this.log(Lang.get('service.entered_in') + splog, 'enter');
@@ -224,8 +311,7 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
 }
-}
-});
+})
 }, tmout);
 }
 else {
@@ -238,8 +324,7 @@ _this.log(Lang.get('service.cant_join'), 'cant');
 }
 }
 }
-}
-});
+})
 }
 else {
 spnext = 100;
@@ -251,7 +336,6 @@ spcurr++;
 setTimeout(giveawayEnter, spnext);
 }
 giveawayEnter();
-}
-});
+})
 }
 }
