@@ -16,6 +16,7 @@ this.curr_value = 0;
 this.getTimeout = 19000;
 this.domain = 'google.com';
 this.auth = Lang.get('service.login') + this.constructor.name;
+this.ua = mainWindow.webContents.session.getUserAgent();
 this.settings = {
 timer_from: { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 700), default: this.getConfig('timer_from', 500) },
 timer_to: { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 500), max: 2880, default: this.getConfig('timer_to', 700) },

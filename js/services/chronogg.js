@@ -36,7 +36,6 @@ if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let chtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = chtimer;
 }
-_this.ua = mainWindow.webContents.session.getUserAgent();
 _this.churl = 'https://api.chrono.gg';
 _this.url = 'https://www.chrono.gg';
 let chcurr = 1;

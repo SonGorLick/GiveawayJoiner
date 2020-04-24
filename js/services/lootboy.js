@@ -36,7 +36,6 @@ if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let lbtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = lbtimer;
 }
-_this.ua = mainWindow.webContents.session.getUserAgent();
 _this.lburl = 'https://api.lootboy.de';
 _this.url = 'https://www.lootboy.de';
 let lbcurr = 1;

@@ -19,16 +19,20 @@ delete this.settings.blacklist_on;
 super.init();
 }
 authCheck(callback) {
-let ua = mainWindow.webContents.session.getUserAgent();
+if (this.cookies === '' & fs.existsSync(dirdata + 'scraptf_cookies.txt')) {
+let spdata = fs.readFileSync(dirdata + 'scraptf_cookies.txt');
+this.cookies = spdata.toString();
+}
 rq({
 method: 'GET',
 uri: 'https://scrap.tf',
+timeout: 19000,
 headers: {
 'authority': 'scrap.tf',
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
 'upgrade-insecure-requests': '1',
-'user-agent': ua,
+'user-agent': this.ua,
 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
 'sec-fetch-site': 'none',
 'sec-fetch-mode': 'navigate',
@@ -41,6 +45,7 @@ json: false
 .then((html) => {
 html = html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 if (html.indexOf('My Auctions') >= 0) {
+fs.writeFile(dirdata + 'scraptf_cookies.txt', this.cookies, (err) => { });
 callback(1);
 }
 else {
@@ -68,7 +73,6 @@ if (_this.getConfig('timer_to', 90) !== _this.getConfig('timer_from', 70)) {
 let sptimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
 _this.stimer = sptimer;
 }
-_this.ua = mainWindow.webContents.session.getUserAgent();
 _this.url = 'https://scrap.tf';
 let page = 1;
 _this.spurl = '';
@@ -311,7 +315,7 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
 }
-})
+});
 }, tmout);
 }
 else {
@@ -324,7 +328,7 @@ _this.log(Lang.get('service.cant_join'), 'cant');
 }
 }
 }
-})
+});
 }
 else {
 spnext = 100;
@@ -336,6 +340,6 @@ spcurr++;
 setTimeout(giveawayEnter, spnext);
 }
 giveawayEnter();
-})
+});
 }
 }

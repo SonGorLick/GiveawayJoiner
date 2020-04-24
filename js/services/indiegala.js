@@ -29,6 +29,7 @@ super.init();
 authCheck(callback) {
 $.ajax({
 url: 'https://www.indiegala.com/',
+timeout: 19000,
 success: function () {
 $.ajax({
 url: 'https://www.indiegala.com/get_user_info',
@@ -101,7 +102,6 @@ _this.stimer = igtimer;
 let page = 1;
 _this.igprtry = 0;
 _this.iglast = 0;
-_this.ua = mainWindow.webContents.session.getUserAgent();
 _this.lvlmax = _this.getConfig('max_level', 0);
 _this.lvlmin = _this.getConfig('min_level', 0);
 _this.entmin = _this.getConfig('min_entries', 0);
@@ -124,7 +124,7 @@ method: 'GET',
 uri: _this.url + '/giveaways/check_if_won_all',
 headers: {
 'origin': _this.url,
-'referer': _this.url + '/profile?user_id=' + GJuser.iglvl,
+'referer': _this.url + '/profile?user_id=' + GJuser.ig,
 'user-agent': _this.ua,
 'cookie': _this.cookies
 },

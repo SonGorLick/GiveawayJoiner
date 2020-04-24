@@ -44,7 +44,6 @@ _this.stimer = tftimer;
 }
 _this.url = 'https://tf2r.com';
 _this.won = _this.getConfig('won', 0);
-_this.ua = mainWindow.webContents.session.getUserAgent();
 $.ajax({
 url: _this.url + '/notifications.html',
 success: function (html) {
