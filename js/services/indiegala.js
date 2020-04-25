@@ -33,10 +33,7 @@ timeout: 19000,
 success: function () {
 $.ajax({
 url: 'https://www.indiegala.com/get_user_info',
-data: {
-uniq_param: (new Date()).getTime(),
-show_coins: 'True'
-},
+data: {uniq_param: (new Date()).getTime(), show_coins: 'True'},
 dataType: 'json',
 success: function (data) {
 if (data.status === 'ok') {
@@ -69,10 +66,7 @@ value: 0
 };
 $.ajax({
 url: 'https://www.indiegala.com/get_user_info',
-data: {
-uniq_param: (new Date()).getTime(),
-show_coins: 'True'
-},
+data: {uniq_param: (new Date()).getTime(), show_coins: 'True'},
 dataType: 'json',
 success: function (data) {
 userData.value = data.silver_coins_tot;
@@ -121,17 +115,18 @@ success: function (response) {
 if (response.check_it_all_enabled === true) {
 rq({
 method: 'GET',
-uri: _this.url + '/giveaways/check_if_won_all',
+url: _this.url + '/giveaways/check_if_won_all',
 headers: {
 'origin': _this.url,
 'referer': _this.url + '/profile?user_id=' + GJuser.ig,
 'user-agent': _this.ua,
 'cookie': _this.cookies
 },
-json: false
+responseType: 'document'
 })
-.then((html) => {
-let igwon = $(html).find('p').eq(1).text().trim();
+.then((htmls) => {
+let html = htmls.data,
+igwon = $(html).find('p').eq(1).text().trim();
 if (igwon.includes('Congratulations! You won')) {
 igwon = igwon.replace('Congratulations! You won','').replace('Giveaways','').trim();
 _this.log(_this.logLink(_this.url + '/profile?user_id=' + GJuser.ig, Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + igwon + ')'), 'win');
@@ -143,10 +138,6 @@ new Audio(dirapp + 'sounds/won.wav').play();
 });
 }
 }
-});
-$.ajax({
-url: _this.url + '/claimprofile/sync_username_avatar',
-type: 'POST'
 });
 if (GJuser.iglvl === 0) {
 _this.sort = false;
@@ -400,8 +391,7 @@ else {
 igrtry++;
 rq({
 method: 'POST',
-uri: _this.url + '/giveaways/new_entry',
-form: JSON.stringify({giv_id: id, ticket_price: price}),
+url: _this.url + '/giveaways/new_entry',
 headers: {
 'authority': 'www.indiegala.com',
 'accept': 'application/json, text/javascript, */*; q=0.01',
@@ -413,9 +403,10 @@ headers: {
 'referer': _this.url + '/giveaways/' + page + '/expiry/asc/level/' + _this.lvl,
 'cookie': _this.cookies
 },
-json: true
+data: {giv_id: id, ticket_price: price}
 })
-.then((response) => {
+.then((resp) => {
+let response = resp.data;
 if (response.status === 'duplicate') {
 igcurr++;
 igrtry = 0;
@@ -446,7 +437,8 @@ else {
 ignext = (Math.floor(Math.random() * 600)) + 800;
 }
 })
-.catch(() => {
+.catch((error) => {
+ignext = (Math.floor(Math.random() * 600)) + 800;
 });
 }
 if (igrtry >= 12) {

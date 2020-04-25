@@ -59,7 +59,7 @@ lbauth = lbd[0],
 lbbrr = lbd[1];
 rq({
 method: 'GET',
-uri: _this.lburl + '/v2/users/' + lbauth,
+url: _this.lburl + '/v2/users/' + lbauth,
 headers: {
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
@@ -68,16 +68,16 @@ headers: {
 'Authorization': lbbrr,
 'user-agent': _this.ua,
 'referer': _this.url,
-},
-json: true
+}
 })
-.then((stat) => {
+.then((stats) => {
+let stat = stats.data;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.acc') + stat.username + ':' + Lang.get('service.gems') + '- ' + stat.lootgemBalance + ',' + Lang.get('service.coins') + '- ' + stat.lootcoinBalance);
 }
 rq({
 method: 'GET',
-uri: _this.lburl + '/v1/offers?lang=en',
+url: _this.lburl + '/v1/offers?lang=en',
 headers: {
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
@@ -86,14 +86,13 @@ headers: {
 'Authorization': lbbrr,
 'user-agent': _this.ua,
 'referer': _this.url + '/offers',
-},
-json: true
+}
 })
 .then((offers) => {
-let lboffers = offers;
+let lboffers = offers.data;
 rq({
 method: 'GET',
-uri: _this.lburl + '/v1/offers/taken?lang=en',
+url: _this.lburl + '/v1/offers/taken?lang=en',
 headers: {
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
@@ -102,14 +101,13 @@ headers: {
 'Authorization': lbbrr,
 'user-agent': _this.ua,
 'referer': _this.url + '/offers',
-},
-json: true
+}
 })
 .then((taken) => {
-let lbtaken = JSON.stringify(taken.offers);
+let lbtaken = JSON.stringify(taken.data.offers);
 rq({
 method: 'PUT',
-uri: _this.lburl + '/v2/users/self/appStart',
+url: _this.lburl + '/v2/users/self/appStart',
 headers: {
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
@@ -122,7 +120,8 @@ headers: {
 },
 json: true
 })
-.then((coin) => {
+.then((coins) => {
+let coin = coins.data;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Coins', 'chk');
 }
@@ -155,7 +154,7 @@ let tmout = Math.floor(lbnext / 4);
 setTimeout(function () {
 rq({
 method: 'PUT',
-uri: _this.lburl + '/v1/offers/' + offer.id + '?lang=en',
+url: _this.lburl + '/v1/offers/' + offer.id + '?lang=en',
 headers: {
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
@@ -165,10 +164,10 @@ headers: {
 'Authorization': lbbrr,
 'user-agent': _this.ua,
 'referer': _this.url + '/offers',
-},
-json: true
+}
 })
-.then((gem) => {
+.then((gems) => {
+let gem = gems.data;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim(), 'chk');
 }
@@ -193,7 +192,7 @@ _this.log(Lang.get('service.skip'), 'skip');
 });
 rq({
 method: 'GET',
-uri: _this.lburl + '/v1/comics?lang=en',
+url: _this.lburl + '/v1/comics?lang=en',
 headers: {
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
@@ -202,14 +201,13 @@ headers: {
 'Authorization': lbbrr,
 'user-agent': _this.ua,
 'referer': _this.url + '/comics',
-},
-json: true
+}
 })
 .then((comics) => {
-let lbcomics = comics;
+let lbcomics = comics.data;
 rq({
 method: 'GET',
-uri: _this.lburl + '/v1/comics/readComics?lang=en',
+url: _this.lburl + '/v1/comics/readComics?lang=en',
 headers: {
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
@@ -218,11 +216,10 @@ headers: {
 'Authorization': lbbrr,
 'user-agent': _this.ua,
 'referer': _this.url + '/comics',
-},
-json: true
+}
 })
 .then((readed) => {
-let lbreaded = JSON.stringify(readed);
+let lbreaded = JSON.stringify(readed.data);
 for (let i = 0; i < lbcomics.length; i++) {
 lbcomics[i].have = lbreaded.includes(lbcomics[i].id);
 }
@@ -241,7 +238,7 @@ let pmout = Math.floor(lbnext / 2);
 setTimeout(function () {
 rq({
 method: 'PUT',
-uri: _this.lburl + '/v1/comics/' + comic.id + '/read?lang=en',
+url: _this.lburl + '/v1/comics/' + comic.id + '/read?lang=en',
 headers: {
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
@@ -251,10 +248,10 @@ headers: {
 'Authorization': lbbrr,
 'user-agent': _this.ua,
 'referer': _this.url + '/comics/' + comic.id,
-},
-json: true
+}
 })
-.then((comread) => {
+.then((comreads) => {
+let comread = comreads.data;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Comics #' + comic.number + ' ' + comic.title, 'chk');
 }
@@ -278,7 +275,7 @@ _this.log(Lang.get('service.skip'), 'skip');
 });
 });
 })
-.catch((err) => {
+.catch((error) => {
 _this.log(Lang.get('service.ses_not_found') + ' - ' + Lang.get('service.session_expired'), 'err');
 });
 }

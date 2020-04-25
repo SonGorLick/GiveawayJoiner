@@ -1,6 +1,7 @@
 'use strict';
 const storage = require('electron').remote.require('electron-json-storage');
 const fs = require('electron').remote.require('fs');
+const qs = require('electron').remote.require('qs');
 const dirapp = (__dirname).replace('electron.asar/renderer', 'app.asar') + '/';
 const dirdata = storage.getDataPath() + '/';
 class Joiner {

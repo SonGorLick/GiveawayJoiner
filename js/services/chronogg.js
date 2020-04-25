@@ -57,7 +57,7 @@ if (chdata.includes('JWT')) {
 let chauth = chdata.toString();
 rq({
 method: 'GET',
-uri: _this.churl + '/account',
+url: _this.churl + '/account',
 headers: {
 'user-agent': _this.ua,
 'pragma': 'no-cache',
@@ -67,10 +67,10 @@ headers: {
 'cache-control': 'no-cache',
 'authorization': chauth,
 'referer': _this.url,
-},
-json: true
+}
 })
-.then((acc) => {
+.then((account) => {
+let acc = account.data;
 if (acc.status === 200) {
 let chacc = acc.coins;
 if (_this.getConfig('log', true)) {
@@ -80,7 +80,7 @@ _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Spin
 }
 rq({
 method: 'GET',
-uri: _this.churl + '/quest/spin',
+url: _this.churl + '/quest/spin',
 headers: {
 'user-agent': _this.ua,
 'pragma': 'no-cache',
@@ -90,11 +90,11 @@ headers: {
 'cache-control': 'no-cache',
 'authorization': chauth,
 'referer': _this.url,
-},
-json: true
+}
 })
-.then((spin) => {
-let chquest = spin.quest,
+.then((spins) => {
+let spin = spins.data,
+chquest = spin.quest,
 chchest = spin.chest,
 chcoins = chquest.value + chquest.bonus;
 if (chchest.base) {
@@ -107,16 +107,16 @@ else {
 _this.log(Lang.get('service.acc') + acc.email + ': ' + Lang.get('service.done') + Lang.get('service.coins') + '- ' + chcoins, 'enter');
 }
 })
-.catch((err) => {
+.catch((error) => {
 if (_this.getConfig('log', true)) {
-if (err.statusCode === 420) {
+if (error.response.status === 420) {
 _this.log(Lang.get('service.skip'), 'skip');
 }
 }
 });
 })
-.catch((err) => {
-if (err.statusCode === 401) {
+.catch((error) => {
+if (error.response.status === 401) {
 _this.log(Lang.get('service.ses_not_found') + ' - ' + Lang.get('service.session_expired'), 'err');
 }
 });

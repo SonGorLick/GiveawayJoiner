@@ -25,7 +25,7 @@ this.cookies = spdata.toString();
 }
 rq({
 method: 'GET',
-uri: 'https://scrap.tf',
+url: 'https://scrap.tf',
 timeout: 19000,
 headers: {
 'authority': 'scrap.tf',
@@ -40,9 +40,10 @@ headers: {
 'sec-fetch-dest': 'document',
 'cookie': this.cookies
 },
-json: false
+responseType: 'document'
 })
-.then((html) => {
+.then((htmls) => {
+let html = htmls.data;
 html = html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 if (html.indexOf('My Auctions') >= 0) {
 fs.writeFile(dirdata + 'scraptf_cookies.txt', this.cookies, (err) => { });
@@ -113,7 +114,7 @@ head = {
 'referer': 'https://scrap.tf/',
 'cookie': _this.cookies
 },
-datatype = false,
+datatype = 'document',
 spdata = {};
 if (page !== 1) {
 spurl = _this.url + '/ajax/raffles/Paginate';
@@ -133,17 +134,18 @@ head = {
 'referer': _this.url + '/raffles' + _this.spurl,
 'cookie': _this.cookies
 };
-datatype = true;
-spdata = {start: _this.lastid, sort: _this.sort, puzzle: 0, csrf: _this.csrf};
+datatype = 'json';
+spdata = qs.stringify({start: _this.lastid, sort: _this.sort, puzzle: 0, csrf: _this.csrf});
 }
 rq({
 method: type,
-uri: spurl,
+url: spurl,
 headers: head,
-json: datatype,
-form: spdata,
+responseType: datatype,
+data: spdata,
 })
-.then((data) => {
+.then((datas) => {
+let data = datas.data;
 if (page === 1) {
 data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 _this.csrf = data.substring(data.indexOf("ScrapTF.User.Hash =")+21,data.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
@@ -257,7 +259,7 @@ _this.log(Lang.get('service.checking') + splog, 'chk');
 if (!GJuser.sp.includes(',' + id + ',') && !spended.includes('Ended')) {
 rq({
 method: 'GET',
-uri: _this.url + splink,
+url: _this.url + splink,
 headers: {
 'authority': 'scrap.tf',
 'pragma': 'no-cache',
@@ -272,9 +274,10 @@ headers: {
 'referer': _this.ua + '/raffles',
 'cookie': _this.cookies
 },
-json: false
+responseType: 'document'
 })
-.then((data) => {
+.then((raffle) => {
+let data = raffle.data;
 data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 let enter = data.indexOf('>Enter Raffle<') >= 0,
 entered = data.indexOf('>Leave Raffle<') >= 0,
@@ -285,7 +288,7 @@ let tmout = Math.floor(spnext / 1.5);
 setTimeout(function () {
 rq({
 method: 'POST',
-uri: _this.url + '/ajax/viewraffle/EnterRaffle',
+url: _this.url + '/ajax/viewraffle/EnterRaffle',
 headers: {
 'authority': 'scrap.tf',
 'pragma': 'no-cache',
@@ -301,11 +304,11 @@ headers: {
 'referer': _this.url + '/raffles/' + id,
 'cookie': _this.cookies
 },
-json: true,
-form: {raffle: id, captcha: '', hash: hash, flag: false, csrf: _this.csrf},
+data: qs.stringify({raffle: id, captcha: '', hash: hash, flag: false, csrf: _this.csrf}),
 })
 .then((response) => {
-let spmess = JSON.stringify(response.message);
+let resp = response.data,
+spmess = JSON.stringify(resp.message);
 if (spmess === '"Entered raffle!"') {
 _this.log(Lang.get('service.entered_in') + splog, 'enter');
 }
