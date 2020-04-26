@@ -53,7 +53,7 @@ else {
 callback(0);
 }
 })
-.catch((err) => {
+.catch((error) => {
 callback(-1);
 })
 }
@@ -127,7 +127,7 @@ head = {
 'x-requested-with': 'XMLHttpRequest',
 'user-agent': _this.ua,
 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-'origin': 'https://scrap.tf',
+'origin': _this.url,
 'sec-fetch-site': 'same-origin',
 'sec-fetch-mode': 'cors',
 'sec-fetch-dest': 'empty',
@@ -297,7 +297,7 @@ headers: {
 'x-requested-with': 'XMLHttpRequest',
 'user-agent': _this.ua,
 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-'origin': 'https://scrap.tf',
+'origin': _this.url,
 'sec-fetch-site': 'same-origin',
 'sec-fetch-mode': 'cors',
 'sec-fetch-dest': 'empty',
@@ -317,6 +317,11 @@ spnext = 61000;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
+}
+})
+.catch((error) => {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
 }
 });
 }, tmout);

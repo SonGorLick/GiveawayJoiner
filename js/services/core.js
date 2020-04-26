@@ -55,9 +55,7 @@ GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replac
 fs.writeFile(dirdata + 'steam_app.txt', GJuser.ownapps, (err) => { });
 fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
 }
-},
-error: function () {
-}
+},error: function () {}
 });
 }
 if (fs.existsSync(dirdata + 'blacklist.txt')) {
@@ -312,9 +310,7 @@ GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replac
 fs.writeFile(dirdata + 'steam_app.txt', GJuser.ownapps, (err) => { });
 fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
 }
-},
-error: function () {
-}
+},error: function () {}
 });
 }
 if (fs.existsSync(dirdata + 'blacklist.txt')) {

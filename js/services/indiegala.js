@@ -55,6 +55,9 @@ error: function () {
 callback(-1);
 }
 });
+},
+error: function () {
+callback(-1);
 }
 });
 }
@@ -82,6 +85,7 @@ userData.username = data.email;
 }
 }
 },
+error: function () {},
 complete: function () {
 callback(userData);
 }
@@ -106,6 +110,8 @@ _this.ending_first = _this.getConfig('ending_first', false);
 _this.reserve = _this.getConfig('points_reserve', 0);
 _this.sort_after = false;
 _this.url = 'https://www.indiegala.com';
+if (GJuser.igchk === '' || (new Date()).getDate() !== GJuser.igchk) {
+GJuser.igchk = (new Date()).getDate();
 $.ajax({
 url: _this.url + '/giveaways/library_completed',
 type: 'POST',
@@ -135,10 +141,12 @@ if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
+})
+.catch((error) => {});
+}
+},error: function () {}
 });
 }
-}
-});
 if (GJuser.iglvl === 0) {
 _this.sort = false;
 }
@@ -407,12 +415,29 @@ data: {giv_id: id, ticket_price: price}
 })
 .then((resp) => {
 let response = resp.data;
-if (response.status === 'duplicate') {
+if (response.status === 'unauthorized') {
+Times = 0;
+igcurr++;
+igrtry = 0;
+if (GJuser.iglvl > 0) {
+GJuser.iglvl = GJuser.iglvl - 1;
+}
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.cant_join'), 'cant');
+}
+}
+if (response.status === 'insufficient_credit') {
+Times = 0;
 igcurr++;
 igrtry = 0;
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.entered_in') + iglog, 'enter');
+_this.log(Lang.get('service.points_low'), 'skip');
 }
+}
+if (response.status === 'duplicate') {
+igcurr++;
+igrtry = 0;
+_this.log(Lang.get('service.entered_in') + iglog, 'enter');
 }
 if (response.status === 'ok') {
 igrtry = 0;
@@ -438,7 +463,7 @@ ignext = (Math.floor(Math.random() * 600)) + 800;
 }
 })
 .catch((error) => {
-ignext = (Math.floor(Math.random() * 600)) + 800;
+ignext = (Math.floor(Math.random() * 6000)) + 8000;
 });
 }
 if (igrtry >= 12) {

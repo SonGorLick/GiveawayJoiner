@@ -18,6 +18,7 @@ GJuser.op = '';
 GJuser.sp = '';
 GJuser.tf = '';
 GJuser.zp = '';
+GJuser.igchk = '';
 GJuser.iglvl = undefined;
 $(function () {
 setInterval(intervalSchedules, 1000);
@@ -109,9 +110,7 @@ GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replac
 fs.writeFile(dirdata + 'steam_app.txt', GJuser.ownapps, (err) => { });
 fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
 }
-},
-error: function () {
-}
+},error: function () {}
 });
 }
 }

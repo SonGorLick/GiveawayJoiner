@@ -71,7 +71,7 @@ if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
-}
+},error: function () {}
 });
 $.ajax({
 url: _this.url + '/raffles.html',
@@ -151,6 +151,11 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
 }
+})
+.catch((error) => {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
 });
 }, tmout);
 }
@@ -163,7 +168,7 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
 }
 }
-}
+},error: function () {}
 });
 }
 else {

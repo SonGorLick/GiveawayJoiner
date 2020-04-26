@@ -67,7 +67,7 @@ if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
-}
+},error: function () {}
 });
 $.ajax({
 url: _this.url + '/zeepond/giveaways/enter-a-competition',
@@ -277,7 +277,7 @@ _this.log(Lang.get('service.err_join'), 'err');
 });
 }, tmout);
 }
-}
+},error: function () {}
 });
 }
 else {
@@ -287,10 +287,6 @@ zpcurr++;
 setTimeout(giveawayEnter, zpnext);
 }
 giveawayEnter();
-},
-error: function () {
-this.log(Lang.get('service.connection_lost'), 'err');
-this.stimer = 10;
 }
 });
 }
