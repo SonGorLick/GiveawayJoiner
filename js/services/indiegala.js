@@ -110,7 +110,7 @@ _this.ending_first = _this.getConfig('ending_first', false);
 _this.reserve = _this.getConfig('points_reserve', 0);
 _this.sort_after = false;
 _this.url = 'https://www.indiegala.com';
-if (GJuser.igchk === '' || (new Date()).getDate() !== GJuser.igchk) {
+if ((new Date()).getDate() !== GJuser.igchk) {
 GJuser.igchk = (new Date()).getDate();
 $.ajax({
 url: _this.url + '/giveaways/library_completed',

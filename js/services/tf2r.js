@@ -44,6 +44,8 @@ _this.stimer = tftimer;
 }
 _this.url = 'https://tf2r.com';
 _this.won = _this.getConfig('won', 0);
+if ((new Date()).getDate() !== GJuser.tfchk) {
+GJuser.tfchk = (new Date()).getDate();
 $.ajax({
 url: _this.url + '/notifications.html',
 success: function (html) {
@@ -73,6 +75,7 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }
 },error: function () {}
 });
+}
 $.ajax({
 url: _this.url + '/raffles.html',
 success: function (data) {

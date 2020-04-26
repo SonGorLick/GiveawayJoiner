@@ -45,6 +45,8 @@ _this.stimer = zptimer;
 _this.skip = false;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.zeepond.com';
+if ((new Date()).getDate() !== GJuser.zpchk) {
+GJuser.zpchk = (new Date()).getDate();
 $.ajax({
 url: _this.url + '/my-account/my-prizes',
 success: function (data) {
@@ -69,6 +71,7 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }
 },error: function () {}
 });
+}
 $.ajax({
 url: _this.url + '/zeepond/giveaways/enter-a-competition',
 success: function (data) {

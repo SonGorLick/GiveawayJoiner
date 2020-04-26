@@ -45,6 +45,8 @@ $.ajax({
 url: _this.url + '/astats/TopListGames.php?language=english'
 });
 }
+if ((new Date()).getDate() !== GJuser.aschk) {
+GJuser.aschk = (new Date()).getDate();
 $.ajax({
 url: _this.url + '/astats/profile/User_Inbox.php',
 success: function (data) {
@@ -69,6 +71,7 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }
 },error: function () {}
 });
+}
 let callback = function () {
 page++;
 if (page <= _this.pagemax) {
