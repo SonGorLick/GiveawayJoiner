@@ -110,11 +110,11 @@ webSecurity: false,
 webaudio: false
 }
 });
-Browser.loadURL('about:blank');
+Browser.loadURL('file://' + __dirname + '/blank.html');
 Browser.on('close', (e) => {
-Browser.loadURL('about:blank');
-e.preventDefault();
+Browser.loadURL('file://' + __dirname + '/blank.html');
 Browser.hide();
+e.preventDefault();
 if (mainWindow.hidden) {
 mainWindow.focus();
 }
