@@ -8,7 +8,7 @@
   3. Open Terminal program (Windows users: cmd.exe 'as administrator') in sources folder and run this commands:
   >npm install electron                                  
   >npm update                                 
-  >npm install electron-builder                   
+  >npm install -g electron-builder                   
   >electron-builder --dir                              
   
   GiveawayJoiner build will be in sources subfolder 'dist'
