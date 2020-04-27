@@ -36,12 +36,20 @@ $.ajax({
 url: 'https://www.indiegala.com/library',
 success: function (html) {
 html = $(html.replace(/<img/gi, '<noload'));
+userData.value = html.find('.settings-galasilver').attr('value');
 userData.avatar = html.find('.profile-private-page-avatar > noload').attr('src');
 if (userData.avatar.includes('profile_backend')) {
 userData.avatar = 'https://www.indiegala.com' + userData.avatar;
 }
 userData.username = html.find('.profile-private-page-user-row').text();
-userData.value = html.find('.settings-galasilver').attr('value');
+$.ajax({
+url: 'https://www.indiegala.com/library/giveaways/user-level-and-coins',
+success: function (response) {
+if (response.current_level !== undefined) {
+GJuser.iglvl = response.current_level;
+}
+},error: function () {}
+});
 },error: function () {},
 complete: function () {
 callback(userData);
@@ -54,15 +62,6 @@ if (_this.getConfig('timer_to', 90) !== _this.getConfig('timer_from', 70)) {
 let igtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
 _this.stimer = igtimer;
 }
-$.ajax({
-url: 'https://www.indiegala.com/library/giveaways/user-level-and-coins',
-timeout: 19000,
-success: function (response) {
-if (response.current_level !== undefined) {
-GJuser.iglvl = response.current_level;
-}
-},error: function () {}
-});
 let page = 1;
 _this.igprtry = 0;
 _this.iglast = 0;
@@ -116,7 +115,7 @@ GJuser.iglvl = _this.lvlmax;
 if (GJuser.iglvl === 0) {
 _this.sort = false;
 }
-if (_this.curr_value === undefined) {
+if (_this.curr_value === undefined || _this.curr_value === 0) {
 _this.setValue(240);
 }
 if (_this.ending_first && _this.ending !== 0 && _this.sort) {
