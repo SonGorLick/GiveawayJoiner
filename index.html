@@ -94,6 +94,7 @@ const currentBuild = require('electron').remote.app.getVersion();
 <script src="./js/services/core.js"></script>
 <script src="./js/services/astats.js"></script>
 <script src="./js/services/chronogg.js"></script>
+<script src="./js/services/fgl.js"></script>
 <script src="./js/services/follx.js"></script>
 <script src="./js/services/indiedb.js"></script>
 <script src="./js/services/indiegala.js"></script>
@@ -107,6 +108,7 @@ const currentBuild = require('electron').remote.app.getVersion();
 window.services = {
 astats: new Astats(),
 chronogg: new ChronoGG(),
+fgl: new FGL(),
 follx: new Follx(),
 indiedb: new IndieDB(),
 indiegala: new IndieGala(),

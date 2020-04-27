@@ -377,7 +377,12 @@ case 4:
 _this.log(Lang.get('service.blacklisted'), 'black');
 break;
 case 5:
+if (single) {
 _this.log(Lang.get('service.skipped'), 'skip');
+}
+else {
+_this.log('[' + enterTimes + '] ' + Lang.get('service.skipped'), 'skip');
+}
 break;
 case 6:
 _this.log(Lang.get('service.time'), 'skip');
