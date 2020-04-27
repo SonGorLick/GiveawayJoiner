@@ -38,6 +38,7 @@ let fgtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _t
 _this.stimer = fgtimer;
 }
 _this.url = 'https://d.freegamelottery.com/draw/register-visit';
+_this.fgurl = 'https://d.freegamelottery.com';
 let fgcurr = 1;
 _this.check = true;
 function giveawayEnter() {
@@ -77,7 +78,7 @@ headers: {
 success: function (data) {
 if (data.result === 'success') {
 $.ajax({
-url: _this.fgurl + 'dashboard-system.js',
+url: _this.fgurl + '/dashboard-system.js',
 success: function (data) {
 data = JSON.parse(data.replace('var System = ', '').replace('}};', '}}'));
 fgid = data.user.id;

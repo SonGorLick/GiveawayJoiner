@@ -188,7 +188,9 @@ let loadLang = () => {
 rq({url: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/' + name, responseType: 'document'})
 .then((language) => {
 let lang = JSON.stringify(language.data);
-fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => { });
+fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => {});
+})
+.finally(() => {
 checked++;
 if (checked >= data.length) {
 startApp();
