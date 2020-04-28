@@ -26,7 +26,6 @@ this.cookies = spdata.toString();
 rq({
 method: 'GET',
 url: 'https://scrap.tf',
-timeout: 19000,
 headers: {
 'authority': 'scrap.tf',
 'pragma': 'no-cache',
@@ -276,13 +275,13 @@ headers: {
 },
 responseType: 'document'
 })
-.then((raffle) => {
-let data = raffle.data;
-data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
-let enter = data.indexOf('>Enter Raffle<') >= 0,
-entered = data.indexOf('>Leave Raffle<') >= 0,
-hash = data.substring(data.indexOf("ScrapTF.Raffles.EnterRaffle(")+39,data.indexOf("<i18n>Enter Raffle</i18n></button>")).slice(0, 64);
-_this.csrf = data.substring(data.indexOf("ScrapTF.User.Hash =")+21,data.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
+.then((raffles) => {
+let raff = raffles.data;
+raff = raff.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
+let enter = raff.indexOf('>Enter Raffle<') >= 0,
+entered = raff.indexOf('>Leave Raffle<') >= 0,
+hash = raff.substring(raff.indexOf("ScrapTF.Raffles.EnterRaffle(")+39,raff.indexOf("<i18n>Enter Raffle</i18n></button>")).slice(0, 64);
+_this.csrf = raff.substring(raff.indexOf("ScrapTF.User.Hash =")+21,raff.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 if (enter) {
 let tmout = Math.floor(spnext / 1.5);
 setTimeout(function () {
