@@ -6,7 +6,6 @@ this.websiteUrl = 'https://freegamelottery.com';
 this.authContent = 'My Points';
 this.authLink = 'https://github.com/pumPCin/GiveawayJoiner/wiki/FGL';
 this.auth = Lang.get('service.wiki') + 'FGL';
-this.authLink = 'https://freegamelottery.com';
 this.withValue = false;
 delete this.settings.pages;
 delete this.settings.check_in_steam;
