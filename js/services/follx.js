@@ -22,7 +22,6 @@ userData.username = data.find('.common-header .user .expander-content a.username
 userData.value = data.find('.common-header .user .expander-content .energy > span').text().trim();
 userData.avatar = data.find('.common-header .user span.avatar').attr('style').replace("background-image: url('",'').replace("')", '');
 },
-error: function () {},
 complete: function () {
 callback(userData);
 }
@@ -70,8 +69,7 @@ headers: {
 'Accept': 'application/json, text/javascript, */*; q=0.01',
 'X-Requested-With': 'XMLHttpRequest',
 },
-dataType: 'json',
-error: function () {}
+dataType: 'json'
 });
 let fxwon = html.find('.hide-on-med-and-down.user-panel.s6.col > .icons > .has.marker.cup').attr('href');
 if (fxwon !== undefined) {
@@ -196,7 +194,7 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.cant_join'), 'cant');
 }
 }
-},error: function () {}
+}
 });
 }
 else {

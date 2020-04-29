@@ -20,12 +20,13 @@ super.init();
 }
 authCheck(callback) {
 if (this.cookies === '' & fs.existsSync(dirdata + 'scraptf_cookies.txt')) {
-let spdata = fs.readFileSync(dirdata + 'scraptf_cookies.txt');
-this.cookies = spdata.toString();
+let spcook = fs.readFileSync(dirdata + 'scraptf_cookies.txt');
+this.cookies = spcook.toString();
 }
 rq({
 method: 'GET',
 url: 'https://scrap.tf',
+timeout: 19000,
 headers: {
 'authority': 'scrap.tf',
 'pragma': 'no-cache',
@@ -84,6 +85,7 @@ else {
 _this.sort = 0;
 }
 _this.lastid = '';
+_this.csrf = '';
 _this.won = _this.getConfig('won', 0);
 _this.pagemax = _this.getConfig('pages', 1);
 let callback = function () {
@@ -98,8 +100,8 @@ enterOnPage(page, callback) {
 let _this = this;
 GJuser.sp = ',';
 let spurl = _this.url + '/raffles' + _this.spurl,
-type = 'GET',
-head = {
+sptype = 'GET',
+sphead = {
 'authority': 'scrap.tf',
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
@@ -113,12 +115,12 @@ head = {
 'referer': 'https://scrap.tf/',
 'cookie': _this.cookies
 },
-datatype = 'document',
-spdata = {};
+sprtype = 'document',
+spdata = '';
 if (page !== 1) {
 spurl = _this.url + '/ajax/raffles/Paginate';
-type = 'POST';
-head = {
+sptype = 'POST';
+sphead = {
 'authority': 'scrap.tf',
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
@@ -133,14 +135,14 @@ head = {
 'referer': _this.url + '/raffles' + _this.spurl,
 'cookie': _this.cookies
 };
-datatype = 'json';
-spdata = qs.stringify({start: _this.lastid, sort: _this.sort, puzzle: 0, csrf: _this.csrf});
+sprtype = 'json';
+spdata = 'start=' + _this.lastid + '&sort=' + _this.sort + '&puzzle=0&csrf=' + _this.csrf;
 }
 rq({
-method: type,
+method: sptype,
 url: spurl,
-headers: head,
-responseType: datatype,
+headers: sphead,
+responseType: sprtype,
 data: spdata,
 })
 .then((datas) => {
@@ -283,7 +285,7 @@ entered = raff.indexOf('>Leave Raffle<') >= 0,
 hash = raff.substring(raff.indexOf("ScrapTF.Raffles.EnterRaffle(")+39,raff.indexOf("<i18n>Enter Raffle</i18n></button>")).slice(0, 64);
 _this.csrf = raff.substring(raff.indexOf("ScrapTF.User.Hash =")+21,raff.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 if (enter) {
-let tmout = Math.floor(spnext / 1.5);
+let tmout = Math.floor(spnext / 2) + 2000;
 setTimeout(function () {
 rq({
 method: 'POST',
@@ -303,7 +305,7 @@ headers: {
 'referer': _this.url + '/raffles/' + id,
 'cookie': _this.cookies
 },
-data: qs.stringify({raffle: id, captcha: '', hash: hash, flag: false, csrf: _this.csrf}),
+data: 'raffle=' + id + '&captcha=&hash=' + hash + '&flag=false&csrf=' + _this.csrf,
 })
 .then((response) => {
 let resp = response.data,
@@ -312,15 +314,10 @@ if (spmess === '"Entered raffle!"') {
 _this.log(Lang.get('service.entered_in') + splog, 'enter');
 }
 else {
-spnext = 61000;
+spnext = spnext * 2
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
-}
-})
-.catch((error) => {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
 }
 });
 }, tmout);

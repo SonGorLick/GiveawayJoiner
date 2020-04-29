@@ -73,7 +73,7 @@ if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
-},error: function () {}
+}
 });
 }
 $.ajax({
@@ -129,12 +129,12 @@ data = data.replace(/<img/gi, '<noload');
 let html = $('<div>' + data + '</div>'),
 entered = html.find('#enbut').length === 0;
 if (!entered) {
-let tmout = Math.floor(tfnext / 4);
+let tmout = Math.floor(tfnext / 2);
 setTimeout(function () {
 rq({
 method: 'POST',
 url: _this.url + '/job.php',
-data: qs.stringify({enterraffle: 'true', rid: rid, ass: 'yup, indeed'}),
+data: 'enterraffle=true&rid=' + rid + '&ass=yup,%20indeed',
 headers: {
 'User-Agent': _this.ua,
 Cookie: _this.cookies
@@ -154,11 +154,6 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
 }
-})
-.catch((error) => {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
-}
 });
 }, tmout);
 }
@@ -171,7 +166,7 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
 }
 }
-},error: function () {}
+}
 });
 }
 else {

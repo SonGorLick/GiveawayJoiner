@@ -35,7 +35,6 @@ userData.username = html.find('.page-header__nav-func-user-wrapper a').text().sp
 userData.avatar = 'https://www.opiumpulses.com' + html.find('.input-group noload').attr('src');
 userData.value = html.find('.points-items li a').first().text().replace('Points:', '').trim();
 },
-error: function () {},
 complete: function () {
 callback(userData);
 }
@@ -293,7 +292,7 @@ else {
 oplog = oplog + _this.logBlack(opid);
 }
 if (opown === 0) {
-let tmout = Math.floor(opnext / 4);
+let tmout = Math.floor(opnext / 2);
 setTimeout(function () {
 if (check !== undefined) {
 check = check.replace('checkUser(', '').replace(')', '');
@@ -318,7 +317,7 @@ _this.log(Lang.get('service.err_join'), 'err');
 else {
 opnext = 100;
 }
-},error: function () {}
+}
 });
 }
 opcurr++;

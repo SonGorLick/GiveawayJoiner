@@ -150,7 +150,7 @@ _this.log(Lang.get('service.no_offer') + 'Diamonds Quests', 'cant');
 }
 else {
 lboffers.forEach(function(offer) {
-let tmout = Math.floor(lbnext / 4);
+let tmout = Math.floor(lbnext / 2);
 setTimeout(function () {
 rq({
 method: 'PUT',
@@ -234,7 +234,7 @@ _this.log(Lang.get('service.no_offer') + 'Read Comics', 'cant');
 }
 else {
 lbcomics.forEach(function(comic) {
-let pmout = Math.floor(lbnext / 2);
+let pmout = Math.floor(lbnext / 2) + 2000;
 setTimeout(function () {
 rq({
 method: 'PUT',

@@ -114,7 +114,7 @@ let check = data.indexOf('<p><strong>Support us by subscribing:</strong></p>') >
 if (_this.getConfig('log', true) && !check) {
 _this.log(Lang.get('service.hided').split(' ')[0] + ' ' + name + ' ' + finish, 'info');
 }
-},error: function () {}
+}
 });
 if (_this.getConfig('log', true) && !addlink.includes('the-challenge-of-adblock')) {
 _this.log(Lang.get('service.hided').split(' ')[0] + ' ' + name + ' ' + finish, 'info');
@@ -124,8 +124,7 @@ _this.log(Lang.get('service.hided').split(' ')[0] + ' ' + name + ' ' + finish, '
 if (addlink.includes('http')) {
 setTimeout(function () {
 $.ajax({
-url: _this.url + '/giveaways/ajax/'+ finish + '/' + id,
-error: function () {}
+url: _this.url + '/giveaways/ajax/'+ finish + '/' + id
 });
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.hided').split(' ')[0] + ' ' + name + ' ' + finish, 'info');

@@ -69,7 +69,7 @@ if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
-},error: function () {}
+}
 });
 }
 $.ajax({
@@ -253,7 +253,7 @@ else {
 zplog = zplog + zpid;
 }
 if (zpown === 0) {
-let tmout = Math.floor(zpnext / 1.6);
+let tmout = Math.floor(zpnext / 2) + 2000;
 setTimeout(function () {
 $.ajax({
 url: zplink + '/enter_competition',
@@ -280,7 +280,7 @@ _this.log(Lang.get('service.err_join'), 'err');
 });
 }, tmout);
 }
-},error: function () {}
+}
 });
 }
 else {

@@ -69,7 +69,7 @@ if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
-},error: function () {}
+}
 });
 }
 let callback = function () {
@@ -110,8 +110,7 @@ _this.pagemax = page;
 }
 if (afound.length <= acurr || !_this.started) {
 $.ajax({
-url: _this.url + '/astats/User_Info.php',
-error: function () {}
+url: _this.url + '/astats/User_Info.php'
 });
 if (afound.length <= acurr && page === _this.pagemax) {
 setTimeout(function () {
@@ -235,7 +234,7 @@ break;
 }
 }
 if (asown === 0) {
-let tmout = Math.floor(asnext / 4);
+let tmout = Math.floor(asnext / 2);
 setTimeout(function () {
 $.ajax({
 url: _this.url + alink,
@@ -258,7 +257,7 @@ _this.log(Lang.get('service.err_join'), 'err');
 else {
 asnext = 1000;
 }
-},error: function () {}
+}
 });
 }
 else {

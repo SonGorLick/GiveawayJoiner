@@ -6,8 +6,7 @@
   "main": "giveawayjoiner.js",
   "dependencies": {
     "electron-json-storage": "latest",
-    "axios": "latest",
-    "qs": "latest"
+    "axios": "latest"
   },
   "author": "pumPCin",
   "license": "MIT",

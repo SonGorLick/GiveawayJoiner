@@ -12,7 +12,6 @@ let intervalTicks = 0;
 GJuser.ownapps = '[]';
 GJuser.ownsubs = '[]';
 GJuser.black = '';
-GJuser.ig = '';
 GJuser.as = '';
 GJuser.op = '';
 GJuser.sp = '';
@@ -23,7 +22,6 @@ GJuser.aschk = '';
 GJuser.zpchk = '';
 GJuser.iglvl = undefined;
 $(function () {
-setInterval(intervalSchedules, 1000);
 reloadLangStrings();
 profileSection();
 let setters = $('.settings .setter').each(function () {
@@ -91,33 +89,6 @@ fs.writeFile(dirdata + 'blacklist.txt', GJuser.black, (err) => { });
 }
 });
 });
-function intervalSchedules() {
-if (intervalTicks % 600 === 0) {
-if (fs.existsSync(dirdata + 'steam_app.txt')) {
-let ownapps = fs.readFileSync(dirdata + 'steam_app.txt');
-GJuser.ownapps = ownapps.toString();
-}
-if (fs.existsSync(dirdata + 'steam_sub.txt')) {
-let ownsubs = fs.readFileSync(dirdata + 'steam_sub.txt');
-GJuser.ownsubs = ownsubs.toString();
-}
-if (!Config.get('steam_local', false)) {
-$.ajax({
-url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
-dataType: 'json',
-success: function (data) {
-if (JSON.stringify(data.rgOwnedApps) !== '[]') {
-GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
-GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
-fs.writeFile(dirdata + 'steam_app.txt', GJuser.ownapps, (err) => { });
-fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
-}
-},error: function () {}
-});
-}
-}
-intervalTicks++;
-}
 function reloadLangStrings() {
 $('[data-lang]').each(function () {
 $(this).html(Lang.get($(this).attr('data-lang')));

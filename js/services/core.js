@@ -1,7 +1,6 @@
 'use strict';
 const storage = require('electron').remote.require('electron-json-storage');
 const fs = require('electron').remote.require('fs');
-const qs = require('electron').remote.require('qs');
 const dirapp = (__dirname).replace('electron.asar/renderer', 'app.asar') + '/';
 const dirdata = storage.getDataPath() + '/';
 class Joiner {
@@ -21,7 +20,7 @@ this.ua = mainWindow.webContents.session.getUserAgent();
 this.settings = {
 timer_from: { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 700), default: this.getConfig('timer_from', 500) },
 timer_to: { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 500), max: 2880, default: this.getConfig('timer_to', 700) },
-interval_from: { type: 'number', trans: 'service.interval_from', min: 0, max: this.getConfig('interval_to', 15), default: this.getConfig('interval_from', 10) },
+interval_from: { type: 'number', trans: 'service.interval_from', min: 5, max: this.getConfig('interval_to', 15), default: this.getConfig('interval_from', 10) },
 interval_to: { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 10), max: 60, default: this.getConfig('interval_to', 15) },
 pages: { type: 'number', trans: 'service.pages', min: 1, max: 30, default: this.getConfig('pages', 1) },
 check_in_steam: { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) },
@@ -36,37 +35,6 @@ this.addPanel();
 this.renderSettings();
 this.updateCookies();
 if (Config.get('autostart') || this.getConfig('autostart')) {
-if (fs.existsSync(dirdata + 'steam_app.txt')) {
-let ownapps = fs.readFileSync(dirdata + 'steam_app.txt');
-GJuser.ownapps = ownapps.toString();
-}
-if (fs.existsSync(dirdata + 'steam_sub.txt')) {
-let ownsubs = fs.readFileSync(dirdata + 'steam_sub.txt');
-GJuser.ownsubs = ownsubs.toString();
-}
-if (!Config.get('steam_local', false)) {
-$.ajax({
-url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
-dataType: 'json',
-success: function (data) {
-if (JSON.stringify(data.rgOwnedApps) !== '[]') {
-GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
-GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
-fs.writeFile(dirdata + 'steam_app.txt', GJuser.ownapps, (err) => { });
-fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
-}
-},error: function () {}
-});
-}
-if (fs.existsSync(dirdata + 'blacklist.txt')) {
-let blacklist = fs.readFileSync(dirdata + 'blacklist.txt');
-if (blacklist.length > 0) {
-GJuser.black = blacklist.toString();
-if (GJuser.black.slice(-1) !== ',') {
-GJuser.black = GJuser.black + ',';
-}
-}
-}
 this.startJoiner(true);
 }
 }
@@ -291,6 +259,15 @@ if (!this.started) {
 clearInterval(this.intervalVar);
 }
 if (this.totalTicks % this.doTimer() === 0) {
+if(
+(this.constructor.name === 'Astats') ||
+(this.constructor.name === 'Follx') ||
+(this.constructor.name === 'IndieGala') ||
+(this.constructor.name === 'OpiumPulses') ||
+(this.constructor.name === 'SteamGifts') ||
+(this.constructor.name === 'ZP')
+)
+{
 if (fs.existsSync(dirdata + 'steam_app.txt')) {
 let ownapps = fs.readFileSync(dirdata + 'steam_app.txt');
 GJuser.ownapps = ownapps.toString();
@@ -310,7 +287,7 @@ GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replac
 fs.writeFile(dirdata + 'steam_app.txt', GJuser.ownapps, (err) => { });
 fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
 }
-},error: function () {}
+}
 });
 }
 if (fs.existsSync(dirdata + 'blacklist.txt')) {
@@ -319,6 +296,7 @@ if (blacklist.length > 0) {
 GJuser.black = blacklist.toString();
 if (GJuser.black.slice(-1) !== ',') {
 GJuser.black = GJuser.black + ',';
+}
 }
 }
 }

@@ -49,7 +49,6 @@ userData.avatar = data.find('.nav__avatar-inner-wrap').attr('style').replace('ba
 userData.username = data.find('input[name=username]').val();
 userData.value = data.find('.nav__points').text();
 },
-error: function () {},
 complete: function () {
 callback(userData);
 }
@@ -410,10 +409,10 @@ _this.log(Lang.get('service.entered_in') + sglog, 'enter');
 _this.setValue(data.points);
 GA.entered = true;
 }
-},
-error: function () {
+else {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
+}
 }
 }
 });

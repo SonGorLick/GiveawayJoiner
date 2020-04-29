@@ -48,9 +48,9 @@ success: function (response) {
 if (response.current_level !== undefined) {
 GJuser.iglvl = response.current_level;
 }
-},error: function () {}
+}
 });
-},error: function () {},
+},
 complete: function () {
 callback(userData);
 }
@@ -80,33 +80,20 @@ GJuser.igchk = (new Date()).getDate();
 $.ajax({
 url: _this.url + '/library/giveaways/giveaways-completed/tocheck',
 success: function (response) {
-if (response.includes('>Check all<')) {
-rq({
-method: 'GET',
+if (!response.includes('This list is actually empty')) {
+$.ajax({
+method: 'POST',
 url: _this.url + '/library/giveaways/check-if-winner-all',
-headers: {
-'origin': _this.url,
-'referer': _this.url + '/library',
-'user-agent': _this.ua,
-'cookie': _this.cookies
-},
-responseType: 'document'
-})
-.then((htmls) => {
-let html = htmls.data,
-igwon = $(html).find('p').eq(1).text().trim();
-if (igwon.includes('Congratulations! You won')) {
-igwon = igwon.replace('Congratulations! You won','').replace('Giveaways','').trim();
-_this.log(_this.logLink(_this.url + '/library/giveaways/giveaways-completed/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + igwon + ')'), 'win');
-_this.setStatus('win');
-if (_this.getConfig('sound', true)) {
-new Audio(dirapp + 'sounds/won.wav').play();
+dataType: 'json',
+cache: false,
+success: function (responsedata) {
+//_this.log(responsedata.status);
+//_this.log(responsedata.code);
+//_this.log(responsedata.won);
+}
+});
 }
 }
-})
-.catch((error) => {});
-}
-},error: function () {}
 });
 }
 if (GJuser.iglvl === undefined) {
@@ -346,7 +333,7 @@ if (single) {
 _this.log(Lang.get('service.skipped'), 'skip');
 }
 else {
-_this.log('[' + enterTimes + '] ' + Lang.get('service.skipped'), 'skip');
+_this.log('[' + (Times + 1) + '] ' + Lang.get('service.skipped'), 'skip');
 }
 break;
 case 6:
@@ -420,7 +407,7 @@ else {
 Times++;
 _this.log('[' + (Times) + '] ' + Lang.get('service.entered_in') + iglog, 'enter');
 if (_this.getConfig('multi_join', false) && Times < _this.getConfig('join_qty', 1)) {
-ignext = (Math.floor(Math.random() * 400)) + 600;
+ignext = (Math.floor(Math.random() * 500)) + 1000;
 }
 else {
 Times = 0;
@@ -429,17 +416,17 @@ igcurr++;
 }
 }
 else {
-ignext = (Math.floor(Math.random() * 600)) + 800;
+ignext = (Math.floor(Math.random() * 1000)) + 1000;
 }
 })
 .catch((error) => {
-ignext = (Math.floor(Math.random() * 6000)) + 8000;
+ignext = ignext * 2;
 });
 }
 if (igrtry >= 12) {
 igrtry = 0;
 Times = 0;
-ignext = 61000;
+ignext = ignext * 4;
 igcurr++;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
