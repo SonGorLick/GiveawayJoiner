@@ -205,7 +205,7 @@ this.waitAuth = true;
 Browser.webContents.on('did-finish-load', () => {
 if (this.waitAuth && Browser.getURL().indexOf(this.websiteUrl) >= 0) {
 Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML')
-.then(body => {
+.then((body) => {
 if (body.indexOf(this.authContent) >= 0) {
 Browser.close();
 this.waitAuth = false;

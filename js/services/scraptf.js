@@ -55,7 +55,7 @@ callback(0);
 })
 .catch((error) => {
 callback(-1);
-})
+});
 }
 getUserInfo(callback) {
 let userData = {
