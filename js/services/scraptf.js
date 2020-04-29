@@ -314,7 +314,7 @@ if (spmess === '"Entered raffle!"') {
 _this.log(Lang.get('service.entered_in') + splog, 'enter');
 }
 else {
-spnext = spnext * 2
+spnext = spnext * 2;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
