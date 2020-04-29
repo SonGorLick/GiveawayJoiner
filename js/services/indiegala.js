@@ -87,9 +87,6 @@ url: _this.url + '/library/giveaways/check-if-winner-all',
 dataType: 'json',
 cache: false,
 success: function (responsedata) {
-//_this.log(responsedata.status);
-//_this.log(responsedata.code);
-//_this.log(responsedata.won);
 }
 });
 }
