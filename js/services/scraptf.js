@@ -99,47 +99,37 @@ let _this = this;
 GJuser.sp = ',';
 let spurl = _this.url + '/raffles' + _this.spurl,
 sptype = 'GET',
-sphead = {
-'authority': 'scrap.tf',
-'pragma': 'no-cache',
-'cache-control': 'no-cache',
-'upgrade-insecure-requests': '1',
-'user-agent': _this.ua,
-'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-'sec-fetch-site': 'same-origin',
-'sec-fetch-mode': 'navigate',
-'sec-fetch-user': '?1',
-'sec-fetch-dest': 'document',
-'referer': 'https://scrap.tf/',
-'cookie': _this.cookies
-},
-sprtype = 'document',
+spaccept = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+spmode = 'navigate',
+spdest = 'document',
+spreferer =  _this.url + '/',
+sprtype = spdest,
 spdata = '';
 if (page !== 1) {
 spurl = _this.url + '/ajax/raffles/Paginate';
 sptype = 'POST';
-sphead = {
-'authority': 'scrap.tf',
-'pragma': 'no-cache',
-'cache-control': 'no-cache',
-'accept': 'application/json, text/javascript, */*; q=0.01',
-'x-requested-with': 'XMLHttpRequest',
-'user-agent': _this.ua,
-'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-'origin': _this.url,
-'sec-fetch-site': 'same-origin',
-'sec-fetch-mode': 'cors',
-'sec-fetch-dest': 'empty',
-'referer': _this.url + '/raffles' + _this.spurl,
-'cookie': _this.cookies
-};
+spaccept = 'application/json, text/javascript, */*; q=0.01';
+spmode = 'cors';
+spdest = 'empty';
+spreferer = _this.url + '/raffles' + _this.spurl;
 sprtype = 'json';
 spdata = 'start=' + _this.lastid + '&sort=' + _this.sort + '&puzzle=0&csrf=' + _this.csrf;
 }
 rq({
 method: sptype,
 url: spurl,
-headers: sphead,
+headers: {
+'authority': 'scrap.tf',
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
+'accept': spaccept,
+'user-agent': _this.ua,
+'origin': _this.url,
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': spmode,
+'sec-fetch-dest': spdest,
+'cookie': _this.cookies
+},
 responseType: sprtype,
 data: spdata,
 })
@@ -267,12 +257,10 @@ headers: {
 'authority': 'scrap.tf',
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
-'upgrade-insecure-requests': '1',
 'user-agent': _this.ua,
 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
 'sec-fetch-site': 'same-origin',
 'sec-fetch-mode': 'navigate',
-'sec-fetch-user': '?1',
 'sec-fetch-dest': 'document',
 'referer': _this.ua + '/raffles',
 'cookie': _this.cookies
@@ -298,9 +286,7 @@ headers: {
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
 'accept': 'application/json, text/javascript, */*; q=0.01',
-'x-requested-with': 'XMLHttpRequest',
 'user-agent': _this.ua,
-'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
 'origin': _this.url,
 'sec-fetch-site': 'same-origin',
 'sec-fetch-mode': 'cors',
