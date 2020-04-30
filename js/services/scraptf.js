@@ -284,7 +284,8 @@ let raff = raffles.data;
 raff = raff.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 let enter = raff.indexOf('>Enter Raffle<') >= 0,
 entered = raff.indexOf('>Leave Raffle<') >= 0,
-hash = raff.substring(raff.indexOf("ScrapTF.Raffles.EnterRaffle(")+39,raff.indexOf("<i18n>Enter Raffle</i18n></button>")).slice(0, 64);
+hash = raff.substring(raff.indexOf("ScrapTF.Raffles.EnterRaffle(")+39,raff.indexOf("<i18n>Enter Raffle</i18n></button>")).slice(0, 64),
+spid = id;
 _this.csrf = raff.substring(raff.indexOf("ScrapTF.User.Hash =")+21,raff.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 if (enter) {
 let tmout = Math.floor(spnext / 2) + 2000;
@@ -304,10 +305,10 @@ headers: {
 'sec-fetch-site': 'same-origin',
 'sec-fetch-mode': 'cors',
 'sec-fetch-dest': 'empty',
-'referer': _this.url + '/raffles/' + id,
+'referer': _this.url + '/raffles/' + spid,
 'cookie': _this.cookies
 },
-data: 'raffle=' + id + '&captcha=&hash=' + hash + '&flag=false&csrf=' + _this.csrf,
+data: 'raffle=' + spid + '&captcha=&hash=' + hash + '&flag=false&csrf=' + _this.csrf,
 })
 .then((raffle) => {
 let resp = raffle.data,
