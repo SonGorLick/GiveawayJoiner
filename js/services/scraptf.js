@@ -30,9 +30,7 @@ headers: {
 'authority': 'scrap.tf',
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
-'upgrade-insecure-requests': '1',
 'user-agent': this.ua,
-'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
 'sec-fetch-site': 'none',
 'sec-fetch-mode': 'navigate',
 'sec-fetch-user': '?1',
@@ -51,9 +49,6 @@ callback(1);
 else {
 callback(0);
 }
-})
-.catch((error) => {
-callback(-1);
 });
 }
 getUserInfo(callback) {
@@ -331,9 +326,6 @@ spcurr++;
 setTimeout(giveawayEnter, spnext);
 }
 giveawayEnter();
-})
-.catch((error) => {
-callback(-1);
 });
 }
 }
