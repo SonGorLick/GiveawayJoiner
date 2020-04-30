@@ -136,6 +136,7 @@ $(document.createElement('button'))
 .appendTo(info_links);
 }
 function renderUser(userData) {
+$('.content-item .info .username').html('GiveawayJoiner');
 $.ajax({
 url: 'https://store.steampowered.com/account',
 success: function (data) {
@@ -148,11 +149,8 @@ $('.content-item .info .avatar').css({'background-image': 'url("' + userData.ava
 }
 if (name !== undefined && name.length > 0) {
 userData.username = name;
+$('.content-item .info .username').html(userData.username);
 }
-$('.content-item .info .username').html(userData.username);
-},
-error: function () {
-$('.content-item .info .username').html(userData.username);
 }
 });
 }

@@ -98,22 +98,22 @@ enterOnPage(page, callback) {
 let _this = this;
 GJuser.sp = ',';
 let spurl = _this.url + '/raffles' + _this.spurl,
-sptype = 'GET',
-spaccept = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-spmode = 'navigate',
-spdest = 'document',
 spreferer =  _this.url + '/',
-sprtype = spdest,
-spdata = '';
+spdata = '',
+sporig = '',
+spdest = 'document',
+sptype = 'GET',
+spmode = 'navigate',
+sprtype = spdest;
 if (page !== 1) {
 spurl = _this.url + '/ajax/raffles/Paginate';
-sptype = 'POST';
-spaccept = 'application/json, text/javascript, */*; q=0.01';
+spdata = 'start=' + _this.lastid + '&sort=' + _this.sort + '&puzzle=0&csrf=' + _this.csrf;
+spreferer = _this.url + '/raffles' + _this.spurl;
+sporig = _this.url;
 spmode = 'cors';
 spdest = 'empty';
-spreferer = _this.url + '/raffles' + _this.spurl;
+sptype = 'POST';
 sprtype = 'json';
-spdata = 'start=' + _this.lastid + '&sort=' + _this.sort + '&puzzle=0&csrf=' + _this.csrf;
 }
 rq({
 method: sptype,
@@ -122,12 +122,12 @@ headers: {
 'authority': 'scrap.tf',
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
-'accept': spaccept,
 'user-agent': _this.ua,
-'origin': _this.url,
+'origin': sporig,
 'sec-fetch-site': 'same-origin',
 'sec-fetch-mode': spmode,
 'sec-fetch-dest': spdest,
+'referer': spreferer,
 'cookie': _this.cookies
 },
 responseType: sprtype,
@@ -258,7 +258,6 @@ headers: {
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
 'user-agent': _this.ua,
-'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
 'sec-fetch-site': 'same-origin',
 'sec-fetch-mode': 'navigate',
 'sec-fetch-dest': 'document',
@@ -285,7 +284,6 @@ headers: {
 'authority': 'scrap.tf',
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
-'accept': 'application/json, text/javascript, */*; q=0.01',
 'user-agent': _this.ua,
 'origin': _this.url,
 'sec-fetch-site': 'same-origin',
@@ -333,6 +331,9 @@ spcurr++;
 setTimeout(giveawayEnter, spnext);
 }
 giveawayEnter();
+})
+.catch((error) => {
+callback(-1);
 });
 }
 }
