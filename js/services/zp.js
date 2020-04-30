@@ -151,6 +151,7 @@ break;
 }
 }
 if (njoin === 0) {
+zpnext = zpnext + Math.floor(zpnext / 2) + 2100;
 $.ajax({
 url: zplink,
 success: function (html) {

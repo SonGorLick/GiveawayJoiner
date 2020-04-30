@@ -81,7 +81,6 @@ contextIsolation: false,
 nodeIntegration: true,
 webviewTag: true,
 webSecurity: false,
-webaudio: false
 }
 });
 if (devMode) {
@@ -106,7 +105,6 @@ devTools: false,
 contextIsolation: false,
 webviewTag: true,
 webSecurity: false,
-webaudio: false
 }
 });
 Browser.loadURL('file://' + __dirname + '/blank.html');

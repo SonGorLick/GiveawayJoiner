@@ -20,27 +20,24 @@ super.init();
 }
 authCheck(callback) {
 if (this.cookies === '' & fs.existsSync(dirdata + 'scraptf_cookies.txt')) {
-let spcook = fs.readFileSync(dirdata + 'scraptf_cookies.txt');
-this.cook = spcook.toString();
-}
-else {
-this.cook = this.cookies;
+let spdata = fs.readFileSync(dirdata + 'scraptf_cookies.txt');
+this.cookies = spdata.toString();
 }
 rq({
 method: 'GET',
 url: 'https://scrap.tf',
-timeout: 30000,
 headers: {
 'authority': 'scrap.tf',
 'pragma': 'no-cache',
 'cache-control': 'no-cache',
 'upgrade-insecure-requests': '1',
 'user-agent': this.ua,
+'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
 'sec-fetch-site': 'none',
 'sec-fetch-mode': 'navigate',
 'sec-fetch-user': '?1',
 'sec-fetch-dest': 'document',
-'cookie': this.cook
+'cookie': this.cookies
 },
 responseType: 'document'
 })
@@ -48,7 +45,7 @@ responseType: 'document'
 let html = htmls.data;
 html = html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 if (html.indexOf('My Auctions') >= 0) {
-fs.writeFile(dirdata + 'scraptf_cookies.txt', this.cook, (err) => { });
+fs.writeFile(dirdata + 'scraptf_cookies.txt', this.cookies, (err) => { });
 callback(1);
 }
 else {
@@ -108,6 +105,7 @@ sphead = {
 'cache-control': 'no-cache',
 'upgrade-insecure-requests': '1',
 'user-agent': _this.ua,
+'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
 'sec-fetch-site': 'same-origin',
 'sec-fetch-mode': 'navigate',
 'sec-fetch-user': '?1',
@@ -141,7 +139,6 @@ spdata = 'start=' + _this.lastid + '&sort=' + _this.sort + '&puzzle=0&csrf=' + _
 rq({
 method: sptype,
 url: spurl,
-timeout: 30000,
 headers: sphead,
 responseType: sprtype,
 data: spdata,
@@ -262,7 +259,7 @@ splog = '|' + page + '#|' + (sprnd + 1) + '№|  ' + splog;
 _this.log(Lang.get('service.checking') + splog, 'chk');
 }
 if (!GJuser.sp.includes(',' + id + ',') && !spended.includes('Ended')) {
-spnext = spnext * 2;
+spnext = spnext + Math.floor(spnext / 2) + 2100;
 rq({
 method: 'GET',
 url: _this.url + splink,
@@ -272,6 +269,7 @@ headers: {
 'cache-control': 'no-cache',
 'upgrade-insecure-requests': '1',
 'user-agent': _this.ua,
+'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
 'sec-fetch-site': 'same-origin',
 'sec-fetch-mode': 'navigate',
 'sec-fetch-user': '?1',
@@ -318,7 +316,7 @@ if (spmess === '"Entered raffle!"') {
 _this.log(Lang.get('service.entered_in') + splog, 'enter');
 }
 else {
-spnext = spnext * 3;
+spnext = spnext * 2;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
