@@ -6,6 +6,7 @@ this.websiteUrl = 'https://freegamelottery.com';
 this.authContent = 'My Points';
 this.authLink = 'https://github.com/pumPCin/GiveawayJoiner/wiki/FGL';
 this.auth = Lang.get('service.wiki') + 'FGL';
+this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.withValue = false;
 delete this.settings.pages;
 delete this.settings.check_in_steam;
@@ -78,20 +79,27 @@ success: function (data) {
 if (data.result === 'success') {
 $.ajax({
 url: _this.fgurl + '/dashboard-system.js',
-success: function (data) {
-data = JSON.parse(data.replace('var System = ', '').replace('}};', '}}'));
-fgid = data.user.id;
-fgname = data.user.login;
-fgmaindraw = data.draws.main.actual.id;
-fgsurveydraw = data.draws.survey.actual.id;
-fgvideodraw = data.draws.video.actual.id;
-fgstackpotdraw = data.draws.stackpot.actual.id;
-fgmainvisit = data.draws.main.actual.haveVisited;
-fgsurveyvisit = data.draws.survey.actual.haveVisited;
-fgvideovisit = data.draws.video.actual.haveVisited;
-fgstackpotvisit = data.draws.stackpot.actual.haveVisited;
+success: function (account) {
+let fgacc = JSON.parse(account.replace('var System = ', '').replace('}};', '}}'));
+fgid = fgacc.user.id;
+fgname = fgacc.user.login;
+fgmaindraw = fgacc.draws.main.actual.id;
+fgsurveydraw = fgacc.draws.survey.actual.id;
+fgvideodraw = fgacc.draws.video.actual.id;
+fgstackpotdraw = fgacc.draws.stackpot.actual.id;
+fgmainvisit = fgacc.draws.main.actual.haveVisited;
+fgsurveyvisit = fgacc.draws.survey.actual.haveVisited;
+fgvideovisit = fgacc.draws.video.actual.haveVisited;
+fgstackpotvisit = fgacc.draws.stackpot.actual.haveVisited;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.acc') + fgname);
+}
+if (account.indexOf('"winner":{"id":' + fgid + ',') >= 0) {
+_this.log(Lang.get('service.acc') + fgname + ': ' + Lang.get('service.win'), 'win');
+_this.setStatus('win');
+if (_this.getConfig('sound', true)) {
+new Audio(dirapp + 'sounds/won.wav').play();
+}
 }
 if (fgmaindraw > 0) {
 if (!fgmainvisit) {

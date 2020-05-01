@@ -101,6 +101,11 @@ headers: {
 .then((win) => {
 let igwin = win.data;
 if (igwin.won !== undefined) {
+_this.log(_this.logLink(_this.url + '/library', Lang.get('service.win')), 'win');
+_this.setStatus('win');
+if (_this.getConfig('sound', true)) {
+new Audio(dirapp + 'sounds/won.wav').play();
+}
 _this.log(igwin.won);
 }
 });
