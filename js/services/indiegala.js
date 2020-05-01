@@ -81,12 +81,27 @@ $.ajax({
 url: _this.url + '/library/giveaways/giveaways-completed/tocheck',
 success: function (response) {
 if (!response.includes('This list is actually empty')) {
-$.ajax({
+rq({
 method: 'POST',
 url: _this.url + '/library/giveaways/check-if-winner-all',
-dataType: 'json',
-cache: false,
-success: function (responsedata) {
+headers: {
+'cache-control': 'no-cache',
+'pragma': 'no-cache',
+'accept': 'application/json, text/javascript, */*; q=0.01',
+'user-agent': _this.ua,
+'x-requested-with': 'XMLHttpRequest',
+'origin': _this.url,
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'cors',
+'sec-fetch-dest': 'empty',
+'referer': _this.url + '/library/',
+'cookie': _this.cookies
+}
+})
+.then((win) => {
+let igwin = win.data;
+if (igwin.won !== undefined) {
+_this.log(igwin.won);
 }
 });
 }
@@ -423,14 +438,14 @@ else {
 ignext = (Math.floor(Math.random() * 1000)) + 1000;
 }
 })
-.catch((error) => {
+.catch((err) => {
 ignext = ignext * 2;
 });
 }
 if (igrtry >= 12) {
 igrtry = 0;
 Times = 0;
-ignext = ignext * 4;
+ignext = ignext * 3;
 igcurr++;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');

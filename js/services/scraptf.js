@@ -240,6 +240,7 @@ splog = '|' + page + '#|' + (sprnd + 1) + '№|  ' + splog;
 _this.log(Lang.get('service.checking') + splog, 'chk');
 }
 if (!GJuser.sp.includes(',' + id + ',') && !spended.includes('Ended')) {
+spnext = spnext + Math.floor(spnext / 2) + 2100;
 rq({
 method: 'GET',
 url: _this.url + splink,
@@ -265,6 +266,8 @@ hash = raff.substring(raff.indexOf("ScrapTF.Raffles.EnterRaffle(")+39,raff.index
 spid = id;
 _this.csrf = raff.substring(raff.indexOf("ScrapTF.User.Hash =")+21,raff.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 if (enter) {
+let tmout = Math.floor(spnext / 2) + 2000;
+setTimeout(function () {
 rq({
 method: 'POST',
 url: _this.url + '/ajax/viewraffle/EnterRaffle',
@@ -294,7 +297,14 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
 }
+})
+.catch((err) => {
+spnext = spnext * 2;
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
 });
+}, tmout);
 }
 else {
 if (entered && _this.getConfig('log', true)) {
@@ -305,6 +315,12 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.cant_join'), 'cant');
 }
 }
+}
+})
+.catch((err) => {
+spnext = spnext * 2;
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
 }
 });
 }

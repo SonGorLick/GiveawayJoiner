@@ -107,7 +107,7 @@ else {
 _this.log(Lang.get('service.acc') + acc.email + ': ' + Lang.get('service.done') + Lang.get('service.coins') + '- ' + chcoins, 'enter');
 }
 })
-.catch((error) => {
+.catch((err) => {
 if (_this.getConfig('log', true)) {
 if (error.response.status === 420) {
 _this.log(Lang.get('service.skip'), 'skip');
@@ -115,7 +115,7 @@ _this.log(Lang.get('service.skip'), 'skip');
 }
 });
 })
-.catch((error) => {
+.catch((err) => {
 if (error.response.status === 401) {
 _this.log(Lang.get('service.ses_not_found') + ' - ' + Lang.get('service.session_expired'), 'err');
 }
