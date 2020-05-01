@@ -19,6 +19,7 @@ delete this.settings.blacklist_on;
 super.init();
 }
 authCheck(callback) {
+let call = -1;
 rq({
 method: 'GET',
 url: 'https://scrap.tf',
@@ -39,14 +40,14 @@ responseType: 'document'
 let html = htmls.data;
 html = html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 if (html.indexOf('My Auctions') >= 0) {
-callback(1);
+call = 1;
 }
 else {
-callback(0);
+call = 0;
 }
 })
-.catch(() => {
-callback(-1);
+.finally(() => {
+callback(call);
 });
 }
 getUserInfo(callback) {

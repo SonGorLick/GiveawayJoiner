@@ -1,4 +1,5 @@
 'use strict';
+process.binding('http_parser').HTTPParser = require('http-parser-js').HTTPParser;
 const { app, nativeImage, shell, session, Tray, BrowserWindow, Menu, ipcMain, ipcRenderer } = require('electron');
 const storage = require('electron-json-storage');
 const fs = require('fs');
