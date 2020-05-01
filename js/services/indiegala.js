@@ -167,6 +167,9 @@ _this.pagemax = page;
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igprtry > 0) {
 if (_this.igprtry === 0) {
 if (_this.getConfig('log', true)) {
+if (_this.curr_value === 0 && _this.iglast === 0) {
+_this.log(Lang.get('service.value_label') + ': 0', 'skip');
+}
 if (_this.iglast !== 0 && !_this.sort && _this.started) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
@@ -221,6 +224,10 @@ igid = 'app/' + igapp;
 }
 if (igsteam.includes('sub/')) {
 igsub = parseInt(igsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
+igid = 'sub/' + igsub;
+}
+if (igsteam.includes('subs/')) {
+igsub = parseInt(igsteam.split('subs/')[1].split('/')[0].split('?')[0].split('#')[0]);
 igid = 'sub/' + igsub;
 }
 if (time.includes('day')) {

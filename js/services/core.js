@@ -13,6 +13,7 @@ this.waitAuth = false;
 this.cookies = '';
 this.withValue = true;
 this.curr_value = 0;
+this.tries = 0;
 this.getTimeout = 19000;
 this.domain = 'google.com';
 this.auth = Lang.get('service.login') + this.constructor.name;
@@ -181,6 +182,10 @@ startJoiner(autostart) {
 if (this.started) {
 return false;
 }
+if (autostart) {
+this.runTimer();
+}
+else {
 this.buttonState(Lang.get('service.btn_checking'), 'disabled');
 this.authCheck((authState) => {
 if (authState === 1) {
@@ -189,15 +194,6 @@ this.runTimer();
 else if (authState === -1) {
 this.log(Lang.get('service.connection_error'), 'err');
 this.buttonState(Lang.get('service.btn_start'));
-if (autostart) {
-this.setStatus('bad');
-}
-}
-else {
-if (autostart) {
-this.setStatus('bad');
-this.buttonState(Lang.get('service.btn_start'));
-this.log(Lang.get('service.cant_start'), 'err');
 }
 else {
 this.buttonState(Lang.get('service.btn_awaiting'), 'disabled');
@@ -230,8 +226,8 @@ this.buttonState(Lang.get('service.btn_start'));
 });
 Browser.show();
 }
-}
 });
+}
 }
 stopJoiner(bad) {
 let status = bad ? 'bad' : 'normal';
@@ -302,6 +298,7 @@ GJuser.black = GJuser.black + ',';
 }
 this.authCheck((authState) => {
 if (authState === 1) {
+this.tries = 0;
 this.updateUserInfo();
 if (Config.get('log_autoclear', false)) {
 this.logField.html('<div></div>');
@@ -313,12 +310,28 @@ this.updateCookies();
 this.joinService();
 }
 else if (authState === 0) {
+if (this.tries < 3) {
+this.tries++;
+this.log('[' + this.tries + ']' + Lang.get('service.connection_lost'), 'err');
+this.stimer = 10;
+}
+else {
+this.tries = 0;
 this.log(Lang.get('service.session_expired'), 'err');
 this.stopJoiner(true);
 }
+}
 else {
-this.log(Lang.get('service.connection_lost'), 'err');
+if (this.tries < 3) {
+this.tries++;
+this.log('[' + this.tries + ']' + Lang.get('service.connection_lost'), 'err');
 this.stimer = 10;
+}
+else {
+this.tries = 0;
+this.log(Lang.get('connection_error'), 'err');
+this.stopJoiner(true);
+}
 }
 });
 }
