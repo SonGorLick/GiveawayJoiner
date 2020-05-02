@@ -104,7 +104,7 @@ _this.setStatus('win');
 if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
-//_this.log(igwin.won);
+_this.log(igwin.won);
 }
 });
 }

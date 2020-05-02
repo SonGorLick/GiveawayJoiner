@@ -239,6 +239,7 @@ splog = '|' + page + '#|' + (sprnd + 1) + '№|  ' + splog;
 _this.log(Lang.get('service.checking') + splog, 'chk');
 }
 if (!GJuser.sp.includes(',' + id + ',') && !spended.includes('Ended')) {
+spnext = spnext + Math.floor(spnext / 4) + 2100;
 rq({
 method: 'GET',
 url: _this.url + splink,

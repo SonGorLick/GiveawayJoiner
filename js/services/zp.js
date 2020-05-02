@@ -140,9 +140,11 @@ _this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
 switch (njoin) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
+_this.log(Lang.get('service.data_have'), 'skip');
 break;
 case 2:
 _this.log(Lang.get('service.blacklisted'), 'black');
+_this.log(Lang.get('service.data_have'), 'skip');
 break;
 case 3:
 _this.log(Lang.get('service.time'), 'skip');
@@ -151,6 +153,7 @@ break;
 }
 }
 if (njoin === 0) {
+zpnext = zpnext + Math.floor(zpnext / 4) + 2100;
 $.ajax({
 url: zplink,
 success: function (html) {
