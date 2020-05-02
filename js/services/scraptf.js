@@ -25,8 +25,6 @@ method: 'GET',
 url: 'https://scrap.tf',
 headers: {
 'authority': 'scrap.tf',
-'pragma': 'no-cache',
-'cache-control': 'no-cache',
 'user-agent': this.ua,
 'sec-fetch-site': 'none',
 'sec-fetch-mode': 'navigate',
@@ -92,12 +90,13 @@ enterOnPage(page, callback) {
 let _this = this;
 GJuser.sp = ',';
 let spurl = _this.url + '/raffles' + _this.spurl,
-spreferer =  _this.url + '/',
+spreferer = _this.url + '/',
 spdata = '',
 sporig = '',
+spmode = 'navigate',
+spuser = '?1',
 spdest = 'document',
 sptype = 'GET',
-spmode = 'navigate',
 sprtype = spdest;
 if (page !== 1) {
 spurl = _this.url + '/ajax/raffles/Paginate';
@@ -105,6 +104,7 @@ spdata = 'start=' + _this.lastid + '&sort=' + _this.sort + '&puzzle=0&csrf=' + _
 spreferer = _this.url + '/raffles' + _this.spurl;
 sporig = _this.url;
 spmode = 'cors';
+spuser = '';
 spdest = 'empty';
 sptype = 'POST';
 sprtype = 'json';
@@ -114,12 +114,11 @@ method: sptype,
 url: spurl,
 headers: {
 'authority': 'scrap.tf',
-'pragma': 'no-cache',
-'cache-control': 'no-cache',
 'user-agent': _this.ua,
 'origin': sporig,
 'sec-fetch-site': 'same-origin',
 'sec-fetch-mode': spmode,
+'sec-fetch-user': spuser,
 'sec-fetch-dest': spdest,
 'referer': spreferer,
 'cookie': _this.cookies
@@ -240,18 +239,17 @@ splog = '|' + page + '#|' + (sprnd + 1) + '№|  ' + splog;
 _this.log(Lang.get('service.checking') + splog, 'chk');
 }
 if (!GJuser.sp.includes(',' + id + ',') && !spended.includes('Ended')) {
+spnext = spnext + Math.floor(spnext / 2) + 2100;
 rq({
 method: 'GET',
 url: _this.url + splink,
 headers: {
 'authority': 'scrap.tf',
-'pragma': 'no-cache',
-'cache-control': 'no-cache',
 'user-agent': _this.ua,
-'sec-fetch-site': 'same-origin',
+'sec-fetch-site': 'none',
 'sec-fetch-mode': 'navigate',
+'sec-fetch-user': '?1',
 'sec-fetch-dest': 'document',
-'referer': _this.ua + '/raffles',
 'cookie': _this.cookies
 },
 responseType: 'document'
@@ -265,15 +263,13 @@ hash = raff.substring(raff.indexOf("ScrapTF.Raffles.EnterRaffle(")+39,raff.index
 spid = id;
 _this.csrf = raff.substring(raff.indexOf("ScrapTF.User.Hash =")+21,raff.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 if (enter) {
-let tmout = Math.floor(spnext / 4) + 2000;
+let tmout = Math.floor(spnext / 2) + 2000;
 setTimeout(function () {
 rq({
 method: 'POST',
 url: _this.url + '/ajax/viewraffle/EnterRaffle',
 headers: {
 'authority': 'scrap.tf',
-'pragma': 'no-cache',
-'cache-control': 'no-cache',
 'user-agent': _this.ua,
 'origin': _this.url,
 'sec-fetch-site': 'same-origin',

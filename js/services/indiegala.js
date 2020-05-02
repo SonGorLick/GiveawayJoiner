@@ -85,8 +85,6 @@ rq({
 method: 'POST',
 url: _this.url + '/library/giveaways/check-if-winner-all',
 headers: {
-'cache-control': 'no-cache',
-'pragma': 'no-cache',
 'accept': 'application/json, text/javascript, */*; q=0.01',
 'user-agent': _this.ua,
 'x-requested-with': 'XMLHttpRequest',
@@ -106,7 +104,7 @@ _this.setStatus('win');
 if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
-_this.log(igwin.won);
+//_this.log(igwin.won);
 }
 });
 }
