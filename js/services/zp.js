@@ -114,7 +114,7 @@ njoin = 0,
 zpblack = '',
 zpdtnow = new Date();
 zpdtnow.setDate(zpdtnow.getUTCDate());
-zpdtnow.setHours(zpdtnow.getUTCHours() + 12);
+zpdtnow.setHours(zpdtnow.getUTCHours() + 10);
 let zpdnow = zpdtnow.getDate();
 if (GJuser.zp.includes(',' + zpnam + '(z=') && !_this.getConfig('check_all', false)) {
 let zpdga = parseInt(GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0]);
