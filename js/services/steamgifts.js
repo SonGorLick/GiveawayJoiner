@@ -332,7 +332,7 @@ break;
 case 3:
 sgprize = GA.cost;
 _this.log(Lang.get('service.points_low'), 'skip');
-_this.log(Lang.get('service.skip_more') + (GA.cost - 1), 'skip');
+_this.log(Lang.get('service.skip_more') + (GA.cost - 1) + '$', 'skip');
 break;
 case 4:
 _this.log(Lang.get('service.blacklisted'), 'black');
