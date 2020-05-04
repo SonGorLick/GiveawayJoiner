@@ -186,7 +186,7 @@ if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _thi
 if (_this.igprtry === 0) {
 if (_this.getConfig('log', true)) {
 if (_this.curr_value === 0 && _this.iglast === 0) {
-_this.log(Lang.get('service.value_label') + ': 0', 'skip');
+_this.log(Lang.get('service.value_label') + ' - 0', 'skip');
 }
 if (_this.iglast !== 0 && !_this.sort && _this.started) {
 _this.log(Lang.get('service.reach_end'), 'skip');

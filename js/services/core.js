@@ -283,7 +283,7 @@ GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replac
 fs.writeFile(dirdata + 'steam_app.txt', GJuser.ownapps, (err) => { });
 fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
 }
-}
+},error: () => {}
 });
 }
 if (fs.existsSync(dirdata + 'blacklist.txt')) {
@@ -298,6 +298,7 @@ GJuser.black = GJuser.black + ',';
 }
 this.authCheck((authState) => {
 if (authState === 1) {
+this.setStatus('good');
 this.tries = 0;
 this.updateUserInfo();
 if (Config.get('log_autoclear', false)) {
@@ -311,6 +312,7 @@ this.joinService();
 }
 else if (authState === 0) {
 if (this.tries < 3) {
+this.setStatus('net');
 this.tries++;
 this.log('[' + this.tries + ']' + Lang.get('service.connection_lost'), 'err');
 this.stimer = 10;
@@ -323,6 +325,7 @@ this.stopJoiner(true);
 }
 else {
 if (this.tries < 3) {
+this.setStatus('net');
 this.tries++;
 this.log('[' + this.tries + ']' + Lang.get('service.connection_lost'), 'err');
 this.stimer = 10;

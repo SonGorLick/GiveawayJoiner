@@ -330,8 +330,9 @@ case 2:
 _this.log(Lang.get('service.steam_error'), 'err');
 break;
 case 3:
-_this.log(Lang.get('service.points_low'), 'skip');
 sgprize = GA.cost;
+_this.log(Lang.get('service.points_low'), 'skip');
+_this.log(Lang.get('service.skip_more') + (GA.cost - 1), 'skip');
 break;
 case 4:
 _this.log(Lang.get('service.blacklisted'), 'black');

@@ -13,15 +13,7 @@ delete this.settings.blacklist_on;
 super.init();
 }
 authCheck(callback) {
-$.ajax({
-url: 'https://www.chrono.gg',
-success: function () {
 callback(1);
-},
-error: function () {
-callback(-1);
-}
-});
 }
 getUserInfo(callback) {
 let userData = {
@@ -55,6 +47,8 @@ _this.log(Lang.get('service.open_file') + 'chronogg' + chcurr + '.txt', 'info');
 let chdata = fs.readFileSync(dirdata + 'chronogg' + chcurr + '.txt');
 if (chdata.includes('JWT')) {
 let chauth = chdata.toString();
+let tmout = Math.floor(chnext / 4);
+setTimeout(function () {
 rq({
 method: 'GET',
 url: _this.churl + '/account',
@@ -78,6 +72,7 @@ _this.log(Lang.get('service.acc') + acc.email + ':' + Lang.get('service.coins') 
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Spin Coin', 'chk');
 }
 }
+setTimeout(function () {
 rq({
 method: 'GET',
 url: _this.churl + '/quest/spin',
@@ -114,12 +109,14 @@ _this.log(Lang.get('service.skip'), 'skip');
 }
 }
 });
+}, tmout);
 })
 .catch((err) => {
 if (error.response.status === 401) {
 _this.log(Lang.get('service.ses_not_found') + ' - ' + Lang.get('service.session_expired'), 'err');
 }
 });
+}, tmout);
 }
 else {
 _this.log(Lang.get('service.dt_err'), 'err');

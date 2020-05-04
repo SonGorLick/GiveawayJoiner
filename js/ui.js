@@ -22,6 +22,18 @@ GJuser.aschk = '';
 GJuser.zpchk = '';
 GJuser.iglvl = undefined;
 $(function () {
+if (!Config.get('steam_local', false)) {
+$.ajax({
+url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
+dataType: 'json',
+success: function (data) {
+if (JSON.stringify(data.rgOwnedApps) !== '[]') {
+GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
+GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
+}
+},error: () => {}
+});
+}
 reloadLangStrings();
 profileSection();
 let setters = $('.settings .setter').each(function () {

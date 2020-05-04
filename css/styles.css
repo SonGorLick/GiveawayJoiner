@@ -42,6 +42,7 @@ a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .service-icon .service-status span { display: none; color: #b8c1c6; }
 .service-icon .service-status[data-status=good] span:first-child { display: inline; color: lightgreen; }
 .service-icon .service-status[data-status=win] span:first-child { display: inline; color: hotpink; }
+.service-icon .service-status[data-status=net] span:first-child { display: inline; color: lightskyblue; }
 .service-icon .service-status[data-status=normal] span + span { display: inline; }
 .service-icon .service-status[data-status=bad] span + span { display: inline; color: orangered; }
 .list_type:not(.state) span:first-child { color: #4db6ac; }
