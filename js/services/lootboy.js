@@ -13,7 +13,15 @@ delete this.settings.blacklist_on;
 super.init();
 }
 authCheck(callback) {
+$.ajax({
+url: 'https://www.lootboy.de',
+success: function () {
 callback(1);
+},
+error: function () {
+callback(-1);
+}
+});
 }
 getUserInfo(callback) {
 let userData = {
@@ -48,21 +56,19 @@ lbua = fs.readFileSync(dirdata + 'lootboy' + lbcurr + '_ua.txt');
 if (fs.existsSync(dirdata + 'lootboy' + lbcurr + '.txt')) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.open_file') + 'lootboy' + lbcurr + '.txt', 'info');
-_this.log('UA: ' + lbua);
+if (lbua !== _this.ua) {
+_this.log(lbua, 'skip');
 }
-let lbdata = fs.readFileSync(dirdata + 'lootboy' + lbcurr + '.txt');
-if (lbdata.includes('Bearer') && lbdata.includes(',')) {
-let lbd = (lbdata.toString()).split(','),
+}
+let lbdata = fs.readFileSync(dirdata + 'lootboy' + lbcurr + '.txt'),
+lbd = (lbdata.toString()).split(','),
 lbauth = lbd[0],
 lbbrr = lbd[1];
-let tmout = Math.floor(lbnext / 4);
-setTimeout(function () {
+if (lbdata.includes('Bearer') && lbdata.includes(',')) {
 rq({
 method: 'GET',
 url: _this.lburl + '/v2/users/' + lbauth,
 headers: {
-'pragma': 'no-cache',
-'cache-control': 'no-cache',
 'accept': 'application/json',
 'origin': _this.url,
 'Authorization': lbbrr,
@@ -79,8 +85,6 @@ rq({
 method: 'GET',
 url: _this.lburl + '/v1/offers?lang=en',
 headers: {
-'pragma': 'no-cache',
-'cache-control': 'no-cache',
 'accept': 'application/json',
 'origin': _this.url,
 'Authorization': lbbrr,
@@ -94,8 +98,6 @@ rq({
 method: 'GET',
 url: _this.lburl + '/v1/offers/taken?lang=en',
 headers: {
-'pragma': 'no-cache',
-'cache-control': 'no-cache',
 'accept': 'application/json',
 'origin': _this.url,
 'Authorization': lbbrr,
@@ -109,8 +111,6 @@ rq({
 method: 'PUT',
 url: _this.lburl + '/v2/users/self/appStart',
 headers: {
-'pragma': 'no-cache',
-'cache-control': 'no-cache',
 'content-length': 0,
 'accept': 'application/json',
 'origin': _this.url,
@@ -150,13 +150,10 @@ _this.log(Lang.get('service.no_offer') + 'Diamonds Quests', 'cant');
 }
 else {
 lboffers.forEach(function(offer) {
-setTimeout(function () {
 rq({
 method: 'PUT',
 url: _this.lburl + '/v1/offers/' + offer.id + '?lang=en',
 headers: {
-'pragma': 'no-cache',
-'cache-control': 'no-cache',
 'content-length': 0,
 'accept': 'application/json',
 'origin': _this.url,
@@ -184,7 +181,6 @@ _this.log(Lang.get('service.skip'), 'skip');
 }
 }
 });
-}, tmout);
 });
 }
 });
@@ -193,8 +189,6 @@ rq({
 method: 'GET',
 url: _this.lburl + '/v1/comics?lang=en',
 headers: {
-'pragma': 'no-cache',
-'cache-control': 'no-cache',
 'accept': 'application/json',
 'origin': _this.url,
 'Authorization': lbbrr,
@@ -208,8 +202,6 @@ rq({
 method: 'GET',
 url: _this.lburl + '/v1/comics/readComics?lang=en',
 headers: {
-'pragma': 'no-cache',
-'cache-control': 'no-cache',
 'accept': 'application/json',
 'origin': _this.url,
 'Authorization': lbbrr,
@@ -233,13 +225,10 @@ _this.log(Lang.get('service.no_offer') + 'Read Comics', 'cant');
 }
 else {
 lbcomics.forEach(function(comic) {
-setTimeout(function () {
 rq({
 method: 'PUT',
 url: _this.lburl + '/v1/comics/' + comic.id + '/read?lang=en',
 headers: {
-'pragma': 'no-cache',
-'cache-control': 'no-cache',
 'content-length': 0,
 'accept': 'application/json',
 'origin': _this.url,
@@ -267,16 +256,14 @@ _this.log(Lang.get('service.skip'), 'skip');
 }
 }
 });
-}, tmout);
 });
 }
 });
 });
 })
-.catch((err) => {
+.catch((error) => {
 _this.log(Lang.get('service.ses_not_found') + ' - ' + Lang.get('service.session_expired'), 'err');
 });
-}, tmout);
 }
 else {
 _this.log(Lang.get('service.dt_err'), 'err');

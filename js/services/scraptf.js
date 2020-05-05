@@ -293,7 +293,7 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 }
 })
-.catch((err) => {
+.catch((error) => {
 spnext = spnext * 2;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
@@ -312,7 +312,7 @@ _this.log(Lang.get('service.cant_join'), 'cant');
 }
 }
 })
-.catch((err) => {
+.catch((error) => {
 spnext = spnext * 2;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');

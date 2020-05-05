@@ -13,7 +13,15 @@ delete this.settings.blacklist_on;
 super.init();
 }
 authCheck(callback) {
+$.ajax({
+url: 'https://www.chrono.gg',
+success: function () {
 callback(1);
+},
+error: function () {
+callback(-1);
+}
+});
 }
 getUserInfo(callback) {
 let userData = {
@@ -44,21 +52,17 @@ if (fs.existsSync(dirdata + 'chronogg' + chcurr + '.txt')) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.open_file') + 'chronogg' + chcurr + '.txt', 'info');
 }
-let chdata = fs.readFileSync(dirdata + 'chronogg' + chcurr + '.txt');
+let chdata = fs.readFileSync(dirdata + 'chronogg' + chcurr + '.txt'),
+chauth = chdata.toString();
 if (chdata.includes('JWT')) {
-let chauth = chdata.toString();
-let tmout = Math.floor(chnext / 4);
-setTimeout(function () {
 rq({
 method: 'GET',
 url: _this.churl + '/account',
 headers: {
 'user-agent': _this.ua,
-'pragma': 'no-cache',
 'origin': _this.url,
 'accept-encoding': 'gzip, deflate, br',
 'accept': 'application/json',
-'cache-control': 'no-cache',
 'authorization': chauth,
 'referer': _this.url,
 }
@@ -71,18 +75,14 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.acc') + acc.email + ':' + Lang.get('service.coins') + '- ' + chacc.balance);
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Spin Coin', 'chk');
 }
-}
-setTimeout(function () {
 rq({
 method: 'GET',
 url: _this.churl + '/quest/spin',
 headers: {
 'user-agent': _this.ua,
-'pragma': 'no-cache',
 'origin': _this.url,
 'accept-encoding': 'gzip, deflate, br',
 'accept': 'application/json',
-'cache-control': 'no-cache',
 'authorization': chauth,
 'referer': _this.url,
 }
@@ -102,21 +102,25 @@ else {
 _this.log(Lang.get('service.acc') + acc.email + ': ' + Lang.get('service.done') + Lang.get('service.coins') + '- ' + chcoins, 'enter');
 }
 })
-.catch((err) => {
-if (_this.getConfig('log', true)) {
+.catch((error) => {
 if (error.response.status === 420) {
+if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.skip'), 'skip');
 }
 }
 });
-}, tmout);
+}
+else {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
+}
 })
-.catch((err) => {
+.catch((error) => {
 if (error.response.status === 401) {
 _this.log(Lang.get('service.ses_not_found') + ' - ' + Lang.get('service.session_expired'), 'err');
 }
 });
-}, tmout);
 }
 else {
 _this.log(Lang.get('service.dt_err'), 'err');

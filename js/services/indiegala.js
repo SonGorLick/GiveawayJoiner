@@ -441,7 +441,7 @@ else {
 ignext = (Math.floor(Math.random() * 1000)) + 1000;
 }
 })
-.catch((err) => {
+.catch((error) => {
 ignext = ignext * 2;
 });
 }
