@@ -79,12 +79,14 @@ if ((new Date()).getDate() !== GJuser.igchk) {
 GJuser.igchk = (new Date()).getDate();
 $.ajax({
 url: _this.url + '/library/giveaways/giveaways-completed/tocheck',
-success: function (response) {
-if (!response.includes('This list is actually empty')) {
+success: function (check) {
+if (check.indexOf('>Check all<') >= 0) {
 rq({
 method: 'POST',
 url: _this.url + '/library/giveaways/check-if-winner-all',
 headers: {
+'authority': 'www.indiegala.com',
+'content-length': 0,
 'accept': 'application/json, text/javascript, */*; q=0.01',
 'user-agent': _this.ua,
 'x-requested-with': 'XMLHttpRequest',
@@ -92,12 +94,16 @@ headers: {
 'sec-fetch-site': 'same-origin',
 'sec-fetch-mode': 'cors',
 'sec-fetch-dest': 'empty',
-'referer': _this.url + '/library/',
+'referer': _this.url + '/library',
 'cookie': _this.cookies
 }
 })
 .then((win) => {
 let igwin = win.data;
+if (igwin.code !== 'e100') {
+_this.log(igwin.status + ' - ' + igwin.code);
+GJuser.igchk = '';
+}
 if (igwin.won !== undefined) {
 _this.log(_this.logLink(_this.url + '/library', Lang.get('service.win')), 'win');
 _this.setStatus('win');
