@@ -163,7 +163,7 @@ assub = parseInt(assteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')
 asid = 'sub/' + assub;
 }
 if (_this.getConfig('check_in_steam', true)) {
-if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
+if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
 asown = 2;
 }
 if (GJuser.ownapps.includes(',' + asapp + ',') && asapp > 0) {

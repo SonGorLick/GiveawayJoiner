@@ -123,12 +123,15 @@ njoin = 3;
 }
 }
 if (GJuser.zp.includes(',' + zpnam + '(s=') && _this.getConfig('check_in_steam', true)) {
-zpblack = parseInt(GJuser.zp.split(',' + zpnam + '(s=')[1].split('),')[0]);
+zpblack = GJuser.zp.split(',' + zpnam + '(s=')[1].split('),')[0];
 njoin = 1;
 }
 if (GJuser.zp.includes(',' + zpnam + '(b=') && _this.getConfig('blacklist_on', false)) {
-zpblack = parseInt(GJuser.zp.split(',' + zpnam + '(b=')[1].split('),')[0]);
+zpblack = GJuser.zp.split(',' + zpnam + '(b=')[1].split('),')[0];
 njoin = 2;
+}
+if (GJuser.zp.includes(',' + zpnam + '(w),')) {
+njoin = 4;
 }
 if (zpblack !== '') {
 zpblack = _this.logBlack(zpblack);
@@ -148,6 +151,10 @@ _this.log(Lang.get('service.data_have'), 'skip');
 break;
 case 3:
 _this.log(Lang.get('service.time'), 'skip');
+_this.log(Lang.get('service.data_have'), 'skip');
+break;
+case 4:
+_this.log(Lang.get('service.cant_join'), 'cant');
 _this.log(Lang.get('service.data_have'), 'skip');
 break;
 }
@@ -176,7 +183,7 @@ zpsteam = undefined;
 }
 if (!enter) {
 zpown = 3;
-if (!entered) {
+if (!entered && !won) {
 if (GJuser.zp.includes(',' + zpnam + '(z=')) {
 let zpdga = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];
 GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zpdga, ',' + zpnam + '(z=' + zpdnow);
@@ -209,7 +216,7 @@ zpsub = parseInt(zpsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')
 zpid = 'sub/' + zpsub;
 }
 if (_this.getConfig('check_in_steam', true)) {
-if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
+if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
 zpown = 2;
 }
 if (GJuser.ownapps.includes(',' + zpapp + ',') && zpapp > 0) {
@@ -225,6 +232,12 @@ GJuser.zp = GJuser.zp + zpnam + '(s=' + zpid + '),';
 if (GJuser.black.includes(zpid + ',') && _this.getConfig('blacklist_on', false)) {
 GJuser.zp = GJuser.zp + zpnam + '(b=' + zpid + '),';
 zpown = 4;
+}
+}
+if (won) {
+zpown = 3;
+if (!GJuser.zp.includes(',' + zpnam + '(w),')) {
+GJuser.zp = GJuser.zp + zpnam + '(w),';
 }
 }
 if (zpid !== '') {

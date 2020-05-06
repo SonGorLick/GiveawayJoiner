@@ -100,8 +100,8 @@ headers: {
 })
 .then((win) => {
 let igwin = win.data;
+_this.log(JSON.stringify(igwin));
 if (igwin.code !== 'e100') {
-_this.log(igwin.status + ' - ' + igwin.code);
 GJuser.igchk = '';
 }
 if (igwin.won !== undefined) {
@@ -316,7 +316,7 @@ if (
 igown = 5;
 }
 if (_this.getConfig('check_in_steam', true)) {
-if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
+if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
 igown = 2;
 }
 if (GJuser.ownapps.includes(',' + igapp + ',') && igapp > 0) {

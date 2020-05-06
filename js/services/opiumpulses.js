@@ -176,11 +176,11 @@ if (GJuser.op.includes(',' + code + '-n,')) {
 njoin = 1;
 }
 if (GJuser.op.includes(',' + code + '(s=') && _this.getConfig('check_in_steam', true)) {
-opblack = parseInt(GJuser.op.split(',' + code + '(s=')[1].split('),')[0]);
+opblack = GJuser.op.split(',' + code + '(s=')[1].split('),')[0];
 njoin = 2;
 }
 if (GJuser.op.includes(',' + code + '(b=') && _this.getConfig('blacklist_on', false)) {
-opblack = parseInt(GJuser.op.split(',' + code + '(b=')[1].split('),')[0]);
+opblack = GJuser.op.split(',' + code + '(b=')[1].split('),')[0];
 njoin = 3;
 }
 }
@@ -252,7 +252,7 @@ GJuser.op = GJuser.op + code + '-n,';
 opown = 3;
 }
 if (_this.getConfig('check_in_steam', true) && opown !== 3) {
-if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
+if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
 opown = 2;
 }
 if (GJuser.ownapps.includes(',' + opapp + ',') && opapp > 0) {

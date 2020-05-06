@@ -122,7 +122,7 @@ fxsub = parseInt(fxsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')
 fxid = 'sub/' + fxsub;
 }
 if (_this.getConfig('check_in_steam', true)) {
-if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
+if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
 fxown = 2;
 }
 if (GJuser.ownapps.includes(',' + fxapp + ',') && fxapp > 0) {

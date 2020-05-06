@@ -292,7 +292,7 @@ if (GA.entered) {
 sgown = 5;
 }
 if (_this.getConfig('check_in_steam', true)) {
-if (GJuser.ownapps === '[]' || GJuser.ownsubs === '[]') {
+if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
 sgown = 2;
 }
 if (GJuser.ownapps.includes(',' + sgapp + ',') && sgapp > 0) {

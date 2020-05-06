@@ -1,7 +1,7 @@
 {
   "name": "GiveawayJoiner",
   "productName": "GiveawayJoiner",
-  "version": "1.3.1j",
+  "version": "1.3.1k",
   "description": "Autojoin to steam game giveaways",
   "main": "giveawayjoiner.js",
   "dependencies": {
@@ -24,7 +24,8 @@
       "**/*",
       "!giveawayjoinerdata/*",
       "!.eslintrc",
-      "!.jshintrc"
+      "!.jshintrc",
+      "!package-lock.json"
     ],
     "linux": {
       "target": "dir",
