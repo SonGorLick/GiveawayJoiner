@@ -24,8 +24,7 @@
       "**/*",
       "!giveawayjoinerdata/*",
       "!.eslintrc",
-      "!.jshintrc",
-      "!package-lock.json"
+      "!.jshintrc"
     ],
     "linux": {
       "target": "dir",
