@@ -277,7 +277,7 @@ success: function (response) {
 response = $(response.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
 let zpdtnew = new Date();
 zpdtnew.setDate(zpdtnew.getUTCDate());
-zpdtnew.setHours(zpdtnew.getUTCHours() + 11);
+zpdtnew.setHours(zpdtnew.getUTCHours() + 10);
 let zpdnew = ('0' + zpdtnew.getDate().toString()).slice(-2);
 if (GJuser.zp.includes(',' + zpnam + '(z=')) {
 let zpdold = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];

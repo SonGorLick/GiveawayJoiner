@@ -17,7 +17,7 @@ if (GJuser.op === '') {
 GJuser.op = ',';
 if (fs.existsSync(dirdata + 'opiumpulses.txt')) {
 let opdata = fs.readFileSync(dirdata + 'opiumpulses.txt');
-if (opdata.length > 1 && opdata.length < 4000) {
+if (opdata.length > 1 && opdata.length < 8000) {
 GJuser.op = opdata.toString();
 }
 }
@@ -172,7 +172,8 @@ if (cost !== 0 && _this.getConfig('free_only', false)) {
 njoin = 5;
 }
 if (!_this.getConfig('check_all', false)) {
-if (GJuser.op.includes(',' + code + '-n,')) {
+if (GJuser.op.includes(',' + code + '(n=')) {
+opblack = GJuser.op.split(',' + code + '(n=')[1].split('),')[0];
 njoin = 1;
 }
 if (GJuser.op.includes(',' + code + '(s=') && _this.getConfig('check_in_steam', true)) {
@@ -185,6 +186,9 @@ njoin = 3;
 }
 }
 if (entered.includes('ENTERED')) {
+if (GJuser.op.includes(',' + code + '(e=')) {
+opblack = GJuser.op.split(',' + code + '(e=')[1].split('),')[0];
+}
 njoin = 6;
 }
 if (opblack !== '') {
@@ -230,7 +234,7 @@ success: function (data) {
 data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
 let opsteam = data.find('.giveaways-single-sponsored h1 a').attr('href');
 if (opsteam === undefined) {
-opsteam = $(data).find('.giveaways-single-sponsored h4 a').attr('href');
+opsteam = data.find('.giveaways-single-sponsored h4 a').attr('href');
 }
 let openter = data.find('.giveaways-single-promo-content-info-points p').text();
 let opown = 0,
@@ -246,8 +250,8 @@ opsub = parseInt(opsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')
 opid = 'sub/' + opsub;
 }
 if (openter === " You're not eligible to enter") {
-if (!GJuser.op.includes(',' + code + '-n,')) {
-GJuser.op = GJuser.op + code + '-n,';
+if (!GJuser.op.includes(',' + code + '(n=')) {
+GJuser.op = GJuser.op + code + '(n=' + opid + '),';
 }
 opown = 3;
 }
@@ -305,6 +309,9 @@ success: function () {
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
 _this.log(Lang.get('service.entered_in') + oplog, 'enter');
+if (!GJuser.op.includes(',' + code + '(e=')) {
+GJuser.op = GJuser.op + code + '(e=' + opid + '),';
+}
 },
 error: function () {
 if (_this.getConfig('log', true)) {

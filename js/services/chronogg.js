@@ -3,7 +3,7 @@ class ChronoGG extends Joiner {
 constructor() {
 super();
 this.websiteUrl = 'https://www.chrono.gg';
-this.authContent = 'Coin Shop';
+this.authContent = '';
 this.authLink = 'https://github.com/pumPCin/GiveawayJoiner/wiki/Chrono';
 this.auth = Lang.get('service.wiki') + 'ChronoGG';
 this.withValue = false;
@@ -38,7 +38,7 @@ _this.stimer = chtimer;
 }
 _this.churl = 'https://api.chrono.gg';
 _this.url = 'https://www.chrono.gg';
-let chcurr = 1;
+let chcurr = 0;
 _this.check = true;
 function giveawayEnter() {
 let chnext = _this.interval();
@@ -48,13 +48,12 @@ _this.log(Lang.get('service.checked') + 'ChronoGG', 'srch');
 }
 return;
 }
-if (fs.existsSync(dirdata + 'chronogg' + chcurr + '.txt')) {
+if (fs.existsSync(dirdata + 'chronogg' + chcurr + '.txt') && chcurr > 0) {
+let chauth = fs.readFileSync(dirdata + 'chronogg' + chcurr + '.txt').toString();
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.open_file') + 'chronogg' + chcurr + '.txt', 'info');
 }
-let chdata = fs.readFileSync(dirdata + 'chronogg' + chcurr + '.txt'),
-chauth = chdata.toString();
-if (chdata.includes('JWT')) {
+if (chauth.includes('JWT')) {
 rq({
 method: 'GET',
 url: _this.churl + '/account',
@@ -75,6 +74,7 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.acc') + acc.email + ':' + Lang.get('service.coins') + '- ' + chacc.balance);
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Spin Coin', 'chk');
 }
+setTimeout(function () {
 rq({
 method: 'GET',
 url: _this.churl + '/quest/spin',
@@ -103,12 +103,23 @@ _this.log(Lang.get('service.acc') + acc.email + ': ' + Lang.get('service.done') 
 }
 })
 .catch((error) => {
+if (error.response) {
 if (error.response.status === 420) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.skip'), 'skip');
 }
 }
+} else if (error.request) {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
+} else {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
+}
 });
+}, 1000);
 }
 else {
 if (_this.getConfig('log', true)) {
@@ -117,8 +128,14 @@ _this.log(Lang.get('service.connection_error'), 'err');
 }
 })
 .catch((error) => {
+if (error.response) {
 if (error.response.status === 401) {
 _this.log(Lang.get('service.ses_not_found') + ' - ' + Lang.get('service.session_expired'), 'err');
+}
+} else if (error.request) {
+_this.log(Lang.get('service.connection_error'), 'err');
+} else {
+_this.log(Lang.get('service.connection_error'), 'err');
 }
 });
 }
@@ -127,11 +144,13 @@ _this.log(Lang.get('service.dt_err'), 'err');
 }
 }
 else {
+if (chcurr > 0) {
 _this.check = false;
 if (chcurr === 1) {
 fs.writeFile(dirdata + 'chronogg1.txt', '', (err) => { });
 _this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/chronogg1.txt', 'err');
 _this.stopJoiner(true);
+}
 }
 }
 chcurr++;

@@ -4,7 +4,8 @@ body { -webkit-user-select: none; overflow: hidden; font-family: 'Noto Sans', sa
 .no-selectable { -webkit-user-select: none; cursor: default; }
 a, a:visited, a:hover{ color:#b9c2c7; text-decoration: none; }
 .styled-scrollbar::-webkit-scrollbar-track { width: 8px; background-color: #29353b; }
-.styled-scrollbar::-webkit-scrollbar { width: 8px; background-color: #29353b; }
+.styled-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; background-color: #29353b; }
+.styled-scrollbar::-webkit-scrollbar-corner { background-color: #263238; }
 .styled-scrollbar::-webkit-scrollbar-thumb { width: 8px; background-color: #5a656a; }
 .styled-scrollbar::-webkit-scrollbar-thumb:hover { width: 8px; background-color: #788388; }
 #head { position: relative; z-index: 10; background-color: #263238; height: 60px; border-top: 1px solid #222d32; border-bottom: 1px solid #222d32; -webkit-app-region: drag; }
