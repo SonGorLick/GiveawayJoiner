@@ -214,7 +214,7 @@ _this.log(Lang.get('service.skip'), 'skip');
 setTimeout(function () {
 rq({
 method: 'GET',
-url: _this.lburl + '/v1/offers?country=RU&platform=web&lang=en',
+url: _this.lburl + '/v1/offers?country=&platform=web&lang=en',
 headers: {
 'authority': 'api.lootboy.de',
 'Authorization': lbbrr,
