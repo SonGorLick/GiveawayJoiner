@@ -112,14 +112,19 @@ fxsteam = card.find('.head_info').attr('style'),
 fxown = 0,
 fxapp = 0,
 fxsub = 0,
+fxbun = 0,
 fxid = '???';
 if (fxsteam.includes('apps/')) {
 fxapp = parseInt(fxsteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
 fxid = 'app/' + fxapp;
 }
-if (fxsteam.includes('sub/')) {
+if (fxsteam.includes('subs/')) {
 fxsub = parseInt(fxsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 fxid = 'sub/' + fxsub;
+}
+if (fxsteam.includes('bundles/')) {
+fxbun = parseInt(fxsteam.split('bundles/')[1].split('/')[0].split('?')[0].split('#')[0]);
+fxid = 'bundle/' + fxbun;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {

@@ -142,6 +142,7 @@ assteam = away.find('a noload').attr('src'),
 asown = 0,
 asapp = 0,
 assub = 0,
+asbun = 0,
 asid = '???';
 if (alink !== undefined || assteam !== undefined) {
 let aname = data.find('[href="' + alink + '"]').text().trim(),
@@ -161,6 +162,10 @@ asid = 'app/' + asapp;
 if (assteam.includes('sub/')) {
 assub = parseInt(assteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'sub/' + assub;
+}
+if (assteam.includes('bundle/')) {
+asbun = parseInt(assteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
+asid = 'bundle/' + asbun;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {

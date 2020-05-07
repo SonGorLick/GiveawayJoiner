@@ -237,6 +237,7 @@ enterTimes = 1,
 igown = 0,
 igapp = 0,
 igsub = 0,
+igbun = 0,
 igid = '???',
 igtime = '';
 if (name.length > 77) {
@@ -246,13 +247,13 @@ if (igsteam.includes('apps/')) {
 igapp = parseInt(igsteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
 igid = 'app/' + igapp;
 }
-if (igsteam.includes('sub/')) {
-igsub = parseInt(igsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
-igid = 'sub/' + igsub;
-}
 if (igsteam.includes('subs/')) {
 igsub = parseInt(igsteam.split('subs/')[1].split('/')[0].split('?')[0].split('#')[0]);
 igid = 'sub/' + igsub;
+}
+if (igsteam.includes('bundles/')) {
+igbun = parseInt(igsteam.split('bundles/')[1].split('/')[0].split('?')[0].split('#')[0]);
+igid = 'bundle/' + igbun;
 }
 if (time.includes('day')) {
 igtime = time.replace('day left','').replace('days left','').trim();

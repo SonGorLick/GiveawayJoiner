@@ -268,6 +268,7 @@ let GA = _this.giveaways[sgcurr],
 sgown = 0,
 sgapp = 0,
 sgsub = 0,
+sgbun = 0,
 sgid = '???';
 if (GA.sgsteam.includes('app/')) {
 sgapp = parseInt(GA.sgsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
@@ -276,6 +277,10 @@ sgid = 'app/' + sgapp;
 if (GA.sgsteam.includes('sub/')) {
 sgsub = parseInt(GA.sgsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 sgid = 'sub/' + sgsub;
+}
+if (GA.sgsteam.includes('bundle/')) {
+sgbun = parseInt(GA.sgsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
+sgid = 'bundle/' + sgbun;
 }
 if (_this.curr_value < GA.cost && GA.cost > 0) {
 if (sgprize > GA.cost) {

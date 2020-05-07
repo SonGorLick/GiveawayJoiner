@@ -177,6 +177,7 @@ zpsteam = html.substring(html.indexOf('href="https://store.steam')+6, html.index
 let zpown = 0,
 zpapp = 0,
 zpsub = 0,
+zpbun = 0,
 zpid = '';
 if (!zpsteam.includes('https://store.steam')) {
 zpsteam = undefined;
@@ -214,6 +215,10 @@ zpid = 'app/' + zpapp;
 if (zpsteam.includes('sub/')) {
 zpsub = parseInt(zpsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 zpid = 'sub/' + zpsub;
+}
+if (zpsteam.includes('bundle/')) {
+zpbun = parseInt(zpsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
+zpid = 'bundle/' + zpbun;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {

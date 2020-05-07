@@ -240,6 +240,7 @@ let openter = data.find('.giveaways-single-promo-content-info-points p').text();
 let opown = 0,
 opapp = 0,
 opsub = 0,
+opbun = 0,
 opid = '???';
 if (opsteam.includes('app/')) {
 opapp = parseInt(opsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
@@ -248,6 +249,10 @@ opid = 'app/' + opapp;
 if (opsteam.includes('sub/')) {
 opsub = parseInt(opsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 opid = 'sub/' + opsub;
+}
+if (opsteam.includes('bundle/')) {
+opbun = parseInt(opsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
+opid = 'bundle/' + opbun;
 }
 if (openter === " You're not eligible to enter") {
 if (!GJuser.op.includes(',' + code + '(n=')) {
