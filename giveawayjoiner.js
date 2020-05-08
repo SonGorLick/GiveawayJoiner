@@ -45,7 +45,7 @@ else {
 fs.writeFile(storage.getDataPath() + '/user-agent.txt', _ua, (err) => { });
 }
 if (!fs.existsSync(storage.getDataPath() + '/blacklist.txt')) {
-fs.writeFile(storage.getDataPath() + '/blacklist.txt', 'app/0,sub/0,', (err) => { });
+fs.writeFile(storage.getDataPath() + '/blacklist.txt', 'app/0,sub/0,bundle/0,', (err) => { });
 }
 ipcMain.on('save-user', function (event, data) {
 user = data;
