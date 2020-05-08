@@ -160,7 +160,6 @@ break;
 }
 }
 if (njoin === 0) {
-zpnext = zpnext + Math.floor(zpnext / 4) + 2100;
 $.ajax({
 url: zplink,
 success: function (html) {
@@ -274,7 +273,7 @@ else {
 zplog = zplog + zpid;
 }
 if (zpown === 0) {
-let tmout = Math.floor(zpnext / 4) + 2000;
+let tmout = Math.floor(zpnext / 2);
 setTimeout(function () {
 $.ajax({
 url: zplink + '/enter_competition',

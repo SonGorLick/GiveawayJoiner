@@ -22,7 +22,7 @@ authCheck(callback) {
 let call = -1;
 rq({
 method: 'GET',
-uri: 'https://scrap.tf',
+url: 'https://scrap.tf',
 headers: {
 'authority': 'scrap.tf',
 'user-agent': this.ua,
@@ -31,9 +31,11 @@ headers: {
 'sec-fetch-user': '?1',
 'sec-fetch-dest': 'document',
 'cookie': this.cookies
-}
+},
+responseType: 'document'
 })
-.then((html) => {
+.then((htmls) => {
+let html = htmls.data;
 html = html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 if (html.indexOf('My Auctions') >= 0) {
 call = 1;
@@ -93,7 +95,7 @@ spdata = '',
 sporig = '',
 spmode = 'navigate',
 spuser = '?1',
-spdest = false,
+spdest = 'document',
 sptype = 'GET',
 sprtype = spdest;
 if (page !== 1) {
@@ -105,11 +107,11 @@ spmode = 'cors';
 spuser = '';
 spdest = 'empty';
 sptype = 'POST';
-sprtype = true;
+sprtype = 'json';
 }
 rq({
 method: sptype,
-uri: spurl,
+url: spurl,
 headers: {
 'authority': 'scrap.tf',
 'user-agent': _this.ua,
@@ -121,10 +123,11 @@ headers: {
 'referer': spreferer,
 'cookie': _this.cookies
 },
-json: sprtype,
-form: spdata,
+responseType: sprtype,
+data: spdata,
 })
-.then((data) => {
+.then((datas) => {
+let data = datas.data;
 if (page === 1) {
 data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 _this.csrf = data.substring(data.indexOf("ScrapTF.User.Hash =")+21,data.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
@@ -239,7 +242,7 @@ if (!GJuser.sp.includes(',' + id + ',') && !spended.includes('Ended')) {
 spnext = spnext + Math.floor(spnext / 4) + 2100;
 rq({
 method: 'GET',
-uri: _this.url + splink,
+url: _this.url + splink,
 headers: {
 'authority': 'scrap.tf',
 'user-agent': _this.ua,
@@ -248,9 +251,11 @@ headers: {
 'sec-fetch-user': '?1',
 'sec-fetch-dest': 'document',
 'cookie': _this.cookies
-}
+},
+responseType: 'document'
 })
-.then((raff) => {
+.then((raffles) => {
+let raff = raffles.data;
 raff = raff.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 let enter = raff.indexOf('>Enter Raffle<') >= 0,
 entered = raff.indexOf('>Leave Raffle<') >= 0,
@@ -262,7 +267,7 @@ let tmout = Math.floor(spnext / 4) + 2000;
 setTimeout(function () {
 rq({
 method: 'POST',
-uri: _this.url + '/ajax/viewraffle/EnterRaffle',
+url: _this.url + '/ajax/viewraffle/EnterRaffle',
 headers: {
 'authority': 'scrap.tf',
 'user-agent': _this.ua,
@@ -273,11 +278,11 @@ headers: {
 'referer': _this.url + '/raffles/' + spid,
 'cookie': _this.cookies
 },
-form: 'raffle=' + spid + '&captcha=&hash=' + hash + '&flag=false&csrf=' + _this.csrf,
-json: true
+data: 'raffle=' + spid + '&captcha=&hash=' + hash + '&flag=false&csrf=' + _this.csrf,
 })
-.then((resp) => {
-let spmess = JSON.stringify(resp.message);
+.then((raffle) => {
+let resp = raffle.data,
+spmess = JSON.stringify(resp.message);
 if (spmess === '"Entered raffle!"') {
 _this.log(Lang.get('service.entered_in') + splog, 'enter');
 }
@@ -288,7 +293,7 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 }
 })
-.catch((err) => {
+.catch((error) => {
 spnext = spnext * 2;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
@@ -307,7 +312,7 @@ _this.log(Lang.get('service.cant_join'), 'cant');
 }
 }
 })
-.catch((err) => {
+.catch((error) => {
 spnext = spnext * 2;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');

@@ -75,48 +75,49 @@ _this.ending_first = _this.getConfig('ending_first', false);
 _this.reserve = _this.getConfig('points_reserve', 0);
 _this.sort_after = false;
 _this.url = 'https://www.indiegala.com';
-if ((new Date()).getDate() !== GJuser.igchk) {
-GJuser.igchk = (new Date()).getDate();
 $.ajax({
 url: _this.url + '/library/giveaways/giveaways-completed/tocheck',
-success: function (check) {
-if (check.indexOf('>Check all<') >= 0) {
+success: function (tocheck) {
+let igchecks = $(JSON.parse(tocheck).html).find('.library-giveaways-check-if-won-btn'),
+igcheck = [];
+for (let i = 0; i < igchecks.length; i++) {
+igcheck[i] = igchecks.eq(i).attr('onclick').replace("giveawayCheckIfWinner(this, event, '", "").replace("')", "");
+}
+if (igcheck.length > 0) {
+igcheck.forEach(function(check) {
 rq({
 method: 'POST',
-uri: _this.url + '/library/giveaways/check-if-winner-all',
+url: _this.url + '/library/giveaways/check-if-winner',
 headers: {
 'authority': 'www.indiegala.com',
-'content-length': 0,
 'accept': 'application/json, text/javascript, */*; q=0.01',
-'user-agent': _this.ua,
-'x-requested-with': 'XMLHttpRequest',
 'origin': _this.url,
 'sec-fetch-site': 'same-origin',
 'sec-fetch-mode': 'cors',
-'sec-fetch-dest': 'empty',
+'x-requested-with': 'XMLHttpRequest',
+'user-agent': _this.ua,
 'referer': _this.url + '/library',
 'cookie': _this.cookies
 },
-json: true
+data: {entry_id: check}
 })
-.then((igwin) => {
-_this.log(JSON.stringify(igwin));
-if (igwin.code !== 'e100') {
-GJuser.igchk = '';
+.then((win) => {
+let igwin = win.data;
+if (igwin.winner === false) {
+_this.log('false');
 }
-if (igwin.won !== undefined) {
+if (igwin.winner === true) {
 _this.log(_this.logLink(_this.url + '/library', Lang.get('service.win')), 'win');
 _this.setStatus('win');
 if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
-_this.log(igwin.won);
 }
+});
 });
 }
 }
 });
-}
 if (GJuser.iglvl === undefined) {
 GJuser.iglvl = _this.lvlmax;
 }
@@ -385,8 +386,7 @@ else {
 igrtry++;
 rq({
 method: 'POST',
-uri: _this.url + '/giveaways/new_entry',
-form: '{"giv_id":'+ id + ',"ticket_price":' + price + '}',
+url: _this.url + '/giveaways/new_entry',
 headers: {
 'authority': 'www.indiegala.com',
 'accept': 'application/json, text/javascript, */*; q=0.01',
@@ -398,9 +398,10 @@ headers: {
 'referer': _this.url + '/giveaways/' + page + '/expiry/asc/level/' + _this.lvl,
 'cookie': _this.cookies
 },
-json: true
+data: {giv_id: id, ticket_price: price}
 })
-.then((response) => {
+.then((resp) => {
+let response = resp.data;
 if (response.status === 'unauthorized') {
 Times = 0;
 igcurr++;
@@ -448,7 +449,7 @@ else {
 ignext = (Math.floor(Math.random() * 1000)) + 1000;
 }
 })
-.catch((err) => {
+.catch((error) => {
 ignext = ignext * 2;
 });
 }

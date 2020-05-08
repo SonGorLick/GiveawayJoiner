@@ -1,9 +1,8 @@
 'use strict';
-process.binding('http_parser').HTTPParser = require('http-parser-js').HTTPParser;
 const { app, nativeImage, shell, session, Tray, BrowserWindow, Menu, ipcMain, ipcRenderer } = require('electron');
 const storage = require('electron-json-storage');
 const fs = require('fs');
-const rq = require('request-promise-native');
+const rq = require('axios').default;
 const devMode = false;
 let _ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36';
 let appLoaded = false;
@@ -175,8 +174,9 @@ constructor() {
 this.default = 'en_US';
 this.languages = {};
 this.langsCount = 0;
-rq({uri: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/all.json', json: true})
-.then((data) => {
+rq({url: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/all.json'})
+.then((all) => {
+let data = all.data;
 if (data.response !== false) {
 data = JSON.parse(data.response).langs;
 let checked = 0;
@@ -184,9 +184,12 @@ for (let one in data) {
 let name = data[one].name;
 let size = data[one].size;
 let loadLang = () => {
-rq({uri: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/' + name})
-.then((lang) => {
-fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => { });
+rq({url: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/' + name, responseType: 'document'})
+.then((language) => {
+let lang = JSON.stringify(language.data);
+fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => {});
+})
+.finally(() => {
 checked++;
 if (checked >= data.length) {
 startApp();
