@@ -95,7 +95,12 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.acc') + fgname);
 }
 if (account.indexOf('"winner":{"id":' + fgid + ',') >= 0) {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.win'), 'win');
+}
+else {
 _this.log(Lang.get('service.acc') + fgname + ': ' + Lang.get('service.win'), 'win');
+}
 _this.setStatus('win');
 if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();

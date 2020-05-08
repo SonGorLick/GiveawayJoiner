@@ -79,12 +79,12 @@ $.ajax({
 url: _this.url + '/library/giveaways/giveaways-completed/tocheck',
 success: function (tocheck) {
 let igchecks = $(JSON.parse(tocheck).html).find('.library-giveaways-check-if-won-btn'),
-igcheck = [];
+igchck = [];
 for (let i = 0; i < igchecks.length; i++) {
-igcheck[i] = igchecks.eq(i).attr('onclick').replace("giveawayCheckIfWinner(this, event, '", "").replace("')", "");
+igchck[i] = igchecks.eq(i).attr('onclick').replace("giveawayCheckIfWinner(this, event, '", "").replace("')", "");
 }
-if (igcheck.length > 0) {
-igcheck.forEach(function(check) {
+if (igchck.length > 0) {
+igchck.forEach(function(check) {
 rq({
 method: 'POST',
 url: _this.url + '/library/giveaways/check-if-winner',
@@ -103,9 +103,6 @@ data: {entry_id: check}
 })
 .then((win) => {
 let igwin = win.data;
-if (igwin.winner === false) {
-_this.log('false');
-}
 if (igwin.winner === true) {
 _this.log(_this.logLink(_this.url + '/library', Lang.get('service.win')), 'win');
 _this.setStatus('win');
