@@ -32,7 +32,7 @@ url: 'https://www.opiumpulses.com/user/account',
 success: function (html) {
 html = $(html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
 userData.username = html.find('.page-header__nav-func-user-wrapper a').text().split('Account')[0].trim();
-userData.avatar = 'https://www.opiumpulses.com' + html.find('.input-group noload').attr('src');
+userData.avatar = html.find('.input-group noload').attr('src').replace('/uploads/', 'https://www.opiumpulses.com/uploads/');
 userData.value = html.find('.points-items li a').first().text().replace('Points:', '').trim();
 },
 complete: function () {

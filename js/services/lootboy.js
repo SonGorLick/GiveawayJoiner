@@ -13,15 +13,7 @@ delete this.settings.blacklist_on;
 super.init();
 }
 authCheck(callback) {
-$.ajax({
-url: 'https://www.lootboy.de',
-success: function () {
 callback(1);
-},
-error: function () {
-callback(-1);
-}
-});
 }
 getUserInfo(callback) {
 let userData = {
@@ -38,9 +30,9 @@ _this.stimer = lbtimer;
 }
 _this.lburl = 'https://api.lootboy.de';
 _this.url = 'https://www.lootboy.de';
-let lbcurr = 0;
 _this.check = true;
-let lbua = _this.ua;
+let lbcurr = 0,
+lbua = _this.ua;
 function giveawayEnter() {
 let lbnext = _this.interval();
 if (!_this.check || !_this.started) {
@@ -54,56 +46,51 @@ if (fs.existsSync(dirdata + 'lootboy' + lbcurr + '_ua.txt') && lbcurr > 0) {
 lbua = fs.readFileSync(dirdata + 'lootboy' + lbcurr + '_ua.txt').toString();
 }
 if (fs.existsSync(dirdata + 'lootboy' + lbcurr + '.txt') && lbcurr > 0) {
-let lbdata = fs.readFileSync(dirdata + 'lootboy' + lbcurr + '.txt').toString();
-let lbd = lbdata.split(','),
-lbauth = lbd[0],
-lbbrr = lbd[1];
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.open_file') + 'lootboy' + lbcurr + '.txt', 'info');
 if (lbua !== _this.ua) {
 _this.log(lbua, 'skip');
 }
 }
+let lbdata = fs.readFileSync(dirdata + 'lootboy' + lbcurr + '.txt');
 if (lbdata.includes('Bearer') && lbdata.includes(',')) {
+let lbd = (lbdata.toString()).split(','),
+lbauth = lbd[0],
+lbbrr = lbd[1];
 rq({
 method: 'GET',
-url: _this.lburl + '/v2/users/' + lbauth,
+uri: _this.lburl + '/v2/users/' + lbauth,
 headers: {
-'authority': 'api.lootboy.de',
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
+'accept': 'application/json',
+'origin': _this.url,
 'Authorization': lbbrr,
 'user-agent': lbua,
-'content-type': 'application/json',
-'origin': _this.url,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'sec-fetch-dest': 'empty',
 'referer': _this.url,
-}
+},
+json: true
 })
-.then((stats) => {
-let stat = stats.data;
+.then((stat) => {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.acc') + stat.username + ':' + Lang.get('service.gems') + '- ' + stat.lootgemBalance + ',' + Lang.get('service.coins') + '- ' + stat.lootcoinBalance);
 }
-setTimeout(function () {
 rq({
 method: 'PUT',
-url: _this.lburl + '/v2/users/self/appStart',
+uri: _this.lburl + '/v2/users/self/appStart',
 headers: {
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
 'content-length': 0,
-'authority': 'api.lootboy.de',
+'accept': 'application/json',
+'origin': _this.url,
 'Authorization': lbbrr,
 'user-agent': lbua,
-'content-type': 'application/json',
-'origin': _this.url,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'sec-fetch-dest': 'empty',
 'referer': _this.url,
-}
+},
+json: true
 })
-.then((coins) => {
-let coin = coins.data;
+.then((coin) => {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Coins', 'chk');
 }
@@ -121,42 +108,121 @@ _this.log(Lang.get('service.skip'), 'skip');
 }
 }
 });
-}, 1000);
+rq({
+method: 'GET',
+uri: _this.lburl + '/v1/offers?lang=en',
+headers: {
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
+'accept': 'application/json',
+'origin': _this.url,
+'Authorization': lbbrr,
+'user-agent': lbua,
+'referer': _this.url + '/offers',
+},
+json: true
+})
+.then((offers) => {
+let lboffers = offers;
+rq({
+method: 'GET',
+uri: _this.lburl + '/v1/offers/taken?lang=en',
+headers: {
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
+'accept': 'application/json',
+'origin': _this.url,
+'Authorization': lbbrr,
+'user-agent': lbua,
+'referer': _this.url + '/offers',
+},
+json: true
+})
+.then((taken) => {
+let lbtaken = JSON.stringify(taken.offers);
+for (let i = 0; i < lboffers.length; i++) {
+lboffers[i].have = lbtaken.includes(lboffers[i].id);
+}
+lboffers = lboffers.filter(off => off.have === false);
+if (lboffers.length === 0) {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.no_offer') + 'Diamonds Quests', 'cant');
+}
+}
+else {
+lboffers.forEach(function(offer) {
+let tmout = Math.floor(lbnext / 4);
 setTimeout(function () {
 rq({
-method: 'GET',
-url: _this.lburl + '/v1/comics?lang=en',
+method: 'PUT',
+uri: _this.lburl + '/v1/offers/' + offer.id + '?lang=en',
 headers: {
-'authority': 'api.lootboy.de',
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
+'content-length': 0,
+'accept': 'application/json',
+'origin': _this.url,
 'Authorization': lbbrr,
 'user-agent': lbua,
-'content-type': 'application/json',
-'origin': _this.url,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'sec-fetch-dest': 'empty',
-'referer': _this.url + '/comics',
-}
+'referer': _this.url + '/offers',
+},
+json: true
 })
-.then((comics) => {
-let lbcomics = comics.data;
+.then((gem) => {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim(), 'chk');
+}
+if (!gem.alreadyTaken) {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.done') + Lang.get('service.gems') + '- ' + offer.diamondBonus, 'enter');
+}
+else {
+_this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.done') + Lang.get('service.gems') + '- ' + offer.diamondBonus, 'enter');
+}
+}
+else {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.skip'), 'skip');
+}
+}
+});
+}, tmout);
+});
+}
+});
+});
 rq({
 method: 'GET',
-url: _this.lburl + '/v1/comics/readComics?lang=en',
+uri: _this.lburl + '/v1/comics?lang=en',
 headers: {
-'authority': 'api.lootboy.de',
-'content-type': 'application/json',
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
+'accept': 'application/json',
 'origin': _this.url,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'sec-fetch-dest': 'empty',
 'Authorization': lbbrr,
 'user-agent': lbua,
 'referer': _this.url + '/comics',
-}
+},
+json: true
+})
+.then((comics) => {
+let lbcomics = comics;
+rq({
+method: 'GET',
+uri: _this.lburl + '/v1/comics/readComics?lang=en',
+headers: {
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
+'accept': 'application/json',
+'origin': _this.url,
+'Authorization': lbbrr,
+'user-agent': lbua,
+'referer': _this.url + '/comics',
+},
+json: true
 })
 .then((readed) => {
-let lbreaded = JSON.stringify(readed.data);
+let lbreaded = JSON.stringify(readed);
 for (let i = 0; i < lbcomics.length; i++) {
 lbcomics[i].have = lbreaded.includes(lbcomics[i].id);
 }
@@ -173,22 +239,20 @@ else {
 lbcomics.forEach(function(comic) {
 rq({
 method: 'PUT',
-url: _this.lburl + '/v1/comics/' + comic.id + '/read?lang=en',
+uri: _this.lburl + '/v1/comics/' + comic.id + '/read?lang=en',
 headers: {
+'pragma': 'no-cache',
+'cache-control': 'no-cache',
 'content-length': 0,
-'authority': 'api.lootboy.de',
-'content-type': 'application/json',
+'accept': 'application/json',
 'origin': _this.url,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'sec-fetch-dest': 'empty',
 'Authorization': lbbrr,
 'user-agent': lbua,
 'referer': _this.url + '/comics/' + comic.id,
-}
+},
+json: true
 })
-.then((comreads) => {
-let comread = comreads.data;
+.then((comread) => {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Comics #' + comic.number + ' ' + comic.title, 'chk');
 }
@@ -210,95 +274,8 @@ _this.log(Lang.get('service.skip'), 'skip');
 }
 });
 });
-}, 2000);
-setTimeout(function () {
-rq({
-method: 'GET',
-url: _this.lburl + '/v1/offers?country=&platform=web&lang=en',
-headers: {
-'authority': 'api.lootboy.de',
-'Authorization': lbbrr,
-'user-agent': lbua,
-'content-type': 'application/json',
-'origin': _this.url,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'sec-fetch-dest': 'empty',
-'referer': _this.url + '/offers',
-}
 })
-.then((offers) => {
-let lboffers = offers.data;
-rq({
-method: 'GET',
-url: _this.lburl + '/v1/offers/taken?lang=en',
-headers: {
-'authority': 'api.lootboy.de',
-'Authorization': lbbrr,
-'user-agent': lbua,
-'content-type': 'application/json',
-'origin': _this.url,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'sec-fetch-dest': 'empty',
-'referer': _this.url + '/offers',
-}
-})
-.then((taken) => {
-let lbtaken = JSON.stringify(taken.data.offers);
-for (let i = 0; i < lboffers.length; i++) {
-lboffers[i].have = lbtaken.includes(lboffers[i].id);
-}
-lboffers = lboffers.filter(off => off.have === false);
-if (lboffers.length === 0) {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.no_offer') + 'Diamonds Quests', 'cant');
-}
-}
-else {
-lboffers.forEach(function(offer) {
-rq({
-method: 'PUT',
-url: _this.lburl + '/v1/offers/' + offer.id + '?lang=en',
-headers: {
-'content-length': 0,
-'authority': 'api.lootboy.de',
-'Authorization': lbbrr,
-'user-agent': lbua,
-'content-type': 'application/json',
-'origin': _this.url,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'sec-fetch-dest': 'empty',
-'referer': _this.url + '/offers',
-}
-})
-.then((gems) => {
-let gem = gems.data;
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim(), 'chk');
-}
-if (!gem.alreadyTaken) {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.done') + Lang.get('service.gems') + '- ' + offer.diamondBonus, 'enter');
-}
-else {
-_this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.done') + Lang.get('service.gems') + '- ' + offer.diamondBonus, 'enter');
-}
-}
-else {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.skip'), 'skip');
-}
-}
-});
-});
-}
-});
-});
-}, 4000);
-})
-.catch((error) => {
+.catch((err) => {
 _this.log(Lang.get('service.ses_not_found') + ' - ' + Lang.get('service.session_expired'), 'err');
 });
 }

@@ -1,8 +1,9 @@
 'use strict';
+process.binding('http_parser').HTTPParser = require('http-parser-js').HTTPParser;
 const { app, nativeImage, shell, session, Tray, BrowserWindow, Menu, ipcMain, ipcRenderer } = require('electron');
 const storage = require('electron-json-storage');
 const fs = require('fs');
-const rq = require('axios').default;
+const rq = require('request-promise-native');
 const devMode = false;
 let _ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36';
 let appLoaded = false;
@@ -18,7 +19,7 @@ let _bmd = 'true';
 let _bfr = 'false';
 let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
-app.commandLine.appendSwitch('disk-cache-size', 150);
+app.commandLine.appendSwitch('disk-cache-size', 100);
 app.disableHardwareAcceleration();
 if (process.platform === 'win32') {
 _itr = __dirname + '/icons/icon.ico';
@@ -73,6 +74,7 @@ show: false,
 center: true,
 resizable: false,
 frame: false,
+hasShadow: false,
 webPreferences: {
 session: _session,
 devTools: devMode,
@@ -99,6 +101,7 @@ frame: _bfr,
 show: false,
 center: true,
 backgroundColor: '#263238',
+hasShadow: false,
 webPreferences: {
 session: _session,
 devTools: false,
@@ -172,9 +175,8 @@ constructor() {
 this.default = 'en_US';
 this.languages = {};
 this.langsCount = 0;
-rq({url: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/all.json'})
-.then((all) => {
-let data = all.data;
+rq({uri: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/all.json', json: true})
+.then((data) => {
 if (data.response !== false) {
 data = JSON.parse(data.response).langs;
 let checked = 0;
@@ -182,12 +184,9 @@ for (let one in data) {
 let name = data[one].name;
 let size = data[one].size;
 let loadLang = () => {
-rq({url: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/' + name, responseType: 'document'})
-.then((language) => {
-let lang = JSON.stringify(language.data);
-fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => {});
-})
-.finally(() => {
+rq({uri: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/' + name})
+.then((lang) => {
+fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => { });
 checked++;
 if (checked >= data.length) {
 startApp();

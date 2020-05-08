@@ -13,15 +13,7 @@ delete this.settings.blacklist_on;
 super.init();
 }
 authCheck(callback) {
-$.ajax({
-url: 'https://www.chrono.gg',
-success: function () {
 callback(1);
-},
-error: function () {
-callback(-1);
-}
-});
 }
 getUserInfo(callback) {
 let userData = {
@@ -49,47 +41,52 @@ _this.log(Lang.get('service.checked') + 'ChronoGG', 'srch');
 return;
 }
 if (fs.existsSync(dirdata + 'chronogg' + chcurr + '.txt') && chcurr > 0) {
-let chauth = fs.readFileSync(dirdata + 'chronogg' + chcurr + '.txt').toString();
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.open_file') + 'chronogg' + chcurr + '.txt', 'info');
 }
-if (chauth.includes('JWT')) {
+let chdata = fs.readFileSync(dirdata + 'chronogg' + chcurr + '.txt');
+if (chdata.includes('JWT')) {
+let chauth = chdata.toString();
 rq({
 method: 'GET',
-url: _this.churl + '/account',
+uri: _this.churl + '/account',
 headers: {
 'user-agent': _this.ua,
+'pragma': 'no-cache',
 'origin': _this.url,
 'accept-encoding': 'gzip, deflate, br',
 'accept': 'application/json',
+'cache-control': 'no-cache',
 'authorization': chauth,
-'referer': _this.url,
-}
+'referer': _this.url + '/',
+},
+json: true
 })
-.then((account) => {
-let acc = account.data;
+.then((acc) => {
 if (acc.status === 200) {
 let chacc = acc.coins;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.acc') + acc.email + ':' + Lang.get('service.coins') + '- ' + chacc.balance);
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Spin Coin', 'chk');
 }
-setTimeout(function () {
+}
 rq({
 method: 'GET',
-url: _this.churl + '/quest/spin',
+uri: _this.churl + '/quest/spin',
 headers: {
 'user-agent': _this.ua,
+'pragma': 'no-cache',
 'origin': _this.url,
 'accept-encoding': 'gzip, deflate, br',
 'accept': 'application/json',
+'cache-control': 'no-cache',
 'authorization': chauth,
-'referer': _this.url,
-}
+'referer': _this.url + '/',
+},
+json: true
 })
-.then((spins) => {
-let spin = spins.data,
-chquest = spin.quest,
+.then((spin) => {
+let chquest = spin.quest,
 chchest = spin.chest,
 chcoins = chquest.value + chquest.bonus;
 if (chchest.base) {
@@ -102,40 +99,17 @@ else {
 _this.log(Lang.get('service.acc') + acc.email + ': ' + Lang.get('service.done') + Lang.get('service.coins') + '- ' + chcoins, 'enter');
 }
 })
-.catch((error) => {
-if (error.response) {
-if (error.response.status === 420) {
+.catch((err) => {
 if (_this.getConfig('log', true)) {
+if (err.statusCode === 420) {
 _this.log(Lang.get('service.skip'), 'skip');
 }
 }
-} else if (error.request) {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.connection_error'), 'err');
-}
-} else {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.connection_error'), 'err');
-}
-}
 });
-}, 1000);
-}
-else {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.connection_error'), 'err');
-}
-}
 })
-.catch((error) => {
-if (error.response) {
-if (error.response.status === 401) {
+.catch((err) => {
+if (err.statusCode === 401) {
 _this.log(Lang.get('service.ses_not_found') + ' - ' + Lang.get('service.session_expired'), 'err');
-}
-} else if (error.request) {
-_this.log(Lang.get('service.connection_error'), 'err');
-} else {
-_this.log(Lang.get('service.connection_error'), 'err');
 }
 });
 }

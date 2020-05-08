@@ -83,7 +83,7 @@ success: function (check) {
 if (check.indexOf('>Check all<') >= 0) {
 rq({
 method: 'POST',
-url: _this.url + '/library/giveaways/check-if-winner-all',
+uri: _this.url + '/library/giveaways/check-if-winner-all',
 headers: {
 'authority': 'www.indiegala.com',
 'content-length': 0,
@@ -96,10 +96,10 @@ headers: {
 'sec-fetch-dest': 'empty',
 'referer': _this.url + '/library',
 'cookie': _this.cookies
-}
+},
+json: true
 })
-.then((win) => {
-let igwin = win.data;
+.then((igwin) => {
 _this.log(JSON.stringify(igwin));
 if (igwin.code !== 'e100') {
 GJuser.igchk = '';
@@ -385,7 +385,8 @@ else {
 igrtry++;
 rq({
 method: 'POST',
-url: _this.url + '/giveaways/new_entry',
+uri: _this.url + '/giveaways/new_entry',
+form: '{"giv_id":'+ id + ',"ticket_price":' + price + '}',
 headers: {
 'authority': 'www.indiegala.com',
 'accept': 'application/json, text/javascript, */*; q=0.01',
@@ -397,10 +398,9 @@ headers: {
 'referer': _this.url + '/giveaways/' + page + '/expiry/asc/level/' + _this.lvl,
 'cookie': _this.cookies
 },
-data: {giv_id: id, ticket_price: price}
+json: true
 })
-.then((resp) => {
-let response = resp.data;
+.then((response) => {
 if (response.status === 'unauthorized') {
 Times = 0;
 igcurr++;
@@ -448,7 +448,7 @@ else {
 ignext = (Math.floor(Math.random() * 1000)) + 1000;
 }
 })
-.catch((error) => {
+.catch((err) => {
 ignext = ignext * 2;
 });
 }

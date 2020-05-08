@@ -133,15 +133,15 @@ let tmout = Math.floor(tfnext / 2);
 setTimeout(function () {
 rq({
 method: 'POST',
-url: _this.url + '/job.php',
-data: 'enterraffle=true&rid=' + rid + '&ass=yup,%20indeed',
+uri: _this.url + '/job.php',
+form: {enterraffle: 'true', rid: rid, ass: 'yup, indeed'},
 headers: {
 'User-Agent': _this.ua,
 Cookie: _this.cookies
-}
+},
+json: true
 })
-.then((bodys) => {
-let body = bodys.data;
+.then((body) => {
 if (body.status === 'ok') {
 _this.log(Lang.get('service.entered_in') + tflog, 'enter');
 if (!GJuser.tf.includes(',' + rid + ',')) {
