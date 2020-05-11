@@ -44,6 +44,11 @@ _this.stimer = zptimer;
 }
 GJuser.zpn = ',';
 _this.skip = false;
+_this.month = 1;
+let zpmonth = new Date().getMonth();
+if (zpmonth > 2 && zpmonth < 10) {
+_this.month = 0;
+}
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.zeepond.com';
 if ((new Date()).getDate() !== GJuser.zpchk) {
@@ -116,7 +121,7 @@ njoin = 0,
 zpblack = '',
 zpdtnow = new Date();
 zpdtnow.setDate(zpdtnow.getUTCDate());
-zpdtnow.setHours(zpdtnow.getUTCHours() + 10);
+zpdtnow.setHours(zpdtnow.getUTCHours() + 10 + _this.month);
 let zpdnow = zpdtnow.getDate();
 if (GJuser.zp.includes(',' + zpnam + '(d=')) {
 zpblack = GJuser.zp.split(',' + zpnam + '(d=')[1].split('),')[0];
@@ -287,7 +292,7 @@ success: function (response) {
 response = $(response.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
 let zpdtnew = new Date();
 zpdtnew.setDate(zpdtnew.getUTCDate());
-zpdtnew.setHours(zpdtnew.getUTCHours() + 10);
+zpdtnew.setHours(zpdtnew.getUTCHours() + 10 + _this.month);
 let zpdnew = ('0' + zpdtnew.getDate().toString()).slice(-2);
 GJuser.zpn = GJuser.zpn + zpnam + '(z=' + zpdnew + '),';
 _this.log(Lang.get('service.entered_in') + zplog, 'enter');
