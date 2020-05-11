@@ -164,6 +164,9 @@ success: function (data) {
 if (data.indexOf('Incapsula_Resource') >= 0) {
 _this.igprtry = page;
 }
+else if (JSON.parse(data).status === 'server_error') {
+_this.igprtry = page;
+}
 else {
 tickets = $(JSON.parse(data).content).find('.tickets-col');
 _this.igprtry = 0;
@@ -410,7 +413,7 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.cant_join'), 'cant');
 }
 }
-if (response.status === 'insufficient_credit') {
+else if (response.status === 'insufficient_credit') {
 Times = 0;
 igcurr++;
 igrtry = 0;
@@ -418,12 +421,12 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.points_low'), 'skip');
 }
 }
-if (response.status === 'duplicate') {
+else if (response.status === 'duplicate') {
 igcurr++;
 igrtry = 0;
 _this.log(Lang.get('service.entered_in') + iglog, 'enter');
 }
-if (response.status === 'ok') {
+else if (response.status === 'ok') {
 igrtry = 0;
 _this.setValue(response.new_amount);
 if (Times === 0 && single) {

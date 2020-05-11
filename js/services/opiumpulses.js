@@ -17,7 +17,7 @@ if (GJuser.op === '') {
 GJuser.op = ',';
 if (fs.existsSync(dirdata + 'opiumpulses.txt')) {
 let opdata = fs.readFileSync(dirdata + 'opiumpulses.txt');
-if (opdata.length > 1 && opdata.length < 8000) {
+if (opdata.length > 1) {
 GJuser.op = opdata.toString();
 }
 }
@@ -47,6 +47,7 @@ let optimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _t
 _this.stimer = optimer;
 }
 let page = 1;
+GJuser.opn = ',';
 _this.pagemax = _this.getConfig('pages', 1);
 _this.costmax = _this.getConfig('maxcost', 0);
 _this.check = 0;
@@ -125,7 +126,8 @@ success: function () {
 }
 });
 setTimeout(function () {
-fs.writeFile(dirdata + 'opiumpulses.txt', GJuser.op, (err) => { });
+fs.writeFile(dirdata + 'opiumpulses.txt', GJuser.opn, (err) => { });
+GJuser.op = GJuser.opn;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
 }
@@ -162,6 +164,9 @@ opblack = '';
 if (isNaN(cost)) {
 cost = 0;
 }
+if (GJuser.op.includes(',' + code + '(d=')) {
+opblack = GJuser.op.split(',' + code + '(d=')[1].split('),')[0];
+GJuser.opn = GJuser.opn + code + '(d=' + opblack + '),';
 if (_this.curr_value < cost) {
 njoin = 4;
 }
@@ -171,24 +176,27 @@ njoin = 5;
 if (cost !== 0 && _this.getConfig('free_only', false)) {
 njoin = 5;
 }
+}
 if (!_this.getConfig('check_all', false)) {
-if (GJuser.op.includes(',' + code + '(n=')) {
-opblack = GJuser.op.split(',' + code + '(n=')[1].split('),')[0];
+if (opblack !== '') {
+if (GJuser.op.includes(',' + code + '(n),')) {
+GJuser.opn = GJuser.opn + code + '(n),';
 njoin = 1;
 }
-if (GJuser.op.includes(',' + code + '(s=') && _this.getConfig('check_in_steam', true)) {
-opblack = GJuser.op.split(',' + code + '(s=')[1].split('),')[0];
+if (_this.getConfig('check_in_steam', true)) {
+if (GJuser.ownapps.includes(',' + opblack.replace('app/', '') + ',')) {
 njoin = 2;
 }
-if (GJuser.op.includes(',' + code + '(b=') && _this.getConfig('blacklist_on', false)) {
-opblack = GJuser.op.split(',' + code + '(b=')[1].split('),')[0];
+if (GJuser.ownapps.includes(',' + opblack.replace('sub/', '') + ',')) {
+njoin = 2;
+}
+}
+if (GJuser.black.includes(opblack + ',') && _this.getConfig('blacklist_on', false)) {
 njoin = 3;
 }
 }
-if (entered.includes('ENTERED')) {
-if (GJuser.op.includes(',' + code + '(e=')) {
-opblack = GJuser.op.split(',' + code + '(e=')[1].split('),')[0];
 }
+if (entered.includes('ENTERED') && GJuser.op.includes(',' + code + '(d=')) {
 njoin = 6;
 }
 if (opblack !== '') {
@@ -208,11 +216,9 @@ _this.log(Lang.get('service.data_have'), 'skip');
 break;
 case 2:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
-_this.log(Lang.get('service.data_have'), 'skip');
 break;
 case 3:
 _this.log(Lang.get('service.blacklisted'), 'black');
-_this.log(Lang.get('service.data_have'), 'skip');
 break;
 case 4:
 _this.log(Lang.get('service.points_low'), 'skip');
@@ -254,13 +260,23 @@ if (opsteam.includes('bundle/')) {
 opbun = parseInt(opsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
 opid = 'bundle/' + opbun;
 }
-if (openter === " You're not eligible to enter") {
-if (!GJuser.op.includes(',' + code + '(n=')) {
-GJuser.op = GJuser.op + code + '(n=' + opid + '),';
+if (!GJuser.opn.includes(',' + code + '(d=') && opid !== '???') {
+GJuser.opn = GJuser.opn + code + '(d=' + opid + '),';
 }
+if (_this.curr_value < cost) {
+opown = 5;
+}
+if (_this.costmax < cost && _this.costmax !== 0) {
+opown = 6;
+}
+if (cost !== 0 && _this.getConfig('free_only', false)) {
+opown = 6;
+}
+if (openter === " You're not eligible to enter") {
+GJuser.opn = GJuser.opn + code + '(n),';
 opown = 3;
 }
-if (_this.getConfig('check_in_steam', true) && opown !== 3) {
+if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
 opown = 2;
 }
@@ -270,15 +286,12 @@ opown = 1;
 if (GJuser.ownsubs.includes(',' + opsub + ',') && opsub > 0) {
 opown = 1;
 }
-if (opown === 1 && !GJuser.op.includes(',' + code + '(s=')) {
-GJuser.op = GJuser.op + code + '(s=' + opid + '),';
 }
-}
-if (GJuser.black.includes(opid + ',') && _this.getConfig('blacklist_on', false) && opown !== 3) {
-if (!GJuser.op.includes(',' + code + '(b=')) {
-GJuser.op = GJuser.op + code + '(b=' + opid + '),';
-}
+if (GJuser.black.includes(opid + ',') && _this.getConfig('blacklist_on', false)) {
 opown = 4;
+}
+if (entered.includes('ENTERED')) {
+opown = 7;
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + oplog + _this.logBlack(opid), 'chk');
@@ -294,6 +307,15 @@ _this.log(Lang.get('service.cant_join'), 'cant');
 break;
 case 4:
 _this.log(Lang.get('service.blacklisted'), 'black');
+break;
+case 5:
+_this.log(Lang.get('service.points_low'), 'skip');
+break;
+case 6:
+_this.log(Lang.get('service.skipped'), 'skip');
+break;
+case 7:
+_this.log(Lang.get('service.already_joined'), 'jnd');
 break;
 }
 }
@@ -314,9 +336,6 @@ success: function () {
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
 _this.log(Lang.get('service.entered_in') + oplog, 'enter');
-if (!GJuser.op.includes(',' + code + '(e=')) {
-GJuser.op = GJuser.op + code + '(e=' + opid + '),';
-}
 },
 error: function () {
 if (_this.getConfig('log', true)) {

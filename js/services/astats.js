@@ -15,7 +15,7 @@ super.init();
 getUserInfo(callback) {
 if (GJuser.as === '' && fs.existsSync(dirdata + 'astats.txt')) {
 let asdata = fs.readFileSync(dirdata + 'astats.txt');
-if (asdata.length > 1 && asdata.length < 4000) {
+if (asdata.length > 1) {
 GJuser.as = asdata.toString();
 }
 }
@@ -39,6 +39,7 @@ let page = 1;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://astats.astats.nl';
 _this.pagemax = _this.getConfig('pages', 1);
+GJuser.asn = ',';
 if (GJuser.as === '') {
 GJuser.as = ',';
 $.ajax({
@@ -114,7 +115,8 @@ url: _this.url + '/astats/User_Info.php'
 });
 if (afound.length <= acurr && page === _this.pagemax) {
 setTimeout(function () {
-fs.writeFile(dirdata + 'astats.txt', GJuser.as, (err) => { });
+fs.writeFile(dirdata + 'astats.txt', GJuser.asn, (err) => { });
+GJuser.as = GJuser.asn;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
 }
@@ -149,7 +151,6 @@ let aname = data.find('[href="' + alink + '"]').text().trim(),
 ended = data.find('[href="' + alink + '"] > span').text().trim(),
 asjoin = alink.replace('/astats/Giveaway.php?GiveawayID=','');
 if (aname.includes('This giveaway has ended.') || ended === 'This giveaway has ended.') {
-GJuser.as = GJuser.as.replace(',' + asjoin + ',', ',');
 _this.pagemax = page;
 asnext = 50;
 }
@@ -185,6 +186,7 @@ if (ahave === '#FF0000') {
 asown = 1;
 }
 if (GJuser.as.includes(',' + asjoin + ',') && !_this.getConfig('check_all', false)) {
+GJuser.asn = GJuser.asn + asjoin + ',';
 asown = 3;
 }
 let aslog = _this.logLink(_this.url + alink, aname);
@@ -218,15 +220,13 @@ html = $(html.replace(/<img/gi, '<noload'));
 let ajoin = html.find('.input-group-btn').text().trim();
 if (ajoin === 'Add') {
 asown = 1;
-if (!GJuser.as.includes(',' + asjoin + ',')) {
-GJuser.as = GJuser.as + asjoin + ',';
+GJuser.asn = GJuser.asn + asjoin + ',';
 }
-}
-if (ajoin !== 'Add' && ajoin !== 'Join') {
-asown = 2;
-}
-if (ajoin === 'Join') {
+else if (ajoin === 'Join') {
 asown = 0;
+}
+else {
+asown = 2;
 }
 if (_this.getConfig('log', true)) {
 switch (asown) {
@@ -246,9 +246,7 @@ url: _this.url + alink,
 method: 'POST',
 data: 'Comment=&JoinGiveaway=Join',
 success: function () {
-if (!GJuser.as.includes(',' + asjoin + ',')) {
-GJuser.as = GJuser.as + asjoin + ',';
-}
+GJuser.asn = GJuser.asn + asjoin + ',';
 _this.log(Lang.get('service.entered_in') + aslog, 'enter');
 },
 error: function () {

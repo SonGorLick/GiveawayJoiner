@@ -51,9 +51,11 @@ _this.log(Lang.get('service.checked') + 'LootBoy', 'srch');
 }
 return;
 }
-lbua = _this.ua;
 if (fs.existsSync(dirdata + 'lootboy' + lbcurr + '_ua.txt') && lbcurr > 0) {
 lbua = fs.readFileSync(dirdata + 'lootboy' + lbcurr + '_ua.txt').toString();
+}
+else {
+lbua = _this.ua;
 }
 if (fs.existsSync(dirdata + 'lootboy' + lbcurr + '.txt') && lbcurr > 0) {
 if (_this.getConfig('log', true)) {
@@ -63,7 +65,7 @@ _this.log(lbua, 'skip');
 }
 }
 let lbdata = fs.readFileSync(dirdata + 'lootboy' + lbcurr + '.txt');
-if (lbdata.includes('Bearer') && lbdata.includes(',')) {
+if (lbdata.includes(',Bearer')) {
 let lbd = (lbdata.toString()).split(','),
 lbauth = lbd[0],
 lbbrr = lbd[1];
@@ -295,6 +297,7 @@ _this.log(Lang.get('service.skip'), 'skip');
 });
 })
 .catch((error) => {
+_this.log(error.response.status);
 _this.log(Lang.get('service.ses_not_found') + ' - ' + Lang.get('service.session_expired'), 'err');
 });
 }

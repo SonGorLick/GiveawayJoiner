@@ -150,7 +150,7 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 }
-if (page !== 1) {
+else if (page !== 1) {
 let success = data.success;
 if (success === true) {
 _this.lastid = data.lastid;

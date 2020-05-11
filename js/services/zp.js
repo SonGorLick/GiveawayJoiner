@@ -21,7 +21,7 @@ if (GJuser.zp === '') {
 GJuser.zp = ',';
 if (fs.existsSync(dirdata + 'zp.txt')) {
 let zpdata = fs.readFileSync(dirdata + 'zp.txt');
-if (zpdata.length > 1 && zpdata.length < 20000) {
+if (zpdata.length > 1) {
 GJuser.zp = zpdata.toString();
 }
 }
@@ -42,6 +42,7 @@ if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let zptimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = zptimer;
 }
+GJuser.zpn = ',';
 _this.skip = false;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.zeepond.com';
@@ -91,7 +92,8 @@ function giveawayEnter() {
 if (comp.length <= zpcurr || _this.skip || !_this.started) {
 if (comp.length <= zpcurr || _this.skip) {
 setTimeout(function () {
-fs.writeFile(dirdata + 'zp.txt', GJuser.zp, (err) => { });
+fs.writeFile(dirdata + 'zp.txt', GJuser.zpn, (err) => { });
+GJuser.zp = GJuser.zpn;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
 }
@@ -116,22 +118,35 @@ zpdtnow = new Date();
 zpdtnow.setDate(zpdtnow.getUTCDate());
 zpdtnow.setHours(zpdtnow.getUTCHours() + 10);
 let zpdnow = zpdtnow.getDate();
-if (GJuser.zp.includes(',' + zpnam + '(z=') && !_this.getConfig('check_all', false)) {
+if (GJuser.zp.includes(',' + zpnam + '(d=')) {
+zpblack = GJuser.zp.split(',' + zpnam + '(d=')[1].split('),')[0];
+GJuser.zpn = GJuser.zpn + zpnam + '(d=' + zpblack + '),';
+}
+if (!_this.getConfig('check_all', false)) {
+if (GJuser.zp.includes(',' + zpnam + '(z=')) {
 let zpdga = parseInt(GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0]);
 if (zpdnow === zpdga) {
+GJuser.zpn = GJuser.zpn + zpnam + '(z=' + zpdga + '),';
 njoin = 3;
 }
 }
-if (GJuser.zp.includes(',' + zpnam + '(s=') && _this.getConfig('check_in_steam', true)) {
-zpblack = GJuser.zp.split(',' + zpnam + '(s=')[1].split('),')[0];
+if (zpblack !== '') {
+if (_this.getConfig('check_in_steam', true)) {
+if (GJuser.ownapps.includes(',' + zpblack.replace('app/', '') + ',')) {
 njoin = 1;
 }
-if (GJuser.zp.includes(',' + zpnam + '(b=') && _this.getConfig('blacklist_on', false)) {
-zpblack = GJuser.zp.split(',' + zpnam + '(b=')[1].split('),')[0];
+if (GJuser.ownapps.includes(',' + zpblack.replace('sub/', '') + ',')) {
+njoin = 1;
+}
+}
+if (GJuser.black.includes(zpblack + ',') && _this.getConfig('blacklist_on', false)) {
 njoin = 2;
 }
+}
 if (GJuser.zp.includes(',' + zpnam + '(w),')) {
+GJuser.zpn = GJuser.zpn + zpnam + '(w),';
 njoin = 4;
+}
 }
 if (zpblack !== '') {
 zpblack = _this.logBlack(zpblack);
@@ -143,18 +158,16 @@ _this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
 switch (njoin) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
-_this.log(Lang.get('service.data_have'), 'skip');
 break;
 case 2:
 _this.log(Lang.get('service.blacklisted'), 'black');
-_this.log(Lang.get('service.data_have'), 'skip');
 break;
 case 3:
 _this.log(Lang.get('service.time'), 'skip');
 _this.log(Lang.get('service.data_have'), 'skip');
 break;
 case 4:
-_this.log(Lang.get('service.cant_join'), 'cant');
+_this.log(Lang.get('service.won_skip'), 'jnd');
 _this.log(Lang.get('service.data_have'), 'skip');
 break;
 }
@@ -184,26 +197,14 @@ zpsteam = undefined;
 if (!enter) {
 zpown = 3;
 if (!entered && !won) {
-if (GJuser.zp.includes(',' + zpnam + '(z=')) {
-let zpdga = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];
-GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zpdga, ',' + zpnam + '(z=' + zpdnow);
-}
-else {
-GJuser.zp = GJuser.zp + zpnam + '(z=' + zpdnow + '),';
-}
+GJuser.zpn = GJuser.zpn + zpnam + '(z=' + zpdnow + '),';
 }
 }
 if (entered) {
+GJuser.zpn = GJuser.zpn + zpnam + '(z=' + zpdnow + '),';
 zpown = 5;
 if (_this.getConfig('skip_after', true)) {
 _this.skip = true;
-}
-if (GJuser.zp.includes(',' + zpnam + '(z=')) {
-let zpdga = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];
-GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zpdga, ',' + zpnam + '(z=' + zpdnow);
-}
-else {
-GJuser.zp = GJuser.zp + zpnam + '(z=' + zpdnow + '),';
 }
 }
 if (zpsteam !== undefined) {
@@ -219,6 +220,12 @@ if (zpsteam.includes('bundle/')) {
 zpbun = parseInt(zpsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
 zpid = 'bundle/' + zpbun;
 }
+if (!GJuser.zpn.includes(',' + zpnam + '(d=') && zpid !== '') {
+GJuser.zpn = GJuser.zpn + zpnam + '(d=' + zpid + '),';
+}
+else if (zpid === '') {
+zpid = '???';
+}
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
 zpown = 2;
@@ -229,19 +236,15 @@ zpown = 1;
 if (GJuser.ownsubs.includes(',' + zpsub + ',') && zpsub > 0) {
 zpown = 1;
 }
-if (zpown === 1) {
-GJuser.zp = GJuser.zp + zpnam + '(s=' + zpid + '),';
-}
 }
 if (GJuser.black.includes(zpid + ',') && _this.getConfig('blacklist_on', false)) {
-GJuser.zp = GJuser.zp + zpnam + '(b=' + zpid + '),';
 zpown = 4;
 }
 }
 if (won) {
-zpown = 3;
-if (!GJuser.zp.includes(',' + zpnam + '(w),')) {
-GJuser.zp = GJuser.zp + zpnam + '(w),';
+zpown = 6;
+if (!GJuser.zpn.includes(',' + zpnam + '(w),')) {
+GJuser.zpn = GJuser.zpn + zpnam + '(w),';
 }
 }
 if (zpid !== '') {
@@ -267,6 +270,9 @@ break;
 case 5:
 _this.log(Lang.get('service.already_joined'), 'jnd');
 break;
+case 6:
+_this.log(Lang.get('service.won_skip'), 'jnd');
+break;
 }
 }
 else {
@@ -283,13 +289,7 @@ let zpdtnew = new Date();
 zpdtnew.setDate(zpdtnew.getUTCDate());
 zpdtnew.setHours(zpdtnew.getUTCHours() + 10);
 let zpdnew = ('0' + zpdtnew.getDate().toString()).slice(-2);
-if (GJuser.zp.includes(',' + zpnam + '(z=')) {
-let zpdold = GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0];
-GJuser.zp = GJuser.zp.replace(',' + zpnam + '(z=' + zpdold, ',' + zpnam + '(z=' + zpdnew);
-}
-else {
-GJuser.zp = GJuser.zp + zpnam + '(z=' + zpdnew + '),';
-}
+GJuser.zpn = GJuser.zpn + zpnam + '(z=' + zpdnew + '),';
 _this.log(Lang.get('service.entered_in') + zplog, 'enter');
 },
 error: function () {

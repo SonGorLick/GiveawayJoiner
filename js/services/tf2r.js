@@ -42,6 +42,7 @@ if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let tftimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = tftimer;
 }
+GJuser.tfn = ',';
 _this.url = 'https://tf2r.com';
 _this.won = _this.getConfig('won', 0);
 if ((new Date()).getDate() !== GJuser.tfchk) {
@@ -95,7 +96,8 @@ function giveawayEnter() {
 if (giveaways.length <= tfcurr || !_this.started) {
 if (giveaways.length <= tfcurr) {
 setTimeout(function () {
-fs.writeFile(dirdata + 'tf2r.txt', GJuser.tf, (err) => { });
+fs.writeFile(dirdata + 'tf2r.txt', GJuser.tfn, (err) => { });
+GJuser.tf = GJuser.tfn;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
 }
@@ -144,9 +146,7 @@ Cookie: _this.cookies
 let body = bodys.data;
 if (body.status === 'ok') {
 _this.log(Lang.get('service.entered_in') + tflog, 'enter');
-if (!GJuser.tf.includes(',' + rid + ',')) {
-GJuser.tf = GJuser.tf + rid + ',';
-}
+GJuser.tfn = GJuser.tfn + rid + ',';
 }
 else {
 tfnext = 100;
@@ -159,9 +159,7 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 else {
 tfnext = 100;
-if (!GJuser.tf.includes(',' + rid + ',')) {
-GJuser.tf = GJuser.tf + rid + ',';
-}
+GJuser.tfn = GJuser.tfn + rid + ',';
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
 }

@@ -23,7 +23,7 @@ timer_from: { type: 'number', trans: 'service.timer_from', min: 5, max: this.get
 timer_to: { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 500), max: 2880, default: this.getConfig('timer_to', 700) },
 interval_from: { type: 'number', trans: 'service.interval_from', min: 5, max: this.getConfig('interval_to', 15), default: this.getConfig('interval_from', 10) },
 interval_to: { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 10), max: 60, default: this.getConfig('interval_to', 15) },
-pages: { type: 'number', trans: 'service.pages', min: 1, max: 30, default: this.getConfig('pages', 1) },
+pages: { type: 'number', trans: 'service.pages', min: 1, max: 50, default: this.getConfig('pages', 1) },
 check_in_steam: { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) },
 autostart: { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) },
 blacklist_on: { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) },
