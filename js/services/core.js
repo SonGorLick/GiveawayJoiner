@@ -260,11 +260,8 @@ clearInterval(this.intervalVar);
 if (this.totalTicks % this.doTimer() === 0) {
 if(
 (this.constructor.name === 'Astats') ||
-(this.constructor.name === 'Follx') ||
-(this.constructor.name === 'IndieGala') ||
-(this.constructor.name === 'OpiumPulses') ||
-(this.constructor.name === 'SteamGifts') ||
-(this.constructor.name === 'ZP')
+(this.constructor.name === 'ZP') ||
+(this.withValue)
 )
 {
 if (fs.existsSync(dirdata + 'steam_app.txt')) {
