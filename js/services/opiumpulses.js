@@ -13,15 +13,6 @@ this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.
 super.init();
 }
 getUserInfo(callback) {
-if (GJuser.op === '') {
-GJuser.op = ',';
-if (fs.existsSync(dirdata + 'opiumpulses.txt')) {
-let opdata = fs.readFileSync(dirdata + 'opiumpulses.txt');
-if (opdata.length > 1) {
-GJuser.op = opdata.toString();
-}
-}
-}
 let userData = {
 avatar: dirapp + 'images/OpiumPulses.png',
 username: 'OpiumPulses User',
@@ -47,10 +38,16 @@ let optimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _t
 _this.stimer = optimer;
 }
 let page = 1;
-GJuser.opn = ',';
+_this.dsave = ',';
+_this.dload = ',';
+if (fs.existsSync(dirdata + 'opiumpulses.txt')) {
+let opdata = fs.readFileSync(dirdata + 'opiumpulses.txt');
+if (opdata.length > 1) {
+_this.dload = opdata.toString();
+}
+}
 _this.pagemax = _this.getConfig('pages', 1);
 _this.costmax = _this.getConfig('maxcost', 0);
-_this.check = 0;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.opiumpulses.com';
 let callback = function () {
@@ -75,8 +72,7 @@ let opfound = $(data).find('.giveaways-page-item');
 if (data.indexOf('li class="next"') < 0) {
 _this.pagemax = page;
 }
-if (_this.check === 0) {
-_this.check = 1;
+if (page === 1) {
 let opwon = $(data).find('[href="/user/giveawaykeys"] > span').text().trim();
 if (opwon === undefined) {
 opwon = 0;
@@ -126,8 +122,7 @@ success: function () {
 }
 });
 setTimeout(function () {
-fs.writeFile(dirdata + 'opiumpulses.txt', GJuser.opn, (err) => { });
-GJuser.op = GJuser.opn;
+fs.writeFile(dirdata + 'opiumpulses.txt', _this.dsave, (err) => { });
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
 }
@@ -164,9 +159,9 @@ opblack = '';
 if (isNaN(cost)) {
 cost = 0;
 }
-if (GJuser.op.includes(',' + code + '(d=')) {
-opblack = GJuser.op.split(',' + code + '(d=')[1].split('),')[0];
-GJuser.opn = GJuser.opn + code + '(d=' + opblack + '),';
+if (_this.dload.includes(',' + code + '(d=')) {
+opblack = _this.dload.split(',' + code + '(d=')[1].split('),')[0];
+_this.dsave = _this.dsave + code + '(d=' + opblack + '),';
 if (_this.curr_value < cost) {
 njoin = 4;
 }
@@ -179,8 +174,8 @@ njoin = 5;
 }
 if (!_this.getConfig('check_all', false)) {
 if (opblack !== '') {
-if (GJuser.op.includes(',' + code + '(n),')) {
-GJuser.opn = GJuser.opn + code + '(n),';
+if (_this.dload.includes(',' + code + '(n),')) {
+_this.dsave = _this.dsave + code + '(n),';
 njoin = 1;
 }
 if (_this.getConfig('check_in_steam', true)) {
@@ -196,7 +191,7 @@ njoin = 3;
 }
 }
 }
-if (entered.includes('ENTERED') && GJuser.op.includes(',' + code + '(d=')) {
+if (entered.includes('ENTERED') && _this.dload.includes(',' + code + '(d=')) {
 njoin = 6;
 }
 if (opblack !== '') {
@@ -260,8 +255,8 @@ if (opsteam.includes('bundle/')) {
 opbun = parseInt(opsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
 opid = 'bundle/' + opbun;
 }
-if (!GJuser.opn.includes(',' + code + '(d=') && opid !== '???') {
-GJuser.opn = GJuser.opn + code + '(d=' + opid + '),';
+if (!_this.dsave.includes(',' + code + '(d=') && opid !== '???') {
+_this.dsave = _this.dsave + code + '(d=' + opid + '),';
 }
 if (_this.curr_value < cost) {
 opown = 5;
@@ -273,7 +268,7 @@ if (cost !== 0 && _this.getConfig('free_only', false)) {
 opown = 6;
 }
 if (openter === " You're not eligible to enter") {
-GJuser.opn = GJuser.opn + code + '(n),';
+_this.dsave = _this.dsave + code + '(n),';
 opown = 3;
 }
 if (_this.getConfig('check_in_steam', true)) {

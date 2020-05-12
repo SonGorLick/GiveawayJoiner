@@ -71,6 +71,7 @@ title: 'GiveawayJoiner',
 icon: _icn,
 show: false,
 center: true,
+backgroundColor: '#263238',
 resizable: false,
 frame: false,
 hasShadow: false,
@@ -109,14 +110,11 @@ webviewTag: true,
 webSecurity: false,
 }
 });
-Browser.loadURL('file://' + __dirname + '/blank.html');
+Browser.loadFile('blank.html');
 Browser.on('close', (e) => {
-Browser.loadURL('file://' + __dirname + '/blank.html');
-Browser.hide();
 e.preventDefault();
-if (mainWindow.hidden) {
-mainWindow.focus();
-}
+Browser.loadFile('blank.html');
+Browser.hide();
 });
 mainWindow.on('close', () => {
 mainWindow.removeAllListeners('close');
@@ -187,7 +185,7 @@ let loadLang = () => {
 rq({url: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/' + name, responseType: 'document'})
 .then((language) => {
 let lang = JSON.stringify(language.data);
-fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => {});
+fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => { });
 })
 .finally(() => {
 checked++;

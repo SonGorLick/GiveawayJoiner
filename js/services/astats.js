@@ -6,19 +6,13 @@ this.settings.timer_from.min = 5;
 this.websiteUrl = 'https://astats.astats.nl/astats/';
 this.authContent = 'Log out';
 this.authLink = 'https://astats.astats.nl/astats/profile/Login.php';
-this.withValue = false;
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
+this.withValue = false;
 super.init();
 }
 getUserInfo(callback) {
-if (GJuser.as === '' && fs.existsSync(dirdata + 'astats.txt')) {
-let asdata = fs.readFileSync(dirdata + 'astats.txt');
-if (asdata.length > 1) {
-GJuser.as = asdata.toString();
-}
-}
 let userData = {
 avatar: dirapp + 'images/Astats.png',
 username: 'Astats User'
@@ -39,15 +33,21 @@ let page = 1;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://astats.astats.nl';
 _this.pagemax = _this.getConfig('pages', 1);
-GJuser.asn = ',';
-if (GJuser.as === '') {
-GJuser.as = ',';
+_this.dsave = ',';
+_this.dload = ',';
+if (fs.existsSync(dirdata + 'astats.txt')) {
+let asdata = fs.readFileSync(dirdata + 'astats.txt');
+if (asdata.length > 1) {
+_this.dload = asdata.toString();
+}
+}
+if (_this.dload === ',') {
 $.ajax({
 url: _this.url + '/astats/TopListGames.php?language=english'
 });
 }
-if ((new Date()).getDate() !== GJuser.aschk) {
-GJuser.aschk = (new Date()).getDate();
+if ((new Date()).getDate() !== _this.dcheck) {
+_this.dcheck = (new Date()).getDate();
 $.ajax({
 url: _this.url + '/astats/profile/User_Inbox.php',
 success: function (data) {
@@ -70,6 +70,9 @@ if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
+},
+error: function () {
+_this.dcheck = '';
 }
 });
 }
@@ -115,8 +118,7 @@ url: _this.url + '/astats/User_Info.php'
 });
 if (afound.length <= acurr && page === _this.pagemax) {
 setTimeout(function () {
-fs.writeFile(dirdata + 'astats.txt', GJuser.asn, (err) => { });
-GJuser.as = GJuser.asn;
+fs.writeFile(dirdata + 'astats.txt', _this.dsave, (err) => { });
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
 }
@@ -185,8 +187,8 @@ asown = 4;
 if (ahave === '#FF0000') {
 asown = 1;
 }
-if (GJuser.as.includes(',' + asjoin + ',') && !_this.getConfig('check_all', false)) {
-GJuser.asn = GJuser.asn + asjoin + ',';
+if (_this.dload.includes(',' + asjoin + ',') && !_this.getConfig('check_all', false)) {
+_this.dsave = _this.dsave + asjoin + ',';
 asown = 3;
 }
 let aslog = _this.logLink(_this.url + alink, aname);
@@ -220,7 +222,7 @@ html = $(html.replace(/<img/gi, '<noload'));
 let ajoin = html.find('.input-group-btn').text().trim();
 if (ajoin === 'Add') {
 asown = 1;
-GJuser.asn = GJuser.asn + asjoin + ',';
+_this.dsave = _this.dsave + asjoin + ',';
 }
 else if (ajoin === 'Join') {
 asown = 0;
@@ -246,7 +248,7 @@ url: _this.url + alink,
 method: 'POST',
 data: 'Comment=&JoinGiveaway=Join',
 success: function () {
-GJuser.asn = GJuser.asn + asjoin + ',';
+_this.dsave = _this.dsave + asjoin + ',';
 _this.log(Lang.get('service.entered_in') + aslog, 'enter');
 },
 error: function () {

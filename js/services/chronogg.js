@@ -42,9 +42,9 @@ _this.churl = 'https://api.chrono.gg';
 _this.url = 'https://www.chrono.gg';
 let chcurr = 0,
 chnext = 5000;
-_this.check = true;
+_this.dcheck = true;
 function giveawayEnter() {
-if (!_this.check || !_this.started) {
+if (!_this.dcheck || !_this.started) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checked') + 'ChronoGG', 'srch');
 }
@@ -133,7 +133,7 @@ _this.log(Lang.get('service.dt_err'), 'err');
 }
 else {
 if (chcurr > 0) {
-_this.check = false;
+_this.dcheck = false;
 if (chcurr === 1) {
 fs.writeFile(dirdata + 'chronogg1.txt', '', (err) => { });
 _this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/chronogg1.txt', 'err');

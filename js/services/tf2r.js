@@ -17,15 +17,6 @@ delete this.settings.blacklist_on;
 super.init();
 }
 getUserInfo(callback) {
-if (GJuser.tf === '') {
-GJuser.tf = ',';
-if (fs.existsSync(dirdata + 'tf2r.txt')) {
-let tfdata = fs.readFileSync(dirdata + 'tf2r.txt');
-if (tfdata.length > 1 && tfdata.length < 4000) {
-GJuser.tf = tfdata.toString();
-}
-}
-}
 let userData = {
 avatar: dirapp + 'images/TF2R.png',
 username: 'TF2R User'
@@ -42,11 +33,18 @@ if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let tftimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = tftimer;
 }
-GJuser.tfn = ',';
+_this.dsave = ',';
+_this.dload = ',';
+if (fs.existsSync(dirdata + 'tf2r.txt')) {
+let tfdata = fs.readFileSync(dirdata + 'tf2r.txt');
+if (tfdata.length > 1) {
+_this.dload = tfdata.toString();
+}
+}
 _this.url = 'https://tf2r.com';
 _this.won = _this.getConfig('won', 0);
-if ((new Date()).getDate() !== GJuser.tfchk) {
-GJuser.tfchk = (new Date()).getDate();
+if ((new Date()).getDate() !== _this.dcheck) {
+_this.dcheck = (new Date()).getDate();
 $.ajax({
 url: _this.url + '/notifications.html',
 success: function (html) {
@@ -74,6 +72,9 @@ if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
+},
+error: function () {
+_this.dcheck = '';
 }
 });
 }
@@ -96,8 +97,7 @@ function giveawayEnter() {
 if (giveaways.length <= tfcurr || !_this.started) {
 if (giveaways.length <= tfcurr) {
 setTimeout(function () {
-fs.writeFile(dirdata + 'tf2r.txt', GJuser.tfn, (err) => { });
-GJuser.tf = GJuser.tfn;
+fs.writeFile(dirdata + 'tf2r.txt', _this.dsave, (err) => { });
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
 }
@@ -123,7 +123,7 @@ if (_this.getConfig('log', true)) {
 tflog = '|' + (tfrnd + 1) + '№|  ' + tflog;
 _this.log(Lang.get('service.checking') + tflog, 'chk');
 }
-if (!GJuser.tf.includes(rid + ',') && !_this.getConfig('check_all', false)) {
+if (!_this.dload.includes(rid + ',') && !_this.getConfig('check_all', false)) {
 $.ajax({
 url: link,
 success: function (data) {
@@ -146,7 +146,7 @@ Cookie: _this.cookies
 let body = bodys.data;
 if (body.status === 'ok') {
 _this.log(Lang.get('service.entered_in') + tflog, 'enter');
-GJuser.tfn = GJuser.tfn + rid + ',';
+_this.dsave = _this.dsave + rid + ',';
 }
 else {
 tfnext = 100;
@@ -159,7 +159,7 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 else {
 tfnext = 100;
-GJuser.tfn = GJuser.tfn + rid + ',';
+_this.dsave = _this.dsave + rid + ',';
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
 }

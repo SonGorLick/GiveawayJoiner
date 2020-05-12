@@ -40,10 +40,10 @@ _this.stimer = fgtimer;
 _this.url = 'https://d.freegamelottery.com/draw/register-visit';
 _this.fgurl = 'https://d.freegamelottery.com';
 let fgcurr = 1;
-_this.check = true;
+_this.dcheck = true;
 function giveawayEnter() {
 let fgnext = _this.interval();
-if (!_this.check || !_this.started) {
+if (!_this.dcheck || !_this.started) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checked') + 'FGL', 'srch');
 }
@@ -231,7 +231,7 @@ _this.log(Lang.get('service.dt_err'), 'err');
 }
 }
 else {
-_this.check = false;
+_this.dcheck = false;
 if (fgcurr === 1) {
 fs.writeFile(dirdata + 'fgl1.txt', '', (err) => { });
 _this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/fgl1.txt', 'err');

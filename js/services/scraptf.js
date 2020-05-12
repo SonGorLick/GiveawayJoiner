@@ -70,12 +70,12 @@ let page = 1;
 _this.spurl = '';
 if (_this.getConfig('sort_by_end', false)) {
 _this.spurl = '/ending';
-_this.sort = 1;
+_this.dload = 1;
 }
 else {
-_this.sort = 0;
+_this.dload = 0;
 }
-_this.lastid = '';
+_this.dcheck = '';
 _this.won = _this.getConfig('won', 0);
 _this.pagemax = _this.getConfig('pages', 1);
 let callback = function () {
@@ -88,7 +88,7 @@ this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback) {
 let _this = this;
-GJuser.sp = ',';
+_this.dsave = ',';
 let spurl = _this.url + '/raffles' + _this.spurl,
 spreferer = _this.url + '/',
 spdata = '',
@@ -100,7 +100,7 @@ sptype = 'GET',
 sprtype = spdest;
 if (page !== 1) {
 spurl = _this.url + '/ajax/raffles/Paginate';
-spdata = 'start=' + _this.lastid + '&sort=' + _this.sort + '&puzzle=0&csrf=' + _this.csrf;
+spdata = 'start=' + _this.dcheck + '&sort=' + _this.dload + '&puzzle=0&csrf=' + _this.csrf;
 spreferer = _this.url + '/raffles' + _this.spurl;
 sporig = _this.url;
 spmode = 'cors';
@@ -153,7 +153,7 @@ new Audio(dirapp + 'sounds/won.wav').play();
 else if (page !== 1) {
 let success = data.success;
 if (success === true) {
-_this.lastid = data.lastid;
+_this.dcheck = data.lastid;
 let done = data.done;
 if (done === true) {
 _this.pagemax = page;
@@ -170,11 +170,11 @@ if (page === 1) {
 if (sptent.length < 60) {
 _this.pagemax = page;
 }
-_this.lastid = sptent.eq(-1).find('.panel-heading .raffle-name a').attr('href').replace('/raffles/', '');
+_this.dcheck = sptent.eq(-1).find('.panel-heading .raffle-name a').attr('href').replace('/raffles/', '');
 }
 for (let spcurred = 0; spcurred < sptented.length; spcurred++) {
 let linked = sptented.eq(spcurred).find('.panel-heading .raffle-name a').attr('href').replace('/raffles/', '');
-GJuser.sp = GJuser.sp + linked + ',';
+_this.dsave = _this.dsave + linked + ',';
 }
 let spcurr = 0,
 random = Array.from(Array(sptent.length).keys());
@@ -224,13 +224,13 @@ id = splink.replace('/raffles/', '');
 if (spname === undefined) {
 spname = '?????? ' + '(' + id + ')';
 }
-if (spname.includes('<noload')) {
+else if (spname.includes('<noload')) {
 spname = spcont.find('.panel-heading .raffle-name a noload').text().trim();
 }
 if (spname.length > 70) {
 spname = spname.slice(0, 70) + '...';
 }
-if (spname === '') {
+else if (spname === '') {
 spname = '?????? ' + '(' + id + ')';
 }
 let splog = _this.logLink(_this.url + splink, spname);
@@ -238,7 +238,7 @@ if (_this.getConfig('log', true)) {
 splog = '|' + page + '#|' + (sprnd + 1) + '№|  ' + splog;
 _this.log(Lang.get('service.checking') + splog, 'chk');
 }
-if (!GJuser.sp.includes(',' + id + ',') && !spended.includes('Ended')) {
+if (!_this.dsave.includes(',' + id + ',') && !spended.includes('Ended')) {
 spnext = spnext + Math.floor(spnext / 4) + 2100;
 rq({
 method: 'GET',
@@ -301,14 +301,12 @@ _this.log(Lang.get('service.err_join'), 'err');
 });
 }, tmout);
 }
-else {
-if (entered && _this.getConfig('log', true)) {
+else if (_this.getConfig('log', true)) {
+if (entered) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
 }
 else {
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.cant_join'), 'cant');
-}
 }
 }
 })

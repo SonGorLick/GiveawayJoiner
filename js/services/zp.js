@@ -17,15 +17,6 @@ delete this.settings.pages;
 super.init();
 }
 getUserInfo(callback) {
-if (GJuser.zp === '') {
-GJuser.zp = ',';
-if (fs.existsSync(dirdata + 'zp.txt')) {
-let zpdata = fs.readFileSync(dirdata + 'zp.txt');
-if (zpdata.length > 1) {
-GJuser.zp = zpdata.toString();
-}
-}
-}
 let userData = {
 avatar: dirapp + 'images/ZP.png',
 username: 'ZP User'
@@ -42,7 +33,14 @@ if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let zptimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = zptimer;
 }
-GJuser.zpn = ',';
+_this.dsave = ',';
+_this.dload = ',';
+if (fs.existsSync(dirdata + 'zp.txt')) {
+let zpdata = fs.readFileSync(dirdata + 'zp.txt');
+if (zpdata.length > 1) {
+_this.dload = zpdata.toString();
+}
+}
 _this.skip = false;
 _this.month = 1;
 let zpmonth = new Date().getMonth();
@@ -51,8 +49,8 @@ _this.month = 0;
 }
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.zeepond.com';
-if ((new Date()).getDate() !== GJuser.zpchk) {
-GJuser.zpchk = (new Date()).getDate();
+if ((new Date()).getDate() !== _this.dcheck) {
+_this.dcheck = (new Date()).getDate();
 $.ajax({
 url: _this.url + '/my-account/my-prizes',
 success: function (data) {
@@ -75,6 +73,9 @@ if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
+},
+error: function () {
+_this.dcheck = '';
 }
 });
 }
@@ -97,8 +98,7 @@ function giveawayEnter() {
 if (comp.length <= zpcurr || _this.skip || !_this.started) {
 if (comp.length <= zpcurr || _this.skip) {
 setTimeout(function () {
-fs.writeFile(dirdata + 'zp.txt', GJuser.zpn, (err) => { });
-GJuser.zp = GJuser.zpn;
+fs.writeFile(dirdata + 'zp.txt', _this.dsave, (err) => { });
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
 }
@@ -123,15 +123,15 @@ zpdtnow = new Date();
 zpdtnow.setDate(zpdtnow.getUTCDate());
 zpdtnow.setHours(zpdtnow.getUTCHours() + 10 + _this.month);
 let zpdnow = zpdtnow.getDate();
-if (GJuser.zp.includes(',' + zpnam + '(d=')) {
-zpblack = GJuser.zp.split(',' + zpnam + '(d=')[1].split('),')[0];
-GJuser.zpn = GJuser.zpn + zpnam + '(d=' + zpblack + '),';
+if (_this.dload.includes(',' + zpnam + '(d=')) {
+zpblack = _this.dload.split(',' + zpnam + '(d=')[1].split('),')[0];
+_this.dsave = _this.dsave + zpnam + '(d=' + zpblack + '),';
 }
 if (!_this.getConfig('check_all', false)) {
-if (GJuser.zp.includes(',' + zpnam + '(z=')) {
-let zpdga = parseInt(GJuser.zp.split(',' + zpnam + '(z=')[1].split('),')[0]);
+if (_this.dload.includes(',' + zpnam + '(z=')) {
+let zpdga = parseInt(_this.dload.split(',' + zpnam + '(z=')[1].split('),')[0]);
 if (zpdnow === zpdga) {
-GJuser.zpn = GJuser.zpn + zpnam + '(z=' + zpdga + '),';
+_this.dsave = _this.dsave + zpnam + '(z=' + zpdga + '),';
 njoin = 3;
 }
 }
@@ -148,8 +148,8 @@ if (GJuser.black.includes(zpblack + ',') && _this.getConfig('blacklist_on', fals
 njoin = 2;
 }
 }
-if (GJuser.zp.includes(',' + zpnam + '(w),')) {
-GJuser.zpn = GJuser.zpn + zpnam + '(w),';
+if (_this.dload.includes(',' + zpnam + '(w),')) {
+_this.dsave = _this.dsave + zpnam + '(w),';
 njoin = 4;
 }
 }
@@ -202,11 +202,11 @@ zpsteam = undefined;
 if (!enter) {
 zpown = 3;
 if (!entered && !won) {
-GJuser.zpn = GJuser.zpn + zpnam + '(z=' + zpdnow + '),';
+_this.dsave = _this.dsave + zpnam + '(z=' + zpdnow + '),';
 }
 }
 if (entered) {
-GJuser.zpn = GJuser.zpn + zpnam + '(z=' + zpdnow + '),';
+_this.dsave = _this.dsave + zpnam + '(z=' + zpdnow + '),';
 zpown = 5;
 if (_this.getConfig('skip_after', true)) {
 _this.skip = true;
@@ -225,8 +225,8 @@ if (zpsteam.includes('bundle/')) {
 zpbun = parseInt(zpsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
 zpid = 'bundle/' + zpbun;
 }
-if (!GJuser.zpn.includes(',' + zpnam + '(d=') && zpid !== '') {
-GJuser.zpn = GJuser.zpn + zpnam + '(d=' + zpid + '),';
+if (!_this.dsave.includes(',' + zpnam + '(d=') && zpid !== '') {
+_this.dsave = _this.dsave + zpnam + '(d=' + zpid + '),';
 }
 else if (zpid === '') {
 zpid = '???';
@@ -248,8 +248,8 @@ zpown = 4;
 }
 if (won) {
 zpown = 6;
-if (!GJuser.zpn.includes(',' + zpnam + '(w),')) {
-GJuser.zpn = GJuser.zpn + zpnam + '(w),';
+if (!_this.dsave.includes(',' + zpnam + '(w),')) {
+_this.dsave = _this.dsave + zpnam + '(w),';
 }
 }
 if (zpid !== '') {
@@ -294,7 +294,7 @@ let zpdtnew = new Date();
 zpdtnew.setDate(zpdtnew.getUTCDate());
 zpdtnew.setHours(zpdtnew.getUTCHours() + 10 + _this.month);
 let zpdnew = ('0' + zpdtnew.getDate().toString()).slice(-2);
-GJuser.zpn = GJuser.zpn + zpnam + '(z=' + zpdnew + '),';
+_this.dsave = _this.dsave + zpnam + '(z=' + zpdnew + '),';
 _this.log(Lang.get('service.entered_in') + zplog, 'enter');
 },
 error: function () {

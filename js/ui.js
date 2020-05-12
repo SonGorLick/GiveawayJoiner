@@ -12,18 +12,7 @@ let intervalTicks = 0;
 GJuser.ownapps = '[]';
 GJuser.ownsubs = '[]';
 GJuser.black = '';
-GJuser.as = '';
-GJuser.op = '';
-GJuser.sp = '';
-GJuser.tf = '';
-GJuser.zp = '';
-GJuser.asn = '';
-GJuser.opn = '';
-GJuser.tfn = '';
-GJuser.zpn = '';
-GJuser.aschk = '';
-GJuser.zpchk = '';
-GJuser.iglvl = undefined;
+GJuser.iglvl = '';
 $(function () {
 if (!Config.get('steam_local', false)) {
 $.ajax({

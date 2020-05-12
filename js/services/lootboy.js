@@ -40,12 +40,12 @@ _this.stimer = lbtimer;
 }
 _this.lburl = 'https://api.lootboy.de';
 _this.url = 'https://www.lootboy.de';
-_this.check = true;
+_this.dcheck = true;
 let lbcurr = 0,
 lbua = _this.ua,
 lbnext = 5000;
 function giveawayEnter() {
-if (!_this.check || !_this.started) {
+if (!_this.dcheck || !_this.started) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checked') + 'LootBoy', 'srch');
 }
@@ -307,7 +307,7 @@ _this.log(Lang.get('service.dt_err'), 'err');
 }
 else {
 if (lbcurr > 0) {
-_this.check = false;
+_this.dcheck = false;
 if (lbcurr === 1) {
 fs.writeFile(dirdata + 'lootboy1.txt', '', (err) => { });
 _this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/lootboy1.txt', 'err');

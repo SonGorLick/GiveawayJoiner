@@ -60,9 +60,9 @@ if (this.getConfig('timer_to', 90) !== this.getConfig('timer_from', 70)) {
 let sgtimer = (Math.floor(Math.random() * (this.getConfig('timer_to', 90) - this.getConfig('timer_from', 70))) + this.getConfig('timer_from', 70));
 this.stimer = sgtimer;
 }
-this.check = 0;
+this.dcheck = 0;
 this.won = this.getConfig('won', 0);
-this.hided = ',';
+this.dsave = ',';
 this.giveaways = [];
 this.gawf = [];
 this.gagf = [];
@@ -122,8 +122,8 @@ this.log(this.trans('token_error'), 'err');
 this.stopJoiner(true);
 return;
 }
-if (this.check === 0) {
-this.check = 1;
+if (this.dcheck === 0) {
+this.dcheck = 1;
 let sgwon = parseInt(data.find('.nav__button-container--active.nav__button-container--notification.nav__button-container:nth-of-type(2) > .nav__button > .nav__notification').text().trim());
 if (isNaN(sgwon)) {
 sgwon = 0;
@@ -317,7 +317,7 @@ let sglog = _this.logLink(GA.lnk, GA.nam);
 if (
 (_this.getConfig('log', true)) &&
 (sgown !== 7) &&
-(!_this.hided.includes(',' + sgid + ',') || sgown === 6)
+(!_this.dsave.includes(',' + sgid + ',') || sgown === 6)
 )
 {
 sglog = '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|  ' + sglog;
@@ -367,13 +367,14 @@ code: GA.code
 },
 success: function (data) {
 if (data.type === 'success') {
+sgprize = 1000;
 _this.log(Lang.get('service.removed') + _this.logLink(GA.lnk, GA.nam), 'info');
 _this.setValue(data.points);
 }
 }
 });
 }
-if ((sgown === 1 || sgown === 6) && !_this.hided.includes(',' + sgid + ',') && _this.getConfig('hide_ga', false)) {
+if ((sgown === 1 || sgown === 6) && !_this.dsave.includes(',' + sgid + ',') && _this.getConfig('hide_ga', false)) {
 sgown = 6;
 $.ajax({
 url: _this.url + '/ajax.php',
@@ -386,7 +387,7 @@ game_id: GA.gameid
 },
 success: function () {
 _this.log(Lang.get('service.hided') + _this.logLink(GA.lnk, GA.nam), 'info');
-_this.hided = _this.hided + sgid + ',';
+_this.dsave = _this.dsave + sgid + ',';
 }
 });
 }

@@ -42,14 +42,6 @@ if (userData.avatar.includes('profile_backend')) {
 userData.avatar = 'https://www.indiegala.com' + userData.avatar;
 }
 userData.username = html.find('.profile-private-page-user-row').text();
-$.ajax({
-url: 'https://www.indiegala.com/library/giveaways/user-level-and-coins',
-success: function (response) {
-if (response.current_level !== undefined) {
-GJuser.iglvl = response.current_level;
-}
-}
-});
 },
 complete: function () {
 callback(userData);
@@ -64,7 +56,7 @@ _this.stimer = igtimer;
 }
 let page = 1;
 _this.igprtry = 0;
-_this.iglast = 0;
+_this.dcheck = 0;
 _this.lvlmax = _this.getConfig('max_level', 0);
 _this.lvlmin = _this.getConfig('min_level', 0);
 _this.entmin = _this.getConfig('min_entries', 0);
@@ -75,6 +67,17 @@ _this.ending_first = _this.getConfig('ending_first', false);
 _this.reserve = _this.getConfig('points_reserve', 0);
 _this.sort_after = false;
 _this.url = 'https://www.indiegala.com';
+if (GJuser.iglvl === '') {
+GJuser.iglvl = _this.lvlmax;
+$.ajax({
+url: 'https://www.indiegala.com/library/giveaways/user-level-and-coins',
+success: function (iglevel) {
+if (iglevel.current_level !== undefined) {
+GJuser.iglvl = iglevel.current_level;
+}
+},error: () => {}
+});
+}
 $.ajax({
 url: _this.url + '/library/giveaways/giveaways-completed/tocheck',
 success: function (tocheck) {
@@ -115,9 +118,6 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 });
-if (GJuser.iglvl === undefined) {
-GJuser.iglvl = _this.lvlmax;
-}
 if (GJuser.iglvl === 0) {
 _this.sort = false;
 }
@@ -176,7 +176,7 @@ igrtry = 0,
 Times = 0;
 if (page > 1 && data.indexOf('prev-next palette-background-7') >= 0) {
 _this.pagemax = page;
-_this.iglast = 1;
+_this.dcheck = 1;
 }
 function giveawayEnter() {
 if (_this.doTimer() - _this.totalTicks < 240) {
@@ -192,10 +192,10 @@ _this.pagemax = page;
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igprtry > 0) {
 if (_this.igprtry === 0) {
 if (_this.getConfig('log', true)) {
-if (_this.curr_value === 0 && _this.iglast === 0) {
+if (_this.curr_value === 0 && _this.dcheck === 0) {
 _this.log(Lang.get('service.value_label') + ' - 0', 'skip');
 }
-if (_this.iglast !== 0 && !_this.sort && _this.started) {
+if (_this.dcheck !== 0 && !_this.sort && _this.started) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
 let igplog = Lang.get('service.checked');
