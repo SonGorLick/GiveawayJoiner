@@ -225,13 +225,13 @@ if (spname === undefined) {
 spname = '?????? ' + '(' + id + ')';
 }
 else if (spname.includes('<noload')) {
-spname = spcont.find('.panel-heading .raffle-name a noload').text().trim();
-}
-if (spname.length > 70) {
-spname = spname.slice(0, 70) + '...';
-}
-else if (spname === '') {
 spname = '?????? ' + '(' + id + ')';
+}
+if (spname === '') {
+spname = '?????? ' + '(' + id + ')';
+}
+else if (spname.length > 70) {
+spname = spname.slice(0, 70) + '...';
 }
 let splog = _this.logLink(_this.url + splink, spname);
 if (_this.getConfig('log', true)) {
