@@ -181,12 +181,11 @@ data = JSON.parse(data.response).langs;
 let checked = 0;
 for (let one in data) {
 let name = data[one].name;
-let size = data[one].size;
 let loadLang = () => {
 rq({url: url + name, responseType: 'document'})
 .then((language) => {
 let lang = JSON.stringify(language.data);
-fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => {});
+fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => { });
 })
 .finally(() => {
 checked++;
