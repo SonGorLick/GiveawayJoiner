@@ -19,7 +19,6 @@ let _bfr = 'false';
 let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
 app.commandLine.appendSwitch('disk-cache-size', 100);
-app.commandLine.appendSwitch('disable-features', 'CookieDeprecationMessages');
 app.disableHardwareAcceleration();
 if (process.platform === 'win32') {
 _itr = __dirname + '/icons/icon.ico';
@@ -173,7 +172,8 @@ constructor() {
 this.default = 'en_US';
 this.languages = {};
 this.langsCount = 0;
-rq({url: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/all.json'})
+let url = 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/';
+rq({url: url + 'all.json'})
 .then((all) => {
 let data = all.data;
 if (data.response !== false) {
@@ -183,10 +183,10 @@ for (let one in data) {
 let name = data[one].name;
 let size = data[one].size;
 let loadLang = () => {
-rq({url: 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/' + name, responseType: 'document'})
+rq({url: url + name, responseType: 'document'})
 .then((language) => {
 let lang = JSON.stringify(language.data);
-fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => { });
+fs.writeFile(storage.getDataPath() + '/' + name, lang, (err) => {});
 })
 .finally(() => {
 checked++;
@@ -195,21 +195,14 @@ startApp();
 }
 });
 };
-if (!fs.existsSync(storage.getDataPath() + '/' + name)) {
-loadLang();
-}
-else {
-fs.stat(storage.getDataPath() + '/' + name, (err, stats) => {
-if (stats.size !== size) {
-loadLang();
-}
-else {
+if (fs.existsSync(storage.getDataPath() + '/' + name)) {
 checked++;
 }
-if (checked === data.length) {
-startApp();
+else {
+loadLang();
 }
-});
+if (checked >= data.length) {
+startApp();
 }
 }
 }
@@ -219,7 +212,6 @@ startApp();
 })
 .catch(() => {
 startApp();
-console.log('catchLang Constructor');
 });
 }
 loadLangs(callback) {

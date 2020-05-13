@@ -149,6 +149,7 @@ if (!this.started) {
 this.startJoiner();
 }
 else {
+this.tries = 0;
 this.stopJoiner();
 }
 })
@@ -191,12 +192,8 @@ this.runTimer();
 else {
 this.buttonState(Lang.get('service.btn_checking'), 'disabled');
 this.authCheck((authState) => {
-if (authState === 1) {
+if (authState !== 0) {
 this.runTimer();
-}
-else if (authState === -1) {
-this.log(Lang.get('service.connection_error'), 'err');
-this.buttonState(Lang.get('service.btn_start'));
 }
 else {
 this.buttonState(Lang.get('service.btn_awaiting'), 'disabled');
@@ -324,7 +321,7 @@ this.stopJoiner(true);
 }
 }
 else {
-if (this.tries < 3) {
+if (this.tries < 6) {
 this.setStatus('net');
 this.tries++;
 this.log('[' + this.tries + ']' + Lang.get('service.connection_lost'), 'err');
