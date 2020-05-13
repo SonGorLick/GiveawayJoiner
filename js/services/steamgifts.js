@@ -141,21 +141,28 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 data.find('.giveaway__row-outer-wrap').each((index, item) => {
-let sgaway = $(item);
-let copies = 1;
-let link = this.url + sgaway.find('a.giveaway__heading__name').attr('href');
-let entries = parseInt(sgaway.find('.fa.fa-tag+span').text().replace(/[^0-9]/g, ''));
-let left = sgaway.find('[data-timestamp]').first().text().split(' ');
-let factor = 1;
+let sgaway = $(item),
+copies = 1,
+link = this.url + sgaway.find('a.giveaway__heading__name').attr('href'),
+entries = parseInt(sgaway.find('.fa.fa-tag+span').text().replace(/[^0-9]/g, '')),
+left = sgaway.find('[data-timestamp]').first().text().split(' '),
+factor = 1;
 switch (left[1]) {
 case 'hour': case 'hours': factor = 60; break;
 case 'day': case 'days': factor = 1440; break;
 case 'week': case 'weeks': factor = 10080; break;
 case 'month': case 'months': factor = 40320; break;
 }
-let detectQty = sgaway.find('.giveaway__heading__thin').first().text();
-if (detectQty.indexOf('Copies') > 0) {
-copies = parseInt(detectQty.replace(/[^0-9]/g, ''));
+let cost = sgaway.find('.giveaway__heading__thin').first().text();
+if (cost.indexOf('P)') > 0) {
+cost = parseInt(cost.replace(/[^0-9]/g, ''));
+}
+else if (cost.indexOf('Copies)') > 0) {
+copies = parseInt(cost.replace(/[^0-9]/g, ''));
+cost = parseInt(sgaway.find('.giveaway__heading__thin').eq(1).text().replace(/[^0-9]/g, ''));
+}
+else {
+cost = parseInt(sgaway.find('a.giveaway__icon[rel]').prev().text().replace(/[^0-9]/g, ''));
 }
 let chance = parseFloat(((copies / entries) * 100).toFixed(2));
 let GA = {
@@ -170,15 +177,12 @@ gameid: sgaway.attr('data-game-id'),
 nam: sgaway.find('a.giveaway__heading__name').text(),
 level: sgaway.find('.giveaway__column--contributor-level').length > 0 ? parseInt(sgaway.find('.giveaway__column--contributor-level').text().replace('+', '').replace('Level ', '')) : 0,
 levelPass: sgaway.find('.giveaway__column--contributor-level--negative').length === 0,
-cost: parseInt(sgaway.find('a.giveaway__icon[rel]').prev().text().replace(/[^0-9]/g, '')),
+cost: cost,
 sgsteam: sgaway.find('a.giveaway__icon').attr('href'),
 entered: sgaway.find('.giveaway__row-inner-wrap.is-faded').length > 0,
 wish: this.wish,
 group: this.group
 };
-if (isNaN(GA.cost)) {
-GA.cost = parseInt(sgaway.find('a.giveaway__heading__name').next().text().replace(/[^0-9]/g, ''));
-}
 if (GA.sgsteam === undefined) {
 GA.sgsteam = '';
 }
@@ -320,7 +324,7 @@ if (
 (!_this.dsave.includes(',' + sgid + ',') || sgown === 6)
 )
 {
-sglog = '|'+ GA.copies + 'x|' + GA.level + 'L|' + GA.cost + '$|' + GA.chance + '%|  ' + sglog;
+sglog = '|' + GA.copies + 'x|' + GA.entries + 'e|' + GA.chance + '%|' + GA.level + 'L|' + GA.cost + '$|  ' + sglog;
 if (sgid !== '???') {
 _this.log(Lang.get('service.checking') + sglog + _this.logBlack(sgid), 'chk');
 }
