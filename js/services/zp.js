@@ -297,7 +297,8 @@ let zpdnew = ('0' + zpdtnew.getDate().toString()).slice(-2);
 _this.dsave = _this.dsave + zpnam + '(z=' + zpdnew + '),';
 _this.log(Lang.get('service.entered_in') + zplog, 'enter');
 },
-error: function () {
+error: function (response) {
+_this.log(response.status);
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
