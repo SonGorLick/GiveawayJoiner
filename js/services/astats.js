@@ -148,7 +148,10 @@ asapp = 0,
 assub = 0,
 asbun = 0,
 asid = '???';
-if (alink !== undefined || assteam !== undefined) {
+if (alink === undefined || assteam === undefined) {
+asnext = 50;
+}
+else {
 let aname = data.find('[href="' + alink + '"]').text().trim(),
 ended = data.find('[href="' + alink + '"] > span').text().trim(),
 asjoin = alink.replace('/astats/Giveaway.php?GiveawayID=','');
@@ -184,8 +187,8 @@ asown = 1;
 if (GJuser.black.includes(asid + ',') && _this.getConfig('blacklist_on', false)) {
 asown = 4;
 }
-if (ahave === '#FF0000') {
-asown = 1;
+if (asown === 0 && ahave === '#FF0000') {
+asown = 5;
 }
 if (_this.dload.includes(',' + asjoin + ',') && !_this.getConfig('check_all', false)) {
 _this.dsave = _this.dsave + asjoin + ',';
@@ -209,12 +212,18 @@ break;
 case 4:
 _this.log(Lang.get('service.blacklisted'), 'black');
 break;
+case 5:
+_this.log(Lang.get('service.cant_join') + ',' + Lang.get('service.have_on_steam').split('-')[1], 'cant');
+break;
 }
 }
 else {
 aslog = aslog + _this.logBlack(asid);
 }
-if (asown === 0) {
+if (asown > 0) {
+asnext = 100;
+}
+else {
 $.ajax({
 url: _this.url + alink,
 success: function (html) {
@@ -222,7 +231,9 @@ html = $(html.replace(/<img/gi, '<noload'));
 let ajoin = html.find('.input-group-btn').text().trim();
 if (ajoin === 'Add') {
 asown = 1;
+if (!_this.dsave.includes(',' + asjoin + ',')) {
 _this.dsave = _this.dsave + asjoin + ',';
+}
 }
 else if (ajoin === 'Join') {
 asown = 0;
@@ -240,7 +251,10 @@ _this.log(Lang.get('service.cant_join'), 'cant');
 break;
 }
 }
-if (asown === 0) {
+if (asown > 0) {
+asnext = 1000;
+}
+else {
 let tmout = Math.floor(asnext / 2);
 setTimeout(function () {
 $.ajax({
@@ -259,19 +273,10 @@ _this.log(Lang.get('service.err_join'), 'err');
 });
 }, tmout);
 }
-else {
-asnext = 1000;
-}
 }
 });
 }
-else {
-asnext = 100;
 }
-}
-}
-else {
-asnext = 100;
 }
 acurr++;
 setTimeout(giveawayEnter, asnext);

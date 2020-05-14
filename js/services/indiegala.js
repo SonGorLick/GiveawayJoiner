@@ -4,7 +4,7 @@ constructor() {
 super();
 this.domain = 'indiegala.com';
 this.authContent = 'Your account';
-this.websiteUrl = 'https://www.indiegala.com';
+this.websiteUrl = 'https://www.indiegala.com/library';
 this.authLink = 'https://www.indiegala.com/login';
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
@@ -86,8 +86,9 @@ igchck = [];
 for (let i = 0; i < igchecks.length; i++) {
 igchck[i] = igchecks.eq(i).attr('onclick').replace("giveawayCheckIfWinner(this, event, '", "").replace("')", "");
 }
-let iw = 0,
-ic = 0;
+let ic = 0,
+iw = 0,
+il = 0;
 if (igchck.length > 0) {
 igchck.forEach(function(check) {
 rq({
@@ -107,20 +108,25 @@ headers: {
 data: {entry_id: check}
 })
 .then((win) => {
-iw++;
 let igwin = win.data;
 if (igwin.winner === true) {
-_this.log(_this.logLink(_this.url + '/library', Lang.get('service.win')), 'win');
-_this.setStatus('win');
-if (_this.getConfig('sound', true)) {
-new Audio(dirapp + 'sounds/won.wav').play();
+iw++;
 }
+else if (igwin.winner === false) {
+il++;
 }
 })
 .finally(() => {
 ic++;
 if (ic >= igchck.length) {
-_this.log(Lang.get('service.hided').split(' ')[0] + ' Completed to check - ' + iw, 'info');
+_this.log(Lang.get('service.hided').split(' ')[0] + ' Completed to check - ' + (iw + il), 'info');
+if (iw > 0) {
+_this.log(_this.logLink(_this.url + '/library', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (iw) + ')'), 'win');
+_this.setStatus('win');
+if (_this.getConfig('sound', true)) {
+new Audio(dirapp + 'sounds/won.wav').play();
+}
+}
 }
 });
 });
