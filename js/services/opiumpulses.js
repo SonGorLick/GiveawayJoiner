@@ -10,6 +10,7 @@ this.settings.free_only = { type: 'checkbox', trans: this.transPath('free_only')
 this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
+this.settings.remove_ga = { type: 'checkbox', trans: this.transPath('remove_ga'), default: this.getConfig('remove_ga', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -159,6 +160,9 @@ opblack = '';
 if (isNaN(cost)) {
 cost = 0;
 }
+if (check === undefined) {
+check = opway.find('.giveaways-page-item-img').attr('style').split('giveaway/')[1].split('/')[0];
+}
 if (_this.dload.includes(',' + code + '(d=')) {
 opblack = _this.dload.split(',' + code + '(d=')[1].split('),')[0];
 _this.dsave = _this.dsave + code + '(d=' + opblack + '),';
@@ -192,7 +196,18 @@ njoin = 3;
 }
 }
 if (entered.includes('ENTERED') && _this.dload.includes(',' + code + '(d=')) {
+if (njoin === 2) {
+njoin = 7;
+}
+else if (njoin === 3) {
+njoin = 8;
+}
+else {
 njoin = 6;
+}
+}
+if (njoin > 6 && _this.getConfig('remove_ga', false)) {
+njoin = 0;
 }
 if (opblack !== '') {
 opblack = _this.logBlack(opblack);
@@ -223,6 +238,12 @@ _this.log(Lang.get('service.skipped'), 'skip');
 break;
 case 6:
 _this.log(Lang.get('service.already_joined'), 'jnd');
+break;
+case 7:
+_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.have_on_steam').split('-')[1], 'err');
+break;
+case 8:
+_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.blacklisted').split('-')[1], 'err');
 break;
 }
 }
@@ -268,7 +289,9 @@ if (cost !== 0 && _this.getConfig('free_only', false)) {
 opown = 6;
 }
 if (openter === " You're not eligible to enter") {
+if (!_this.dsave.includes(',' + code + '(n),')) {
 _this.dsave = _this.dsave + code + '(n),';
+}
 opown = 3;
 }
 if (_this.getConfig('check_in_steam', true)) {
@@ -286,7 +309,15 @@ if (GJuser.black.includes(opid + ',') && _this.getConfig('blacklist_on', false))
 opown = 4;
 }
 if (entered.includes('ENTERED')) {
+if (opown === 1) {
+opown = 8;
+}
+else if (opown === 4) {
+opown = 9;
+}
+else {
 opown = 7;
+}
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + oplog + _this.logBlack(opid), 'chk');
@@ -311,6 +342,12 @@ _this.log(Lang.get('service.skipped'), 'skip');
 break;
 case 7:
 _this.log(Lang.get('service.already_joined'), 'jnd');
+break;
+case 8:
+_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.have_on_steam').split('-')[1], 'err');
+break;
+case 9:
+_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.blacklisted').split('-')[1], 'err');
 break;
 }
 }
@@ -339,6 +376,23 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 });
 }, tmout);
+}
+else if (opown > 7 && _this.getConfig('remove_ga', false)) {
+let pmout = Math.floor(opnext / 2);
+setTimeout(function () {
+if (check !== undefined) {
+let oprcookie = { url: 'https://www.opiumpulses.com', name: 'checkUser', value: check };
+mainWindow.webContents.session.cookies.set(oprcookie, (error) => { });
+$.ajax({
+url: _this.url + '/giveaway/refund/' + check,
+success: function () {
+_this.curr_value = _this.curr_value + cost;
+_this.setValue(_this.curr_value);
+_this.log(Lang.get('service.removed') + _this.logLink(_this.url + link, name), 'info');
+}
+});
+}
+}, pmout);
 }
 else {
 opnext = 100;

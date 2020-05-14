@@ -12,7 +12,6 @@ this.settings.interval_from = { type: 'number', trans: 'service.interval_from', 
 this.settings.interval_to = { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 10), max: 60, default: this.getConfig('interval_to', 15) };
 this.settings.sort_by_end = { type: 'checkbox', trans: this.transPath('sort_by_end'), default: this.getConfig('sort_by_end', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
-this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
 this.withValue = false;
 delete this.settings.check_in_steam;
 delete this.settings.blacklist_on;
@@ -176,16 +175,7 @@ for (let spcurred = 0; spcurred < sptented.length; spcurred++) {
 let linked = sptented.eq(spcurred).find('.panel-heading .raffle-name a').attr('href').replace('/raffles/', '');
 _this.dsave = _this.dsave + linked + ',';
 }
-let spcurr = 0,
-random = Array.from(Array(sptent.length).keys());
-if (_this.getConfig('rnd', false)) {
-for(let i = random.length - 1; i > 0; i--){
-const j = Math.floor(Math.random() * i);
-const temp = random[i];
-random[i] = random[j];
-random[j] = temp;
-}
-}
+let spcurr = 0;
 function giveawayEnter() {
 if (_this.doTimer() - _this.totalTicks < 240) {
 let sptimer = _this.getConfig('timer_from', 70);
@@ -215,8 +205,7 @@ callback();
 return;
 }
 let spnext = _this.interval(),
-sprnd = random[spcurr],
-spcont = sptent.eq(sprnd),
+spcont = sptent.eq(spcurr),
 spname = spcont.find('.panel-heading .raffle-name a').text().trim(),
 splink = spcont.find('.panel-heading .raffle-name a').attr('href'),
 spended = spcont.find('.panel-heading .raffle-details span.raffle-state-ended').text().trim(),
@@ -235,7 +224,7 @@ spname = spname.slice(0, 70) + '...';
 }
 let splog = _this.logLink(_this.url + splink, spname);
 if (_this.getConfig('log', true)) {
-splog = '|' + page + '#|' + (sprnd + 1) + '№|  ' + splog;
+splog = '|' + page + '#|' + (spcurr + 1) + '№|  ' + splog;
 _this.log(Lang.get('service.checking') + splog, 'chk');
 }
 if (!_this.dsave.includes(',' + id + ',') && !spended.includes('Ended')) {

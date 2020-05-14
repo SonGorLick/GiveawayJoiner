@@ -123,7 +123,7 @@ if (_this.getConfig('log', true)) {
 tflog = '|' + (tfrnd + 1) + '№|  ' + tflog;
 _this.log(Lang.get('service.checking') + tflog, 'chk');
 }
-if (!_this.dload.includes(rid + ',') && !_this.getConfig('check_all', false)) {
+if (!_this.dload.includes(rid + ',') || _this.getConfig('check_all', false)) {
 $.ajax({
 url: link,
 success: function (data) {
@@ -159,7 +159,9 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 else {
 tfnext = 100;
+if (!_this.dsave.includes(rid + ',')) {
 _this.dsave = _this.dsave + rid + ',';
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
 }
@@ -169,6 +171,9 @@ _this.log(Lang.get('service.already_joined'), 'jnd');
 }
 else {
 tfnext = 100;
+if (!_this.dsave.includes(rid + ',')) {
+_this.dsave = _this.dsave + rid + ',';
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
 _this.log(Lang.get('service.data_have'), 'skip');
