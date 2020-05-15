@@ -141,7 +141,6 @@ $(document.createElement('button'))
 }
 function renderUser(userData) {
 $('.content-item .info .username').html('GiveawayJoiner');
-if (!Config.get('steam_local', false)) {
 $.ajax({
 url: 'https://store.steampowered.com/account',
 success: function (data) {
@@ -158,7 +157,6 @@ $('.content-item .info .username').html(userData.username);
 }
 }
 });
-}
 }
 function openWebsite(url) {
 Browser.loadURL(url);

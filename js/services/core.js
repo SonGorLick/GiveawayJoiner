@@ -311,7 +311,7 @@ else if (authState === 0) {
 if (this.tries < 3) {
 this.setStatus('net');
 this.tries++;
-this.log('[' + this.tries + ']' + Lang.get('service.connection_lost'), 'err');
+this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost'), 'err');
 this.stimer = 10;
 }
 else {
@@ -324,7 +324,7 @@ else {
 if (this.tries < 6) {
 this.setStatus('net');
 this.tries++;
-this.log('[' + this.tries + ']' + Lang.get('service.connection_lost'), 'err');
+this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost'), 'err');
 this.stimer = 10;
 }
 else {
