@@ -302,14 +302,13 @@ _this.log(Lang.get('service.ses_not_found') + ' - ' + Lang.get('service.session_
 });
 }
 else {
-_this.log(Lang.get('service.dt_err'), 'err');
+_this.log(Lang.get('service.dt_err') + '/giveawayjoinerdata/lootboy' + lbcurr + '.txt', 'err');
 }
 }
 else {
 if (lbcurr > 0) {
 _this.dcheck = false;
 if (lbcurr === 1) {
-fs.writeFile(dirdata + 'lootboy1.txt', '', (err) => { });
 _this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/lootboy1.txt', 'err');
 _this.stopJoiner(true);
 }

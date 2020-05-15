@@ -6,9 +6,8 @@ this.settings.timer_from.min = 5;
 this.websiteUrl = 'https://astats.astats.nl/astats/';
 this.authContent = 'Log out';
 this.authLink = 'https://astats.astats.nl/astats/profile/Login.php';
-this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
-this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
+this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
 this.withValue = false;
 super.init();
 }
@@ -99,15 +98,7 @@ success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 let afound = data.find('[style="text-align:right;"]'),
 acurr = 0,
-random = Array.from(Array(afound.length).keys());
-if (_this.getConfig('rnd', false)) {
-for(let i = random.length - 1; i > 0; i--){
-const j = Math.floor(Math.random() * i);
-const temp = random[i];
-random[i] = random[j];
-random[j] = temp;
-}
-}
+acrr = 0;
 function giveawayEnter() {
 if (afound.length === 0 || !_this.started) {
 _this.pagemax = page;
@@ -139,8 +130,7 @@ callback();
 return;
 }
 let asnext = _this.interval(),
-arnd = random[acurr],
-away = afound.eq(arnd),
+away = afound.eq(acurr),
 alink = away.find('a').attr('href'),
 assteam = away.find('a noload').attr('src'),
 asown = 0,
@@ -149,11 +139,13 @@ assub = 0,
 asbun = 0,
 asid = '???';
 if (alink !== undefined || assteam !== undefined) {
+acrr++;
 let aname = data.find('[href="' + alink + '"]').text().trim(),
 ended = data.find('[href="' + alink + '"] > span').text().trim(),
 asjoin = alink.replace('/astats/Giveaway.php?GiveawayID=','');
 if (aname.includes('This giveaway has ended.') || ended === 'This giveaway has ended.') {
 _this.pagemax = page;
+acurr = 900;
 asnext = 50;
 }
 else {
@@ -193,7 +185,7 @@ asown = 3;
 }
 let aslog = _this.logLink(_this.url + alink, aname);
 if (_this.getConfig('log', true)) {
-aslog = '|' + page + '#|' + (arnd + 1) + '№|  ' + aslog;
+aslog = '|' + page + '#|' + (acrr) + '№|  ' + aslog;
 _this.log(Lang.get('service.checking') + aslog + _this.logBlack(asid), 'chk');
 switch (asown) {
 case 1:

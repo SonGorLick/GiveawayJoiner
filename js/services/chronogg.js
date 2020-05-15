@@ -128,14 +128,13 @@ _this.log(Lang.get('service.connection_error'), 'err');
 });
 }
 else {
-_this.log(Lang.get('service.dt_err'), 'err');
+_this.log(Lang.get('service.dt_err') + '/giveawayjoinerdata/chronogg' + chcurr + '.txt', 'err');
 }
 }
 else {
 if (chcurr > 0) {
 _this.dcheck = false;
 if (chcurr === 1) {
-fs.writeFile(dirdata + 'chronogg1.txt', '', (err) => { });
 _this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/chronogg1.txt', 'err');
 _this.stopJoiner(true);
 }

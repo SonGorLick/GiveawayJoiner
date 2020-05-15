@@ -8,7 +8,6 @@ this.authContent = 'Notifications';
 this.authLink = 'https://tf2r.com/login';
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
-this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
 this.withValue = false;
 this.getTimeout = 10000;
 delete this.settings.pages;
@@ -83,16 +82,7 @@ url: _this.url + '/raffles.html',
 success: function (data) {
 data = data.replace(/<img/gi, '<noload');
 let giveaways = $(data).find('.pubrhead-text-right'),
-tfcurr = 0,
-random = Array.from(Array(giveaways.length).keys());
-if (_this.getConfig('rnd', false)) {
-for(let i = random.length - 1; i > 0; i--){
-const j = Math.floor(Math.random() * i);
-const temp = random[i];
-random[i] = random[j];
-random[j] = temp;
-}
-}
+tfcurr = 0;
 function giveawayEnter() {
 if (giveaways.length <= tfcurr || !_this.started) {
 if (giveaways.length <= tfcurr) {
@@ -110,8 +100,7 @@ _this.log(Lang.get('service.checked') + 'Public Raffles', 'srch');
 return;
 }
 let tfnext = _this.interval(),
-tfrnd = random[tfcurr],
-giveaway = giveaways.eq(tfrnd),
+giveaway = giveaways.eq(tfcurr),
 link = giveaway.find('a').attr('href'),
 name = giveaway.find('a').text().trim(),
 rid = link.replace('https://tf2r.com/k', '').replace('.html', '');
@@ -120,7 +109,7 @@ name = '?????? ' + '(' + rid + ')';
 }
 let tflog = _this.logLink(link, name);
 if (_this.getConfig('log', true)) {
-tflog = '|' + (tfrnd + 1) + '№|  ' + tflog;
+tflog = '|' + (tfcurr + 1) + '№|  ' + tflog;
 _this.log(Lang.get('service.checking') + tflog, 'chk');
 }
 if (!_this.dload.includes(rid + ',') || _this.getConfig('check_all', false)) {

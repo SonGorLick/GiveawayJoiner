@@ -9,9 +9,8 @@ this.auth = this.auth + Lang.get('service.zp.login');
 this.settings.interval_from = { type: 'number', trans: 'service.interval_from', min: 10, max: this.getConfig('interval_to', 15), default: this.getConfig('interval_from', 10) };
 this.settings.interval_to = { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 10), max: 60, default: this.getConfig('interval_to', 15) };
 this.settings.skip_after = { type: 'checkbox', trans: this.transPath('skip_after'), default: this.getConfig('skip_after', true) };
-this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
-this.settings.check_all = { type: 'checkbox', trans: this.transPath('check_all'), default: this.getConfig('check_all', false) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
+this.settings.check_all = { type: 'checkbox', trans: this.transPath('check_all'), default: this.getConfig('check_all', false) };
 this.withValue = false;
 delete this.settings.pages;
 super.init();
@@ -84,16 +83,8 @@ url: _this.url + '/zeepond/giveaways/enter-a-competition',
 success: function (data) {
 data = data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
 let comp = $(data).find('.bv-item-wrapper'),
-zpcurr = 0,
-random = Array.from(Array(comp.length).keys());
-if (_this.getConfig('rnd', false)) {
-for(let i = random.length - 1; i > 0; i--){
-const j = Math.floor(Math.random() * i);
-const temp = random[i];
-random[i] = random[j];
-random[j] = temp;
-}
-}
+zpcurr = 0;
+let zpretry = comp.length;
 function giveawayEnter() {
 if (comp.length <= zpcurr || _this.skip || !_this.started) {
 if (comp.length <= zpcurr || _this.skip) {
@@ -113,8 +104,7 @@ _this.log(Lang.get('service.checked') + 'Giveaways', 'srch');
 return;
 }
 let zpnext = _this.interval(),
-zprnd = random[zpcurr],
-zpcomp = comp.eq(zprnd),
+zpcomp = comp.eq(zpcurr),
 zplink = _this.url + zpcomp.find('.bv-item-image a').attr('href'),
 zpnam = zplink.replace('https://www.zeepond.com/zeepond/giveaways/enter-a-competition/', ''),
 njoin = 0,
@@ -158,7 +148,7 @@ zpblack = _this.logBlack(zpblack);
 }
 let zplog = _this.logLink(zplink, zpnam.replace(/-/g, ' '));
 if (_this.getConfig('log', true) && njoin > 0) {
-zplog = '|' + (zprnd + 1) + '№|  ' + zplog;
+zplog = '|' + (zpcurr + 1) + '№|  ' + zplog;
 _this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
 switch (njoin) {
 case 1:
@@ -257,7 +247,7 @@ zpid = _this.logBlack(zpid);
 }
 zplog = _this.logLink(zplink, zpname);
 if (_this.getConfig('log', true)) {
-zplog = '|' + (zprnd + 1) + '№|  ' + zplog;
+zplog = '|' + (zpcurr + 1) + '№|  ' + zplog;
 _this.log(Lang.get('service.checking') + zplog + zpid, 'chk');
 switch (zpown) {
 case 1:
@@ -288,8 +278,8 @@ let tmout = Math.floor(zpnext / 2);
 setTimeout(function () {
 $.ajax({
 url: zplink + '/enter_competition',
-success: function (response) {
-response = $(response.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
+success: function (data) {
+data = $(data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
 let zpdtnew = new Date();
 zpdtnew.setDate(zpdtnew.getUTCDate());
 zpdtnew.setHours(zpdtnew.getUTCHours() + 10 + _this.month);
@@ -297,14 +287,31 @@ let zpdnew = ('0' + zpdtnew.getDate().toString()).slice(-2);
 _this.dsave = _this.dsave + zpnam + '(z=' + zpdnew + '),';
 _this.log(Lang.get('service.entered_in') + zplog, 'enter');
 },
-error: function (response) {
-_this.log(response.status);
+error: function (err) {
+zpnext = zpnext * 2;
+if (err.status === 504) {
+_this.log(Lang.get('service.entered_in') + zplog, 'enter');
+}
+else {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
 }
+}
 });
 }, tmout);
+}
+},
+error: function (resp) {
+zpnext = zpnext * 2;
+if (resp.status > 500 & zpretry > 0) {
+comp.push(zpcomp);
+zpretry = zpretry - 1;
+}
+else {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
 }
 }
 });

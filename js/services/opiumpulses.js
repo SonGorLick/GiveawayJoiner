@@ -7,10 +7,9 @@ this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
 this.settings.maxcost = { type: 'number', trans: this.transPath('maxcost'), min: 0, max: 1000, default: this.getConfig('maxcost', 0) };
 this.settings.free_only = { type: 'checkbox', trans: this.transPath('free_only'), default: this.getConfig('free_only', false) };
-this.settings.rnd = { type: 'checkbox', trans: 'service.rnd', default: this.getConfig('rnd', false) };
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
-this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.settings.remove_ga = { type: 'checkbox', trans: this.transPath('remove_ga'), default: this.getConfig('remove_ga', false) };
+this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 super.init();
 }
 getUserInfo(callback) {
@@ -90,16 +89,7 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 }
-let opcurr = 0,
-random = Array.from(Array(opfound.length).keys());
-if (_this.getConfig('rnd', false)) {
-for(let i = random.length - 1; i > 0; i--){
-const j = Math.floor(Math.random() * i);
-const temp = random[i];
-random[i] = random[j];
-random[j] = temp;
-}
-}
+let opcurr = 0;
 function giveawayEnter() {
 if (opfound.length < 40 || !_this.started) {
 _this.pagemax = page;
@@ -146,8 +136,7 @@ callback();
 return;
 }
 let opnext = _this.interval(),
-oprnd = random[opcurr],
-opway = opfound.eq(oprnd),
+opway = opfound.eq(opcurr),
 link = opway.find('.giveaways-page-item-img-btn-more').attr('href'),
 name = opway.find('.giveaways-page-item-footer-name').text().trim(),
 entered = opway.find('.giveaways-page-item-img-btn-wrapper').text(),
@@ -214,7 +203,7 @@ opblack = _this.logBlack(opblack);
 }
 let oplog = _this.logLink(_this.url + link, name);
 if (_this.getConfig('log', true)) {
-oplog = '|' + page + '#|' + (oprnd + 1) + '№|' + cost + '$|  ' + oplog;
+oplog = '|' + page + '#|' + (opcurr + 1) + '№|' + cost + '$|  ' + oplog;
 }
 if (njoin > 0) {
 if (_this.getConfig('log', true)) {

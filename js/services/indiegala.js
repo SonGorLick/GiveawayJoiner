@@ -131,6 +131,9 @@ new Audio(dirapp + 'sounds/won.wav').play();
 });
 });
 }
+else {
+_this.log(Lang.get('service.hided').split(' ')[0] + ' Completed to check - list empty', 'info');
+}
 }
 });
 if (GJuser.iglvl === 0) {
