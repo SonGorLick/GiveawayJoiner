@@ -304,7 +304,7 @@ _this.log(Lang.get('service.err_join'), 'err');
 },
 error: function (resp) {
 zpnext = zpnext * 2;
-if (resp.status > 500 & zpretry > 0) {
+if (resp.status > 500 && zpretry > 0) {
 comp.push(zpcomp);
 zpretry = zpretry - 1;
 }
