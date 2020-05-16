@@ -198,8 +198,8 @@ _this.pagemax = page;
 _this.dcheck = 1;
 }
 function giveawayEnter() {
-if (_this.doTimer() & _this.totalTicks < 240) {
-_this.totalTicks = 0;
+if (_this.doTimer() - _this.totalTicks < 240) {
+_this.totalTicks = 1;
 }
 if (tickets.length < 12 && _this.igprtry === 0 || _this.curr_value === 0 || !_this.started) {
 _this.pagemax = page;

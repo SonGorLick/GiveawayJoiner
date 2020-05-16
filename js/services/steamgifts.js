@@ -259,8 +259,8 @@ if (this.getConfig('multiple_first', false)) {
 this.giveaways.unshift.apply(this.giveaways, this.gamf);
 }
 function processOne() {
-if (_this.doTimer() & _this.totalTicks < 240) {
-_this.totalTicks = 0;
+if (_this.doTimer() - _this.totalTicks < 240) {
+_this.totalTicks = 1;
 }
 if (_this.giveaways.length <= sgcurr || !_this.started) {
 if (_this.getConfig('log', true) && sgcurr > 0) {

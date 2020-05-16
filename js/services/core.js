@@ -310,6 +310,7 @@ if (this.tries < 3) {
 this.setStatus('net');
 this.tries++;
 this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost'), 'err');
+this.totalTicks = 1;
 this.stimer = 10;
 }
 else {
@@ -323,6 +324,7 @@ if (this.tries < 6) {
 this.setStatus('net');
 this.tries++;
 this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost'), 'err');
+this.totalTicks = 1;
 this.stimer = 10;
 }
 else {

@@ -178,8 +178,8 @@ _this.dsave = _this.dsave + linked + ',';
 }
 let spcurr = 0;
 function giveawayEnter() {
-if (_this.doTimer() & _this.totalTicks < 240) {
-_this.totalTicks = 0;
+if (_this.doTimer() - _this.totalTicks < 240) {
+_this.totalTicks = 1;
 }
 if (sptent.length <= spcurr || !_this.started) {
 if (!_this.started) {

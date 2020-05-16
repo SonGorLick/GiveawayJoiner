@@ -93,8 +93,8 @@ new Audio(dirapp + 'sounds/won.wav').play();
 let opcurr = 0,
 opretry = opfound.length;
 function giveawayEnter() {
-if (_this.doTimer() & _this.totalTicks < 240) {
-_this.totalTicks = 0;
+if (_this.doTimer() - _this.totalTicks < 240) {
+_this.totalTicks = 1;
 }
 if (opfound.length < 40 || !_this.started) {
 _this.pagemax = page;

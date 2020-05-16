@@ -102,8 +102,8 @@ acurr = 0,
 acrr = 0;
 let aretry = afound.length;
 function giveawayEnter() {
-if (_this.doTimer() & _this.totalTicks < 240) {
-_this.totalTicks = 0;
+if (_this.doTimer() - _this.totalTicks < 240) {
+_this.totalTicks = 1;
 }
 if (afound.length === 0 || !_this.started) {
 _this.pagemax = page;
