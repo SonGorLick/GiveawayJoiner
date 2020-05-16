@@ -83,7 +83,8 @@ url: _this.url + '/raffles.html',
 success: function (data) {
 data = data.replace(/<img/gi, '<noload');
 let giveaways = $(data).find('.pubrhead-text-right'),
-tfcurr = 0;
+tfcurr = 0,
+tfcrr = 0;
 function giveawayEnter() {
 if (giveaways.length <= tfcurr || !_this.started) {
 if (giveaways.length <= tfcurr) {
@@ -105,12 +106,13 @@ giveaway = giveaways.eq(tfcurr),
 link = giveaway.find('a').attr('href'),
 name = giveaway.find('a').text().trim(),
 rid = link.replace('https://tf2r.com/k', '').replace('.html', '');
+tfcrr = tfcurr + 1;
 if (name.length === 0) {
 name = '?????? ' + '(' + rid + ')';
 }
 let tflog = _this.logLink(link, name);
 if (_this.getConfig('log', true)) {
-tflog = '|' + (tfcurr + 1) + '№|  ' + tflog;
+tflog = '|' + tfcrr + '№|  ' + tflog;
 _this.log(Lang.get('service.checking') + tflog, 'chk');
 }
 if (!_this.dload.includes(rid + ',') || _this.getConfig('check_all', false)) {
