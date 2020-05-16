@@ -91,6 +91,7 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 let opcurr = 0,
+opcrr = 0,
 opretry = opfound.length;
 function giveawayEnter() {
 if (_this.doTimer() - _this.totalTicks < 240) {
@@ -154,6 +155,7 @@ opblack = '';
 if (isNaN(cost)) {
 cost = 0;
 }
+opcrr = opcurr + 1;
 if (check === undefined) {
 check = opway.find('.giveaways-page-item-img').attr('style').split('giveaway/')[1].split('/')[0];
 }
@@ -212,7 +214,7 @@ opblack = _this.logBlack(opblack);
 }
 let oplog = _this.logLink(_this.url + link, name);
 if (_this.getConfig('log', true)) {
-oplog = '|' + page + '#|' + (opcurr + 1) + '№|' + cost + '$|  ' + oplog;
+oplog = '|' + page + '#|' + opcrr + '№|' + cost + '$|  ' + oplog;
 }
 if (njoin > 0) {
 if (_this.getConfig('log', true)) {

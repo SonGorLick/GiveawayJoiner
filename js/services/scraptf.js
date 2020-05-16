@@ -176,7 +176,8 @@ for (let spcurred = 0; spcurred < sptented.length; spcurred++) {
 let linked = sptented.eq(spcurred).find('.panel-heading .raffle-name a').attr('href').replace('/raffles/', '');
 _this.dsave = _this.dsave + linked + ',';
 }
-let spcurr = 0;
+let spcurr = 0,
+spcrr = 0;
 function giveawayEnter() {
 if (_this.doTimer() - _this.totalTicks < 240) {
 _this.totalTicks = 1;
@@ -207,6 +208,7 @@ spname = spcont.find('.panel-heading .raffle-name a').text().trim(),
 splink = spcont.find('.panel-heading .raffle-name a').attr('href'),
 spended = spcont.find('.panel-heading .raffle-details span.raffle-state-ended').text().trim(),
 id = splink.replace('/raffles/', '');
+spcrr = spcurr + 1;
 if (spname === undefined) {
 spname = '?????? ' + '(' + id + ')';
 }
@@ -221,7 +223,7 @@ spname = spname.slice(0, 70) + '...';
 }
 let splog = _this.logLink(_this.url + splink, spname);
 if (_this.getConfig('log', true)) {
-splog = '|' + page + '#|' + (spcurr + 1) + '№|  ' + splog;
+splog = '|' + page + '#|' + spcrr + '№|  ' + splog;
 _this.log(Lang.get('service.checking') + splog, 'chk');
 }
 if (!_this.dsave.includes(',' + id + ',') && !spended.includes('Ended')) {

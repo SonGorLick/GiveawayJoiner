@@ -191,7 +191,7 @@ asown = 3;
 }
 let aslog = _this.logLink(_this.url + alink, aname);
 if (_this.getConfig('log', true)) {
-aslog = '|' + page + '#|' + (acrr) + '№|  ' + aslog;
+aslog = '|' + page + '#|' + acrr + '№|  ' + aslog;
 _this.log(Lang.get('service.checking') + aslog + _this.logBlack(asid), 'chk');
 switch (asown) {
 case 1:

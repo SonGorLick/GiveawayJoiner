@@ -84,7 +84,8 @@ url: _this.url + '/zeepond/giveaways/enter-a-competition',
 success: function (data) {
 data = data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
 let comp = $(data).find('.bv-item-wrapper'),
-zpcurr = 0;
+zpcurr = 0,
+zpcrr = 0;
 let zpretry = comp.length;
 function giveawayEnter() {
 if (comp.length <= zpcurr || _this.skip || !_this.started) {
@@ -114,6 +115,7 @@ zpdtnow = new Date();
 zpdtnow.setDate(zpdtnow.getUTCDate());
 zpdtnow.setHours(zpdtnow.getUTCHours() + 10 + _this.month);
 let zpdnow = zpdtnow.getDate();
+zpcrr = zpcurr + 1;
 if (_this.dload.includes(',' + zpnam + '(d=')) {
 zpblack = _this.dload.split(',' + zpnam + '(d=')[1].split('),')[0];
 if (!_this.dsave.includes(',' + zpnam + '(d=' + zpblack + '),')) {
@@ -155,7 +157,7 @@ zpblack = _this.logBlack(zpblack);
 }
 let zplog = _this.logLink(zplink, zpnam.replace(/-/g, ' '));
 if (_this.getConfig('log', true) && njoin > 0) {
-zplog = '|' + (zpcurr + 1) + '№|  ' + zplog;
+zplog = '|' + zpcrr + '№|  ' + zplog;
 _this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
 switch (njoin) {
 case 1:
@@ -258,7 +260,7 @@ zpid = _this.logBlack(zpid);
 }
 zplog = _this.logLink(zplink, zpname);
 if (_this.getConfig('log', true)) {
-zplog = '|' + (zpcurr + 1) + '№|  ' + zplog;
+zplog = '|' + zpcrr + '№|  ' + zplog;
 _this.log(Lang.get('service.checking') + zplog + zpid, 'chk');
 switch (zpown) {
 case 1:
