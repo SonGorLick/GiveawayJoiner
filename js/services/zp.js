@@ -115,13 +115,17 @@ zpdtnow.setHours(zpdtnow.getUTCHours() + 10 + _this.month);
 let zpdnow = zpdtnow.getDate();
 if (_this.dload.includes(',' + zpnam + '(d=')) {
 zpblack = _this.dload.split(',' + zpnam + '(d=')[1].split('),')[0];
+if (!_this.dsave.includes(',' + zpnam + '(d=' + zpblack + '),')) {
 _this.dsave = _this.dsave + zpnam + '(d=' + zpblack + '),';
+}
 }
 if (!_this.getConfig('check_all', false)) {
 if (_this.dload.includes(',' + zpnam + '(z=')) {
 let zpdga = parseInt(_this.dload.split(',' + zpnam + '(z=')[1].split('),')[0]);
 if (zpdnow === zpdga) {
+if (!_this.dsave.includes(',' + zpnam + '(z=' + zpdga + '),')) {
 _this.dsave = _this.dsave + zpnam + '(z=' + zpdga + '),';
+}
 njoin = 3;
 }
 }
@@ -139,7 +143,9 @@ njoin = 2;
 }
 }
 if (_this.dload.includes(',' + zpnam + '(w),')) {
+if (!_this.dsave.includes(',' + zpnam + '(w)')) {
 _this.dsave = _this.dsave + zpnam + '(w),';
+}
 njoin = 4;
 }
 }
@@ -192,11 +198,15 @@ zpsteam = undefined;
 if (!enter) {
 zpown = 3;
 if (!entered && !won) {
+if (!_this.dsave.includes(',' + zpnam + '(z=' + zpdnow + '),')) {
 _this.dsave = _this.dsave + zpnam + '(z=' + zpdnow + '),';
+}
 }
 }
 if (entered) {
+if (!_this.dsave.includes(',' + zpnam + '(z=' + zpdnow + '),')) {
 _this.dsave = _this.dsave + zpnam + '(z=' + zpdnow + '),';
+}
 zpown = 5;
 if (_this.getConfig('skip_after', true)) {
 _this.skip = true;
@@ -287,10 +297,14 @@ let zpdnew = ('0' + zpdtnew.getDate().toString()).slice(-2);
 _this.dsave = _this.dsave + zpnam + '(z=' + zpdnew + '),';
 _this.log(Lang.get('service.entered_in') + zplog, 'enter');
 },
-error: function (err) {
+error: function () {
 zpnext = zpnext * 2;
-if (err.status === 504) {
-_this.log(Lang.get('service.entered_in') + zplog, 'enter');
+if (zpretry > 0) {
+comp.push(zpcomp);
+zpretry = zpretry - 1;
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
 }
 else {
 if (_this.getConfig('log', true)) {
@@ -302,11 +316,14 @@ _this.log(Lang.get('service.err_join'), 'err');
 }, tmout);
 }
 },
-error: function (resp) {
+error: function () {
 zpnext = zpnext * 2;
-if (resp.status > 500 && zpretry > 0) {
+if (zpretry > 0) {
 comp.push(zpcomp);
 zpretry = zpretry - 1;
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
 }
 else {
 if (_this.getConfig('log', true)) {

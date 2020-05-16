@@ -89,8 +89,16 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 }
-let opcurr = 0;
+let opcurr = 0,
+opretry = opfound.length;
 function giveawayEnter() {
+if (_this.doTimer() - _this.totalTicks < 240) {
+let optimer = _this.getConfig('timer_from', 500);
+if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
+optimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
+}
+_this.stimer = optimer;
+}
 if (opfound.length < 40 || !_this.started) {
 _this.pagemax = page;
 }
@@ -154,7 +162,9 @@ check = opway.find('.giveaways-page-item-img').attr('style').split('giveaway/')[
 }
 if (_this.dload.includes(',' + code + '(d=')) {
 opblack = _this.dload.split(',' + code + '(d=')[1].split('),')[0];
+if (!_this.dsave.includes(',' + code + '(d=' + opblack + '),')) {
 _this.dsave = _this.dsave + code + '(d=' + opblack + '),';
+}
 if (_this.curr_value < cost) {
 njoin = 4;
 }
@@ -168,7 +178,9 @@ njoin = 5;
 if (!_this.getConfig('check_all', false)) {
 if (opblack !== '') {
 if (_this.dload.includes(',' + code + '(n),')) {
+if (!_this.dsave.includes(',' + code + '(n),')) {
 _this.dsave = _this.dsave + code + '(n),';
+}
 njoin = 1;
 }
 if (_this.getConfig('check_in_steam', true)) {
@@ -359,8 +371,18 @@ _this.setValue(_this.curr_value);
 _this.log(Lang.get('service.entered_in') + oplog, 'enter');
 },
 error: function () {
+opnext = opnext * 2;
+if (opretry > 0) {
+opfound.push(opway);
+opretry = opretry - 1;
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
+}
+else {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
+}
 }
 }
 });
@@ -378,13 +400,28 @@ success: function () {
 _this.curr_value = _this.curr_value + cost;
 _this.setValue(_this.curr_value);
 _this.log(Lang.get('service.removed') + _this.logLink(_this.url + link, name), 'info');
-}
+}, error: () => {}
 });
 }
 }, pmout);
 }
 else {
 opnext = 100;
+}
+},
+error: function () {
+opnext = opnext * 2;
+if (opretry > 0) {
+opfound.push(opway);
+opretry = opretry - 1;
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
+}
+else {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
 }
 }
 });

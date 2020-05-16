@@ -258,6 +258,13 @@ if (this.getConfig('multiple_first', false)) {
 this.giveaways.unshift.apply(this.giveaways, this.gamf);
 }
 function processOne() {
+if (_this.doTimer() - _this.totalTicks < 240) {
+let sgtimer = _this.getConfig('timer_from', 70);
+if (_this.getConfig('timer_to', 90) !== _this.getConfig('timer_from', 70)) {
+sgtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
+}
+_this.stimer = sgtimer;
+}
 if (_this.giveaways.length <= sgcurr || !_this.started) {
 if (_this.getConfig('log', true) && sgcurr > 0) {
 _this.log(Lang.get('service.checked') + '1#-' + _this.getConfig('pages', 1) + '#', 'srch');
