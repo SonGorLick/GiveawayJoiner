@@ -33,6 +33,7 @@ callback(userData);
 }
 joinService() {
 let _this = this;
+_this.stimer = _this.getConfig('timer_from', 500);
 if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let optimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = optimer;
@@ -92,12 +93,8 @@ new Audio(dirapp + 'sounds/won.wav').play();
 let opcurr = 0,
 opretry = opfound.length;
 function giveawayEnter() {
-if (_this.doTimer() - _this.totalTicks < 240) {
-let optimer = _this.getConfig('timer_from', 500);
-if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
-optimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
-}
-_this.stimer = optimer;
+if (_this.doTimer() & _this.totalTicks < 240) {
+_this.totalTicks = 0;
 }
 if (opfound.length < 40 || !_this.started) {
 _this.pagemax = page;

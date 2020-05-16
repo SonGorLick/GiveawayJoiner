@@ -60,6 +60,7 @@ callback(userData);
 }
 joinService() {
 let _this = this;
+_this.stimer = _this.getConfig('timer_from', 70);
 if (_this.getConfig('timer_to', 90) !== _this.getConfig('timer_from', 70)) {
 let sptimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
 _this.stimer = sptimer;
@@ -177,12 +178,8 @@ _this.dsave = _this.dsave + linked + ',';
 }
 let spcurr = 0;
 function giveawayEnter() {
-if (_this.doTimer() - _this.totalTicks < 240) {
-let sptimer = _this.getConfig('timer_from', 70);
-if (_this.getConfig('timer_to', 90) !== _this.getConfig('timer_from', 70)) {
-sptimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
-}
-_this.stimer = sptimer;
+if (_this.doTimer() & _this.totalTicks < 240) {
+_this.totalTicks = 0;
 }
 if (sptent.length <= spcurr || !_this.started) {
 if (!_this.started) {

@@ -56,6 +56,7 @@ callback(userData);
 }
 joinService() {
 let page = 1;
+this.stimer = this.getConfig('timer_from', 70);
 if (this.getConfig('timer_to', 90) !== this.getConfig('timer_from', 70)) {
 let sgtimer = (Math.floor(Math.random() * (this.getConfig('timer_to', 90) - this.getConfig('timer_from', 70))) + this.getConfig('timer_from', 70));
 this.stimer = sgtimer;
@@ -258,12 +259,8 @@ if (this.getConfig('multiple_first', false)) {
 this.giveaways.unshift.apply(this.giveaways, this.gamf);
 }
 function processOne() {
-if (_this.doTimer() - _this.totalTicks < 240) {
-let sgtimer = _this.getConfig('timer_from', 70);
-if (_this.getConfig('timer_to', 90) !== _this.getConfig('timer_from', 70)) {
-sgtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
-}
-_this.stimer = sgtimer;
+if (_this.doTimer() & _this.totalTicks < 240) {
+_this.totalTicks = 0;
 }
 if (_this.giveaways.length <= sgcurr || !_this.started) {
 if (_this.getConfig('log', true) && sgcurr > 0) {

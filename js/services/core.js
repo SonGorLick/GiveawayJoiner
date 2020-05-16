@@ -243,8 +243,7 @@ this.buttonState(Lang.get('service.btn_start'));
 runTimer() {
 this.totalTicks = 0;
 this.started = true;
-let atimer = this.getConfig('timer_from', 50);
-this.stimer = atimer;
+this.stimer = 1440;
 this.setStatus('good');
 this.log(Lang.get('service.started'));
 if (this.intervalVar) {
@@ -255,6 +254,7 @@ if (!this.started) {
 clearInterval(this.intervalVar);
 }
 if (this.totalTicks % this.doTimer() === 0) {
+this.totalTicks = 0;
 if(
 (this.constructor.name === 'Astats') ||
 (this.constructor.name === 'ZP') ||
@@ -302,8 +302,6 @@ if (Config.get('log_autoclear', false)) {
 this.logField.html('<div></div>');
 }
 this.log(Lang.get('service.connection_good'), 'srch');
-let atimer = this.getConfig('timer_from', 50);
-this.stimer = atimer;
 this.updateCookies();
 this.joinService();
 }

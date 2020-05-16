@@ -29,6 +29,7 @@ callback(userData);
 }
 joinService() {
 let _this = this;
+_this.stimer = _this.getConfig('timer_from', 500);
 if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let fxtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = fxtimer;
