@@ -56,11 +56,8 @@ callback(userData);
 }
 joinService() {
 let page = 1;
-this.stimer = this.getConfig('timer_from', 70);
-if (this.getConfig('timer_to', 90) !== this.getConfig('timer_from', 70)) {
 let sgtimer = (Math.floor(Math.random() * (this.getConfig('timer_to', 90) - this.getConfig('timer_from', 70))) + this.getConfig('timer_from', 70));
 this.stimer = sgtimer;
-}
 this.dcheck = 0;
 this.won = this.getConfig('won', 0);
 this.dsave = ',';

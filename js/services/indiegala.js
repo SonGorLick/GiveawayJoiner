@@ -50,14 +50,14 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-_this.stimer = _this.getConfig('timer_from', 70);
-if (_this.getConfig('timer_to', 90) !== _this.getConfig('timer_from', 70)) {
 let igtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
 _this.stimer = igtimer;
-}
 let page = 1;
 _this.igprtry = 0;
 _this.dcheck = 0;
+if (_this.dload === ',') {
+_this.dload = 0;
+}
 _this.lvlmax = _this.getConfig('max_level', 0);
 _this.lvlmin = _this.getConfig('min_level', 0);
 _this.entmin = _this.getConfig('min_entries', 0);
@@ -79,22 +79,37 @@ GJuser.iglvl = iglevel.current_level;
 },error: () => {}
 });
 }
+if (_this.dload === 0) {
 $.ajax({
 url: _this.url + '/library/giveaways/giveaways-completed/tocheck',
 success: function (tocheck) {
-let igchecks = $(JSON.parse(tocheck).html).find('.library-giveaways-check-if-won-btn'),
-igchck = [];
+let igchecks = '',
+igchck = [],
+igchckid = '';
+if (tocheck.indexOf('>Check all<') >= 0) {
+igchecks = '-all';
+igchck[0] = '0';
+}
+else {
+igchecks = $(JSON.parse(tocheck).html).find('.library-giveaways-check-if-won-btn');
 for (let i = 0; i < igchecks.length; i++) {
 igchck[i] = igchecks.eq(i).attr('onclick').replace("giveawayCheckIfWinner(this, event, '", "").replace("')", "");
+}
 }
 let ic = 0,
 iw = 0,
 il = 0;
 if (igchck.length > 0) {
+if (igchecks !== '-all') {
+igchecks = '';
+}
 igchck.forEach(function(check) {
+if (igchecks === '') {
+igchckid = {entry_id: check};
+}
 rq({
 method: 'POST',
-url: _this.url + '/library/giveaways/check-if-winner',
+url: _this.url + '/library/giveaways/check-if-winner' + igchecks,
 headers: {
 'authority': 'www.indiegala.com',
 'accept': 'application/json, text/javascript, */*; q=0.01',
@@ -106,11 +121,17 @@ headers: {
 'referer': _this.url + '/library',
 'cookie': _this.cookies
 },
-data: {entry_id: check}
+data: igchckid
 })
 .then((win) => {
 let igwin = win.data;
-if (igwin.winner === true) {
+if (igchecks === '-all') {
+_this.dload = 3;
+igchecks = ' (Check all)';
+iw = igwin.won;
+il = igwin.checked - iw;
+}
+else if (igwin.winner === true) {
 iw++;
 }
 else if (igwin.winner === false) {
@@ -120,7 +141,7 @@ il++;
 .finally(() => {
 ic++;
 if (ic >= igchck.length) {
-_this.log(Lang.get('service.hided').split(' ')[0] + ' Completed to check - ' + (iw + il), 'info');
+_this.log(Lang.get('service.hided').split(' ')[0] + ' Completed to check - ' + (iw + il) + igchecks, 'info');
 if (iw > 0) {
 _this.log(_this.logLink(_this.url + '/library', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (iw) + ')'), 'win');
 _this.setStatus('win');
@@ -133,10 +154,14 @@ new Audio(dirapp + 'sounds/won.wav').play();
 });
 }
 else {
-_this.log(Lang.get('service.hided').split(' ')[0] + ' Completed to check - list empty', 'info');
+_this.log(Lang.get('service.hided').split(' ')[0] + ' Completed to check - This list is actually empty', 'info');
 }
 }
 });
+}
+else {
+_this.dload = _this.dload - 1;
+}
 if (GJuser.iglvl === 0) {
 _this.sort = false;
 }
@@ -205,6 +230,9 @@ if (tickets.length < 12 && _this.igprtry === 0 || _this.curr_value === 0 || !_th
 _this.pagemax = page;
 }
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igprtry > 0) {
+if (!_this.started) {
+_this.dload = 0;
+}
 if (_this.igprtry === 0) {
 if (_this.getConfig('log', true)) {
 if (_this.curr_value === 0 && _this.dcheck === 0) {

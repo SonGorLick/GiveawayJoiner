@@ -27,11 +27,8 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-_this.stimer = _this.getConfig('timer_from', 500);
-if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let idbtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = idbtimer;
-}
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.indiedb.com';
 $.ajax({

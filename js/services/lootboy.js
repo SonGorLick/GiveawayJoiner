@@ -6,6 +6,8 @@ this.websiteUrl = 'https://www.lootboy.de';
 this.authContent = '';
 this.authLink = 'https://github.com/pumPCin/GiveawayJoiner/wiki/LootBoy';
 this.auth = Lang.get('service.wiki') + 'LootBoy';
+this.settings.intervalfrom = { type: 'number', trans: 'service.intervalfrom', min: 0, max: this.getConfig('intervalto', 0), default: this.getConfig('intervalfrom', 0) };
+this.settings.intervalto = { type: 'number', trans: 'service.intervalto', min: this.getConfig('intervalfrom', 0), max: 360, default: this.getConfig('intervalto', 0) };
 this.withValue = false;
 delete this.settings.interval_from;
 delete this.settings.interval_to;
@@ -34,23 +36,46 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-_this.stimer = _this.getConfig('timer_from', 500);
-if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let lbtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = lbtimer;
+if (_this.getConfig('intervalfrom', 0) === 0 || _this.getConfig('intervalto', 0) === 0) {
+_this.dload = 0;
+}
+else {
+if (_this.dload === 0 || _this.dload === ',') {
+_this.dload = 1;
+}
 }
 _this.lburl = 'https://api.lootboy.de';
 _this.url = 'https://www.lootboy.de';
 _this.dcheck = true;
-let lbcurr = 0,
+if (!fs.existsSync(dirdata + 'lootboy1.txt')) {
+_this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/lootboy1.txt', 'err');
+_this.stopJoiner(true);
+}
+let lbcurr = _this.dload,
 lbua = _this.ua,
-lbnext = 5000;
+lbnext = 10000;
 function giveawayEnter() {
 if (!_this.dcheck || !_this.started) {
+if (!_this.started) {
+_this.dload = 1;
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checked') + 'LootBoy', 'srch');
 }
 return;
+}
+if (_this.dload > 0) {
+_this.dload = _this.dload + 1;
+_this.dcheck = false;
+if (!fs.existsSync(dirdata + 'lootboy' + _this.dload + '.txt')) {
+_this.dload = 1;
+}
+else {
+let lbtimer = (Math.floor(Math.random() * (_this.getConfig('intervalto', 0) - _this.getConfig('intervalfrom', 0))) + _this.getConfig('intervalfrom', 0));
+_this.stimer = lbtimer;
+}
 }
 if (fs.existsSync(dirdata + 'lootboy' + lbcurr + '_ua.txt') && lbcurr > 0) {
 lbua = fs.readFileSync(dirdata + 'lootboy' + lbcurr + '_ua.txt').toString();
@@ -309,10 +334,6 @@ _this.log(Lang.get('service.dt_err') + '/giveawayjoinerdata/lootboy' + lbcurr + 
 else {
 if (lbcurr > 0) {
 _this.dcheck = false;
-if (lbcurr === 1) {
-_this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/lootboy1.txt', 'err');
-_this.stopJoiner(true);
-}
 }
 }
 lbcurr++;

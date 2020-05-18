@@ -60,11 +60,8 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-_this.stimer = _this.getConfig('timer_from', 70);
-if (_this.getConfig('timer_to', 90) !== _this.getConfig('timer_from', 70)) {
 let sptimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
 _this.stimer = sptimer;
-}
 _this.url = 'https://scrap.tf';
 let page = 1;
 _this.spurl = '';

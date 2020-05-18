@@ -6,6 +6,8 @@ this.websiteUrl = 'https://www.chrono.gg';
 this.authContent = '';
 this.authLink = 'https://github.com/pumPCin/GiveawayJoiner/wiki/Chrono';
 this.auth = Lang.get('service.wiki') + 'ChronoGG';
+this.settings.intervalfrom = { type: 'number', trans: 'service.intervalfrom', min: 0, max: this.getConfig('intervalto', 0), default: this.getConfig('intervalfrom', 0) };
+this.settings.intervalto = { type: 'number', trans: 'service.intervalto', min: this.getConfig('intervalfrom', 0), max: 360, default: this.getConfig('intervalto', 0) };
 this.withValue = false;
 delete this.settings.interval_from;
 delete this.settings.interval_to;
@@ -34,22 +36,45 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-_this.stimer = _this.getConfig('timer_from', 500);
-if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let chtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = chtimer;
+if (_this.getConfig('intervalfrom', 0) === 0 || _this.getConfig('intervalto', 0) === 0) {
+_this.dload = 0;
+}
+else {
+if (_this.dload === 0 || _this.dload === ',') {
+_this.dload = 1;
+}
 }
 _this.churl = 'https://api.chrono.gg';
 _this.url = 'https://www.chrono.gg';
-let chcurr = 0,
-chnext = 5000;
 _this.dcheck = true;
+if (!fs.existsSync(dirdata + 'chronogg1.txt')) {
+_this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/chronogg1.txt', 'err');
+_this.stopJoiner(true);
+}
+let chcurr = 0,
+chnext = 7000;
 function giveawayEnter() {
 if (!_this.dcheck || !_this.started) {
+if (!_this.started) {
+_this.dload = 1;
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checked') + 'ChronoGG', 'srch');
 }
 return;
+}
+if (_this.dload > 0) {
+_this.dload = _this.dload + 1;
+_this.dcheck = false;
+if (!fs.existsSync(dirdata + 'chronogg' + _this.dload + '.txt')) {
+_this.dload = 1;
+}
+else {
+let chtimer = (Math.floor(Math.random() * (_this.getConfig('intervalto', 0) - _this.getConfig('intervalfrom', 0))) + _this.getConfig('intervalfrom', 0));
+_this.stimer = chtimer;
+}
 }
 if (fs.existsSync(dirdata + 'chronogg' + chcurr + '.txt') && chcurr > 0) {
 if (_this.getConfig('log', true)) {
@@ -135,10 +160,6 @@ _this.log(Lang.get('service.dt_err') + '/giveawayjoinerdata/chronogg' + chcurr +
 else {
 if (chcurr > 0) {
 _this.dcheck = false;
-if (chcurr === 1) {
-_this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/chronogg1.txt', 'err');
-_this.stopJoiner(true);
-}
 }
 }
 chcurr++;

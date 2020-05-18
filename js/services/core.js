@@ -425,6 +425,14 @@ case 'max_cost':
 _this.settings.min_cost.max = val;
 _this.reinitNumber('min_cost');
 break;
+case 'intervalfrom':
+_this.settings.intervalto.min = val;
+_this.reinitNumber('intervalto');
+break;
+case 'intervalto':
+_this.settings.intervalfrom.max = val;
+_this.reinitNumber('intervalfrom');
+break;
 case 'interval_from':
 _this.settings.interval_to.min = val;
 _this.reinitNumber('interval_to');
@@ -473,6 +481,14 @@ break;
 case 'max_cost':
 _this.settings.min_cost.max = val;
 _this.reinitNumber('min_cost');
+break;
+case 'intervalfrom':
+_this.settings.intervalto.min = val;
+_this.reinitNumber('intervalto');
+break;
+case 'intervalto':
+_this.settings.intervalfrom.max = val;
+_this.reinitNumber('intervalfrom');
 break;
 case 'interval_from':
 _this.settings.interval_to.min = val;

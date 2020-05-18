@@ -28,11 +28,8 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-_this.stimer = _this.getConfig('timer_from', 500);
-if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let zptimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = zptimer;
-}
 _this.dsave = ',';
 _this.dload = ',';
 if (fs.existsSync(dirdata + 'zp.txt')) {
@@ -86,7 +83,6 @@ data = data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
 let comp = $(data).find('.bv-item-wrapper'),
 zpcurr = 0,
 zpcrr = 0;
-let zpretry = comp.length;
 function giveawayEnter() {
 if (comp.length <= zpcurr || _this.skip || !_this.started) {
 if (comp.length <= zpcurr || _this.skip) {
@@ -177,6 +173,7 @@ break;
 }
 }
 if (njoin === 0) {
+zpnext = zpnext + Math.floor(spnext / 4) + 2100;
 $.ajax({
 url: zplink,
 success: function (html) {
@@ -287,7 +284,7 @@ else {
 zplog = zplog + zpid;
 }
 if (zpown === 0) {
-let tmout = Math.floor(zpnext / 2);
+let tmout = Math.floor(spnext / 4) + 2000;
 setTimeout(function () {
 $.ajax({
 url: zplink + '/enter_competition',
@@ -302,17 +299,8 @@ _this.log(Lang.get('service.entered_in') + zplog, 'enter');
 },
 error: function () {
 zpnext = zpnext * 2;
-if (zpretry > 0) {
-comp.push(zpcomp);
-zpretry = zpretry - 1;
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.connection_error'), 'err');
-}
-}
-else {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
-}
 }
 }
 });
@@ -321,17 +309,8 @@ _this.log(Lang.get('service.err_join'), 'err');
 },
 error: function () {
 zpnext = zpnext * 2;
-if (zpretry > 0) {
-comp.push(zpcomp);
-zpretry = zpretry - 1;
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.connection_error'), 'err');
-}
-}
-else {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
-}
 }
 }
 });

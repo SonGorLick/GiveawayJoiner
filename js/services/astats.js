@@ -24,11 +24,8 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-_this.stimer = _this.getConfig('timer_from', 500);
-if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let astimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = astimer;
-}
 let page = 1;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://astats.astats.nl';
@@ -100,7 +97,6 @@ data = $(data.replace(/<img/gi, '<noload'));
 let afound = data.find('[style="text-align:right;"]'),
 acurr = 0,
 acrr = 0;
-let aretry = afound.length;
 function giveawayEnter() {
 if (_this.doTimer() - _this.totalTicks < 240) {
 _this.totalTicks = 1;
@@ -150,6 +146,7 @@ ended = data.find('[href="' + alink + '"] > span').text().trim(),
 asjoin = alink.replace('/astats/Giveaway.php?GiveawayID=','');
 if (aname.includes('This giveaway has ended.') || ended === 'This giveaway has ended.') {
 _this.pagemax = page;
+acurr = 900;
 asnext = 50;
 }
 else {
@@ -258,17 +255,8 @@ _this.log(Lang.get('service.entered_in') + aslog, 'enter');
 },
 error: function () {
 asnext = asnext * 2;
-if (aretry > 0) {
-afound.push(away);
-aretry = aretry - 1;
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.connection_error'), 'err');
-}
-}
-else {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
-}
 }
 }
 });
@@ -280,17 +268,8 @@ asnext = 1000;
 },
 error: function () {
 asnext = asnext * 2;
-if (aretry > 0) {
-afound.push(away);
-aretry = aretry - 1;
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.connection_error'), 'err');
-}
-}
-else {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
-}
 }
 }
 });

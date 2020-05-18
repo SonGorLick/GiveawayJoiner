@@ -33,11 +33,8 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-_this.stimer = _this.getConfig('timer_from', 500);
-if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let optimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = optimer;
-}
 let page = 1;
 _this.dsave = ',';
 _this.dload = ',';
@@ -91,8 +88,7 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 let opcurr = 0,
-opcrr = 0,
-opretry = opfound.length;
+opcrr = 0;
 function giveawayEnter() {
 if (_this.doTimer() - _this.totalTicks < 240) {
 _this.totalTicks = 1;
@@ -371,17 +367,8 @@ _this.log(Lang.get('service.entered_in') + oplog, 'enter');
 },
 error: function () {
 opnext = opnext * 2;
-if (opretry > 0) {
-opfound.push(opway);
-opretry = opretry - 1;
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.connection_error'), 'err');
-}
-}
-else {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
-}
 }
 }
 });
@@ -410,17 +397,8 @@ opnext = 100;
 },
 error: function () {
 opnext = opnext * 2;
-if (opretry > 0) {
-opfound.push(opway);
-opretry = opretry - 1;
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.connection_error'), 'err');
-}
-}
-else {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
-}
 }
 }
 });

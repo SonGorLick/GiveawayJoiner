@@ -6,8 +6,12 @@ this.websiteUrl = 'https://freegamelottery.com';
 this.authContent = 'My Points';
 this.authLink = 'https://github.com/pumPCin/GiveawayJoiner/wiki/FGL';
 this.auth = Lang.get('service.wiki') + 'FGL';
+this.settings.intervalfrom = { type: 'number', trans: 'service.intervalfrom', min: 0, max: this.getConfig('intervalto', 0), default: this.getConfig('intervalfrom', 0) };
+this.settings.intervalto = { type: 'number', trans: 'service.intervalto', min: this.getConfig('intervalfrom', 0), max: 360, default: this.getConfig('intervalto', 0) };
 this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.withValue = false;
+delete this.settings.interval_from;
+delete this.settings.interval_to;
 delete this.settings.pages;
 delete this.settings.check_in_steam;
 delete this.settings.blacklist_on;
@@ -33,24 +37,47 @@ callback(userData);
 }
 joinService() {
 let _this = this;
-_this.stimer = _this.getConfig('timer_from', 500);
-if (_this.getConfig('timer_to', 700) !== _this.getConfig('timer_from', 500)) {
 let fgtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = fgtimer;
+if (_this.getConfig('intervalfrom', 0) === 0 || _this.getConfig('intervalto', 0) === 0) {
+_this.dload = 0;
+}
+else {
+if (_this.dload === 0 || _this.dload === ',') {
+_this.dload = 1;
+}
 }
 _this.url = 'https://d.freegamelottery.com/draw/register-visit';
 _this.fgurl = 'https://d.freegamelottery.com';
-let fgcurr = 1;
 _this.dcheck = true;
+if (!fs.existsSync(dirdata + 'fgl1.txt')) {
+_this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/fgl1.txt', 'err');
+_this.stopJoiner(true);
+}
+let fgcurr = _this.dload,
+fgnext = 10000;
 function giveawayEnter() {
-let fgnext = _this.interval();
 if (!_this.dcheck || !_this.started) {
+if (!_this.started) {
+_this.dload = 1;
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checked') + 'FGL', 'srch');
 }
 return;
 }
-if (fs.existsSync(dirdata + 'fgl' + fgcurr + '.txt')) {
+if (_this.dload > 0) {
+_this.dload = _this.dload + 1;
+_this.dcheck = false;
+if (!fs.existsSync(dirdata + 'fgl' + _this.dload + '.txt')) {
+_this.dload = 1;
+}
+else {
+let fgtimer = (Math.floor(Math.random() * (_this.getConfig('intervalto', 0) - _this.getConfig('intervalfrom', 0))) + _this.getConfig('intervalfrom', 0));
+_this.stimer = fgtimer;
+}
+}
+if (fs.existsSync(dirdata + 'fgl' + fgcurr + '.txt') && fgcurr > 0) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.open_file') + 'fgl' + fgcurr + '.txt', 'info');
 }
@@ -228,15 +255,12 @@ _this.log(Lang.get('service.connection_error'), 'err');
 });
 }
 else {
-_this.log(Lang.get('service.dt_err'), 'err');
+_this.log(Lang.get('service.dt_err') + '/giveawayjoinerdata/fgl' + fgcurr + '.txt', 'err');
 }
 }
 else {
+if (fgcurr > 0) {
 _this.dcheck = false;
-if (fgcurr === 1) {
-fs.writeFile(dirdata + 'fgl1.txt', '', (err) => { });
-_this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/fgl1.txt', 'err');
-_this.stopJoiner(true);
 }
 }
 fgcurr++;
