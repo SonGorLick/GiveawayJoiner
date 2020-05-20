@@ -9,7 +9,7 @@ this.auth = this.auth + Lang.get('service.zp.login');
 this.settings.interval_from = { type: 'number', trans: 'service.interval_from', min: 10, max: this.getConfig('interval_to', 15), default: this.getConfig('interval_from', 10) };
 this.settings.interval_to = { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 10), max: 60, default: this.getConfig('interval_to', 15) };
 this.settings.skip_after = { type: 'checkbox', trans: this.transPath('skip_after'), default: this.getConfig('skip_after', true) };
-this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
+this.settings.skip_xbox = { type: 'checkbox', trans: this.transPath('skip_xbox'), default: this.getConfig('skip_xbox', false) };
 this.settings.check_all = { type: 'checkbox', trans: this.transPath('check_all'), default: this.getConfig('check_all', false) };
 this.withValue = false;
 delete this.settings.pages;
@@ -141,6 +141,11 @@ if (GJuser.black.includes(zpblack + ',') && _this.getConfig('blacklist_on', fals
 njoin = 2;
 }
 }
+if (_this.getConfig('skip_xbox', false)) {
+if (zpnam.includes('-xbox-') || zpnam.includes('-x-box-')) {
+njoin = 5;
+}
+}
 if (_this.dload.includes(',' + zpnam + '(w),')) {
 if (!_this.dsave.includes(',' + zpnam + '(w)')) {
 _this.dsave = _this.dsave + zpnam + '(w),';
@@ -169,6 +174,9 @@ break;
 case 4:
 _this.log(Lang.get('service.won_skip'), 'jnd');
 _this.log(Lang.get('service.data_have'), 'skip');
+break;
+case 5:
+_this.log(Lang.get('service.skipped'), 'skip');
 break;
 }
 }
@@ -297,9 +305,12 @@ let zpdnew = ('0' + zpdtnew.getDate().toString()).slice(-2);
 _this.dsave = _this.dsave + zpnam + '(z=' + zpdnew + '),';
 _this.log(Lang.get('service.entered_in') + zplog, 'enter');
 },
-error: function () {
-zpnext = zpnext * 2;
-if (_this.getConfig('log', true)) {
+error: function (response) {
+zpnext = 59000;
+if (response.status === 504) {
+_this.log(Lang.get('service.entered_in') + zplog, 'enter');
+}
+else if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
 }
@@ -308,8 +319,9 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 },
 error: function () {
-zpnext = zpnext * 2;
+zpnext = 59000;
 if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
 _this.log(Lang.get('service.err_join'), 'err');
 }
 }

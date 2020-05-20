@@ -30,7 +30,9 @@ pages: { type: 'number', trans: 'service.pages', min: 1, max: 50, default: this.
 autostart: { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) },
 check_in_steam: { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) },
 log: { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) },
-blacklist_on: { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) }
+blacklist_on: { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) },
+log_autoclear: { type: 'checkbox', trans: 'service.log_autoclear', default: this.getConfig('log_autoclear', false) },
+sound: { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) }
 };
 }
 init() {
@@ -38,7 +40,7 @@ this.addIcon();
 this.addPanel();
 this.renderSettings();
 this.updateCookies();
-if (Config.get('autostart') || this.getConfig('autostart')) {
+if (!Config.get('autostart_off', false) && this.getConfig('autostart', false)) {
 this.startJoiner(true);
 }
 }
@@ -214,15 +216,7 @@ Browser.loadURL(this.authLink);
 Browser.once('close', () => {
 Browser.webContents.removeAllListeners('did-finish-load');
 this.waitAuth = false;
-this.authCheck((authState) => {
-if (authState === 1) {
-this.updateUserInfo();
 this.runTimer();
-}
-else {
-this.buttonState(Lang.get('service.btn_start'));
-}
-});
 });
 Browser.show();
 }
@@ -298,7 +292,7 @@ if (authState === 1) {
 this.setStatus('good');
 this.tries = 0;
 this.updateUserInfo();
-if (Config.get('log_autoclear', false)) {
+if (this.getConfig('log_autoclear', false)) {
 this.logField.html('<div></div>');
 }
 this.log(Lang.get('service.connection_good'), 'srch');
@@ -309,8 +303,8 @@ else if (authState === 0) {
 if (this.tries < 3) {
 this.setStatus('net');
 this.tries++;
-this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost'), 'err');
-this.stimer = 10;
+this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost').replace('10', '5'), 'err');
+this.stimer = 5;
 }
 else {
 this.tries = 0;
@@ -319,11 +313,11 @@ this.stopJoiner(true);
 }
 }
 else {
-if (this.tries < 6) {
+if (this.tries < 8) {
 this.setStatus('net');
 this.tries++;
-this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost'), 'err');
-this.stimer = 10;
+this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost').replace('0', '5'), 'err');
+this.stimer = 15;
 }
 else {
 this.tries = 0;

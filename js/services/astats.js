@@ -6,7 +6,6 @@ this.settings.timer_from.min = 5;
 this.websiteUrl = 'https://astats.astats.nl/astats/';
 this.authContent = 'Log out';
 this.authLink = 'https://astats.astats.nl/astats/profile/Login.php';
-this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
 this.withValue = false;
 super.init();
@@ -254,7 +253,7 @@ _this.dsave = _this.dsave + asjoin + ',';
 _this.log(Lang.get('service.entered_in') + aslog, 'enter');
 },
 error: function () {
-asnext = asnext * 2;
+asnext = 59000;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
@@ -267,7 +266,7 @@ asnext = 1000;
 }
 },
 error: function () {
-asnext = asnext * 2;
+asnext = 59000;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }

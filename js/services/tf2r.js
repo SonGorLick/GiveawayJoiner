@@ -7,7 +7,6 @@ this.websiteUrl = 'https://tf2r.com';
 this.authContent = 'Notifications';
 this.authLink = 'https://tf2r.com/login';
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
-this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.withValue = false;
 this.getTimeout = 10000;
 delete this.settings.pages;

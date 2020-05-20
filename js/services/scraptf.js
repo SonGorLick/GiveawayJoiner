@@ -11,7 +11,6 @@ this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.
 this.settings.interval_from = { type: 'number', trans: 'service.interval_from', min: 10, max: this.getConfig('interval_to', 15), default: this.getConfig('interval_from', 10) };
 this.settings.interval_to = { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 10), max: 60, default: this.getConfig('interval_to', 15) };
 this.settings.sort_by_end = { type: 'checkbox', trans: this.transPath('sort_by_end'), default: this.getConfig('sort_by_end', false) };
-this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.withValue = false;
 delete this.settings.check_in_steam;
 delete this.settings.blacklist_on;
@@ -272,14 +271,14 @@ if (spmess === '"Entered raffle!"') {
 _this.log(Lang.get('service.entered_in') + splog, 'enter');
 }
 else {
-spnext = spnext * 2;
+spnext = 19000;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
 }
 })
 .catch((error) => {
-spnext = spnext * 2;
+spnext = 19000;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
@@ -296,7 +295,7 @@ _this.log(Lang.get('service.cant_join'), 'cant');
 }
 })
 .catch((error) => {
-spnext = spnext * 2;
+spnext = 19000;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }

@@ -14,6 +14,7 @@ delete this.settings.interval_to;
 delete this.settings.pages;
 delete this.settings.check_in_steam;
 delete this.settings.blacklist_on;
+delete this.settings.sound;
 super.init();
 }
 authCheck(callback) {

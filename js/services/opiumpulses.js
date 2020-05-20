@@ -9,7 +9,6 @@ this.settings.maxcost = { type: 'number', trans: this.transPath('maxcost'), min:
 this.settings.free_only = { type: 'checkbox', trans: this.transPath('free_only'), default: this.getConfig('free_only', false) };
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
 this.settings.remove_ga = { type: 'checkbox', trans: this.transPath('remove_ga'), default: this.getConfig('remove_ga', false) };
-this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 super.init();
 }
 getUserInfo(callback) {
@@ -366,7 +365,7 @@ _this.setValue(_this.curr_value);
 _this.log(Lang.get('service.entered_in') + oplog, 'enter');
 },
 error: function () {
-opnext = opnext * 2;
+opnext = 59000;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
@@ -396,8 +395,9 @@ opnext = 100;
 }
 },
 error: function () {
-opnext = opnext * 2;
+opnext = 59000;
 if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.checking') + oplog + opblack, 'chk');
 _this.log(Lang.get('service.err_join'), 'err');
 }
 }

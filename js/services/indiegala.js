@@ -23,7 +23,6 @@ this.settings.reserve_for_smpl = { type: 'checkbox', trans: this.transPath('rese
 this.settings.sort_by_level = { type: 'checkbox', trans: 'service.sort_by_level', default: this.getConfig('sort_by_level', false) };
 this.settings.reserve_no_multi = { type: 'checkbox', trans: this.transPath('reserve_no_multi'), default: this.getConfig('reserve_no_multi', false) };
 this.settings.sbl_ending_ig = { type: 'checkbox', trans: this.transPath('sbl_ending_ig'), default: this.getConfig('sbl_ending_ig', false) };
-this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 super.init();
 }
 getUserInfo(callback) {
@@ -83,14 +82,15 @@ if (_this.dload === 0) {
 $.ajax({
 url: _this.url + '/library/giveaways/giveaways-completed/tocheck',
 success: function (tocheck) {
-let igchecks = '',
+let igchecks = '-all',
 igchck = [],
-igchckid = '';
+igchckid = '',
+igchecked = ' [Check error]';
 if (tocheck.indexOf('>Check all<') >= 0) {
-igchecks = '-all';
 igchck[0] = '0';
 }
 else {
+igchecks = '';
 igchecks = $(JSON.parse(tocheck).html).find('.library-giveaways-check-if-won-btn');
 for (let i = 0; i < igchecks.length; i++) {
 igchck[i] = igchecks.eq(i).attr('onclick').replace("giveawayCheckIfWinner(this, event, '", "").replace("')", "");
@@ -100,11 +100,8 @@ let ic = 0,
 iw = 0,
 il = 0;
 if (igchck.length > 0) {
-if (igchecks !== '-all') {
-igchecks = '';
-}
 igchck.forEach(function(check) {
-if (igchecks === '') {
+if (igchecks !== '-all') {
 igchckid = {entry_id: check};
 }
 rq({
@@ -125,23 +122,25 @@ data: igchckid
 })
 .then((win) => {
 let igwin = win.data;
-if (igchecks === '-all') {
+if (igwin.checked >= 0) {
 _this.dload = 3;
-igchecks = ' (Check all)';
+igchecked = ' [Check all]';
 iw = igwin.won;
 il = igwin.checked - iw;
 }
 else if (igwin.winner === true) {
 iw++;
+igchecked = ' [By one]';
 }
 else if (igwin.winner === false) {
 il++;
+igchecked = ' [By one]';
 }
 })
 .finally(() => {
 ic++;
 if (ic >= igchck.length) {
-_this.log(Lang.get('service.hided').split(' ')[0] + ' Completed to check - ' + (iw + il) + igchecks, 'info');
+_this.log(Lang.get('service.hided').split(' ')[0] + ' Completed to check - ' + (iw + il) + igchecked, 'info');
 if (iw > 0) {
 _this.log(_this.logLink(_this.url + '/library', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (iw) + ')'), 'win');
 _this.setStatus('win');
@@ -154,6 +153,7 @@ new Audio(dirapp + 'sounds/won.wav').play();
 });
 }
 else {
+_this.dload = 3;
 _this.log(Lang.get('service.hided').split(' ')[0] + ' Completed to check - This list is actually empty', 'info');
 }
 }
@@ -493,13 +493,13 @@ ignext = (Math.floor(Math.random() * 1000)) + 1000;
 }
 })
 .catch((error) => {
-ignext = ignext * 2;
+ignext = 29000;
 });
 }
 if (igrtry >= 12) {
 igrtry = 0;
 Times = 0;
-ignext = ignext * 3;
+ignext = 29000;
 igcurr++;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');

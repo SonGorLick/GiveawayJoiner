@@ -14,6 +14,7 @@ delete this.settings.interval_to;
 delete this.settings.pages;
 delete this.settings.check_in_steam;
 delete this.settings.blacklist_on;
+delete this.settings.sound;
 super.init();
 }
 authCheck(callback) {
@@ -53,7 +54,7 @@ if (!fs.existsSync(dirdata + 'chronogg1.txt')) {
 _this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/chronogg1.txt', 'err');
 _this.stopJoiner(true);
 }
-let chcurr = 0,
+let chcurr = _this.dload,
 chnext = 7000;
 function giveawayEnter() {
 if (!_this.dcheck || !_this.started) {

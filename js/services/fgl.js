@@ -8,7 +8,6 @@ this.authLink = 'https://github.com/pumPCin/GiveawayJoiner/wiki/FGL';
 this.auth = Lang.get('service.wiki') + 'FGL';
 this.settings.intervalfrom = { type: 'number', trans: 'service.intervalfrom', min: 0, max: this.getConfig('intervalto', 0), default: this.getConfig('intervalfrom', 0) };
 this.settings.intervalto = { type: 'number', trans: 'service.intervalto', min: this.getConfig('intervalfrom', 0), max: 360, default: this.getConfig('intervalto', 0) };
-this.settings.sound = { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) };
 this.withValue = false;
 delete this.settings.interval_from;
 delete this.settings.interval_to;
