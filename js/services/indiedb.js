@@ -203,7 +203,6 @@ _this.log(Lang.get('service.checked') + 'Giveaways', 'srch');
 }, 12000);
 return;
 }
-}
 });
 }
 }
