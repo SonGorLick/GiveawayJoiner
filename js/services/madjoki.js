@@ -6,6 +6,10 @@ this.websiteUrl = 'https://steam.madjoki.com';
 this.authContent = 'Logout';
 this.authLink = 'https://steam.madjoki.com/login';
 this.withValue = false;
+this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
+this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
+this.settings.mj_black = { type: 'checkbox', trans: this.transPath('mj_black'), default: this.getConfig('mj_black', true) };
+this.settings.auto_mj_black = { type: 'checkbox', trans: this.transPath('auto_mj_black'), default: this.getConfig('auto_mj_black', true) };
 this.settings.add_game = { type: 'checkbox', trans: this.transPath('add_game'), default: this.getConfig('add_game', true) };
 this.settings.add_app = { type: 'checkbox', trans: this.transPath('add_app'), default: this.getConfig('add_app', false) };
 this.settings.add_dlc = { type: 'checkbox', trans: this.transPath('add_dlc'), default: this.getConfig('add_dlc', true) };
@@ -24,18 +28,7 @@ let userData = {
 avatar: dirapp + 'images/Madjoki.png',
 username: 'Madjoki'
 };
-if (this.dload === ',') {
-$.ajax({
-url: 'https://store.steampowered.com/',
-success: (data) => {
-data = data.replace(/<img/gi, '<noload');
-this.dload = data.substring(data.indexOf('var g_sessionID = "')+19,data.indexOf('var g_ServerTime')).slice(0, 24);
-},
-complete: function () {
 callback(userData);
-}
-});
-}
 }
 joinService() {
 let _this = this;
@@ -44,6 +37,15 @@ _this.stimer = mjtimer;
 let page = 0;
 _this.dcheck = 0;
 _this.pagemax = 5;
+if (fs.existsSync(dirdata + 'mj_blacklist.txt')) {
+let mjdata = fs.readFileSync(dirdata + 'mj_blacklist.txt');
+if (mjdata.length > 1) {
+_this.dload = mjdata.toString();
+}
+}
+else {
+fs.writeFile(dirdata + 'mj_blacklist.txt', 'app/0,sub/0,bundle/0,', (err) => { });
+}
 _this.url = 'https://steam.madjoki.com/';
 let callback = function () {
 page++;
@@ -66,11 +68,10 @@ url: _this.url + 'apps/free?type=' + mjpage,
 success: function (html) {
 html = $('<div>' + html.replace(/<img/gi, '<noload') + '</div>');
 CSRF = html.find('meta[name="_token"]').attr('content');
-let mjfound = html.find('td:nth-of-type(6)'),
-mjtime = html.find('.alert-info.alert > time').text(),
-mjnext = 2000;
+let mjfound = html.find('tbody tr'),
+mjtime = html.find('.alert-info.alert > time').text();
 if (CSRF.length < 10) {
-_this.log(Lang.get('service.ses_not_found'), 'err');
+_this.log('CSRF token not found', 'err');
 _this.stopJoiner(true);
 return;
 }
@@ -83,7 +84,7 @@ mjname = 'Game';
 break;
 case 1:
 if (_this.getConfig('add_app', false)) {
-mjname = 'Applications';
+mjname = 'App';
 }
 break;
 case 2:
@@ -145,6 +146,9 @@ _this.log('Steam limit - 50', 'skip');
 }
 if (page === _this.pagemax) {
 _this.log(Lang.get('service.checked') + 'All Free Packages', 'srch');
+setTimeout(function () {
+fs.writeFile(dirdata + 'mj_blacklist.txt', _this.dload, (err) => { });
+}, 3000);
 }
 }
 if (callback) {
@@ -152,9 +156,11 @@ callback();
 }
 return;
 }
-let card = mjfound.eq(mjcurr),
-name = card.find('a').text(),
-mjsteam = card.find('a').attr('href'),
+let mjnext = 2000,
+card = mjfound.eq(mjcurr),
+name = card.find('td:nth-of-type(6) > a').text(),
+mjsteam = card.find('td:nth-of-type(6) > a').attr('href'),
+mjsubid = card.find('td:nth-of-type(3)').text().trim(),
 mjown = 0,
 mjapp = 0,
 mjsub = 0,
@@ -162,15 +168,15 @@ mjbun = 0,
 mjid = '???';
 if (mjsteam.includes('app/')) {
 mjapp = parseInt(mjsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
-mjid = mjapp;
+mjid = 'app/' + mjapp;
 }
 if (mjsteam.includes('sub/')) {
 mjsub = parseInt(mjsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
-mjid = mjsub;
+mjid = 'sub/' + mjsub;
 }
 if (mjsteam.includes('bundle/')) {
 mjbun = parseInt(mjsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
-mjid = mjbun;
+mjid = 'bundle/' + mjbun;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
@@ -183,13 +189,19 @@ if (GJuser.ownsubs.includes(',' + mjsub + ',') && mjsub > 0) {
 mjown = 1;
 }
 }
-if (_this.dload === ',') {
-mjown = 2;
+if (GJuser.black.includes(mjid + ',') && _this.getConfig('blacklist_on', false)) {
+mjown = 3;
+}
+if (_this.dload.includes(mjid + ',') && _this.getConfig('mj_black', true)) {
+mjown = 4;
+}
+if (GJuser.steam === '') {
+mjown = 5;
 }
 let mjlog = _this.logLink(mjsteam, name);
 if (_this.getConfig('log', true)) {
-mjlog = '|' + mjname + '#|' + (mjcurr + 1) + '№|  ' + mjlog;
-_this.log(Lang.get('service.checking') + mjlog + _this.logBlack(mjid), 'chk');
+mjlog = '|' + mjname + '#|' + (mjcurr + 1) + '№|' + mjsubid + '|  ' + mjlog;
+_this.log(Lang.get('service.checking') + mjlog, 'chk');
 switch (mjown) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
@@ -197,16 +209,22 @@ break;
 case 2:
 _this.log(Lang.get('service.steam_error'), 'err');
 break;
+case 3:
+_this.log(Lang.get('service.blacklisted'), 'black');
+break;
+case 4:
+_this.log(Lang.get('service.blacklisted') + ' Madjoki', 'black');
+break;
+case 5:
+_this.log('Steam g_session data error', 'err');
+break;
 }
-}
-else {
-mjlog = mjlog + _this.logBlack(mjid);
 }
 if (mjown === 0) {
 $.ajax({
 method: 'POST',
 url: 'https://store.steampowered.com/checkout/addfreelicense',
-data: ({action: 'add_to_cart', sessionid: _this.dload, subid: mjid}),
+data: ({action: 'add_to_cart', sessionid: GJuser.steam, subid: mjsubid}),
 headers: {
 'Content-Type': 'application/x-www-form-urlencoded'
 },
@@ -216,6 +234,9 @@ if (rp.indexOf('add_free_content_success_area') >= 0) {
 _this.log(Lang.get('service.done') + mjlog, 'enter');
 }
 else if (rp.indexOf('error_box') >= 0) {
+if (_this.getConfig('auto_mj_black', true)) {
+_this.dload = _this.dload + mjid + ',';
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.cant_join'), 'cant');
 }
@@ -230,6 +251,9 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 }
 });
+}
+else {
+mjnext = 100;
 }
 mjcurr++;
 setTimeout(giveawayEnter, mjnext);
