@@ -50,7 +50,7 @@ success: function (html) {
 html = $('<div>' + html.replace(/<img/gi, '<noload') + '</div>');
 CSRF = html.find('meta[name="csrf-token"]').attr('content');
 if (CSRF.length < 10) {
-_this.log(this.trans('token_error'), 'err');
+_this.log('token error', 'err');
 _this.stopJoiner(true);
 return;
 }

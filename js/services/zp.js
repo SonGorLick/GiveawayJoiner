@@ -168,7 +168,7 @@ case 2:
 _this.log(Lang.get('service.blacklisted'), 'black');
 break;
 case 3:
-_this.log(Lang.get('service.time'), 'skip');
+_this.log(Lang.get('service.time'), 'cant');
 _this.log(Lang.get('service.data_have'), 'skip');
 break;
 case 4:

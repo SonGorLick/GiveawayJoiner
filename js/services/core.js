@@ -117,7 +117,7 @@ this.value_label = $(document.createElement('span'))
 }
 $(document.createElement('button'))
 .addClass('open-website')
-.html('<div class="fab fa-chrome" data-lang-title="' + Lang.get('service.open_website') + this.constructor.name + '"></div>')
+.html('<div class="fab fa-chrome" data-lang-title="' + Lang.get('service.open_website') + this.constructor.name + ' (' + this.websiteUrl + ')"></div>')
 .attr('data-link', this.websiteUrl)
 .appendTo(this.userPanel);
 $(document.createElement('button'))

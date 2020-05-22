@@ -2,8 +2,9 @@
 class IndieDB extends Joiner {
 constructor() {
 super();
+this.domain = 'indiedb.com';
 this.websiteUrl = 'https://www.indiedb.com';
-this.authContent = 'View your profile';
+this.authContent = '';
 this.authLink = 'https://www.indiedb.com/members/login';
 this.withValue = false;
 delete this.settings.pages;
@@ -12,6 +13,36 @@ delete this.settings.interval_to;
 delete this.settings.check_in_steam;
 delete this.settings.blacklist_on;
 super.init();
+}
+authCheck(callback) {
+let call = -1;
+rq({
+method: 'GET',
+url: 'https://www.indiedb.com',
+headers: {
+'authority': 'www.indiedb.com',
+'user-agent': this.ua,
+'sec-fetch-site': 'none',
+'sec-fetch-mode': 'navigate',
+'sec-fetch-user': '?1',
+'sec-fetch-dest': 'document',
+'cookie': this.cookies
+},
+responseType: 'document'
+})
+.then((auths) => {
+let auth = auths.data;
+auth = auth.replace(/<img/gi, '<noload');
+if (auth.indexOf('View your profile') >= 0) {
+call = 1;
+}
+else {
+call = 0;
+}
+})
+.finally(() => {
+callback(call);
+});
 }
 getUserInfo(callback) {
 let userData = {
@@ -30,9 +61,24 @@ let idbtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _
 _this.stimer = idbtimer;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.indiedb.com';
-$.ajax({
+_this.idburl = 'www.indiedb.com';
+_this.dload = {
+'authority': _this.idburl,
+'user-agent': _this.ua,
+'sec-fetch-site': 'none',
+'sec-fetch-mode': 'navigate',
+'sec-fetch-user': '?1',
+'sec-fetch-dest': 'document',
+'cookie': _this.cookies
+};
+rq({
+method: 'GET',
 url: _this.url + '/giveaways/prizes',
-success: function (html) {
+headers: _this.dload,
+responseType: 'document'
+})
+.then((htmls) => {
+let html = htmls.data;
 html = html.replace(/<img/gi, '<noload');
 let prizes = $(html).find('.body.clear .table .row.rowcontent span.subheading:nth-of-type(2)'),
 idbprize = '',
@@ -57,11 +103,15 @@ if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
-}
 });
-$.ajax({
+rq({
+method: 'GET',
 url: _this.url + '/giveaways',
-success: function (data) {
+headers: _this.dload,
+responseType: 'document'
+})
+.then((datas) => {
+let data = datas.data;
 data = data.replace(/<img/gi, '<noload');
 let cont = $(data).find('#articlecontent'),
 link = cont.find('h2 a').attr('href'),
@@ -84,16 +134,23 @@ _this.log(Lang.get('service.already_joined'), 'jnd');
 }
 if (enter) {
 let eLink = cont.find('p a.buttonenter').attr('href');
-$.ajax({
-url: _this.url + eLink
+rq({
+method: 'GET',
+url: _this.url + eLink,
+headers: _this.dload,
+responseType: 'document'
 });
 _this.log(Lang.get('service.entered_in') + _this.logLink(link, name), 'enter');
 enter = false;
 entered = true;
 }
 if (entered) {
-let adds = cont.find('#giveawaysjoined > div p');
-for (let curradds = 0; curradds < adds.length; curradds++) {
+let adds = cont.find('#giveawaysjoined > div p'),
+addschk = [];
+for (let i = 0; i < adds.length; i++) {
+addschk[i] = i;
+}
+addschk.forEach(function(curradds) {
 let addlink = adds.eq(curradds).find('a').attr('href'),
 finish = adds.eq(curradds).find('a').attr('class');
 if (!finish.includes('buttonentered')) {
@@ -102,34 +159,39 @@ if (finish === '') {
 finish = addlink;
 }
 if (!addlink.includes('http')) {
-setTimeout(function () {
-$.ajax({
+rq({
+method: 'GET',
 url: _this.url + addlink,
-success: function (data) {
-data = data.replace(/<img/gi, '<noload');
-let check = data.indexOf('<p><strong>Support us by subscribing:</strong></p>') >= 0;
-if (_this.getConfig('log', true) && !check) {
+headers: _this.dload,
+responseType: 'document'
+})
+.then((resps) => {
+let resp = resps.data;
+resp = resp.replace(/<img/gi, '<noload');
+let check = resp.indexOf('<p><strong>Support us by subscribing:</strong></p>') >= 0;
+if (!check) {
 _this.log(Lang.get('service.hided').split(' ')[0] + ' ' + name + ' ' + finish, 'info');
+}
+})
+.finally(() => {
+if (!addlink.includes('the-challenge-of-adblock')) {
+_this.log(Lang.get('service.hided').split(' ')[0] + ' ' + name + ' ' + finish, 'info');
+}
+});
+}
+else if (addlink.includes('http')) {
+rq({
+method: 'GET',
+url: _this.url + '/giveaways/ajax/'+ finish + '/' + id,
+headers: _this.dload,
+responseType: 'document'
+})
+.finally(() => {
+_this.log(Lang.get('service.hided').split(' ')[0] + ' ' + name + ' ' + finish, 'info');
+});
 }
 }
 });
-if (_this.getConfig('log', true) && !addlink.includes('the-challenge-of-adblock')) {
-_this.log(Lang.get('service.hided').split(' ')[0] + ' ' + name + ' ' + finish, 'info');
-}
-}, 1000);
-}
-if (addlink.includes('http')) {
-setTimeout(function () {
-$.ajax({
-url: _this.url + '/giveaways/ajax/'+ finish + '/' + id
-});
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.hided').split(' ')[0] + ' ' + name + ' ' + finish, 'info');
-}
-}, 1000);
-}
-}
-}
 entered = false;
 }
 if (!enter && !entered) {

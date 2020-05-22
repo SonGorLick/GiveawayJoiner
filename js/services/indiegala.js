@@ -332,7 +332,7 @@ igown = 8;
 }
 let iglog = _this.logLink(_this.url + '/giveaways/detail/' + id, name);
 if (_this.getConfig('log', true)) {
-iglog = '|' + page + '#|' + (igcurr + 1) + '№|' + igtime + level + 'L|' + price + '$|  ' + iglog;
+iglog = '|' + page + '#|' + (igcurr + 1) + '№|' + sold + 't|' + igtime + level + 'L|' + price + '$|  ' + iglog;
 if (igrtry === 0 && single) {
 _this.log(Lang.get('service.checking') + iglog + _this.logBlack(igid), 'chk');
 }
