@@ -154,8 +154,10 @@ if (zpblack !== '') {
 zpblack = _this.logBlack(zpblack);
 }
 let zplog = _this.logLink(zplink, zpnam.replace(/-/g, ' '));
-if (_this.getConfig('log', true) && njoin > 0) {
+if (_this.getConfig('log', true)) {
 zplog = '|' + zpcrr + '№|  ' + zplog;
+}
+if (_this.getConfig('log', true) && njoin > 0) {
 _this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
 switch (njoin) {
 case 1:
