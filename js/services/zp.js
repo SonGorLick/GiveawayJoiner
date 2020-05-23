@@ -47,12 +47,12 @@ _this.month = 0;
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.zeepond.com';
 if ((new Date()).getDate() !== _this.dcheck) {
-_this.dcheck = (new Date()).getDate();
 $.ajax({
 url: _this.url + '/my-account/my-prizes',
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
 let zpwon = data.find('.form-group');
+_this.dcheck = (new Date()).getDate();
 if (zpwon === undefined) {
 zpwon = 0;
 }
@@ -70,10 +70,7 @@ if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
-},
-error: function () {
-_this.dcheck = '';
-}
+}, error: () => {}
 });
 }
 $.ajax({

@@ -19,7 +19,6 @@ this.settings.add_media = { type: 'checkbox', trans: this.transPath('add_media')
 delete this.settings.interval_from;
 delete this.settings.interval_to;
 delete this.settings.pages;
-delete this.settings.blacklist_on;
 delete this.settings.sound;
 super.init();
 }
@@ -44,7 +43,7 @@ _this.dload = mjdata.toString();
 }
 }
 else {
-fs.writeFile(dirdata + 'mj_blacklist.txt', 'app/0,sub/0,bundle/0,', (err) => { });
+fs.writeFile(dirdata + 'mj_blacklist.txt', ',', (err) => { });
 }
 _this.url = 'https://steam.madjoki.com/';
 let callback = function () {
@@ -148,7 +147,7 @@ if (page === _this.pagemax) {
 _this.log(Lang.get('service.checked') + 'All Free Packages', 'srch');
 setTimeout(function () {
 fs.writeFile(dirdata + 'mj_blacklist.txt', _this.dload, (err) => { });
-}, 3000);
+}, 6000);
 }
 }
 if (callback) {
@@ -156,7 +155,7 @@ callback();
 }
 return;
 }
-let mjnext = 2000,
+let mjnext = 3000,
 card = mjfound.eq(mjcurr),
 name = card.find('td:nth-of-type(6) > a').text(),
 mjsteam = card.find('td:nth-of-type(6) > a').attr('href'),
@@ -178,6 +177,9 @@ if (mjsteam.includes('bundle/')) {
 mjbun = parseInt(mjsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
 mjid = 'bundle/' + mjbun;
 }
+if (_this.dload.includes(',' + mjsubid + ',') && _this.getConfig('mj_black', true)) {
+mjown = 4;
+}
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
 mjown = 2;
@@ -192,10 +194,7 @@ mjown = 1;
 if (GJuser.black.includes(mjid + ',') && _this.getConfig('blacklist_on', false)) {
 mjown = 3;
 }
-if (_this.dload.includes(mjid + ',') && _this.getConfig('mj_black', true)) {
-mjown = 4;
-}
-if (GJuser.steam === '') {
+if (GJuser.steam === '' || GJuser.steam === undefined) {
 mjown = 5;
 }
 let mjlog = _this.logLink(mjsteam, name);
@@ -213,10 +212,12 @@ case 3:
 _this.log(Lang.get('service.blacklisted'), 'black');
 break;
 case 4:
-_this.log(Lang.get('service.blacklisted') + ' Madjoki', 'black');
+_this.log(Lang.get('service.blacklisted') + ' Madjoki', 'skip');
 break;
 case 5:
 _this.log('Steam g_session data error', 'err');
+_this.pagemax = page;
+mjcurr = 1000;
 break;
 }
 }
@@ -235,7 +236,7 @@ _this.log(Lang.get('service.done') + mjlog, 'enter');
 }
 else if (rp.indexOf('error_box') >= 0) {
 if (_this.getConfig('auto_mj_black', true)) {
-_this.dload = _this.dload + mjid + ',';
+_this.dload = _this.dload + mjsubid + ',';
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.cant_join'), 'cant');
@@ -251,9 +252,6 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 }
 });
-}
-else {
-mjnext = 100;
 }
 mjcurr++;
 setTimeout(giveawayEnter, mjnext);

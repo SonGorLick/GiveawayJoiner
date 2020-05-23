@@ -73,39 +73,6 @@ _this.dload = {
 };
 rq({
 method: 'GET',
-url: _this.url + '/giveaways/prizes',
-headers: _this.dload,
-responseType: 'document'
-})
-.then((htmls) => {
-let html = htmls.data;
-html = html.replace(/<img/gi, '<noload');
-let prizes = $(html).find('.body.clear .table .row.rowcontent span.subheading:nth-of-type(2)'),
-idbprize = '',
-idbwon = 0;
-if (prizes === undefined) {
-prizes = '';
-}
-for (let idbcurr = 0; idbcurr < prizes.length; idbcurr++) {
-idbprize = prizes.eq(idbcurr).text().trim();
-if (idbprize !== '-' && !idbprize.includes('Check in')) {
-idbwon++;
-}
-}
-if (idbwon < _this.won) {
-_this.setConfig('won', idbwon);
-}
-if (idbwon > 0 && idbwon > _this.won) {
-_this.log(_this.logLink(_this.url + '/giveaways/prizes', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (idbwon - _this.won) + ')'), 'win');
-_this.setStatus('win');
-_this.setConfig('won', idbwon);
-if (_this.getConfig('sound', true)) {
-new Audio(dirapp + 'sounds/won.wav').play();
-}
-}
-});
-rq({
-method: 'GET',
 url: _this.url + '/giveaways',
 headers: _this.dload,
 responseType: 'document'
@@ -194,7 +161,42 @@ _this.log(Lang.get('service.hided').split(' ')[0] + ' ' + name + ' ' + finish, '
 });
 entered = false;
 }
-if (!enter && !entered) {
+if ((new Date()).getDate() !== _this.dcheck) {
+rq({
+method: 'GET',
+url: _this.url + '/giveaways/prizes',
+headers: _this.dload,
+responseType: 'document'
+})
+.then((htmls) => {
+let html = htmls.data;
+html = html.replace(/<img/gi, '<noload');
+let prizes = $(html).find('.body.clear .table .row.rowcontent span.subheading:nth-of-type(2)'),
+idbprize = '',
+idbwon = 0;
+_this.dcheck = (new Date()).getDate();
+if (prizes === undefined) {
+prizes = '';
+}
+for (let idbcurr = 0; idbcurr < prizes.length; idbcurr++) {
+idbprize = prizes.eq(idbcurr).text().trim();
+if (idbprize !== '-' && !idbprize.includes('Check in')) {
+idbwon++;
+}
+}
+if (idbwon < _this.won) {
+_this.setConfig('won', idbwon);
+}
+if (idbwon > 0 && idbwon > _this.won) {
+_this.log(_this.logLink(_this.url + '/giveaways/prizes', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (idbwon - _this.won) + ')'), 'win');
+_this.setStatus('win');
+_this.setConfig('won', idbwon);
+if (_this.getConfig('sound', true)) {
+new Audio(dirapp + 'sounds/won.wav').play();
+}
+}
+});
+}
 setTimeout(function () {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.reach_end'), 'skip');
@@ -202,7 +204,6 @@ _this.log(Lang.get('service.checked') + 'Giveaways', 'srch');
 }
 }, 12000);
 return;
-}
 });
 }
 }
