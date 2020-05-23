@@ -8,6 +8,8 @@ a, a:visited, a:hover { color: #b9c2c7; text-decoration: none; }
 .styled-scrollbar::-webkit-scrollbar-corner { background-color: #263238; }
 .styled-scrollbar::-webkit-scrollbar-thumb { width: 8px; background-color: #5a656a; }
 .styled-scrollbar::-webkit-scrollbar-thumb:hover { width: 8px; background-color: #788388; }
+input[type="checkbox"] { -webkit-appearance: none; height: 14px; width: 14px; cursor: pointer; border-radius: 3px; background-color: #263238; }
+input[type="checkbox"]:checked:before { position: relative; left: 2px; bottom: 3px; font-size: 14px; content: '✔'; color: #4db6ac; }
 #head { position: relative; z-index: 10; background-color: #263238; height: 60px; border-top: 1px solid #222d32; border-bottom: 1px solid #222d32; -webkit-app-region: drag; }
 #head_decor { height: 10px; width: 680px; background-color: #222d33; position: absolute; left: 0; right: 0; margin: 0 auto; top: 0; border-radius: 0 0 3px 3px; }
 #head_decor:before,
@@ -116,7 +118,7 @@ button.login:hover { color: #00bcd4; }
 .service-user-panel button.login { position: absolute; right: 160px; bottom: 13px; }
 .input-wrap { position: relative; line-height: 20px; }
 .input-wrap.checkbox input,
-.input-wrap.checkbox label { display: inline-block; vertical-align: middle; cursor: pointer; color: #4db6ac; font-size: 12px; }
+.input-wrap.checkbox label { display: inline-block; vertical-align: middle; cursor: pointer; color: #b9c2c7; font-size: 12px; }
 .input-wrap.checkbox label:hover { color: #00bcd4; }
 input-wrap.checkbox input[disabled] { cursor: default; }
 .input-wrap.checkbox input[disabled] + label { cursor: default; color: #2c383e; }
