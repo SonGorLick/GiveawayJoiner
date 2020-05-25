@@ -169,10 +169,10 @@ mjown = 1;
 if (GJuser.black.includes(mjid + ',') && _this.getConfig('blacklist_on', false)) {
 mjown = 3;
 }
-if (mjname === 'Game' && !_this.getConfig('add_game', false)) {
+if (mjname === 'Game' && !_this.getConfig('add_game', true)) {
 mjown = 5;
 }
-if (mjname === 'DLC' && !_this.getConfig('add_dlc', false)) {
+if (mjname === 'DLC' && !_this.getConfig('add_dlc', true)) {
 mjown = 5;
 }
 if (mjname === 'Demo' && !_this.getConfig('add_demo', false)) {
