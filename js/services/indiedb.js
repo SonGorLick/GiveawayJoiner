@@ -183,12 +183,12 @@ let resp = resps.data;
 resp = resp.replace(/<img/gi, '<noload');
 let check = resp.indexOf('<p><strong>Support us by subscribing:</strong></p>') >= 0;
 if (!check) {
-_this.log(Lang.get('service.hided').split(' ')[0] + ' ' + name + ' ' + finish, 'info');
+_this.log(Lang.get('service.done') + name + ' - ' + finish, 'info');
 }
 })
 .finally(() => {
 if (!addlink.includes('the-challenge-of-adblock')) {
-_this.log(Lang.get('service.hided').split(' ')[0] + ' ' + name + ' ' + finish, 'info');
+_this.log(Lang.get('service.done') + name + ' - ' + finish, 'info');
 }
 });
 }
@@ -200,7 +200,7 @@ headers: _this.dload,
 responseType: 'document'
 })
 .finally(() => {
-_this.log(Lang.get('service.hided').split(' ')[0] + ' ' + name + ' ' + finish, 'info');
+_this.log(Lang.get('service.done') + name + ' - ' + finish, 'info');
 });
 }
 }

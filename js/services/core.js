@@ -17,6 +17,7 @@ this.tries = 0;
 this.dsave = ',';
 this.dload = ',';
 this.dcheck = '';
+this.auto = false;
 this.getTimeout = 19000;
 this.domain = 'google.com';
 this.auth = Lang.get('service.login') + this.constructor.name;
@@ -186,9 +187,11 @@ if (this.started) {
 return false;
 }
 if (autostart) {
+this.auto = true;
 this.runTimer();
 }
 else {
+this.auto = false;
 this.buttonState(Lang.get('service.btn_checking'), 'disabled');
 this.authCheck((authState) => {
 if (authState !== 0) {
@@ -237,6 +240,11 @@ this.started = true;
 this.stimer = 1440;
 this.setStatus('good');
 this.log(Lang.get('service.started'));
+if (this.auto) {
+this.totalTicks = 1;
+this.stimer = 0.1;
+this.auto = false;
+}
 if (this.intervalVar) {
 clearInterval(this.intervalVar);
 }
