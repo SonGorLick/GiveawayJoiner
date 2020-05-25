@@ -241,8 +241,7 @@ this.stimer = 1440;
 this.setStatus('good');
 this.log(Lang.get('service.started'));
 if (this.auto) {
-this.totalTicks = 1;
-this.stimer = 0.1;
+this.totalTicks = 86395;
 this.auto = false;
 }
 if (this.intervalVar) {
