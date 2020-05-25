@@ -11,7 +11,6 @@ this.settings.interval_to = { type: 'number', trans: 'service.interval_to', min:
 this.settings.skip_after = { type: 'checkbox', trans: this.transPath('skip_after'), default: this.getConfig('skip_after', true) };
 this.settings.skip_xbox = { type: 'checkbox', trans: this.transPath('skip_xbox'), default: this.getConfig('skip_xbox', false) };
 this.settings.check_all = { type: 'checkbox', trans: this.transPath('check_all'), default: this.getConfig('check_all', false) };
-this.withValue = false;
 delete this.settings.pages;
 super.init();
 }
@@ -79,9 +78,10 @@ success: function (data) {
 data = data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
 let comp = $(data).find('.bv-item-wrapper'),
 zpcurr = 0,
-zpcrr = 0;
+zpcrr = 0,
+zparray = Array.from(Array(comp.length).keys());
 function giveawayEnter() {
-if (comp.length <= zpcurr || _this.skip || !_this.started) {
+if (zparray.length <= zpcurr || _this.skip || !_this.started) {
 if (comp.length <= zpcurr || _this.skip) {
 setTimeout(function () {
 fs.writeFile(dirdata + 'zp.txt', _this.dsave, (err) => { });
@@ -96,10 +96,12 @@ _this.log(Lang.get('service.reach_end'), 'skip');
 }
 _this.log(Lang.get('service.checked') + 'Giveaways', 'srch');
 }
+_this.setStatus('good');
 return;
 }
 let zpnext = _this.interval(),
-zpcomp = comp.eq(zpcurr),
+zpcrr = zparray[zpcurr],
+zpcomp = comp.eq(zpcrr),
 zplink = _this.url + zpcomp.find('.bv-item-image a').attr('href'),
 zpnam = zplink.replace('https://www.zeepond.com/zeepond/giveaways/enter-a-competition/', ''),
 njoin = 0,
@@ -108,7 +110,6 @@ zpdtnow = new Date();
 zpdtnow.setDate(zpdtnow.getUTCDate());
 zpdtnow.setHours(zpdtnow.getUTCHours() + 10 + _this.month);
 let zpdnow = zpdtnow.getDate();
-zpcrr = zpcurr + 1;
 if (_this.dload.includes(',' + zpnam + '(d=')) {
 zpblack = _this.dload.split(',' + zpnam + '(d=')[1].split('),')[0];
 if (!_this.dsave.includes(',' + zpnam + '(d=' + zpblack + '),')) {
@@ -155,7 +156,7 @@ zpblack = _this.logBlack(zpblack);
 }
 let zplog = _this.logLink(zplink, zpnam.replace(/-/g, ' '));
 if (_this.getConfig('log', true)) {
-zplog = '|' + zpcrr + '№|  ' + zplog;
+zplog = '|' + (zpcrr + 1) + '№|  ' + zplog;
 }
 if (_this.getConfig('log', true) && njoin > 0) {
 _this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
@@ -264,7 +265,7 @@ zpid = _this.logBlack(zpid);
 }
 zplog = _this.logLink(zplink, zpname);
 if (_this.getConfig('log', true)) {
-zplog = '|' + zpcrr + '№|  ' + zplog;
+zplog = '|' + (zpcrr + 1) + '№|  ' + zplog;
 _this.log(Lang.get('service.checking') + zplog + zpid, 'chk');
 switch (zpown) {
 case 1:
@@ -305,12 +306,20 @@ _this.dsave = _this.dsave + zpnam + '(z=' + zpdnew + '),';
 _this.log(Lang.get('service.entered_in') + zplog, 'enter');
 },
 error: function (response) {
-zpnext = 59000;
 if (response.status === 504) {
 _this.log(Lang.get('service.entered_in') + zplog, 'enter');
 }
-else if (_this.getConfig('log', true)) {
+else {
+zpnext = 59000;
+if (zparray.filter(i => i === zpcrr).length === 1) {
+zparray.push(zpcrr);
+if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
 }
 }
 });
@@ -319,9 +328,15 @@ _this.log(Lang.get('service.err_join'), 'err');
 },
 error: function () {
 zpnext = 59000;
+if (zparray.filter(i => i === zpcrr).length === 1) {
+zparray.push(zpcrr);
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
 _this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 });
@@ -333,6 +348,9 @@ zpcurr++;
 setTimeout(giveawayEnter, zpnext);
 }
 giveawayEnter();
+},
+error: function () {
+return;
 }
 });
 }

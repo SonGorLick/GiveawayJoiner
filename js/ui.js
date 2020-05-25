@@ -24,7 +24,7 @@ if (JSON.stringify(data.rgOwnedApps) !== '[]') {
 GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
 GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
 }
-},error: () => {}
+}, error: () => {}
 });
 }
 reloadLangStrings();
@@ -157,7 +157,7 @@ if (name !== undefined && name.length > 0) {
 userData.username = name;
 $('.content-item .info .username').html(userData.username);
 }
-}
+}, error: () => {}
 });
 }
 function openWebsite(url) {

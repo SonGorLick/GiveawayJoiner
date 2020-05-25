@@ -8,7 +8,6 @@ this.authLink = 'https://github.com/pumPCin/GiveawayJoiner/wiki/Chrono';
 this.auth = Lang.get('service.wiki') + 'ChronoGG';
 this.settings.intervalfrom = { type: 'number', trans: 'service.intervalfrom', min: 0, max: this.getConfig('intervalto', 0), default: this.getConfig('intervalfrom', 0) };
 this.settings.intervalto = { type: 'number', trans: 'service.intervalto', min: this.getConfig('intervalfrom', 0), max: 360, default: this.getConfig('intervalto', 0) };
-this.withValue = false;
 delete this.settings.interval_from;
 delete this.settings.interval_to;
 delete this.settings.pages;
@@ -64,6 +63,7 @@ _this.dload = 1;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checked') + 'ChronoGG', 'srch');
 }
+_this.setStatus('good');
 return;
 }
 if (_this.dload > 0) {

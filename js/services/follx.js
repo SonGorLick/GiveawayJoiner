@@ -60,11 +60,11 @@ url: _this.url + '/ajax/syncAccount',
 method: 'POST',
 headers: {
 'X-CSRF-TOKEN': CSRF,
-'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
 'Accept': 'application/json, text/javascript, */*; q=0.01',
 'X-Requested-With': 'XMLHttpRequest',
 },
-dataType: 'json'
+dataType: 'json',
+error: () => {}
 });
 let fxwon = html.find('.hide-on-med-and-down.user-panel.s6.col > .icons > .has.marker.cup').attr('href');
 if (fxwon !== undefined) {
@@ -76,12 +76,14 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 let fxfound = html.find('.giveaway_card');
-let fxcurr = 0;
+let fxcurr = 0,
+fxcrr = 0,
+fxarray = Array.from(Array(fxfound.length).keys());
 function giveawayEnter() {
 if (fxfound.length < 20 || !_this.started) {
 _this.pagemax = page;
 }
-if (fxfound.length <= fxcurr || !_this.started) {
+if (fxarray.length <= fxcurr || !_this.started) {
 if (_this.getConfig('log', true)) {
 if (fxfound.length < 20) {
 _this.log(Lang.get('service.reach_end'), 'skip');
@@ -93,13 +95,17 @@ else {
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 }
+if (page === _this.pagemax && _this.started) {
+_this.setStatus('good');
+}
 if (callback) {
 callback();
 }
 return;
 }
 let fxnext = _this.interval(),
-card = fxfound.eq(fxcurr),
+fxcrr = fxarray[fxcurr],
+card = fxfound.eq(fxcrr),
 link = card.find('.head_info a').attr('href'),
 name = card.find('.head_info').attr('title'),
 entered = card.find('.entered').length > 0,
@@ -140,7 +146,7 @@ fxown = 3;
 }
 let fxlog = _this.logLink(link, name);
 if (_this.getConfig('log', true)) {
-fxlog = '|' + page + '#|' + (fxcurr + 1) + '№|  ' + fxlog;
+fxlog = '|' + page + '#|' + (fxcrr + 1) + '№|  ' + fxlog;
 _this.log(Lang.get('service.checking') + fxlog + _this.logBlack(fxid), 'chk');
 switch (fxown) {
 case 1:
@@ -180,10 +186,29 @@ if (data.response) {
 _this.setValue(data.points);
 _this.log(Lang.get('service.entered_in') + fxlog, 'enter');
 }
-},
-error: function () {
+else {
+fxnext = 59000;
+if (fxarray.filter(i => i === fxcrr).length === 1) {
+fxarray.push(fxcrr);
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
+}
+},
+error: function () {
+fxnext = 59000;
+if (fxarray.filter(i => i === fxcrr).length === 1) {
+fxarray.push(fxcrr);
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 });
@@ -204,6 +229,9 @@ fxcurr++;
 setTimeout(giveawayEnter, fxnext);
 }
 giveawayEnter();
+},
+error: function () {
+return;
 }
 });
 }

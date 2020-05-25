@@ -45,6 +45,7 @@ input[type="checkbox"]:checked:before { position: relative; left: 2px; bottom: 3
 .service-icon .service-name { display: inline-flex; font-size: 12px; font-weight: bold; }
 .service-icon .service-status { width: 16px; height: 16px; line-height: 16px; text-align: center; font-size: 14px; position: absolute; right: 2px; bottom: 2px; background: center/contain no-repeat; }
 .service-icon .service-status span { display: none; color: #b8c1c6; }
+.service-icon .service-status[data-status=work] span:first-child { display: inline; color: orange; }
 .service-icon .service-status[data-status=good] span:first-child { display: inline; color: lightgreen; }
 .service-icon .service-status[data-status=win] span:first-child { display: inline; color: hotpink; }
 .service-icon .service-status[data-status=net] span:first-child { display: inline; color: lightskyblue; }

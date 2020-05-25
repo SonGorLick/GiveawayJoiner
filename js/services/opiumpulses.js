@@ -5,6 +5,7 @@ super();
 this.websiteUrl = 'https://www.opiumpulses.com/giveaways';
 this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
+this.withValue = true;
 this.settings.maxcost = { type: 'number', trans: this.transPath('maxcost'), min: 0, max: 1000, default: this.getConfig('maxcost', 0) };
 this.settings.free_only = { type: 'checkbox', trans: this.transPath('free_only'), default: this.getConfig('free_only', false) };
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
@@ -87,7 +88,8 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 let opcurr = 0,
-opcrr = 0;
+opcrr = 0,
+oparray = Array.from(Array(opfound.length).keys());
 function giveawayEnter() {
 if (_this.doTimer() - _this.totalTicks < 240) {
 _this.totalTicks = 1;
@@ -95,7 +97,7 @@ _this.totalTicks = 1;
 if (opfound.length < 40 || !_this.started) {
 _this.pagemax = page;
 }
-if (opfound.length <= opcurr || !_this.started) {
+if (oparray.length <= opcurr || !_this.started) {
 if (opfound.length <= opcurr && page === _this.pagemax) {
 let arpage = Math.floor(Math.random() * 9) + 1;
 $.ajax({
@@ -108,10 +110,10 @@ if (arlnk !== undefined) {
 $.ajax({
 url: _this.url + arlnk,
 success: function () {
-}
+}, error: () => {}
 });
 }
-}
+}, error: () => {}
 });
 setTimeout(function () {
 fs.writeFile(dirdata + 'opiumpulses.txt', _this.dsave, (err) => { });
@@ -131,13 +133,17 @@ else {
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 }
+if (page === _this.pagemax && _this.started) {
+_this.setStatus('good');
+}
 if (callback) {
 callback();
 }
 return;
 }
 let opnext = _this.interval(),
-opway = opfound.eq(opcurr),
+opcrr = oparray[opcurr],
+opway = opfound.eq(opcrr),
 link = opway.find('.giveaways-page-item-img-btn-more').attr('href'),
 name = opway.find('.giveaways-page-item-footer-name').text().trim(),
 entered = opway.find('.giveaways-page-item-img-btn-wrapper').text(),
@@ -150,7 +156,6 @@ opblack = '';
 if (isNaN(cost)) {
 cost = 0;
 }
-opcrr = opcurr + 1;
 if (check === undefined) {
 check = opway.find('.giveaways-page-item-img').attr('style').split('giveaway/')[1].split('/')[0];
 }
@@ -209,7 +214,7 @@ opblack = _this.logBlack(opblack);
 }
 let oplog = _this.logLink(_this.url + link, name);
 if (_this.getConfig('log', true)) {
-oplog = '|' + page + '#|' + opcrr + '№|' + cost + '$|  ' + oplog;
+oplog = '|' + page + '#|' + (opcrr + 1) + '№|' + cost + '$|  ' + oplog;
 }
 if (njoin > 0) {
 if (_this.getConfig('log', true)) {
@@ -366,8 +371,14 @@ _this.log(Lang.get('service.entered_in') + oplog, 'enter');
 },
 error: function () {
 opnext = 59000;
+if (oparray.filter(i => i === opcrr).length === 1) {
+oparray.push(opcrr);
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 });
@@ -396,9 +407,15 @@ opnext = 100;
 },
 error: function () {
 opnext = 59000;
+if (oparray.filter(i => i === opcrr).length === 1) {
+oparray.push(opcrr);
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + oplog + opblack, 'chk');
 _this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 });
@@ -407,6 +424,9 @@ opcurr++;
 setTimeout(giveawayEnter, opnext);
 }
 giveawayEnter();
+},
+error: function () {
+return;
 }
 });
 }

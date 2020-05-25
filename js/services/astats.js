@@ -7,7 +7,6 @@ this.websiteUrl = 'https://astats.astats.nl/astats/';
 this.authContent = 'Log out';
 this.authLink = 'https://astats.astats.nl/astats/profile/Login.php';
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
-this.withValue = false;
 super.init();
 }
 getUserInfo(callback) {
@@ -43,12 +42,12 @@ url: _this.url + '/astats/TopListGames.php?language=english'
 });
 }
 if ((new Date()).getDate() !== _this.dcheck) {
-_this.dcheck = (new Date()).getDate();
 $.ajax({
 url: _this.url + '/astats/profile/User_Inbox.php',
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 let aswon = data.find('td:nth-of-type(4) > a').text('Congratulations you are a giveaway winner!');
+_this.dcheck = (new Date()).getDate();
 if (aswon === undefined) {
 aswon = 0;
 }
@@ -66,10 +65,7 @@ if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
-},
-error: function () {
-_this.dcheck = '';
-}
+}, error: () => {}
 });
 }
 let callback = function () {
@@ -95,7 +91,8 @@ success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 let afound = data.find('[style="text-align:right;"]'),
 acurr = 0,
-acrr = 0;
+acrr = 0,
+aarray = Array.from(Array(afound.length).keys());
 function giveawayEnter() {
 if (_this.doTimer() - _this.totalTicks < 240) {
 _this.totalTicks = 1;
@@ -103,7 +100,7 @@ _this.totalTicks = 1;
 if (afound.length === 0 || !_this.started) {
 _this.pagemax = page;
 }
-if (afound.length <= acurr || !_this.started) {
+if (aarray.length <= acurr || !_this.started) {
 $.ajax({
 url: _this.url + '/astats/User_Info.php'
 });
@@ -124,13 +121,17 @@ else {
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 }
+if (page === _this.pagemax && _this.started) {
+_this.setStatus('good');
+}
 if (callback) {
 callback();
 }
 return;
 }
 let asnext = _this.interval(),
-away = afound.eq(acurr),
+acrr = aarray[acurr],
+away = afound.eq(acrr),
 alink = away.find('a').attr('href'),
 assteam = away.find('a noload').attr('src'),
 asown = 0,
@@ -139,14 +140,12 @@ assub = 0,
 asbun = 0,
 asid = '???';
 if (alink !== undefined || assteam !== undefined) {
-acrr++;
 let aname = data.find('[href="' + alink + '"]').text().trim(),
 ended = data.find('[href="' + alink + '"] > span').text().trim(),
 asjoin = alink.replace('/astats/Giveaway.php?GiveawayID=','');
 if (aname.includes('This giveaway has ended.') || ended === 'This giveaway has ended.') {
 _this.pagemax = page;
-acurr = 900;
-asnext = 50;
+asnext = 100;
 }
 else {
 let ahave = data.find('[href="' + alink + '"] font').attr('color');
@@ -187,7 +186,7 @@ asown = 3;
 }
 let aslog = _this.logLink(_this.url + alink, aname);
 if (_this.getConfig('log', true)) {
-aslog = '|' + page + '#|' + acrr + '№|  ' + aslog;
+aslog = '|' + page + '#|' + (acrr + 1) + '№|  ' + aslog;
 _this.log(Lang.get('service.checking') + aslog + _this.logBlack(asid), 'chk');
 switch (asown) {
 case 1:
@@ -254,8 +253,14 @@ _this.log(Lang.get('service.entered_in') + aslog, 'enter');
 },
 error: function () {
 asnext = 59000;
+if (aarray.filter(i => i === acrr).length === 1) {
+aarray.push(acrr);
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 });
@@ -267,8 +272,14 @@ asnext = 1000;
 },
 error: function () {
 asnext = 59000;
+if (aarray.filter(i => i === acrr).length === 1) {
+aarray.push(acrr);
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 });
@@ -285,6 +296,9 @@ acurr++;
 setTimeout(giveawayEnter, asnext);
 }
 giveawayEnter();
+},
+error: function () {
+return;
 }
 });
 }

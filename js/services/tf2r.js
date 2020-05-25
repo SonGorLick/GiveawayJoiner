@@ -7,8 +7,6 @@ this.websiteUrl = 'https://tf2r.com';
 this.authContent = 'Notifications';
 this.authLink = 'https://tf2r.com/login';
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
-this.withValue = false;
-this.getTimeout = 10000;
 delete this.settings.pages;
 delete this.settings.check_in_steam;
 delete this.settings.blacklist_on;
@@ -40,7 +38,6 @@ _this.dload = tfdata.toString();
 _this.url = 'https://tf2r.com';
 _this.won = _this.getConfig('won', 0);
 if ((new Date()).getDate() !== _this.dcheck) {
-_this.dcheck = (new Date()).getDate();
 $.ajax({
 url: _this.url + '/notifications.html',
 success: function (html) {
@@ -48,6 +45,7 @@ html = html.replace(/<img/gi, '<noload');
 let tfprizes = $(html).find('#content .indent .notif'),
 tfprize = '',
 tfwon = 0;
+_this.dcheck = (new Date()).getDate();
 if (tfprizes === undefined) {
 tfprizes = '';
 }
@@ -68,10 +66,7 @@ if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
-},
-error: function () {
-_this.dcheck = '';
-}
+}, error: () => {}
 });
 }
 $.ajax({
@@ -80,9 +75,10 @@ success: function (data) {
 data = data.replace(/<img/gi, '<noload');
 let giveaways = $(data).find('.pubrhead-text-right'),
 tfcurr = 0,
-tfcrr = 0;
+tfcrr = 0,
+tfarray = Array.from(Array(giveaways.length).keys());
 function giveawayEnter() {
-if (giveaways.length <= tfcurr || !_this.started) {
+if (tfarray.length <= tfcurr || !_this.started) {
 if (giveaways.length <= tfcurr) {
 setTimeout(function () {
 fs.writeFile(dirdata + 'tf2r.txt', _this.dsave, (err) => { });
@@ -95,20 +91,21 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 _this.log(Lang.get('service.checked') + 'Public Raffles', 'srch');
 }
+_this.setStatus('good');
 return;
 }
 let tfnext = _this.interval(),
-giveaway = giveaways.eq(tfcurr),
+tfcrr = tfarray[tfcurr],
+giveaway = giveaways.eq(tfcrr),
 link = giveaway.find('a').attr('href'),
 name = giveaway.find('a').text().trim(),
 rid = link.replace('https://tf2r.com/k', '').replace('.html', '');
-tfcrr = tfcurr + 1;
 if (name.length === 0) {
 name = '?????? ' + '(' + rid + ')';
 }
 let tflog = _this.logLink(link, name);
 if (_this.getConfig('log', true)) {
-tflog = '|' + tfcrr + '№|  ' + tflog;
+tflog = '|' + (tfcrr + 1) + '№|  ' + tflog;
 _this.log(Lang.get('service.checking') + tflog, 'chk');
 }
 if (!_this.dload.includes(rid + ',') || _this.getConfig('check_all', false)) {
@@ -137,10 +134,27 @@ _this.log(Lang.get('service.entered_in') + tflog, 'enter');
 _this.dsave = _this.dsave + rid + ',';
 }
 else {
-tfnext = 100;
+if (tfarray.filter(i => i === tfcrr).length === 1) {
+tfarray.push(tfcrr);
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
+}
+})
+.catch(() => {
+tfnext = 59000;
+if (tfarray.filter(i => i === tfcrr).length === 1) {
+tfarray.push(tfcrr);
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
 }
 });
 }, tmout);
@@ -153,6 +167,18 @@ _this.dsave = _this.dsave + rid + ',';
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
 }
+}
+},
+error: function () {
+tfnext = 59000;
+if (tfarray.filter(i => i === tfcrr).length === 1) {
+tfarray.push(tfcrr);
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 });
@@ -171,6 +197,9 @@ tfcurr++;
 setTimeout(giveawayEnter, tfnext);
 }
 giveawayEnter();
+},
+error: function () {
+return;
 }
 });
 }

@@ -5,20 +5,22 @@ super();
 this.websiteUrl = 'https://steam.madjoki.com';
 this.authContent = 'Logout';
 this.authLink = 'https://steam.madjoki.com/login';
-this.withValue = false;
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
 this.settings.mj_black = { type: 'checkbox', trans: this.transPath('mj_black'), default: this.getConfig('mj_black', true) };
 this.settings.add_game = { type: 'checkbox', trans: this.transPath('add_game'), default: this.getConfig('add_game', true) };
 this.settings.auto_mj_black = { type: 'checkbox', trans: this.transPath('auto_mj_black'), default: this.getConfig('auto_mj_black', true) };
-this.settings.add_dlc = { type: 'checkbox', trans: this.transPath('add_dlc'), default: this.getConfig('add_dlc', true) };
-this.settings.add_tool = { type: 'checkbox', trans: this.transPath('add_tool'), default: this.getConfig('add_tool', false) };
 this.settings.add_app = { type: 'checkbox', trans: this.transPath('add_app'), default: this.getConfig('add_app', false) };
 this.settings.add_media = { type: 'checkbox', trans: this.transPath('add_media'), default: this.getConfig('add_media', false) };
+this.settings.add_dlc = { type: 'checkbox', trans: this.transPath('add_dlc'), default: this.getConfig('add_dlc', true) };
+this.settings.add_music = { type: 'checkbox', trans: this.transPath('add_music'), default: this.getConfig('add_music', false) };
 this.settings.add_demo = { type: 'checkbox', trans: this.transPath('add_demo'), default: this.getConfig('add_demo', false) };
+this.settings.add_video = { type: 'checkbox', trans: this.transPath('add_video'), default: this.getConfig('add_video', false) };
+this.settings.add_tool = { type: 'checkbox', trans: this.transPath('add_tool'), default: this.getConfig('add_tool', false) };
+this.settings.add_series = { type: 'checkbox', trans: this.transPath('add_series'), default: this.getConfig('add_series', false) };
+this.settings.add_pack = { type: 'checkbox', trans: this.transPath('add_pack'), default: this.getConfig('add_pack', false) };
 delete this.settings.interval_from;
 delete this.settings.interval_to;
-delete this.settings.pages;
 delete this.settings.sound;
 super.init();
 }
@@ -33,9 +35,9 @@ joinService() {
 let _this = this;
 let mjtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
 _this.stimer = mjtimer;
-let page = 0;
+let page = 1;
 _this.dcheck = 0;
-_this.pagemax = 5;
+_this.pagemax = _this.getConfig('pages', 1);
 if (fs.existsSync(dirdata + 'mj_blacklist.txt')) {
 let mjdata = fs.readFileSync(dirdata + 'mj_blacklist.txt');
 if (mjdata.length > 1) {
@@ -56,14 +58,9 @@ this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback) {
 let _this = this;
-let CSRF = '',
-mjname = '',
-mjpage = Math.pow(2, page);
-if (mjpage === 0) {
-mjpage = 1;
-}
+let CSRF = '';
 $.ajax({
-url: _this.url + 'apps/free?type=' + mjpage,
+url: _this.url + 'apps/free?page=' + page + '&desc=0',
 success: function (html) {
 html = $('<div>' + html.replace(/<img/gi, '<noload') + '</div>');
 CSRF = html.find('meta[name="_token"]').attr('content');
@@ -74,40 +71,32 @@ _this.log('CSRF token not found', 'err');
 _this.stopJoiner(true);
 return;
 }
-let mjcurr = 0;
-switch (page) {
-case 0:
-if (_this.getConfig('add_game', true)) {
-mjname = 'Game';
+let mjcurr = 0,
+mjcrr = 0,
+mjarray = Array.from(Array(mjfound.length).keys());
+function giveawayEnter() {
+if (_this.dcheck >= 50 || mjfound.length < 50) {
+_this.pagemax = page;
 }
-break;
-case 1:
-if (_this.getConfig('add_app', false)) {
-mjname = 'App';
+if (mjarray.length <= mjcurr || _this.dcheck >= 50 || !_this.started) {
+if (_this.getConfig('log', true)) {
+if (_this.dcheck >= 50) {
+_this.log('Steam limit - 50', 'skip');
 }
-break;
-case 2:
-if (_this.getConfig('add_tool', false)) {
-mjname = 'Tool';
+if (page === _this.pagemax) {
+if (mjarray.length <= mjcurr) {
+_this.log(Lang.get('service.reach_end'), 'skip');
 }
-break;
-case 3:
-if (_this.getConfig('add_demo', false)) {
-mjname = 'Demo';
+_this.log(Lang.get('service.checked') + page + '#-' + _this.getConfig('pages', 1) + '#', 'srch');
+setTimeout(function () {
+fs.writeFile(dirdata + 'mj_blacklist.txt', _this.dload, (err) => { });
+}, 5000);
 }
-break;
-case 4:
-if (_this.getConfig('add_media', false)) {
-mjname = 'Media';
+else {
+_this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
-break;
-case 5:
-if (_this.getConfig('add_dlc', true)) {
-mjname = 'DLC';
 }
-break;
-}
-if (page === 0) {
+if (page === _this.pagemax) {
 if (
 (!mjtime.includes('minute')) &&
 (!mjtime.includes('second')) &&
@@ -127,27 +116,11 @@ success : function (upd) {
 if (upd.message !== undefined) {
 _this.log(Lang.get('service.hided').split(' ')[0] + ' ' + upd.message, 'info');
 }
-}
+}, error: () => {}
 });
 }
-}
-function giveawayEnter() {
-if (mjname === '') {
-mjcurr = 100;
-}
-if (_this.dcheck >= 50) {
-page = _this.pagemax;
-}
-if (mjfound.length <= mjcurr || _this.dcheck >= 50 || !_this.started) {
-if (_this.getConfig('log', true)) {
-if (_this.dcheck >= 50) {
-_this.log('Steam limit - 50', 'skip');
-}
-if (page === _this.pagemax) {
-_this.log(Lang.get('service.checked') + 'All Free Packages', 'srch');
-setTimeout(function () {
-fs.writeFile(dirdata + 'mj_blacklist.txt', _this.dload, (err) => { });
-}, 6000);
+if (_this.started) {
+_this.setStatus('good');
 }
 }
 if (callback) {
@@ -155,16 +128,18 @@ callback();
 }
 return;
 }
-let mjnext = 3000,
-card = mjfound.eq(mjcurr),
+let mjnext = 2000,
+mjcrr = mjarray[mjcurr],
+card = mjfound.eq(mjcrr),
 name = card.find('td:nth-of-type(6) > a').text(),
 mjsteam = card.find('td:nth-of-type(6) > a').attr('href'),
 mjsubid = card.find('td:nth-of-type(3)').text().trim(),
+mjname = card.find('td:nth-of-type(4)').text().trim(),
 mjown = 0,
 mjapp = 0,
 mjsub = 0,
 mjbun = 0,
-mjid = '???';
+mjid = '';
 if (mjsteam.includes('app/')) {
 mjapp = parseInt(mjsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
 mjid = 'app/' + mjapp;
@@ -194,13 +169,45 @@ mjown = 1;
 if (GJuser.black.includes(mjid + ',') && _this.getConfig('blacklist_on', false)) {
 mjown = 3;
 }
-if (GJuser.steam === '' || GJuser.steam === undefined) {
+if (mjname === 'Game' && !_this.getConfig('add_game', false)) {
 mjown = 5;
+}
+if (mjname === 'DLC' && !_this.getConfig('add_dlc', false)) {
+mjown = 5;
+}
+if (mjname === 'Demo' && !_this.getConfig('add_demo', false)) {
+mjown = 5;
+}
+if (mjname === 'Application' && !_this.getConfig('add_app', false)) {
+mjown = 5;
+}
+if (mjname === 'Tool' && !_this.getConfig('add_tool', false)) {
+mjown = 5;
+}
+if (mjname === 'Media' && !_this.getConfig('add_media', false)) {
+mjown = 5;
+}
+if (mjname === 'Music' && !_this.getConfig('add_music', false)) {
+mjown = 5;
+}
+if (mjname === 'Video' && !_this.getConfig('add_video', false)) {
+mjown = 5;
+}
+if (mjname === 'Series' && !_this.getConfig('add_series', false)) {
+mjown = 5;
+}
+if (mjname === 'Package' && !_this.getConfig('add_pack', false)) {
+mjown = 5;
+}
+if (GJuser.steam === '' || GJuser.steam === undefined) {
+_this.pagemax = page;
+mjcurr = 1000;
+mjown = 6;
 }
 let mjlog = _this.logLink(mjsteam, name);
 if (_this.getConfig('log', true)) {
-mjlog = '|' + mjname + '#|' + (mjcurr + 1) + '№|' + mjsubid + '|  ' + mjlog;
-_this.log(Lang.get('service.checking') + mjlog, 'chk');
+mjlog = '|' + page + '#|' + (mjcrr + 1) + '№|' + mjsubid + '|' + mjname + '|  ' + mjlog;
+_this.log(Lang.get('service.checking') + mjlog + _this.logBlack(mjid), 'chk');
 switch (mjown) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
@@ -212,14 +219,18 @@ case 3:
 _this.log(Lang.get('service.blacklisted'), 'black');
 break;
 case 4:
-_this.log(Lang.get('service.blacklisted') + ' Madjoki', 'skip');
+_this.log(Lang.get('service.blacklisted') + ' Madjoki', 'black');
 break;
 case 5:
+_this.log(Lang.get('service.skipped'), 'skip');
+break;
+case 6:
 _this.log('Steam g_session data error', 'err');
-_this.pagemax = page;
-mjcurr = 1000;
 break;
 }
+}
+else {
+mjlog = mjlog + mjid;
 }
 if (mjown === 0) {
 $.ajax({
@@ -242,21 +253,42 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.cant_join'), 'cant');
 }
 }
-else if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
-}
-},
-error: function () {
+else {
+if (mjarray.filter(i => i === mjcrr).length === 1) {
+mjarray.push(mjcrr);
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
 }
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
+}
+},
+error: function () {
+mjnext = 59000;
+if (mjarray.filter(i => i === mjcrr).length === 1) {
+mjarray.push(mjcrr);
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
+}
 });
+}
+else {
+mjnext = 100;
 }
 mjcurr++;
 setTimeout(giveawayEnter, mjnext);
 }
 giveawayEnter();
+},
+error: function () {
+return;
 }
 });
 }

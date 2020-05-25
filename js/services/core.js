@@ -11,7 +11,7 @@ this.usrUpdTimer = 60;
 this.started = false;
 this.waitAuth = false;
 this.cookies = '';
-this.withValue = true;
+this.withValue = false;
 this.curr_value = 0;
 this.tries = 0;
 this.dsave = ',';
@@ -251,6 +251,7 @@ if (this.totalTicks % this.doTimer() === 0) {
 this.totalTicks = 1;
 if(
 (this.constructor.name === 'Astats') ||
+(this.constructor.name === 'Madjoki') ||
 (this.constructor.name === 'ZP') ||
 (this.withValue)
 )
@@ -274,7 +275,7 @@ GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replac
 fs.writeFile(dirdata + 'steam_app.txt', GJuser.ownapps, (err) => { });
 fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
 }
-},error: () => {}
+}, error: () => {}
 });
 }
 if (fs.existsSync(dirdata + 'blacklist.txt')) {
@@ -289,7 +290,7 @@ GJuser.black = GJuser.black + ',';
 }
 this.authCheck((authState) => {
 if (authState === 1) {
-this.setStatus('good');
+this.setStatus('work');
 this.tries = 0;
 this.updateUserInfo();
 if (this.getConfig('log_autoclear', false)) {

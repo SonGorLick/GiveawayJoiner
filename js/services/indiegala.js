@@ -6,6 +6,7 @@ this.domain = 'indiegala.com';
 this.authContent = 'Your account';
 this.websiteUrl = 'https://www.indiegala.com/library';
 this.authLink = 'https://www.indiegala.com/login';
+this.withValue = true;
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
 this.settings.ending = { type: 'number', trans: this.transPath('ending'), min: 0, max: 720, default: this.getConfig('ending', 0) };
@@ -75,7 +76,7 @@ success: function (iglevel) {
 if (iglevel.current_level !== undefined) {
 GJuser.iglvl = iglevel.current_level;
 }
-},error: () => {}
+}, error: () => {}
 });
 }
 if (_this.dload === 0) {
@@ -156,7 +157,7 @@ else {
 _this.dload = 3;
 _this.log(Lang.get('service.hided').split(' ')[0] + ' Completed to check - This list is actually empty', 'info');
 }
-}
+}, error: () => {}
 });
 }
 else {
@@ -260,6 +261,9 @@ _this.sort = true;
 _this.lvl = _this.lvlmax + 1;
 _this.sort_after = false;
 }
+}
+if (_this.dcheck !== 0 && !_this.sort && _this.started) {
+_this.setStatus('good');
 }
 if (callback) {
 callback();
@@ -489,10 +493,13 @@ igcurr++;
 }
 }
 else {
+if (response.status !== undefined) {
+_this.log(response.status, 'err');
+}
 ignext = (Math.floor(Math.random() * 1000)) + 1000;
 }
 })
-.catch((error) => {
+.catch(() => {
 ignext = 29000;
 });
 }
@@ -508,6 +515,9 @@ _this.log(Lang.get('service.err_join'), 'err');
 setTimeout(giveawayEnter, ignext);
 }
 giveawayEnter();
+},
+error: function () {
+return;
 }
 });
 }

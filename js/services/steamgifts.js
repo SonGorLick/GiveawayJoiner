@@ -5,6 +5,7 @@ super();
 this.websiteUrl = 'https://www.steamgifts.com';
 this.authContent = 'Account';
 this.authLink = 'https://www.steamgifts.com/?login';
+this.withValue = true;
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
 this.settings.ending = { type: 'number', trans: this.transPath('ending'), min: 0, max: 2880, default: this.getConfig('ending', 0) };
@@ -261,6 +262,9 @@ _this.totalTicks = 1;
 if (_this.giveaways.length <= sgcurr || !_this.started) {
 if (_this.getConfig('log', true) && sgcurr > 0) {
 _this.log(Lang.get('service.checked') + '1#-' + _this.getConfig('pages', 1) + '#', 'srch');
+}
+if (sgcurr > 0 && _this.started) {
+_this.setStatus('good');
 }
 if (callback) {
 callback(false);
