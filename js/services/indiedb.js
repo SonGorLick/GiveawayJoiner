@@ -105,8 +105,7 @@ responseType: 'document'
 _this.log(Lang.get('service.entered_in') + _this.logLink(link, name), 'enter');
 }
 let adds = '',
-curradds = 0,
-addschk = [];
+curradds = 0;
 if (entered) {
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
