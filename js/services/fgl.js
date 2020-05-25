@@ -62,7 +62,9 @@ _this.dload = 1;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checked') + 'FGL', 'srch');
 }
+if (_this.started) {
 _this.setStatus('good');
+}
 return;
 }
 if (_this.dload > 0) {

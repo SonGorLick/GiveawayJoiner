@@ -19,6 +19,7 @@ this.settings.add_video = { type: 'checkbox', trans: this.transPath('add_video')
 this.settings.add_tool = { type: 'checkbox', trans: this.transPath('add_tool'), default: this.getConfig('add_tool', false) };
 this.settings.add_series = { type: 'checkbox', trans: this.transPath('add_series'), default: this.getConfig('add_series', false) };
 this.settings.add_pack = { type: 'checkbox', trans: this.transPath('add_pack'), default: this.getConfig('add_pack', false) };
+this.settings.add_cfg = { type: 'checkbox', trans: this.transPath('add_cfg'), default: this.getConfig('add_cfg', false) };
 delete this.settings.interval_from;
 delete this.settings.interval_to;
 delete this.settings.sound;
@@ -114,7 +115,7 @@ headers: {
 dataType: 'json',
 success : function (upd) {
 if (upd.message !== undefined) {
-_this.log(Lang.get('service.hided').split(' ')[0] + ' ' + upd.message, 'info');
+_this.log(Lang.get('service.added') + upd.message, 'info');
 }
 }, error: () => {}
 });
@@ -199,6 +200,9 @@ mjown = 5;
 if (mjname === 'Package' && !_this.getConfig('add_pack', false)) {
 mjown = 5;
 }
+if (mjname === 'Config' && !_this.getConfig('add_cfg', false)) {
+mjown = 5;
+}
 if (GJuser.steam === '' || GJuser.steam === undefined) {
 _this.pagemax = page;
 mjcurr = 1000;
@@ -243,7 +247,7 @@ headers: {
 success: function (rp) {
 _this.dcheck++;
 if (rp.indexOf('add_free_content_success_area') >= 0) {
-_this.log(Lang.get('service.done') + mjlog, 'enter');
+_this.log(Lang.get('service.added') + mjlog, 'enter');
 }
 else if (rp.indexOf('error_box') >= 0) {
 if (_this.getConfig('auto_mj_black', true)) {

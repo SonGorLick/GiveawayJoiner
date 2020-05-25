@@ -64,7 +64,9 @@ _this.dload = 1;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checked') + 'LootBoy', 'srch');
 }
+if (_this.started) {
 _this.setStatus('good');
+}
 return;
 }
 if (_this.dload > 0) {
@@ -139,10 +141,10 @@ _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Coin
 }
 if (coin.newLootcoinBalance - stat.lootcoinBalance > 0) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.done') + Lang.get('service.coins') + '- ' + (coin.newLootcoinBalance - stat.lootcoinBalance), 'enter');
+_this.log(Lang.get('service.received') + Lang.get('service.coins') + '- ' + (coin.newLootcoinBalance - stat.lootcoinBalance), 'enter');
 }
 else {
-_this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.done') + Lang.get('service.coins') + '- ' + (coin.newLootcoinBalance - stat.lootcoinBalance), 'enter');
+_this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.received') + Lang.get('service.coins') + '- ' + (coin.newLootcoinBalance - stat.lootcoinBalance), 'enter');
 }
 }
 else {
@@ -222,7 +224,7 @@ _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Comics #' 
 }
 if (comread.gotBonus) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.done') + Lang.get('service.coins') + '- ' + comread.lootcoinBonus, 'enter');
+_this.log(Lang.get('service.received') + Lang.get('service.coins') + '- ' + comread.lootcoinBonus, 'enter');
 }
 else {
 _this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.coins') + '- ' + comread.lootcoinBonus, 'enter');
@@ -306,10 +308,10 @@ _this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.descr
 }
 if (!gem.alreadyTaken) {
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.done') + Lang.get('service.gems') + '- ' + offer.diamondBonus, 'enter');
+_this.log(Lang.get('service.received') + Lang.get('service.gems') + '- ' + offer.diamondBonus, 'enter');
 }
 else {
-_this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.done') + Lang.get('service.gems') + '- ' + offer.diamondBonus, 'enter');
+_this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.received') + Lang.get('service.gems') + '- ' + offer.diamondBonus, 'enter');
 }
 }
 else {

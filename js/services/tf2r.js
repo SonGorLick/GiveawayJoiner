@@ -91,7 +91,9 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 _this.log(Lang.get('service.checked') + 'Public Raffles', 'srch');
 }
+if (_this.started) {
 _this.setStatus('good');
+}
 return;
 }
 let tfnext = _this.interval(),

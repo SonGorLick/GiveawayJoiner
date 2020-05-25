@@ -161,9 +161,6 @@ setActive() {
 $('.service-icon, .service-panel').removeClass('active');
 this.icon.addClass('active');
 this.panel.addClass('active');
-if (this.statusIcon.attr('data-status') === 'win') {
-this.setStatus('good');
-}
 }
 authCheck(callback) {
 let authContent = this.authContent;

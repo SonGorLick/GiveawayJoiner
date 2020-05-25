@@ -63,7 +63,9 @@ _this.dload = 1;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checked') + 'ChronoGG', 'srch');
 }
+if (_this.started) {
 _this.setStatus('good');
+}
 return;
 }
 if (_this.dload > 0) {
@@ -126,10 +128,10 @@ if (chchest.base) {
 chcoins = chcoins + chchest.base + chchest.bonus;
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.done') + Lang.get('service.coins') + '- ' + chcoins, 'enter');
+_this.log(Lang.get('service.received') + Lang.get('service.coins') + '- ' + chcoins, 'enter');
 }
 else {
-_this.log(Lang.get('service.acc') + acc.email + ': ' + Lang.get('service.done') + Lang.get('service.coins') + '- ' + chcoins, 'enter');
+_this.log(Lang.get('service.acc') + acc.email + ': ' + Lang.get('service.received') + Lang.get('service.coins') + '- ' + chcoins, 'enter');
 }
 })
 .catch((error) => {

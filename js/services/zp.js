@@ -96,7 +96,9 @@ _this.log(Lang.get('service.reach_end'), 'skip');
 }
 _this.log(Lang.get('service.checked') + 'Giveaways', 'srch');
 }
+if (_this.started) {
 _this.setStatus('good');
+}
 return;
 }
 let zpnext = _this.interval(),

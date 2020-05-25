@@ -53,7 +53,8 @@ let _this = this;
 let igtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
 _this.stimer = igtimer;
 let page = 1;
-_this.igprtry = 0;
+_this.igpage = 0;
+_this.igpretry = 0;
 _this.dcheck = 0;
 if (_this.dload === ',') {
 _this.dload = 0;
@@ -141,7 +142,7 @@ igchecked = ' [By one]';
 .finally(() => {
 ic++;
 if (ic >= igchck.length) {
-_this.log(Lang.get('service.hided').split(' ')[0] + ' Completed to check - ' + (iw + il) + igchecked, 'info');
+_this.log(Lang.get('service.done') + 'Completed to check - ' + (iw + il) + igchecked, 'info');
 if (iw > 0) {
 _this.log(_this.logLink(_this.url + '/library', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (iw) + ')'), 'win');
 _this.setStatus('win');
@@ -155,7 +156,7 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }
 else {
 _this.dload = 3;
-_this.log(Lang.get('service.hided').split(' ')[0] + ' Completed to check - This list is actually empty', 'info');
+_this.log(Lang.get('service.done') + 'Completed to check - This list is actually empty', 'info');
 }
 }, error: () => {}
 });
@@ -199,22 +200,39 @@ let _this = this;
 if (!_this.sort && GJuser.iglvl > 0) {
 _this.lvl = 'all';
 }
-if (_this.igprtry > 0) {
-page = _this.igprtry;
+if (_this.igpage > 0) {
+page = _this.igpage;
 }
 let tickets = '';
 $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
 success: function (data) {
 if (data.indexOf('Incapsula_Resource') >= 0) {
-_this.igprtry = page;
+if (_this.igpretry < 3) {
+_this.igpage = page;
+_this.igpretry++;
+}
+else {
+_this.igpage = 0;
+_this.igpretry = 0;
+_this.pagemax = page;
+}
 }
 else if (JSON.parse(data).status === 'server_error') {
-_this.igprtry = page;
+if (_this.igpretry < 3) {
+_this.igpage = page;
+_this.igpretry++;
+}
+else {
+_this.igpage = 0;
+_this.igpretry = 0;
+_this.pagemax = page;
+}
 }
 else {
 tickets = $(JSON.parse(data).content).find('.tickets-col');
-_this.igprtry = 0;
+_this.igpage = 0;
+_this.igpretry = 0;
 }
 let igcurr = 0,
 igrtry = 0,
@@ -227,14 +245,17 @@ function giveawayEnter() {
 if (_this.doTimer() - _this.totalTicks < 240) {
 _this.totalTicks = 1;
 }
-if (tickets.length < 12 && _this.igprtry === 0 || _this.curr_value === 0 || !_this.started) {
+if (tickets.length < 20 && _this.igpage === 0 || _this.curr_value === 0 || !_this.started) {
 _this.pagemax = page;
+if (tickets.length > 0) {
+_this.dcheck = 1;
 }
-if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igprtry > 0) {
+}
+if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igpage > 0) {
 if (!_this.started) {
 _this.dload = 0;
 }
-if (_this.igprtry === 0) {
+if (_this.igpage === 0) {
 if (_this.getConfig('log', true)) {
 if (_this.curr_value === 0 && _this.dcheck === 0) {
 _this.log(Lang.get('service.value_label') + ' - 0', 'skip');
@@ -262,7 +283,7 @@ _this.lvl = _this.lvlmax + 1;
 _this.sort_after = false;
 }
 }
-if (_this.dcheck !== 0 && !_this.sort && _this.started) {
+if (page === _this.pagemax && _this.started) {
 _this.setStatus('good');
 }
 if (callback) {
