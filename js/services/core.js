@@ -234,6 +234,7 @@ this.log(Lang.get('service.stopped'));
 this.buttonState(Lang.get('service.btn_start'));
 }
 runTimer() {
+this.updateCookies();
 this.totalTicks = 0;
 this.started = true;
 this.stimer = 1440;
