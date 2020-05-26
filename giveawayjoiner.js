@@ -3,8 +3,8 @@ const { app, nativeImage, shell, session, Tray, BrowserWindow, Menu, ipcMain, ip
 const storage = require('electron-json-storage');
 const fs = require('fs');
 const rq = require('axios').default;
-const devMode = false;
-let _ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36';
+let devMode = false;
+let _ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36';
 let appLoaded = false;
 let mainWindow = null;
 let Browser = null;
@@ -45,6 +45,9 @@ fs.writeFile(storage.getDataPath() + '/user-agent.txt', _ua, (err) => { });
 }
 if (!fs.existsSync(storage.getDataPath() + '/blacklist.txt')) {
 fs.writeFile(storage.getDataPath() + '/blacklist.txt', 'app/0,sub/0,bundle/0,', (err) => { });
+}
+if (fs.existsSync(storage.getDataPath() + '/devmode')) {
+devMode = true;
 }
 ipcMain.on('save-user', function (event, data) {
 user = data;

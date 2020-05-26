@@ -48,9 +48,9 @@ _this.url = 'https://www.zeepond.com';
 if ((new Date()).getDate() !== _this.dcheck) {
 $.ajax({
 url: _this.url + '/my-account/my-prizes',
-success: function (data) {
-data = $(data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
-let zpwon = data.find('.form-group');
+success: function (win) {
+win = $(win.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
+let zpwon = win.find('.form-group');
 _this.dcheck = (new Date()).getDate();
 if (zpwon === undefined) {
 zpwon = 0;
@@ -72,10 +72,14 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }, error: () => {}
 });
 }
+let data = '';
 $.ajax({
 url: _this.url + '/zeepond/giveaways/enter-a-competition',
-success: function (data) {
-data = data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
+success: function (datas) {
+datas = datas.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
+data = datas;
+},
+complete: function () {
 let comp = $(data).find('.bv-item-wrapper'),
 zpcurr = 0,
 zpcrr = 0,
@@ -298,8 +302,8 @@ let tmout = Math.floor(zpnext / 4) + 2000;
 setTimeout(function () {
 $.ajax({
 url: zplink + '/enter_competition',
-success: function (data) {
-data = $(data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
+success: function (body) {
+body = $(body.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
 let zpdtnew = new Date();
 zpdtnew.setDate(zpdtnew.getUTCDate());
 zpdtnew.setHours(zpdtnew.getUTCHours() + 10 + _this.month);
@@ -350,9 +354,6 @@ zpcurr++;
 setTimeout(giveawayEnter, zpnext);
 }
 giveawayEnter();
-},
-error: function () {
-return;
 }
 });
 }

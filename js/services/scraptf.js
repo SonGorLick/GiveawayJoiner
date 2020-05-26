@@ -4,7 +4,7 @@ constructor() {
 super();
 this.domain = 'scrap.tf';
 this.websiteUrl = 'https://scrap.tf';
-this.authContent = '';
+this.authContent = 'My Auctions';
 this.authLink = 'https://scrap.tf/login';
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
@@ -104,6 +104,7 @@ spdest = 'empty';
 sptype = 'POST';
 sprtype = 'json';
 }
+let data = '';
 rq({
 method: sptype,
 url: spurl,
@@ -122,9 +123,15 @@ responseType: sprtype,
 data: spdata,
 })
 .then((datas) => {
-let data = datas.data;
 if (page === 1) {
-data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
+data = datas.data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
+}
+else {
+data = datas.data;
+}
+})
+.finally(() => {
+if (page === 1) {
 _this.csrf = data.substring(data.indexOf("ScrapTF.User.Hash =")+21,data.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 let spwon = $(data).find('.nav-notice a').text().trim();
 if (spwon.length > 0 && spwon.includes("You've won")) {
@@ -241,8 +248,8 @@ headers: {
 },
 responseType: 'document'
 })
-.then((raffles) => {
-let raff = raffles.data;
+.then((raffs) => {
+let raff = raffs.data;
 raff = raff.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 let enter = raff.indexOf('>Enter Raffle<') >= 0,
 entered = raff.indexOf('>Leave Raffle<') >= 0,
@@ -267,8 +274,8 @@ headers: {
 },
 data: 'raffle=' + spid + '&captcha=&hash=' + hash + '&flag=false&csrf=' + _this.csrf,
 })
-.then((raffle) => {
-let resp = raffle.data,
+.then((resps) => {
+let resp = resps.data,
 spmess = JSON.stringify(resp.message);
 if (spmess === '"Entered raffle!"') {
 _this.log(Lang.get('service.entered_in') + splog, 'enter');
@@ -332,9 +339,6 @@ spcurr++;
 setTimeout(giveawayEnter, spnext);
 }
 giveawayEnter();
-})
-.catch(() => {
-return;
 });
 }
 }

@@ -58,14 +58,18 @@ this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback) {
 let _this = this;
-let oppage = '?&Giveaway_page=' + page;
+let oppage = '?&Giveaway_page=' + page,
+data = '';
 if (page === 1) {
 oppage = '';
 }
 $.ajax({
 url: _this.url + '/giveaways' + oppage,
-success: function (data) {
-data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
+success: function (datas) {
+datas = datas.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
+data = datas;
+},
+complete: function () {
 let opfound = $(data).find('.giveaways-page-item');
 if (data.indexOf('li class="next"') < 0) {
 _this.pagemax = page;
@@ -102,9 +106,9 @@ if (opfound.length <= opcurr && page === _this.pagemax) {
 let arpage = Math.floor(Math.random() * 9) + 1;
 $.ajax({
 url: _this.url + '/arcade/index?ArcadeGame_page=' + arpage,
-success: function (data) {
-data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
-let arfound = data.find('.arcade-item-img-btn-wrapper'),
+success: function (arc) {
+arc = $(arc.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
+let arfound = arc.find('.arcade-item-img-btn-wrapper'),
 arlnk = arfound.eq(Math.floor(Math.random() * 28)).find('a').attr('href');
 if (arlnk !== undefined) {
 $.ajax({
@@ -252,13 +256,13 @@ opnext = 100;
 else {
 $.ajax({
 url: _this.url + link,
-success: function (data) {
-data = $(data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
-let opsteam = data.find('.giveaways-single-sponsored h1 a').attr('href');
+success: function (html) {
+html = $(html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
+let opsteam = html.find('.giveaways-single-sponsored h1 a').attr('href');
 if (opsteam === undefined) {
-opsteam = data.find('.giveaways-single-sponsored h4 a').attr('href');
+opsteam = html.find('.giveaways-single-sponsored h4 a').attr('href');
 }
-let openter = data.find('.giveaways-single-promo-content-info-points p').text();
+let openter = html.find('.giveaways-single-promo-content-info-points p').text();
 let opown = 0,
 opapp = 0,
 opsub = 0,
@@ -424,9 +428,6 @@ opcurr++;
 setTimeout(giveawayEnter, opnext);
 }
 giveawayEnter();
-},
-error: function () {
-return;
 }
 });
 }

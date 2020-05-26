@@ -40,9 +40,9 @@ _this.won = _this.getConfig('won', 0);
 if ((new Date()).getDate() !== _this.dcheck) {
 $.ajax({
 url: _this.url + '/notifications.html',
-success: function (html) {
-html = html.replace(/<img/gi, '<noload');
-let tfprizes = $(html).find('#content .indent .notif'),
+success: function (win) {
+win = win.replace(/<img/gi, '<noload');
+let tfprizes = $(win).find('#content .indent .notif'),
 tfprize = '',
 tfwon = 0;
 _this.dcheck = (new Date()).getDate();
@@ -69,10 +69,14 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }, error: () => {}
 });
 }
+let data = '';
 $.ajax({
 url: _this.url + '/raffles.html',
-success: function (data) {
-data = data.replace(/<img/gi, '<noload');
+success: function (datas) {
+datas = datas.replace(/<img/gi, '<noload');
+data = datas;
+},
+complete: function () {
 let giveaways = $(data).find('.pubrhead-text-right'),
 tfcurr = 0,
 tfcrr = 0,
@@ -113,9 +117,9 @@ _this.log(Lang.get('service.checking') + tflog, 'chk');
 if (!_this.dload.includes(rid + ',') || _this.getConfig('check_all', false)) {
 $.ajax({
 url: link,
-success: function (data) {
-data = data.replace(/<img/gi, '<noload');
-let html = $('<div>' + data + '</div>'),
+success: function (htmls) {
+htmls = htmls.replace(/<img/gi, '<noload');
+let html = $('<div>' + htmls + '</div>'),
 entered = html.find('#enbut').length === 0;
 if (!entered) {
 let tmout = Math.floor(tfnext / 2);
@@ -199,9 +203,6 @@ tfcurr++;
 setTimeout(giveawayEnter, tfnext);
 }
 giveawayEnter();
-},
-error: function () {
-return;
 }
 });
 }

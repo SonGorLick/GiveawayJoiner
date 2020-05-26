@@ -31,9 +31,9 @@ _this.pagemax = _this.getConfig('pages', 1);
 _this.dsave = ',';
 _this.dload = ',';
 if (fs.existsSync(dirdata + 'astats.txt')) {
-let asdata = fs.readFileSync(dirdata + 'astats.txt');
-if (asdata.length > 1) {
-_this.dload = asdata.toString();
+let adata = fs.readFileSync(dirdata + 'astats.txt');
+if (adata.length > 1) {
+_this.dload = adata.toString();
 }
 }
 if (_this.dload === ',') {
@@ -44,9 +44,9 @@ url: _this.url + '/astats/TopListGames.php?language=english'
 if ((new Date()).getDate() !== _this.dcheck) {
 $.ajax({
 url: _this.url + '/astats/profile/User_Inbox.php',
-success: function (data) {
-data = $(data.replace(/<img/gi, '<noload'));
-let aswon = data.find('td:nth-of-type(4) > a').text('Congratulations you are a giveaway winner!');
+success: function (win) {
+win = $(win.replace(/<img/gi, '<noload'));
+let aswon = win.find('td:nth-of-type(4) > a').text('Congratulations you are a giveaway winner!');
 _this.dcheck = (new Date()).getDate();
 if (aswon === undefined) {
 aswon = 0;
@@ -85,10 +85,14 @@ _this.pageurl = '/astats/TopListGames.php?&DisplayType=Giveaway';
 else {
 _this.pageurl = '/astats/TopListGames.php?&DisplayType=Giveaway&Offset=' + affset + '#';
 }
+let data = '';
 $.ajax({
 url: _this.url + _this.pageurl,
-success: function (data) {
-data = $(data.replace(/<img/gi, '<noload'));
+success: function (datas) {
+datas = $(datas.replace(/<img/gi, '<noload'));
+data = datas;
+},
+complete: function () {
 let afound = data.find('[style="text-align:right;"]'),
 acurr = 0,
 acrr = 0,
@@ -296,9 +300,6 @@ acurr++;
 setTimeout(giveawayEnter, asnext);
 }
 giveawayEnter();
-},
-error: function () {
-return;
 }
 });
 }

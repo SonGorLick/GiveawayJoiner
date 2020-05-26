@@ -4,7 +4,7 @@ constructor() {
 super();
 this.domain = 'indiedb.com';
 this.websiteUrl = 'https://www.indiedb.com';
-this.authContent = '';
+this.authContent = 'View your profile';
 this.authLink = 'https://www.indiedb.com/members/login';
 delete this.settings.pages;
 delete this.settings.interval_from;
@@ -17,7 +17,7 @@ authCheck(callback) {
 let call = -1;
 rq({
 method: 'GET',
-url: 'https://www.indiedb.com',
+url: 'https://www.indiedb.com/',
 headers: {
 'authority': 'www.indiedb.com',
 'user-agent': this.ua,
@@ -70,6 +70,7 @@ _this.dload = {
 'sec-fetch-dest': 'document',
 'cookie': _this.cookies
 };
+let data = '';
 rq({
 method: 'GET',
 url: _this.url + '/giveaways',
@@ -77,8 +78,7 @@ headers: _this.dload,
 responseType: 'document'
 })
 .then((datas) => {
-let data = datas.data;
-data = data.replace(/<img/gi, '<noload');
+data = datas.data.replace(/<img/gi, '<noload');
 let cont = $(data).find('#articlecontent'),
 link = cont.find('h2 a').attr('href'),
 name = cont.find('h2 a').text(),
@@ -111,9 +111,6 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
 }
 adds = cont.find('#giveawaysjoined > div p');
-for (let i = 0; i < adds.length; i++) {
-addschk[i] = i;
-}
 }
 function giveawayEnter() {
 if (adds.length <= curradds || !_this.started) {
@@ -124,10 +121,10 @@ url: _this.url + '/giveaways/prizes',
 headers: _this.dload,
 responseType: 'document'
 })
-.then((htmls) => {
-let html = htmls.data;
-html = html.replace(/<img/gi, '<noload');
-let prizes = $(html).find('.body.clear .table .row.rowcontent span.subheading:nth-of-type(2)'),
+.then((wins) => {
+let win = wins.data;
+win = win.replace(/<img/gi, '<noload');
+let prizes = $(win).find('.body.clear .table .row.rowcontent span.subheading:nth-of-type(2)'),
 idbprize = '',
 idbwon = 0;
 _this.dcheck = (new Date()).getDate();
@@ -211,9 +208,6 @@ curradds++;
 setTimeout(giveawayEnter, idbnext);
 }
 giveawayEnter();
-})
-.catch(() => {
-return;
 });
 }
 }

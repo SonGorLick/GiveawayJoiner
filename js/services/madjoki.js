@@ -59,17 +59,20 @@ this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback) {
 let _this = this;
-let CSRF = '';
+let CSRF = '',
+html = '';
 $.ajax({
 url: _this.url + 'apps/free?page=' + page + '&desc=0',
-success: function (html) {
-html = $('<div>' + html.replace(/<img/gi, '<noload') + '</div>');
+success: function (htmls) {
+htmls = $('<div>' + htmls.replace(/<img/gi, '<noload') + '</div>');
+html = htmls;
+},
+complete: function () {
 CSRF = html.find('meta[name="_token"]').attr('content');
 let mjfound = html.find('tbody tr'),
 mjtime = html.find('.alert-info.alert > time').text();
 if (CSRF.length < 10) {
 _this.log('CSRF token not found', 'err');
-_this.stopJoiner(true);
 return;
 }
 let mjcurr = 0,
@@ -115,7 +118,7 @@ headers: {
 dataType: 'json',
 success : function (upd) {
 if (upd.message !== undefined) {
-_this.log(Lang.get('service.added') + upd.message, 'info');
+_this.log(Lang.get('service.done') + upd.message, 'info');
 }
 }, error: () => {}
 });
@@ -129,7 +132,7 @@ callback();
 }
 return;
 }
-let mjnext = 2000,
+let mjnext = 4000,
 mjcrr = mjarray[mjcurr],
 card = mjfound.eq(mjcrr),
 name = card.find('td:nth-of-type(6) > a').text(),
@@ -290,9 +293,6 @@ mjcurr++;
 setTimeout(giveawayEnter, mjnext);
 }
 giveawayEnter();
-},
-error: function () {
-return;
 }
 });
 }

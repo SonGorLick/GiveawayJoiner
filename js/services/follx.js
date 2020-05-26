@@ -43,15 +43,18 @@ this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback) {
 let _this = this;
-let CSRF = '';
+let CSRF = '',
+data = '';
 $.ajax({
 url: _this.url + '/giveaways?page=' + page,
-success: function (html) {
-html = $('<div>' + html.replace(/<img/gi, '<noload') + '</div>');
-CSRF = html.find('meta[name="csrf-token"]').attr('content');
+success: function (datas) {
+datas = $('<div>' + datas.replace(/<img/gi, '<noload') + '</div>');
+data = datas;
+},
+complete: function () {
+CSRF = data.find('meta[name="csrf-token"]').attr('content');
 if (CSRF.length < 10) {
-_this.log('token error', 'err');
-_this.stopJoiner(true);
+_this.log('CSRF token not found', 'err');
 return;
 }
 if (page === 1) {
@@ -66,7 +69,7 @@ headers: {
 dataType: 'json',
 error: () => {}
 });
-let fxwon = html.find('.hide-on-med-and-down.user-panel.s6.col > .icons > .has.marker.cup').attr('href');
+let fxwon = data.find('.hide-on-med-and-down.user-panel.s6.col > .icons > .has.marker.cup').attr('href');
 if (fxwon !== undefined) {
 _this.log(_this.logLink('https://follx.com/giveaways/won', Lang.get('service.win')), 'win');
 _this.setStatus('win');
@@ -75,7 +78,7 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 }
-let fxfound = html.find('.giveaway_card');
+let fxfound = data.find('.giveaway_card');
 let fxcurr = 0,
 fxcrr = 0,
 fxarray = Array.from(Array(fxfound.length).keys());
@@ -229,9 +232,6 @@ fxcurr++;
 setTimeout(giveawayEnter, fxnext);
 }
 giveawayEnter();
-},
-error: function () {
-return;
 }
 });
 }

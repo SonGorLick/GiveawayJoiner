@@ -203,7 +203,7 @@ _this.lvl = 'all';
 if (_this.igpage > 0) {
 page = _this.igpage;
 }
-let tickets = '';
+let tickets = 'err';
 $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
 success: function (data) {
@@ -233,14 +233,28 @@ else {
 tickets = $(JSON.parse(data).content).find('.tickets-col');
 _this.igpage = 0;
 _this.igpretry = 0;
-}
-let igcurr = 0,
-igrtry = 0,
-Times = 0;
 if (page > 1 && data.indexOf('prev-next palette-background-7') >= 0) {
 _this.pagemax = page;
 _this.dcheck = 1;
 }
+}
+},
+complete: function () {
+if (tickets === 'err') {
+tickets = '';
+if (_this.igpretry < 3) {
+_this.igpage = page;
+_this.igpretry++;
+}
+else {
+_this.igpage = 0;
+_this.igpretry = 0;
+_this.pagemax = page;
+}
+}
+let igcurr = 0,
+igrtry = 0,
+Times = 0;
 function giveawayEnter() {
 if (_this.doTimer() - _this.totalTicks < 240) {
 _this.totalTicks = 1;
@@ -281,6 +295,7 @@ _this.pagemax = _this.getConfig('pages', 1);
 _this.sort = true;
 _this.lvl = _this.lvlmax + 1;
 _this.sort_after = false;
+_this.dcheck = 0;
 }
 }
 if (page === _this.pagemax && _this.started) {
@@ -536,9 +551,6 @@ _this.log(Lang.get('service.err_join'), 'err');
 setTimeout(giveawayEnter, ignext);
 }
 giveawayEnter();
-},
-error: function () {
-return;
 }
 });
 }

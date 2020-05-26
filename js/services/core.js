@@ -191,7 +191,6 @@ this.auto = true;
 this.runTimer();
 }
 else {
-this.auto = false;
 this.buttonState(Lang.get('service.btn_checking'), 'disabled');
 this.authCheck((authState) => {
 if (authState !== 0) {
@@ -253,6 +252,7 @@ clearInterval(this.intervalVar);
 }
 if (this.totalTicks % this.doTimer() === 0) {
 this.totalTicks = 1;
+this.updateCookies();
 if(
 (this.constructor.name === 'Astats') ||
 (this.constructor.name === 'Madjoki') ||
@@ -301,7 +301,6 @@ if (this.getConfig('log_autoclear', false)) {
 this.logField.html('<div></div>');
 }
 this.log(Lang.get('service.connection_good'), 'srch');
-this.updateCookies();
 this.joinService();
 }
 else if (authState === 0) {
