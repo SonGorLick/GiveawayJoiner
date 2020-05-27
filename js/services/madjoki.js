@@ -116,7 +116,7 @@ else if (page !== 0) {
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 }
-if (page === _this.pagemax) {
+if (page >= _this.pagemax) {
 if (
 (!mjtime.includes('minute')) &&
 (!mjtime.includes('second')) &&
