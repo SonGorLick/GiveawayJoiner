@@ -85,7 +85,7 @@ backgroundThrottling: false,
 contextIsolation: false,
 nodeIntegration: true,
 webviewTag: true,
-webSecurity: false,
+webSecurity: false
 }
 });
 if (devMode) {
@@ -111,6 +111,7 @@ devTools: false,
 contextIsolation: false,
 webviewTag: true,
 webSecurity: false,
+enableRemoteModule: true
 }
 });
 Browser.loadFile('blank.html');

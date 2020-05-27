@@ -31,8 +31,6 @@ this.settings.reserve_on_group = { type: 'checkbox', trans: this.transPath('rese
 this.settings.remove_ga = { type: 'checkbox', trans: this.transPath('remove_ga'), default: this.getConfig('remove_ga', true) };
 this.settings.ignore_on_wish = { type: 'checkbox', trans: this.transPath('ignore_on_wish'), default: this.getConfig('ignore_on_wish', false) };
 this.settings.ignore_on_group = { type: 'checkbox', trans: this.transPath('ignore_on_group'), default: this.getConfig('ignore_on_group', false) };
-this.token = '';
-this.giveaways = [];
 super.init();
 }
 getUserInfo(callback) {
@@ -55,62 +53,44 @@ callback(userData);
 });
 }
 joinService() {
-let page = 1;
 let sgtimer = (Math.floor(Math.random() * (this.getConfig('timer_to', 90) - this.getConfig('timer_from', 70))) + this.getConfig('timer_from', 70));
 this.stimer = sgtimer;
-this.dcheck = 0;
-this.won = this.getConfig('won', 0);
+let page = -1;
+this.token = '';
 this.dsave = ',';
 this.giveaways = [];
-this.gawf = [];
-this.gagf = [];
-this.gamf = [];
+this.won = this.getConfig('won', 0);
 this.url = 'https://www.steamgifts.com';
 let processCommon = () => {
 if (!this.started) {
 return;
 }
 if (page <= this.getConfig('pages', 1)) {
-this.wish = false;
-this.group = false;
-this.giveawaysFromUrl(this.url + '/giveaways/search?page=' + page, processCommon);
+this.giveawaysFromUrl(page, processCommon);
 }
 else {
-this.wish = false;
-this.group = false;
 this.giveawaysEnter();
 }
 page++;
 };
-this.wish = true;
-this.group = false;
-this.giveawaysFromUrl(this.url + '/giveaways/search?type=wishlist', () => {
-this.wish = true;
-this.group = false;
-if (!this.getConfig('group_only')) {
-this.giveawaysEnter();
-if (this.getConfig('wishlist_only')) {
-return;
-}
-}
-this.group = true;
-this.wish = false;
-this.giveawaysFromUrl(this.url + '/giveaways/search?type=group', () => {
-this.group = true;
-this.wish = false;
-this.giveawaysEnter();
-if (this.getConfig('group_only')) {
-return;
-}
-this.wish = false;
-this.group = false;
 processCommon();
-});
-});
 }
-giveawaysFromUrl(url, callback) {
+giveawaysFromUrl(page, callback) {
+let sgurl = this.url + '/giveaways/search?',
+sgtype = 'p';
+if (page === -1) {
+sgurl = sgurl + 'type=wishlist';
+sgtype = 'w';
+}
+else if (page === 0) {
+sgurl = sgurl + 'type=group';
+sgtype = 'g';
+}
+else {
+sgurl = sgurl + 'page=' + page;
+}
 $.ajax({
-url: url,
+url: sgurl,
 method: 'GET',
 success: (data) => {
 data = $('<div>' + data.replace(/<img/gi, '<noload') + '</div>');
@@ -120,8 +100,7 @@ this.log(this.trans('token_error'), 'err');
 this.stopJoiner(true);
 return;
 }
-if (this.dcheck === 0) {
-this.dcheck = 1;
+if (page === -1) {
 let sgwon = parseInt(data.find('.nav__button-container--active.nav__button-container--notification.nav__button-container:nth-of-type(2) > .nav__button > .nav__notification').text().trim());
 if (isNaN(sgwon)) {
 sgwon = 0;
@@ -178,16 +157,13 @@ levelPass: sgaway.find('.giveaway__column--contributor-level--negative').length 
 cost: cost,
 sgsteam: sgaway.find('a.giveaway__icon').attr('href'),
 entered: sgaway.find('.giveaway__row-inner-wrap.is-faded').length > 0,
-wish: this.wish,
-group: this.group
+type: sgtype
 };
 if (GA.sgsteam === undefined) {
 GA.sgsteam = '';
 }
 if (
 (!GA.pinned && GA.levelPass) &&
-(!GA.wish || this.getConfig('wishlist_first', false) || this.getConfig('wishlist_only', false)) &&
-(!GA.group || this.getConfig('group_first', false) || this.getConfig('group_only', false)) &&
 (this.getConfig('ending', 0) === 0 || GA.left <= this.getConfig('ending', 0))
 )
 this.giveaways.push(GA);
@@ -203,33 +179,16 @@ callback();
 giveawaysEnter(callback) {
 let _this = this;
 let sgcurr = 0,
-sgprize = 1000;
-if (this.getConfig('sort_by_chance', false) && (this.wish || this.group)) {
-this.giveaways.sort((a, b) => {
-return b.chance - a.chance;
-});
+sgprize = 1000,
+sga = [],
+sgb = [];
+if (!this.getConfig('group_first', false) && !this.getConfig('group_only', false)) {
+sga = this.giveaways.filter(GA => GA.type !== 'g');
+this.giveaways = sga;
 }
-if (this.getConfig('sort_by_level', false) && (this.wish || this.group)) {
-this.giveaways.sort((a, b) => {
-return b.level - a.level;
-});
-}
-if (this.getConfig('sort_by_copies', false) && (this.wish || this.group)) {
-this.giveaways.sort((a, b) => {
-return b.copies - a.copies;
-});
-}
-if (this.getConfig('wishlist_first', false) && !this.getConfig('wishlist_only', false) && this.wish) {
-this.gawf = this.giveaways.filter(GA => GA.wish === true);
-this.giveaways = [];
-}
-if (this.getConfig('group_first', false) && !this.getConfig('group_only', false) && this.group) {
-this.gagf = this.giveaways.filter(GA => GA.group === true);
-this.giveaways = [];
-}
-if (this.getConfig('multiple_first', false)) {
-this.gamf = this.giveaways.filter(GA => GA.copies > 1);
-this.giveaways = this.giveaways.filter(GA => GA.copies === 1);
+if (!this.getConfig('wishlist_first', false) && !this.getConfig('wishlist_only', false)) {
+sga = this.giveaways.filter(GA => GA.type !== 'w');
+this.giveaways = sga;
 }
 if (this.getConfig('sort_by_chance', false)) {
 this.giveaways.sort((a, b) => {
@@ -246,14 +205,33 @@ this.giveaways.sort((a, b) => {
 return b.copies - a.copies;
 });
 }
-if (this.getConfig('group_first', false) && !this.getConfig('group_only', false) && !this.wish && !this.group) {
-this.giveaways.unshift.apply(this.giveaways, this.gagf);
-}
-if (this.getConfig('wishlist_first', false) && !this.getConfig('wishlist_only', false) && !this.wish && !this.group) {
-this.giveaways.unshift.apply(this.giveaways, this.gawf);
-}
 if (this.getConfig('multiple_first', false)) {
-this.giveaways.unshift.apply(this.giveaways, this.gamf);
+sga = this.giveaways.filter(GA => GA.copies > 1);
+sgb = this.giveaways.filter(GA => GA.copies === 1);
+this.giveaways = [].concat(sga, sgb);
+}
+if (this.getConfig('group_first', false)) {
+sga = this.giveaways.filter(GA => GA.type === 'g');
+sgb = this.giveaways.filter(GA => GA.type !== 'g');
+this.giveaways = [].concat(sga, sgb);
+}
+if (this.getConfig('wishlist_first', false)) {
+sga = this.giveaways.filter(GA => GA.type === 'w');
+sgb = this.giveaways.filter(GA => GA.type !== 'w');
+this.giveaways = [].concat(sga, sgb);
+}
+if (this.getConfig('wishlist_only', false) && !this.getConfig('group_only', false)) {
+sga = this.giveaways.filter(GA => GA.type === 'w');
+this.giveaways = sga;
+}
+if (this.getConfig('group_only', false) && !this.getConfig('wishlist_only', false)) {
+sga = this.giveaways.filter(GA => GA.type === 'g');
+this.giveaways = sga;
+}
+if (this.getConfig('wishlist_only', false) && this.getConfig('group_only', false)) {
+sga = this.giveaways.filter(GA => GA.type === 'w');
+sgb = this.giveaways.filter(GA => GA.type === 'g');
+this.giveaways = [].concat(sga, sgb);
 }
 function processOne() {
 if (_this.doTimer() - _this.totalTicks < 240) {
@@ -277,6 +255,7 @@ sgown = 0,
 sgapp = 0,
 sgsub = 0,
 sgbun = 0,
+sgblack = '',
 sgid = '???';
 if (GA.sgsteam.includes('app/')) {
 sgapp = parseInt(GA.sgsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
@@ -298,11 +277,14 @@ else {
 sgown = 7;
 }
 }
-if (!GA.wish && !GA.group && _this.getConfig('points_reserve', 0) > 0 && (_this.curr_value - GA.cost) < _this.getConfig('points_reserve', 0) && GA.cost > 0) {
+if (GA.type === 'p' && _this.getConfig('points_reserve', 0) > 0 && (_this.curr_value - GA.cost) < _this.getConfig('points_reserve', 0) && GA.cost > 0) {
 sgown = 7;
 }
 if (GA.entered) {
 sgown = 5;
+}
+else if (_this.giveaways.filter(i => i.code === GA.code && i.entered === true).length !== 0) {
+sgown = 7;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
@@ -322,6 +304,9 @@ if (GA.entered && sgown === 1) {
 sgown = 6;
 }
 let sglog = _this.logLink(GA.lnk, GA.nam);
+if (sgid !== '???') {
+sgblack = _this.logBlack(sgid);
+}
 if (
 (_this.getConfig('log', true)) &&
 (sgown !== 7) &&
@@ -329,11 +314,11 @@ if (
 )
 {
 sglog = '|' + GA.copies + 'x|' + GA.entries + 'e|' + GA.chance + '%|' + GA.level + 'L|' + GA.cost + '$|  ' + sglog;
-if (sgid !== '???') {
-_this.log(Lang.get('service.checking') + sglog + _this.logBlack(sgid), 'chk');
+if (GA.type === 'p') {
+_this.log(Lang.get('service.checking') + sglog + sgblack, 'chk');
 }
 else {
-_this.log(Lang.get('service.checking') + sglog, 'chk');
+_this.log('[' + GA.type + '] ' + Lang.get('service.checking') + sglog + sgblack, 'chk');
 }
 switch (sgown) {
 case 1:
@@ -359,9 +344,7 @@ break;
 }
 }
 else {
-if (sgid !== '???') {
-sglog = sglog + _this.logBlack(sgid);
-}
+sglog = sglog + sgblack;
 }
 if (sgown === 6 && _this.getConfig('remove_ga', true)) {
 $.ajax({
@@ -401,12 +384,12 @@ _this.dsave = _this.dsave + sgid + ',';
 }
 if (
 (sgown === 0) &&
-(GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_level', 0) === 0 || GA.level >= _this.getConfig('min_level', 0) && GA.level <= _this.getConfig('max_level', 0) && _this.getConfig('max_level', 0) > 0) &&
-(GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || GA.cost >= _this.getConfig('min_cost', 0) || GA.cost === 0 && _this.getConfig('free_ga', false)) &&
-(GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_cost', 0) === 0 || GA.cost <= _this.getConfig('max_cost', 0)) &&
-(GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || _this.getConfig('points_reserve', 0) === 0 || (_this.curr_value - GA.cost) >= _this.getConfig('points_reserve', 0) || GA.cost === 0) &&
-(GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || _this.getConfig('min_chance', 0) === 0 || GA.chance >= _this.getConfig('min_chance', 0)) &&
-(GA.wish && _this.getConfig('ignore_on_wish', false) || GA.group && _this.getConfig('ignore_on_group', false) || _this.getConfig('min_entries', 0) === 0 || GA.entries >= _this.getConfig('min_entries', 0))
+(GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_level', 0) === 0 || GA.level >= _this.getConfig('min_level', 0) && GA.level <= _this.getConfig('max_level', 0) && _this.getConfig('max_level', 0) > 0) &&
+(GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || GA.cost >= _this.getConfig('min_cost', 0) || GA.cost === 0 && _this.getConfig('free_ga', false)) &&
+(GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_cost', 0) === 0 || GA.cost <= _this.getConfig('max_cost', 0)) &&
+(GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('points_reserve', 0) === 0 || (_this.curr_value - GA.cost) >= _this.getConfig('points_reserve', 0) || GA.cost === 0) &&
+(GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('min_chance', 0) === 0 || GA.chance >= _this.getConfig('min_chance', 0)) &&
+(GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('min_entries', 0) === 0 || GA.entries >= _this.getConfig('min_entries', 0))
 )
 {
 $.ajax({
@@ -420,7 +403,12 @@ code: GA.code
 },
 success: function (data) {
 if (data.type === 'success') {
+if (GA.type === 'p') {
 _this.log(Lang.get('service.entered_in') + sglog, 'enter');
+}
+else {
+_this.log('[' + GA.type + '] ' + Lang.get('service.entered_in') + sglog, 'enter');
+}
 _this.setValue(data.points);
 GA.entered = true;
 }
