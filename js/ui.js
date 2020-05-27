@@ -13,7 +13,6 @@ GJuser.ownapps = '[]';
 GJuser.ownsubs = '[]';
 GJuser.black = '';
 GJuser.iglvl = '';
-GJuser.steam = '';
 $(function () {
 if (!Config.get('steam_local', false)) {
 $.ajax({
@@ -145,10 +144,9 @@ $('.content-item .info .username').html('GiveawayJoiner');
 $.ajax({
 url: 'https://store.steampowered.com/account',
 success: function (data) {
-data = data.replace(/<img/gi, '<noload');
-GJuser.steam = data.substring(data.indexOf('var g_sessionID = "')+19,data.indexOf('var g_ServerTime')).slice(0, 24);
-let name = $(data).find('.responsive_menu_user_persona > a').text().trim(),
-logo = $(data).find('#global_actions > a > noload').attr('src');
+data = $(data.replace(/<img/gi, '<noload'));
+let name = data.find('.responsive_menu_user_persona > a').text().trim(),
+logo = data.find('#global_actions > a > noload').attr('src');
 if (logo !== undefined) {
 userData.avatar = logo.replace('.jpg', '_full.jpg');
 $('.content-item .info .avatar').css({'background-image': 'url("' + userData.avatar + '")'});

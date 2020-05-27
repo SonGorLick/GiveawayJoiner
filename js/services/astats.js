@@ -179,14 +179,16 @@ asown = 1;
 if (GJuser.black.includes(asid + ',') && _this.getConfig('blacklist_on', false)) {
 asown = 4;
 }
-if (asown === 0 && ahave === '#FF0000') {
+if (!_this.getConfig('check_all', false)) {
+if (asown === 0 && ahave === '#FF0000' && !_this.getConfig('check_in_steam', true)) {
 asown = 5;
 }
-if (_this.dload.includes(',' + asjoin + ',') && !_this.getConfig('check_all', false)) {
+if (_this.dload.includes(',' + asjoin + ',')) {
 if (!_this.dsave.includes(',' + asjoin + ',')) {
 _this.dsave = _this.dsave + asjoin + ',';
 }
 asown = 3;
+}
 }
 let aslog = _this.logLink(_this.url + alink, aname);
 if (_this.getConfig('log', true)) {

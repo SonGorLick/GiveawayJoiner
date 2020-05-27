@@ -76,6 +76,7 @@ url: 'https://www.indiegala.com/library/giveaways/user-level-and-coins',
 success: function (iglevel) {
 if (iglevel.current_level !== undefined) {
 GJuser.iglvl = iglevel.current_level;
+_this.lvlmax = iglevel.current_level;
 }
 }, error: () => {}
 });
@@ -207,30 +208,9 @@ let tickets = 'err';
 $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
 success: function (data) {
-if (data.indexOf('Incapsula_Resource') >= 0) {
-if (_this.igpretry < 3) {
-_this.igpage = page;
-_this.igpretry++;
-}
-else {
-_this.igpage = 0;
-_this.igpretry = 0;
-_this.pagemax = page;
-}
-}
-else if (JSON.parse(data).status === 'server_error') {
-if (_this.igpretry < 3) {
-_this.igpage = page;
-_this.igpretry++;
-}
-else {
-_this.igpage = 0;
-_this.igpretry = 0;
-_this.pagemax = page;
-}
-}
-else {
+if (JSON.parse(data).status === 'ok') {
 tickets = $(JSON.parse(data).content).find('.tickets-col');
+_this.dcheck = 0;
 _this.igpage = 0;
 _this.igpretry = 0;
 if (page > 1 && data.indexOf('prev-next palette-background-7') >= 0) {
@@ -295,7 +275,6 @@ _this.pagemax = _this.getConfig('pages', 1);
 _this.sort = true;
 _this.lvl = _this.lvlmax + 1;
 _this.sort_after = false;
-_this.dcheck = 0;
 }
 }
 if (page === _this.pagemax && _this.started) {

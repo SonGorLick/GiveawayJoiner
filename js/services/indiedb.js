@@ -17,7 +17,7 @@ authCheck(callback) {
 let call = -1;
 rq({
 method: 'GET',
-url: 'https://www.indiedb.com/',
+url: 'https://www.indiedb.com',
 headers: {
 'authority': 'www.indiedb.com',
 'user-agent': this.ua,

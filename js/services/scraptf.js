@@ -123,15 +123,11 @@ responseType: sprtype,
 data: spdata,
 })
 .then((datas) => {
-if (page === 1) {
-data = datas.data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
-}
-else {
 data = datas.data;
-}
 })
 .finally(() => {
 if (page === 1) {
+data = data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 _this.csrf = data.substring(data.indexOf("ScrapTF.User.Hash =")+21,data.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 let spwon = $(data).find('.nav-notice a').text().trim();
 if (spwon.length > 0 && spwon.includes("You've won")) {

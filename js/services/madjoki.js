@@ -36,7 +36,7 @@ joinService() {
 let _this = this;
 let mjtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
 _this.stimer = mjtimer;
-let page = 1;
+let page = 0;
 _this.dcheck = 0;
 _this.pagemax = _this.getConfig('pages', 1);
 if (fs.existsSync(dirdata + 'mj_blacklist.txt')) {
@@ -60,26 +60,42 @@ this.enterOnPage(page, callback);
 enterOnPage(page, callback) {
 let _this = this;
 let CSRF = '',
-html = '';
+html = '',
+mjurl = _this.url;
+if (page === 0 && _this.dsave === ',') {
+mjurl = 'https://store.steampowered.com';
+}
+else if (page > 0 && _this.dsave !== ',') {
+mjurl = mjurl + 'apps/free?page=' + page + '&desc=0';
+}
 $.ajax({
-url: _this.url + 'apps/free?page=' + page + '&desc=0',
-success: function (htmls) {
-htmls = $('<div>' + htmls.replace(/<img/gi, '<noload') + '</div>');
-html = htmls;
-},
-complete: function () {
+url: mjurl,
+success: function (datas) {
+datas = datas.replace(/<img/gi, '<noload');
+html = $('<div>' + datas + '</div>');
+if (page === 0 && _this.dsave === ',') {
+_this.dsave = datas.substring(datas.indexOf('var g_sessionID = "')+19,datas.indexOf('var g_ServerTime')).slice(0, 24);
+}
+else if (page === 0 && _this.dsave !== ',') {
 CSRF = html.find('meta[name="_token"]').attr('content');
-let mjfound = html.find('tbody tr'),
-mjtime = html.find('.alert-info.alert > time').text();
 if (CSRF.length < 10) {
 _this.log('CSRF token not found', 'err');
 return;
+}
+}
+},
+complete: function () {
+let mjfound = '',
+mjtime = '';
+if (page > 0) {
+mjfound = html.find('tbody tr');
+mjtime = html.find('.alert-info.alert > time').text();
 }
 let mjcurr = 0,
 mjcrr = 0,
 mjarray = Array.from(Array(mjfound.length).keys());
 function giveawayEnter() {
-if (_this.dcheck >= 50 || mjfound.length < 50) {
+if (_this.dcheck >= 50 || mjfound.length < 50 && page !== 0) {
 _this.pagemax = page;
 }
 if (mjarray.length <= mjcurr || _this.dcheck >= 50 || !_this.started) {
@@ -96,7 +112,7 @@ setTimeout(function () {
 fs.writeFile(dirdata + 'mj_blacklist.txt', _this.dload, (err) => { });
 }, 5000);
 }
-else {
+else if (page !== 0) {
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 }
@@ -206,7 +222,7 @@ mjown = 5;
 if (mjname === 'Config' && !_this.getConfig('add_cfg', false)) {
 mjown = 5;
 }
-if (GJuser.steam === '' || GJuser.steam === undefined) {
+if (_this.dsave === '' || _this.dsave === undefined) {
 _this.pagemax = page;
 mjcurr = 1000;
 mjown = 6;
@@ -243,7 +259,7 @@ if (mjown === 0) {
 $.ajax({
 method: 'POST',
 url: 'https://store.steampowered.com/checkout/addfreelicense',
-data: ({action: 'add_to_cart', sessionid: GJuser.steam, subid: mjsubid}),
+data: ({action: 'add_to_cart', sessionid: _this.dsave, subid: mjsubid}),
 headers: {
 'Content-Type': 'application/x-www-form-urlencoded'
 },
