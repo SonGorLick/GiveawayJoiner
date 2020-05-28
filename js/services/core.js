@@ -574,16 +574,8 @@ rmvblack ='<span class="rmv-blacklist" black="' + steamappid + '" title="' + Lan
 return addblack + rmvblack;
 }
 updateCookies() {
-mainWindow.webContents.session.cookies.get({domain: this.domain})
-.then((cookies) => {
-let newCookies = '';
-for (let one in cookies) {
-if (newCookies.length !== 0) {
-newCookies += '; ';
-}
-newCookies += cookies[one].name + '=' + cookies[one].value;
-}
-this.cookies = newCookies;
+mainWindow.webContents.session.cookies.get({ domain: this.domain }).then(cookies => {
+this.cookies = cookies.map(cookie => cookie.name + '=' + cookie.value).join('; ');
 });
 }
 interval() {

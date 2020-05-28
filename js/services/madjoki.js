@@ -63,7 +63,7 @@ let CSRF = '',
 html = '',
 mjurl = _this.url;
 if (page === 0 && _this.dsave === ',') {
-mjurl = 'https://store.steampowered.com';
+mjurl = 'https://store.steampowered.com/account/languagepreferences';
 }
 else if (page > 0 && _this.dsave !== ',') {
 mjurl = mjurl + 'apps/free?page=' + page + '&desc=0';
