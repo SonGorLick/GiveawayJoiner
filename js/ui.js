@@ -142,7 +142,7 @@ $(document.createElement('button'))
 function renderUser(userData) {
 $('.content-item .info .username').html('GiveawayJoiner');
 $.ajax({
-url: 'https://store.steampowered.com/account',
+url: 'https://store.steampowered.com/account/languagepreferences',
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 let name = data.find('.responsive_menu_user_persona > a').text().trim(),

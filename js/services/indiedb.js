@@ -87,14 +87,14 @@ enter = false,
 entered = false;
 if (link !== undefined) {
 id = data.substring(data.indexOf('<meta property="og:image" content="')+81).slice(0, 8).match(/[\d]+/)[0];
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + ' ' + _this.logLink(link, name), 'chk');
-}
 enter = data.indexOf('"buttonenter buttongiveaway">Join Giveaway<') >= 0;
 entered = data.indexOf('"buttonenter buttonentered buttongiveaway">Success - Giveaway joined<') >= 0;
-}
-if (entered && _this.getConfig('log', true)) {
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.checking') + ' ' + _this.logLink(link, name), 'chk');
+if (entered) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
+}
+}
 }
 if (enter) {
 entered = true;
