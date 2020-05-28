@@ -85,7 +85,7 @@ _this.pageurl = '/astats/TopListGames.php?&DisplayType=Giveaway';
 else {
 _this.pageurl = '/astats/TopListGames.php?&DisplayType=Giveaway&Offset=' + affset + '#';
 }
-let data = '';
+let data = 'err';
 $.ajax({
 url: _this.url + _this.pageurl,
 success: function (datas) {
@@ -97,6 +97,10 @@ let afound = data.find('[style="text-align:right;"]'),
 acurr = 0,
 acrr = 0,
 aarray = Array.from(Array(afound.length).keys());
+if (data === 'err') {
+_this.pagemax = page;
+_this.log(Lang.get('service.connection_error'), 'err');
+}
 function giveawayEnter() {
 if (_this.doTimer() - _this.totalTicks < 240) {
 _this.totalTicks = 1;
@@ -109,7 +113,7 @@ $.ajax({
 url: _this.url + '/astats/User_Info.php'
 });
 if (afound.length <= acurr && page === _this.pagemax) {
-setTimeout(function () {
+setTimeout(() => {
 fs.writeFile(dirdata + 'astats.txt', _this.dsave, (err) => { });
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
@@ -149,7 +153,7 @@ ended = data.find('[href="' + alink + '"] > span').text().trim(),
 asjoin = alink.replace('/astats/Giveaway.php?GiveawayID=','');
 if (aname.includes('This giveaway has ended.') || ended === 'This giveaway has ended.') {
 _this.pagemax = page;
-asnext = 100;
+asnext = 50;
 }
 else {
 let ahave = data.find('[href="' + alink + '"] font').attr('color');
@@ -217,10 +221,27 @@ else {
 aslog = aslog + _this.logBlack(asid);
 }
 if (asown === 0) {
+let html = 'err';
 $.ajax({
 url: _this.url + alink,
-success: function (html) {
-html = $(html.replace(/<img/gi, '<noload'));
+success: function (htmls) {
+htmls = $(htmls.replace(/<img/gi, '<noload'));
+html = htmls;
+},
+complete: function () {
+if (html === 'err') {
+asnext = 59000;
+if (aarray.filter(i => i === acrr).length === 1) {
+aarray.push(acrr);
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
+}
+else {
 let ajoin = html.find('.input-group-btn').text().trim();
 if (ajoin === 'Add') {
 asown = 1;
@@ -245,19 +266,18 @@ break;
 }
 }
 if (asown === 0) {
-let tmout = Math.floor(asnext / 2);
-setTimeout(function () {
+let tmout = Math.floor(asnext / 2),
+resp = 'err';
+setTimeout(() => {
 $.ajax({
 url: _this.url + alink,
 method: 'POST',
 data: 'Comment=&JoinGiveaway=Join',
 success: function () {
-if (!_this.dsave.includes(',' + asjoin + ',')) {
-_this.dsave = _this.dsave + asjoin + ',';
-}
-_this.log(Lang.get('service.entered_in') + aslog, 'enter');
+resp = 'ok';
 },
-error: function () {
+complete: function () {
+if (resp === 'err') {
 asnext = 59000;
 if (aarray.filter(i => i === acrr).length === 1) {
 aarray.push(acrr);
@@ -267,6 +287,13 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 else if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.connection_error'), 'err');
+}
+}
+else {
+if (!_this.dsave.includes(',' + asjoin + ',')) {
+_this.dsave = _this.dsave + asjoin + ',';
+}
+_this.log(Lang.get('service.entered_in') + aslog, 'enter');
 }
 }
 });
@@ -275,17 +302,6 @@ _this.log(Lang.get('service.connection_error'), 'err');
 else {
 asnext = 1000;
 }
-},
-error: function () {
-asnext = 59000;
-if (aarray.filter(i => i === acrr).length === 1) {
-aarray.push(acrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
-}
-}
-else if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 });

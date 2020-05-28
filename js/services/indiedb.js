@@ -70,7 +70,9 @@ _this.dload = {
 'sec-fetch-dest': 'document',
 'cookie': _this.cookies
 };
-let data = '';
+let data = 'err',
+enter = false,
+entered = false;
 rq({
 method: 'GET',
 url: _this.url + '/giveaways',
@@ -79,12 +81,15 @@ responseType: 'document'
 })
 .then((datas) => {
 data = datas.data.replace(/<img/gi, '<noload');
+})
+.finally(() => {
+if (data === 'err') {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
 let cont = $(data).find('#articlecontent'),
 link = cont.find('h2 a').attr('href'),
 name = cont.find('h2 a').text(),
-id = '',
-enter = false,
-entered = false;
+id = '';
 if (link !== undefined) {
 id = data.substring(data.indexOf('<meta property="og:image" content="')+81).slice(0, 8).match(/[\d]+/)[0];
 enter = data.indexOf('"buttonenter buttongiveaway">Join Giveaway<') >= 0;
@@ -115,6 +120,7 @@ adds = cont.find('#giveawaysjoined > div p');
 function giveawayEnter() {
 if (adds.length <= curradds || !_this.started) {
 if ((new Date()).getDate() !== _this.dcheck) {
+let win = 'err';
 rq({
 method: 'GET',
 url: _this.url + '/giveaways/prizes',
@@ -122,7 +128,10 @@ headers: _this.dload,
 responseType: 'document'
 })
 .then((wins) => {
-let win = wins.data;
+win = wins.data;
+})
+.finally(() => {
+if (win !== 'err') {
 win = win.replace(/<img/gi, '<noload');
 let prizes = $(win).find('.body.clear .table .row.rowcontent span.subheading:nth-of-type(2)'),
 idbprize = '',
@@ -148,8 +157,9 @@ if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
-})
-.catch(() => {});
+}
+}
+);
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.reach_end'), 'skip');

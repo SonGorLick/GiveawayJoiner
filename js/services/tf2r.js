@@ -84,7 +84,7 @@ tfarray = Array.from(Array(giveaways.length).keys());
 function giveawayEnter() {
 if (tfarray.length <= tfcurr || !_this.started) {
 if (giveaways.length <= tfcurr) {
-setTimeout(function () {
+setTimeout(() => {
 fs.writeFile(dirdata + 'tf2r.txt', _this.dsave, (err) => { });
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
@@ -123,7 +123,7 @@ let html = $('<div>' + htmls + '</div>'),
 entered = html.find('#enbut').length === 0;
 if (!entered) {
 let tmout = Math.floor(tfnext / 2);
-setTimeout(function () {
+setTimeout(() => {
 rq({
 method: 'POST',
 url: _this.url + '/job.php',

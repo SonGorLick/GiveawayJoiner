@@ -72,7 +72,7 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }, error: () => {}
 });
 }
-let data = '';
+let data = 'err';
 $.ajax({
 url: _this.url + '/zeepond/giveaways/enter-a-competition',
 success: function (datas) {
@@ -84,10 +84,13 @@ let comp = $(data).find('.bv-item-wrapper'),
 zpcurr = 0,
 zpcrr = 0,
 zparray = Array.from(Array(comp.length).keys());
+if (data === 'err') {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
 function giveawayEnter() {
 if (zparray.length <= zpcurr || _this.skip || !_this.started) {
 if (comp.length <= zpcurr || _this.skip) {
-setTimeout(function () {
+setTimeout(() => {
 fs.writeFile(dirdata + 'zp.txt', _this.dsave, (err) => { });
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
@@ -188,10 +191,28 @@ break;
 }
 if (njoin === 0) {
 zpnext = zpnext + Math.floor(zpnext / 4) + 2100;
+let html = 'err';
 $.ajax({
 url: zplink,
-success: function (html) {
-html = html.replace(/<img/gi, '<noload');
+success: function (htmls) {
+htmls = htmls.replace(/<img/gi, '<noload');
+html = htmls;
+},
+complete: function () {
+if (html === 'err') {
+zpnext = 59000;
+if (zparray.filter(i => i === zpcrr).length === 1) {
+zparray.push(zpcrr);
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
+_this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
+}
+else {
 let won = html.indexOf('You have already won a prize in this competition') >= 0,
 entered = html.indexOf('You have already entered today') >= 0,
 enter = html.indexOf('>Enter this competition<') >= 0,
@@ -298,51 +319,39 @@ else {
 zplog = zplog + zpid;
 }
 if (zpown === 0) {
-let tmout = Math.floor(zpnext / 4) + 2000;
-setTimeout(function () {
+let tmout = Math.floor(zpnext / 4) + 2000,
+resp = 'err';
+setTimeout(() => {
 $.ajax({
 url: zplink + '/enter_competition',
-success: function (body) {
-body = $(body.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
+success: function () {
+resp = 'ok';
+},
+complete: function () {
+if (resp === 'err') {
+zpnext = 59000;
+if (zparray.filter(i => i === zpcrr).length === 1) {
+zparray.push(zpcrr);
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
+}
+else {
 let zpdtnew = new Date();
 zpdtnew.setDate(zpdtnew.getUTCDate());
 zpdtnew.setHours(zpdtnew.getUTCHours() + 10 + _this.month);
 let zpdnew = ('0' + zpdtnew.getDate().toString()).slice(-2);
 _this.dsave = _this.dsave + zpnam + '(z=' + zpdnew + '),';
 _this.log(Lang.get('service.entered_in') + zplog, 'enter');
-},
-error: function (response) {
-if (response.status === 504) {
-_this.log(Lang.get('service.entered_in') + zplog, 'enter');
-}
-else {
-zpnext = 59000;
-if (zparray.filter(i => i === zpcrr).length === 1) {
-zparray.push(zpcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
-}
-}
-else if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.connection_error'), 'err');
-}
 }
 }
 });
 }, tmout);
 }
-},
-error: function () {
-zpnext = 59000;
-if (zparray.filter(i => i === zpcrr).length === 1) {
-zparray.push(zpcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
-_this.log(Lang.get('service.err_join'), 'err');
-}
-}
-else if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 });

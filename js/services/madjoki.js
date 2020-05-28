@@ -38,7 +38,8 @@ let mjtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _th
 _this.stimer = mjtimer;
 let page = 0;
 _this.dcheck = 0;
-_this.pagemax = _this.getConfig('pages', 1);
+_this.added = ',';
+_this.pagemax = _this.getConfig('pages', 1) + 14;
 if (fs.existsSync(dirdata + 'mj_blacklist.txt')) {
 let mjdata = fs.readFileSync(dirdata + 'mj_blacklist.txt');
 if (mjdata.length > 1) {
@@ -60,13 +61,19 @@ this.enterOnPage(page, callback);
 enterOnPage(page, callback) {
 let _this = this;
 let CSRF = '',
-html = '',
+html = 'err',
 mjurl = _this.url;
 if (page === 0 && _this.dsave === ',') {
 mjurl = 'https://store.steampowered.com/account/languagepreferences';
 }
-else if (page > 0 && _this.dsave !== ',') {
-mjurl = mjurl + 'apps/free?page=' + page + '&desc=0';
+else if (page !== 0 && page <= 7 && _this.dsave !== ',') {
+mjurl = mjurl + 'apps/free?type=' + Math.pow(2, (page - 1));
+}
+else if (page > 7 && page <= 14 && _this.dsave !== ',') {
+mjurl = mjurl + 'apps/free?type=' + Math.pow(2, page);
+}
+else if (page > 14 && _this.dsave !== ',') {
+mjurl = mjurl + 'apps/free?page=' + (page - 14) + '&desc=0';
 }
 else {
 mjurl = mjurl + 'apps/free';
@@ -95,8 +102,12 @@ mjtime = html.find('.alert-info.alert > time').text();
 let mjcurr = 0,
 mjcrr = 0,
 mjarray = Array.from(Array(mjfound.length).keys());
+if (html === 'err') {
+_this.pagemax = page;
+_this.log(Lang.get('service.connection_error'), 'err');
+}
 function giveawayEnter() {
-if (_this.dcheck >= 50 || mjfound.length < 50 && page !== 0) {
+if (_this.dcheck >= 50 || mjfound.length < 50 && page > 14) {
 _this.pagemax = page;
 }
 if (mjarray.length <= mjcurr || _this.dcheck >= 50 || !_this.started) {
@@ -109,12 +120,12 @@ if (mjarray.length <= mjcurr) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
 _this.log(Lang.get('service.checked') + '1#-' + _this.getConfig('pages', 1) + '#', 'srch');
-setTimeout(function () {
+setTimeout(() => {
 fs.writeFile(dirdata + 'mj_blacklist.txt', _this.dload, (err) => { });
 }, 5000);
 }
-else if (page !== 0) {
-_this.log(Lang.get('service.checked') + page + '#', 'srch');
+else if (page > 14) {
+_this.log(Lang.get('service.checked') + (page - 14) + '#', 'srch');
 }
 }
 if (page === _this.pagemax) {
@@ -223,14 +234,22 @@ mjown = 5;
 if (mjname === 'Config' && !_this.getConfig('add_cfg', false)) {
 mjown = 5;
 }
-if (_this.dsave === '' || _this.dsave === undefined) {
+if (_this.added.includes(',' + mjsubid + ',')) {
+mjown = 7;
+}
+if (_this.dsave === ',' || _this.dsave === undefined) {
 _this.pagemax = page;
 mjcurr = 1000;
 mjown = 6;
 }
 let mjlog = _this.logLink(mjsteam, name);
-if (_this.getConfig('log', true)) {
-mjlog = '|' + page + '#|' + (mjcrr + 1) + '№|' + mjsubid + '|' + mjname + '|  ' + mjlog;
+if (_this.getConfig('log', true) && mjown !== 7) {
+if (page < 15) {
+mjlog = '|0#|' + mjsubid + '|' + mjname + '|  ' + mjlog;
+}
+else {
+mjlog = '|' + (page - 14) + '#|' + (mjcrr + 1) + '№|' + mjsubid + '|' + mjname + '|  ' + mjlog;
+}
 _this.log(Lang.get('service.checking') + mjlog + _this.logBlack(mjid), 'chk');
 switch (mjown) {
 case 1:
@@ -268,6 +287,7 @@ success: function (rp) {
 _this.dcheck++;
 if (rp.indexOf('add_free_content_success_area') >= 0) {
 _this.log(Lang.get('service.added') + mjlog, 'enter');
+_this.added = _this.added + mjsubid + ',';
 }
 else if (rp.indexOf('error_box') >= 0) {
 if (_this.getConfig('auto_mj_black', true)) {

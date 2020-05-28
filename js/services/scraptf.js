@@ -104,7 +104,7 @@ spdest = 'empty';
 sptype = 'POST';
 sprtype = 'json';
 }
-let data = '';
+let data = 'err';
 rq({
 method: sptype,
 url: spurl,
@@ -177,6 +177,10 @@ _this.dsave = _this.dsave + linked + ',';
 let spcurr = 0,
 spcrr = 0,
 sparray = Array.from(Array(sptent.length).keys());
+if (data === 'err') {
+_this.pagemax = page;
+_this.log(Lang.get('service.connection_error'), 'err');
+}
 function giveawayEnter() {
 if (_this.doTimer() - _this.totalTicks < 240) {
 _this.totalTicks = 1;
@@ -230,6 +234,7 @@ _this.log(Lang.get('service.checking') + splog, 'chk');
 }
 if (!_this.dsave.includes(',' + id + ',') && !spended.includes('Ended')) {
 spnext = spnext + Math.floor(spnext / 4) + 2100;
+let raff = 'err';
 rq({
 method: 'GET',
 url: _this.url + splink,
@@ -245,16 +250,31 @@ headers: {
 responseType: 'document'
 })
 .then((raffs) => {
-let raff = raffs.data;
-raff = raff.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
+raff = raffs.data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
+})
+.finally(() => {
+if (raff === 'err') {
+spnext = 19000;
+if (sparray.filter(i => i === spcrr).length === 1) {
+sparray.push(spcrr);
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
+}
+else {
 let enter = raff.indexOf('>Enter Raffle<') >= 0,
 entered = raff.indexOf('>Leave Raffle<') >= 0,
 hash = raff.substring(raff.indexOf("ScrapTF.Raffles.EnterRaffle(")+39,raff.indexOf("<i18n>Enter Raffle</i18n></button>")).slice(0, 64),
 spid = id;
 _this.csrf = raff.substring(raff.indexOf("ScrapTF.User.Hash =")+21,raff.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 if (enter) {
-let tmout = Math.floor(spnext / 4) + 2000;
-setTimeout(function () {
+let tmout = Math.floor(spnext / 4) + 2000,
+resp = 'err';
+setTimeout(() => {
 rq({
 method: 'POST',
 url: _this.url + '/ajax/viewraffle/EnterRaffle',
@@ -271,8 +291,23 @@ headers: {
 data: 'raffle=' + spid + '&captcha=&hash=' + hash + '&flag=false&csrf=' + _this.csrf,
 })
 .then((resps) => {
-let resp = resps.data,
-spmess = JSON.stringify(resp.message);
+resp = resps.data;
+})
+.finally(() => {
+if (resp === 'err') {
+spnext = 19000;
+if (sparray.filter(i => i === spcrr).length === 1) {
+sparray.push(spcrr);
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
+}
+else {
+let spmess = JSON.stringify(resp.message);
 if (spmess === '"Entered raffle!"') {
 _this.log(Lang.get('service.entered_in') + splog, 'enter');
 }
@@ -288,17 +323,7 @@ else if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
 }
-})
-.catch(() => {
-spnext = 19000;
-if (sparray.filter(i => i === spcrr).length === 1) {
-sparray.push(spcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
-}
-}
-else if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.connection_error'), 'err');
+
 }
 });
 }, tmout);
@@ -311,17 +336,6 @@ else {
 _this.log(Lang.get('service.cant_join'), 'cant');
 }
 }
-})
-.catch(() => {
-spnext = 19000;
-if (sparray.filter(i => i === spcrr).length === 1) {
-sparray.push(spcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
-}
-}
-else if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.connection_error'), 'err');
 }
 });
 }

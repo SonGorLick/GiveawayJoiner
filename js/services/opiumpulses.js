@@ -59,7 +59,7 @@ this.enterOnPage(page, callback);
 enterOnPage(page, callback) {
 let _this = this;
 let oppage = '?&Giveaway_page=' + page,
-data = '';
+data = 'err';
 if (page === 1) {
 oppage = '';
 }
@@ -94,6 +94,10 @@ new Audio(dirapp + 'sounds/won.wav').play();
 let opcurr = 0,
 opcrr = 0,
 oparray = Array.from(Array(opfound.length).keys());
+if (data === 'err') {
+_this.pagemax = page;
+_this.log(Lang.get('service.connection_error'), 'err');
+}
 function giveawayEnter() {
 if (_this.doTimer() - _this.totalTicks < 240) {
 _this.totalTicks = 1;
@@ -103,11 +107,16 @@ _this.pagemax = page;
 }
 if (oparray.length <= opcurr || !_this.started) {
 if (opfound.length <= opcurr && page === _this.pagemax) {
-let arpage = Math.floor(Math.random() * 9) + 1;
+let arpage = Math.floor(Math.random() * 9) + 1,
+arc = 'err';
 $.ajax({
 url: _this.url + '/arcade/index?ArcadeGame_page=' + arpage,
-success: function (arc) {
-arc = $(arc.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
+success: function (arcs) {
+arcs = $(arcs.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
+arc = arcs;
+},
+complete: function () {
+if (arc !== 'err') {
 let arfound = arc.find('.arcade-item-img-btn-wrapper'),
 arlnk = arfound.eq(Math.floor(Math.random() * 28)).find('a').attr('href');
 if (arlnk !== undefined) {
@@ -117,9 +126,10 @@ success: function () {
 }, error: () => {}
 });
 }
-}, error: () => {}
+}
+}
 });
-setTimeout(function () {
+setTimeout(() => {
 fs.writeFile(dirdata + 'opiumpulses.txt', _this.dsave, (err) => { });
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
@@ -254,10 +264,28 @@ break;
 opnext = 100;
 }
 else {
+let html = 'err';
 $.ajax({
 url: _this.url + link,
-success: function (html) {
-html = $(html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
+success: function (htmls) {
+htmls = $(htmls.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
+html = htmls;
+},
+complete: function () {
+if (html === 'err') {
+opnext = 59000;
+if (oparray.filter(i => i === opcrr).length === 1) {
+oparray.push(opcrr);
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.checking') + oplog + opblack, 'chk');
+_this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
+}
+else {
 let opsteam = html.find('.giveaways-single-sponsored h1 a').attr('href');
 if (opsteam === undefined) {
 opsteam = html.find('.giveaways-single-sponsored h4 a').attr('href');
@@ -360,20 +388,20 @@ oplog = oplog + _this.logBlack(opid);
 }
 if (opown === 0) {
 let tmout = Math.floor(opnext / 2);
-setTimeout(function () {
+setTimeout(() => {
 if (check !== undefined) {
 check = check.replace('checkUser(', '').replace(')', '');
 let opcookie = { url: 'https://www.opiumpulses.com', name: 'checkUser', value: check };
 mainWindow.webContents.session.cookies.set(opcookie, (error) => { });
 }
+let resp = 'err';
 $.ajax({
 url: _this.url + eLink,
 success: function () {
-_this.curr_value = _this.curr_value - cost;
-_this.setValue(_this.curr_value);
-_this.log(Lang.get('service.entered_in') + oplog, 'enter');
+resp = 'ok';
 },
-error: function () {
+complete: function () {
+if (resp === 'err') {
 opnext = 59000;
 if (oparray.filter(i => i === opcrr).length === 1) {
 oparray.push(opcrr);
@@ -383,6 +411,12 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 else if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.connection_error'), 'err');
+}
+}
+else {
+_this.curr_value = _this.curr_value - cost;
+_this.setValue(_this.curr_value);
+_this.log(Lang.get('service.entered_in') + oplog, 'enter');
 }
 }
 });
@@ -390,17 +424,23 @@ _this.log(Lang.get('service.connection_error'), 'err');
 }
 else if (opown > 7 && _this.getConfig('remove_ga', false)) {
 let pmout = Math.floor(opnext / 2);
-setTimeout(function () {
+setTimeout(() => {
 if (check !== undefined) {
 let oprcookie = { url: 'https://www.opiumpulses.com', name: 'checkUser', value: check };
 mainWindow.webContents.session.cookies.set(oprcookie, (error) => { });
+let respr = 'err';
 $.ajax({
 url: _this.url + '/giveaway/refund/' + check,
 success: function () {
+respr = 'ok';
+},
+complete: function () {
+if (respr === 'ok') {
 _this.curr_value = _this.curr_value + cost;
 _this.setValue(_this.curr_value);
 _this.log(Lang.get('service.removed') + _this.logLink(_this.url + link, name), 'info');
-}, error: () => {}
+}
+}
 });
 }
 }, pmout);
@@ -408,18 +448,6 @@ _this.log(Lang.get('service.removed') + _this.logLink(_this.url + link, name), '
 else {
 opnext = 100;
 }
-},
-error: function () {
-opnext = 59000;
-if (oparray.filter(i => i === opcrr).length === 1) {
-oparray.push(opcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + oplog + opblack, 'chk');
-_this.log(Lang.get('service.err_join'), 'err');
-}
-}
-else if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 });
