@@ -93,6 +93,9 @@ _this.log(Lang.get('service.checking') + ' ' + _this.logLink(link, name), 'chk')
 enter = data.indexOf('"buttonenter buttongiveaway">Join Giveaway<') >= 0;
 entered = data.indexOf('"buttonenter buttonentered buttongiveaway">Success - Giveaway joined<') >= 0;
 }
+if (entered && _this.getConfig('log', true)) {
+_this.log(Lang.get('service.already_joined'), 'jnd');
+}
 if (enter) {
 entered = true;
 let eLink = cont.find('p a.buttonenter').attr('href');
@@ -107,9 +110,6 @@ _this.log(Lang.get('service.entered_in') + _this.logLink(link, name), 'enter');
 let adds = '',
 curradds = 0;
 if (entered) {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.already_joined'), 'jnd');
-}
 adds = cont.find('#giveawaysjoined > div p');
 }
 function giveawayEnter() {

@@ -68,6 +68,9 @@ mjurl = 'https://store.steampowered.com';
 else if (page > 0 && _this.dsave !== ',') {
 mjurl = mjurl + 'apps/free?page=' + page + '&desc=0';
 }
+else {
+mjurl = mjurl + 'apps/free';
+}
 $.ajax({
 url: mjurl,
 success: function (datas) {
@@ -76,18 +79,16 @@ html = $('<div>' + datas + '</div>');
 if (page === 0 && _this.dsave === ',') {
 _this.dsave = datas.substring(datas.indexOf('var g_sessionID = "')+19,datas.indexOf('var g_ServerTime')).slice(0, 24);
 }
-else if (page === 0 && _this.dsave !== ',') {
-CSRF = html.find('meta[name="_token"]').attr('content');
-if (CSRF.length < 10) {
-_this.log('CSRF token not found', 'err');
-return;
-}
-}
 },
 complete: function () {
 let mjfound = '',
 mjtime = '';
 if (page > 0) {
+CSRF = html.find('meta[name="_token"]').attr('content');
+if (CSRF.length < 10) {
+_this.log('CSRF token not found', 'err');
+return;
+}
 mjfound = html.find('tbody tr');
 mjtime = html.find('.alert-info.alert > time').text();
 }
@@ -107,7 +108,7 @@ if (page === _this.pagemax) {
 if (mjarray.length <= mjcurr) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
-_this.log(Lang.get('service.checked') + page + '#-' + _this.getConfig('pages', 1) + '#', 'srch');
+_this.log(Lang.get('service.checked') + '1#-' + _this.getConfig('pages', 1) + '#', 'srch');
 setTimeout(function () {
 fs.writeFile(dirdata + 'mj_blacklist.txt', _this.dload, (err) => { });
 }, 5000);

@@ -164,7 +164,9 @@ GA.sgsteam = '';
 }
 if (
 (!GA.pinned && GA.levelPass) &&
-(this.getConfig('ending', 0) === 0 || GA.left <= this.getConfig('ending', 0))
+(this.getConfig('ending', 0) === 0 || GA.left <= this.getConfig('ending', 0)) &&
+(GA.type === 'p' || GA.type === 'g' && this.getConfig('group_first', false) || GA.type === 'g' && this.getConfig('group_only', false)) &&
+(GA.type === 'p' || GA.type === 'w' && this.getConfig('wishlist_first', false) || GA.type === 'g' && this.getConfig('wishlist_only', false))
 )
 this.giveaways.push(GA);
 });
@@ -182,14 +184,6 @@ let sgcurr = 0,
 sgprize = 1000,
 sga = [],
 sgb = [];
-if (!this.getConfig('group_first', false) && !this.getConfig('group_only', false)) {
-sga = this.giveaways.filter(GA => GA.type !== 'g');
-this.giveaways = sga;
-}
-if (!this.getConfig('wishlist_first', false) && !this.getConfig('wishlist_only', false)) {
-sga = this.giveaways.filter(GA => GA.type !== 'w');
-this.giveaways = sga;
-}
 if (this.getConfig('sort_by_chance', false)) {
 this.giveaways.sort((a, b) => {
 return b.chance - a.chance;
@@ -387,7 +381,7 @@ if (
 (GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_level', 0) === 0 || GA.level >= _this.getConfig('min_level', 0) && GA.level <= _this.getConfig('max_level', 0) && _this.getConfig('max_level', 0) > 0) &&
 (GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || GA.cost >= _this.getConfig('min_cost', 0) || GA.cost === 0 && _this.getConfig('free_ga', false)) &&
 (GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_cost', 0) === 0 || GA.cost <= _this.getConfig('max_cost', 0)) &&
-(GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('points_reserve', 0) === 0 || (_this.curr_value - GA.cost) >= _this.getConfig('points_reserve', 0) || GA.cost === 0) &&
+(GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || GA.type === 'w' && _this.getConfig('reserve_on_wish', false) || GA.type === 'g' && _this.getConfig('reserve_on_group', false) || (_this.curr_value - GA.cost) >= _this.getConfig('points_reserve', 0) || GA.cost === 0) &&
 (GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('min_chance', 0) === 0 || GA.chance >= _this.getConfig('min_chance', 0)) &&
 (GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('min_entries', 0) === 0 || GA.entries >= _this.getConfig('min_entries', 0))
 )
