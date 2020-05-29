@@ -5,6 +5,7 @@ super();
 this.websiteUrl = 'https://follx.com';
 this.authLink = 'https://follx.com/logIn';
 this.authContent = '/account';
+this.withValue = true;
 super.init();
 }
 getUserInfo(callback) {
@@ -44,7 +45,7 @@ this.enterOnPage(page, callback);
 enterOnPage(page, callback) {
 let _this = this;
 let CSRF = '',
-data = '';
+data = 'err';
 $.ajax({
 url: _this.url + '/giveaways?page=' + page,
 success: function (datas) {
@@ -82,6 +83,10 @@ let fxfound = data.find('.giveaway_card');
 let fxcurr = 0,
 fxcrr = 0,
 fxarray = Array.from(Array(fxfound.length).keys());
+if (data === 'err') {
+_this.pagemax = page;
+_this.log(Lang.get('service.connection_error'), 'err');
+}
 function giveawayEnter() {
 if (fxfound.length < 20 || !_this.started) {
 _this.pagemax = page;
@@ -170,39 +175,18 @@ else {
 fxlog = fxlog + _this.logBlack(fxid);
 }
 if (fxown === 0) {
+let html = 'err';
 $.ajax({
 url: link,
-success: function (html) {
-html = html.replace(/<img/gi, '<noload');
-if (html.indexOf('data-action="enter"') > 0) {
-$.ajax({
-method: 'POST',
-url: link + '/action',
-data: 'action=enter',
-dataType: 'json',
-headers: {
-'X-Requested-With': 'XMLHttpRequest',
-'X-CSRF-TOKEN': CSRF
-},
-success: function (data) {
-if (data.response) {
-_this.setValue(data.points);
-_this.log(Lang.get('service.entered_in') + fxlog, 'enter');
-}
-else {
-fxnext = 59000;
-if (fxarray.filter(i => i === fxcrr).length === 1) {
-fxarray.push(fxcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
-}
-}
-else if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
-}
+success: function (htmls) {
+htmls = htmls.replace(/<img/gi, '<noload');
+html = htmls;
+if (html.indexOf('data-action="enter"') < 0) {
+html = 'err';
 }
 },
-error: function () {
+complete: function () {
+if (html === 'err') {
 fxnext = 59000;
 if (fxarray.filter(i => i === fxcrr).length === 1) {
 fxarray.push(fxcrr);
@@ -214,13 +198,39 @@ else if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
-});
+else {
+let body = 'err';
+$.ajax({
+method: 'POST',
+url: link + '/action',
+data: 'action=enter',
+dataType: 'json',
+headers: {
+'X-Requested-With': 'XMLHttpRequest',
+'X-CSRF-TOKEN': CSRF
+},
+success: function (bodys) {
+body = bodys;
+},
+complete: function () {
+if (body === 'err' || !body.response) {
+fxnext = 59000;
+if (fxarray.filter(i => i === fxcrr).length === 1) {
+fxarray.push(fxcrr);
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
 }
 else {
-fxnext = 100;
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.cant_join'), 'cant');
+_this.setValue(data.points);
+_this.log(Lang.get('service.entered_in') + fxlog, 'enter');
 }
+}
+});
 }
 }
 });

@@ -279,6 +279,7 @@ else {
 mjlog = mjlog + mjid;
 }
 if (mjown === 0) {
+let rp = 'err';
 $.ajax({
 method: 'POST',
 url: 'https://store.steampowered.com/checkout/addfreelicense',
@@ -286,8 +287,8 @@ data: ({action: 'add_to_cart', sessionid: _this.dsave, subid: mjsubid}),
 headers: {
 'Content-Type': 'application/x-www-form-urlencoded'
 },
-success: function (rp) {
-_this.limit++;
+success: function (rps) {
+rp = rps;
 if (rp.indexOf('add_free_content_success_area') >= 0) {
 _this.log(Lang.get('service.added') + mjlog, 'enter');
 _this.added = _this.added + mjsubid + ',';
@@ -301,19 +302,13 @@ _this.log(Lang.get('service.cant_join'), 'cant');
 }
 }
 else {
-if (mjarray.filter(i => i === mjcrr).length === 1) {
-mjarray.push(mjcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
-}
-}
-else if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
-}
+rp = 'err';
 }
 },
-error: function () {
-mjnext = 59000;
+complete: function () {
+_this.limit++;
+if (rp === 'err') {
+mjnext = 29000;
 if (mjarray.filter(i => i === mjcrr).length === 1) {
 mjarray.push(mjcrr);
 if (_this.getConfig('log', true)) {
@@ -322,6 +317,7 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 else if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.connection_error'), 'err');
+}
 }
 }
 });

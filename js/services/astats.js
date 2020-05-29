@@ -136,7 +136,9 @@ _this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 }
 if (page === _this.pagemax && _this.started) {
+setTimeout(() => {
 _this.setStatus('good');
+}, _this.interval());
 }
 if (callback) {
 callback();

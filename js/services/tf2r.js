@@ -69,7 +69,7 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }, error: () => {}
 });
 }
-let data = '';
+let data = 'err';
 $.ajax({
 url: _this.url + '/raffles.html',
 success: function (datas) {
@@ -81,6 +81,9 @@ let giveaways = $(data).find('.pubrhead-text-right'),
 tfcurr = 0,
 tfcrr = 0,
 tfarray = Array.from(Array(giveaways.length).keys());
+if (data === 'err') {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
 function giveawayEnter() {
 if (tfarray.length <= tfcurr || !_this.started) {
 if (giveaways.length <= tfcurr) {
@@ -96,7 +99,9 @@ _this.log(Lang.get('service.reach_end'), 'skip');
 _this.log(Lang.get('service.checked') + 'Public Raffles', 'srch');
 }
 if (_this.started) {
+setTimeout(() => {
 _this.setStatus('good');
+}, _this.interval());
 }
 return;
 }
@@ -115,14 +120,31 @@ tflog = '|' + (tfcrr + 1) + '№|  ' + tflog;
 _this.log(Lang.get('service.checking') + tflog, 'chk');
 }
 if (!_this.dload.includes(rid + ',') || _this.getConfig('check_all', false)) {
+let html = 'err';
 $.ajax({
 url: link,
 success: function (htmls) {
 htmls = htmls.replace(/<img/gi, '<noload');
-let html = $('<div>' + htmls + '</div>'),
-entered = html.find('#enbut').length === 0;
+html = $('<div>' + htmls + '</div>');
+},
+complete: function () {
+if (html === 'err') {
+tfnext = 59000;
+if (tfarray.filter(i => i === tfcrr).length === 1) {
+tfarray.push(tfcrr);
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.err_join'), 'err');
+}
+}
+else if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
+}
+else {
+let entered = html.find('#enbut').length === 0;
 if (!entered) {
-let tmout = Math.floor(tfnext / 2);
+let tmout = Math.floor(tfnext / 2),
+body = 'err';
 setTimeout(() => {
 rq({
 method: 'POST',
@@ -134,24 +156,17 @@ Cookie: _this.cookies
 }
 })
 .then((bodys) => {
-let body = bodys.data;
+body = bodys.data;
 if (body.status === 'ok') {
 _this.log(Lang.get('service.entered_in') + tflog, 'enter');
 _this.dsave = _this.dsave + rid + ',';
 }
 else {
-if (tfarray.filter(i => i === tfcrr).length === 1) {
-tfarray.push(tfcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
-}
-}
-else if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
-}
+body = 'err';
 }
 })
-.catch(() => {
+.finally(() => {
+if (body === 'err') {
 tfnext = 59000;
 if (tfarray.filter(i => i === tfcrr).length === 1) {
 tfarray.push(tfcrr);
@@ -161,6 +176,7 @@ _this.log(Lang.get('service.err_join'), 'err');
 }
 else if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.connection_error'), 'err');
+}
 }
 });
 }, tmout);
@@ -174,17 +190,6 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
 }
 }
-},
-error: function () {
-tfnext = 59000;
-if (tfarray.filter(i => i === tfcrr).length === 1) {
-tfarray.push(tfcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
-}
-}
-else if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 });

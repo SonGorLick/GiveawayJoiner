@@ -104,7 +104,9 @@ _this.log(Lang.get('service.reach_end'), 'skip');
 _this.log(Lang.get('service.checked') + 'Giveaways', 'srch');
 }
 if (_this.started) {
+setTimeout(() => {
 _this.setStatus('good');
+}, _this.interval());
 }
 return;
 }
