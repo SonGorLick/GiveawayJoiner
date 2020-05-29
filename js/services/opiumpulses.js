@@ -300,11 +300,11 @@ if (opsteam.includes('app/')) {
 opapp = parseInt(opsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
 opid = 'app/' + opapp;
 }
-if (opsteam.includes('sub/')) {
+else if (opsteam.includes('sub/')) {
 opsub = parseInt(opsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 opid = 'sub/' + opsub;
 }
-if (opsteam.includes('bundle/')) {
+else if (opsteam.includes('bundle/')) {
 opbun = parseInt(opsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
 opid = 'bundle/' + opbun;
 }

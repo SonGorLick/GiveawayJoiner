@@ -161,11 +161,11 @@ if (assteam.includes('apps/')) {
 asapp = parseInt(assteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'app/' + asapp;
 }
-if (assteam.includes('sub/')) {
+else if (assteam.includes('sub/')) {
 assub = parseInt(assteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'sub/' + assub;
 }
-if (assteam.includes('bundle/')) {
+else if (assteam.includes('bundle/')) {
 asbun = parseInt(assteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'bundle/' + asbun;
 }

@@ -39,6 +39,9 @@ _this.stimer = mjtimer;
 let page = 0;
 _this.dcheck = 0;
 _this.added = ',';
+if (_this.dsave !== ',') {
+page = 1;
+}
 _this.pagemax = _this.getConfig('pages', 1) + 14;
 if (fs.existsSync(dirdata + 'mj_blacklist.txt')) {
 let mjdata = fs.readFileSync(dirdata + 'mj_blacklist.txt');
@@ -176,11 +179,11 @@ if (mjsteam.includes('app/')) {
 mjapp = parseInt(mjsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
 mjid = 'app/' + mjapp;
 }
-if (mjsteam.includes('sub/')) {
+else if (mjsteam.includes('sub/')) {
 mjsub = parseInt(mjsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 mjid = 'sub/' + mjsub;
 }
-if (mjsteam.includes('bundle/')) {
+else if (mjsteam.includes('bundle/')) {
 mjbun = parseInt(mjsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
 mjid = 'bundle/' + mjbun;
 }

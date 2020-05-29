@@ -255,11 +255,11 @@ if (GA.sgsteam.includes('app/')) {
 sgapp = parseInt(GA.sgsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
 sgid = 'app/' + sgapp;
 }
-if (GA.sgsteam.includes('sub/')) {
+else if (GA.sgsteam.includes('sub/')) {
 sgsub = parseInt(GA.sgsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 sgid = 'sub/' + sgsub;
 }
-if (GA.sgsteam.includes('bundle/')) {
+else if (GA.sgsteam.includes('bundle/')) {
 sgbun = parseInt(GA.sgsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
 sgid = 'bundle/' + sgbun;
 }

@@ -173,7 +173,7 @@ appLoaded = true;
 }
 class LanguageClass {
 constructor() {
-this.default = 'en_US';
+this.default = 'ru_RU';
 this.languages = {};
 this.langsCount = 0;
 let url = 'https://raw.githubusercontent.com/pumPCin/GiveawayJoiner/master/giveawayjoinerdata/';

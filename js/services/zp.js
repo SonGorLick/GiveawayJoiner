@@ -252,11 +252,11 @@ if (zpsteam.includes('app/')) {
 zpapp = parseInt(zpsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
 zpid = 'app/' + zpapp;
 }
-if (zpsteam.includes('sub/')) {
+else if (zpsteam.includes('sub/')) {
 zpsub = parseInt(zpsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 zpid = 'sub/' + zpsub;
 }
-if (zpsteam.includes('bundle/')) {
+else if (zpsteam.includes('bundle/')) {
 zpbun = parseInt(zpsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
 zpid = 'bundle/' + zpbun;
 }

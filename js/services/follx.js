@@ -122,11 +122,11 @@ if (fxsteam.includes('apps/')) {
 fxapp = parseInt(fxsteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
 fxid = 'app/' + fxapp;
 }
-if (fxsteam.includes('subs/')) {
+else if (fxsteam.includes('subs/')) {
 fxsub = parseInt(fxsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 fxid = 'sub/' + fxsub;
 }
-if (fxsteam.includes('bundles/')) {
+else if (fxsteam.includes('bundles/')) {
 fxbun = parseInt(fxsteam.split('bundles/')[1].split('/')[0].split('?')[0].split('#')[0]);
 fxid = 'bundle/' + fxbun;
 }
