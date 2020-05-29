@@ -164,21 +164,25 @@ this.icon.addClass('active');
 this.panel.addClass('active');
 }
 authCheck(callback) {
-let authContent = this.authContent;
+let authContent = this.authContent,
+html = 'err';
 $.ajax({
 url: this.websiteUrl,
 timeout: this.getTimeout,
-success: function (html) {
-html = html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
-if (html.indexOf(authContent) >= 0) {
+success: function (htmls) {
+htmls = htmls.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
+html = htmls;
+},
+complete: function () {
+if (html === 'err') {
+callback(-1);
+}
+else if (html.indexOf(authContent) >= 0) {
 callback(1);
 }
 else {
 callback(0);
 }
-},
-error: function () {
-callback(-1);
 }
 });
 }
@@ -574,8 +578,16 @@ rmvblack ='<span class="rmv-blacklist" black="' + steamappid + '" title="' + Lan
 return addblack + rmvblack;
 }
 updateCookies() {
-mainWindow.webContents.session.cookies.get({ domain: this.domain }).then(cookies => {
-this.cookies = cookies.map(cookie => cookie.name + '=' + cookie.value).join('; ');
+mainWindow.webContents.session.cookies.get({domain: this.domain})
+.then((cookies) => {
+let newCookies = '';
+for (let one in cookies) {
+if (newCookies.length !== 0) {
+newCookies += '; ';
+}
+newCookies += cookies[one].name + '=' + cookies[one].value;
+}
+this.cookies = newCookies;
 });
 }
 interval() {

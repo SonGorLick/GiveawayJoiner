@@ -42,10 +42,15 @@ url: _this.url + '/astats/TopListGames.php?language=english'
 });
 }
 if ((new Date()).getDate() !== _this.dcheck) {
+let win = 'err';
 $.ajax({
 url: _this.url + '/astats/profile/User_Inbox.php',
-success: function (win) {
-win = $(win.replace(/<img/gi, '<noload'));
+success: function (wins) {
+wins = $(wins.replace(/<img/gi, '<noload'));
+win = wins;
+},
+complete: function () {
+if (win !== 'err') {
 let aswon = win.find('td:nth-of-type(4) > a').text('Congratulations you are a giveaway winner!');
 _this.dcheck = (new Date()).getDate();
 if (aswon === undefined) {
@@ -65,7 +70,8 @@ if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
-}, error: () => {}
+}
+}
 });
 }
 let callback = function () {
