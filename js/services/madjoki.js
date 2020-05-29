@@ -37,7 +37,7 @@ let _this = this;
 let mjtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _this.getConfig('timer_from', 70))) + _this.getConfig('timer_from', 70));
 _this.stimer = mjtimer;
 let page = 0;
-_this.dcheck = 0;
+_this.limit = 0;
 _this.added = ',';
 if (_this.dsave !== ',') {
 page = 1;
@@ -110,12 +110,12 @@ _this.pagemax = page;
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 function giveawayEnter() {
-if (_this.dcheck >= 50 || mjfound.length < 50 && page > 14) {
+if (_this.limit >= 50 || mjfound.length < 50 && page > 14) {
 _this.pagemax = page;
 }
-if (mjarray.length <= mjcurr || _this.dcheck >= 50 || !_this.started) {
+if (mjarray.length <= mjcurr || _this.limit >= 50 || !_this.started) {
 if (_this.getConfig('log', true)) {
-if (_this.dcheck >= 50) {
+if (_this.limit >= 50) {
 _this.log('Steam limit - 50', 'skip');
 }
 if (page === _this.pagemax) {
@@ -287,7 +287,7 @@ headers: {
 'Content-Type': 'application/x-www-form-urlencoded'
 },
 success: function (rp) {
-_this.dcheck++;
+_this.limit++;
 if (rp.indexOf('add_free_content_success_area') >= 0) {
 _this.log(Lang.get('service.added') + mjlog, 'enter');
 _this.added = _this.added + mjsubid + ',';
