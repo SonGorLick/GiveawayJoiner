@@ -192,9 +192,7 @@ return false;
 }
 if (autostart) {
 this.auto = true;
-this.runTimer();
 }
-else {
 this.buttonState(Lang.get('service.btn_checking'), 'disabled');
 this.authCheck((authState) => {
 if (authState !== 0) {
@@ -221,10 +219,11 @@ Browser.webContents.removeAllListeners('did-finish-load');
 this.waitAuth = false;
 this.runTimer();
 });
+if (!autostart) {
 Browser.show();
 }
-});
 }
+});
 }
 stopJoiner(bad) {
 let status = bad ? 'bad' : 'normal';
