@@ -76,7 +76,9 @@ dataType: 'json',
 success: function (iglevel) {
 if (iglevel.current_level !== undefined) {
 _this.dsave = iglevel.current_level;
+if (_this.lvlmax > _this.dsave || _this.lvlmax === 0) {
 _this.lvlmax = _this.dsave;
+}
 }
 }, error: () => {}
 });
@@ -519,8 +521,6 @@ else {
 ignext = (Math.floor(Math.random() * 1000)) + 1000;
 }
 }
-});
-}
 if (igrtry >= 12) {
 igrtry = 0;
 Times = 0;
@@ -529,6 +529,8 @@ igcurr++;
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
+}
+});
 }
 setTimeout(giveawayEnter, ignext);
 }
