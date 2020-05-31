@@ -71,11 +71,12 @@ _this.url = 'https://www.indiegala.com';
 if (_this.dsave === ',') {
 _this.dsave = _this.lvlmax;
 $.ajax({
-url: 'https://www.indiegala.com/library/giveaways/user-level-and-coins',
+url: _this.url + '/library/giveaways/user-level-and-coins',
 dataType: 'json',
 success: function (iglevel) {
 if (iglevel.current_level !== undefined) {
 _this.dsave = iglevel.current_level;
+_this.lvlmax = _this.dsave;
 }
 }, error: () => {}
 });
@@ -280,9 +281,9 @@ _this.sort = true;
 _this.lvl = _this.lvlmax + 1;
 _this.sort_after = false;
 }
-}
 if (page === _this.pagemax && _this.started) {
 _this.setStatus('good');
+}
 }
 if (callback) {
 callback();
@@ -465,6 +466,12 @@ data: {giv_id: id, ticket_price: price}
 })
 .then((resps) => {
 resp = resps.data;
+})
+.finally(() => {
+if (resp === 'err') {
+ignext = 29000;
+}
+else {
 if (resp.status === 'ok') {
 igrtry = 0;
 _this.setValue(resp.new_amount);
@@ -511,10 +518,6 @@ _this.log(Lang.get('service.entered_in') + iglog, 'enter');
 else {
 ignext = (Math.floor(Math.random() * 1000)) + 1000;
 }
-})
-.finally(() => {
-if (resp === 'err') {
-ignext = 29000;
 }
 });
 }
