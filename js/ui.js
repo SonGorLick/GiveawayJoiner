@@ -12,7 +12,6 @@ let intervalTicks = 0;
 GJuser.ownapps = '[]';
 GJuser.ownsubs = '[]';
 GJuser.black = '';
-GJuser.iglvl = '';
 $(function () {
 if (!Config.get('steam_local', false)) {
 $.ajax({

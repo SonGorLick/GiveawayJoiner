@@ -68,14 +68,14 @@ _this.ending_first = _this.getConfig('ending_first', false);
 _this.reserve = _this.getConfig('points_reserve', 0);
 _this.sort_after = false;
 _this.url = 'https://www.indiegala.com';
-if (GJuser.iglvl === '') {
-GJuser.iglvl = _this.lvlmax;
+if (_this.dsave === ',') {
+_this.dsave = _this.lvlmax;
 $.ajax({
 url: 'https://www.indiegala.com/library/giveaways/user-level-and-coins',
+dataType: 'json',
 success: function (iglevel) {
 if (iglevel.current_level !== undefined) {
-GJuser.iglvl = iglevel.current_level;
-_this.lvlmax = iglevel.current_level;
+_this.dsave = iglevel.current_level;
 }
 }, error: () => {}
 });
@@ -164,7 +164,7 @@ _this.log(Lang.get('service.done') + 'Completed to check - This list is actually
 else {
 _this.dload = _this.dload - 1;
 }
-if (GJuser.iglvl === 0) {
+if (_this.dsave === 0) {
 _this.sort = false;
 }
 if (_this.curr_value === undefined || _this.curr_value === 0) {
@@ -174,11 +174,11 @@ if (_this.ending_first && _this.ending !== 0 && _this.sort) {
 _this.sort = false;
 _this.sort_after = true;
 }
-if (_this.lvlmax > GJuser.iglvl || _this.lvlmax === 0) {
-_this.lvlmax = GJuser.iglvl;
+if (_this.lvlmax > _this.dsave || _this.lvlmax === 0) {
+_this.lvlmax = _this.dsave;
 }
-if (_this.lvlmin > GJuser.iglvl) {
-_this.lvlmin = GJuser.iglvl;
+if (_this.lvlmin > _this.dsave) {
+_this.lvlmin = _this.dsave;
 }
 _this.lvl = _this.lvlmax;
 let callback = function () {
@@ -203,22 +203,14 @@ tickets = '',
 data = 'err',
 igpage = page;
 _this.dcheck = 0;
-if (!_this.sort && GJuser.iglvl > 0) {
+if (!_this.sort && _this.dsave > 0) {
 _this.lvl = 'all';
 }
 $.ajax({
 url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
 success: function (datas) {
 data = datas;
-if (data.indexOf('Incapsula_Resource') >= 0) {
-if (_this.igprtry < 3) {
-_this.igprtry++;
-}
-else {
-_this.igprtry = 0;
-}
-}
-else if (JSON.parse(data).status === 'ok') {
+if (data.indexOf('"status": "ok"') >= 0) {
 _this.igprtry = 0;
 tickets = $(JSON.parse(data).content).find('.tickets-col');
 if (igpage > 1 && data.indexOf('prev-next palette-background-7') >= 0) {
@@ -375,7 +367,7 @@ igown = 7;
 }
 if (
 (_this.entmin > sold) ||
-(GJuser.iglvl < level) ||
+(_this.dsave < level) ||
 (_this.lvlmin > level) ||
 (_this.lvlmax < level && _this.lvlmax !== 0) ||
 (price < _this.getConfig('min_cost', 0) && _this.getConfig('min_cost', 0) !== 0) ||
@@ -473,12 +465,6 @@ data: {giv_id: id, ticket_price: price}
 })
 .then((resps) => {
 resp = resps.data;
-})
-.finally(() => {
-if (resp === 'err') {
-ignext = 29000;
-}
-else {
 if (resp.status === 'ok') {
 igrtry = 0;
 _this.setValue(resp.new_amount);
@@ -502,8 +488,8 @@ else if (resp.status === 'unauthorized') {
 Times = 0;
 igcurr++;
 igrtry = 0;
-if (GJuser.iglvl > 0) {
-GJuser.iglvl = GJuser.iglvl - 1;
+if (_this.lvlmax > 0) {
+_this.lvlmax = _this.lvlmax - 1;
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.cant_join'), 'cant');
@@ -523,11 +509,12 @@ igrtry = 0;
 _this.log(Lang.get('service.entered_in') + iglog, 'enter');
 }
 else {
-if (resp.status !== undefined) {
-_this.log(resp.status, 'err');
-}
 ignext = (Math.floor(Math.random() * 1000)) + 1000;
 }
+})
+.finally(() => {
+if (resp === 'err') {
+ignext = 29000;
 }
 });
 }
