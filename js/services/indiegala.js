@@ -370,7 +370,6 @@ igown = 7;
 }
 if (
 (_this.entmin > sold) ||
-(_this.dsave < level) ||
 (_this.lvlmin > level) ||
 (_this.lvlmax < level && _this.lvlmax !== 0) ||
 (price < _this.getConfig('min_cost', 0) && _this.getConfig('min_cost', 0) !== 0) ||
@@ -381,6 +380,9 @@ if (
 )
 {
 igown = 5;
+}
+if (_this.dsave < level) {
+igown = 8;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
