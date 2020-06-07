@@ -77,7 +77,8 @@ processCommon();
 }
 giveawaysFromUrl(page, callback) {
 let sgurl = this.url + '/giveaways/search?',
-sgtype = 'p';
+sgtype = 'p',
+sgpage = page;
 if (page === -1) {
 sgurl = sgurl + 'type=wishlist';
 sgtype = 'w';
@@ -142,7 +143,12 @@ else {
 cost = parseInt(sgaway.find('a.giveaway__icon[rel]').prev().text().replace(/[^0-9]/g, ''));
 }
 let chance = parseFloat(((copies / entries) * 100).toFixed(2));
+if (sgtype !== 'p') {
+sgpage = sgtype;
+}
 let GA = {
+page: sgpage,
+order: index,
 chance: (chance === Infinity ? 0 : chance),
 pinned: sgaway.closest('.pinned-giveaways__outer-wrap').length > 0,
 lnk: link,
@@ -271,14 +277,20 @@ else {
 sgown = 7;
 }
 }
-if (GA.type === 'p' && _this.getConfig('points_reserve', 0) > 0 && (_this.curr_value - GA.cost) < _this.getConfig('points_reserve', 0) && GA.cost > 0) {
+if (
+(GA.type === 'p') &&
+(_this.getConfig('points_reserve', 0) > 0) &&
+((_this.curr_value - GA.cost) < _this.getConfig('points_reserve', 0)) &&
+(GA.cost > 0)
+)
+{
 sgown = 7;
 }
 if (GA.entered) {
 sgown = 5;
 }
-else if (_this.giveaways.filter(i => i.code === GA.code && i.entered === true).length !== 0) {
-sgown = 7;
+else if (_this.giveaways.filter(i => i.code === GA.code && i.entered === true).length > 0) {
+sgown = 5;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
@@ -307,13 +319,8 @@ if (
 (!_this.dsave.includes(',' + sgid + ',') || sgown === 6)
 )
 {
-sglog = '|' + GA.copies + 'x|' + GA.entries + 'e|' + GA.chance + '%|' + GA.level + 'L|' + GA.cost + '$|  ' + sglog;
-if (GA.type === 'p') {
+sglog = '|' + GA.page + '#|' + GA.order + '№|'+ GA.copies + 'x|' + GA.entries + 'e|' + GA.chance + '%|' + GA.level + 'L|' + GA.cost + '$|  ' + sglog;
 _this.log(Lang.get('service.checking') + sglog + sgblack, 'chk');
-}
-else {
-_this.log('[' + GA.type + '] ' + Lang.get('service.checking') + sglog + sgblack, 'chk');
-}
 switch (sgown) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
@@ -397,12 +404,7 @@ code: GA.code
 },
 success: function (data) {
 if (data.type === 'success') {
-if (GA.type === 'p') {
 _this.log(Lang.get('service.entered_in') + sglog, 'enter');
-}
-else {
-_this.log('[' + GA.type + '] ' + Lang.get('service.entered_in') + sglog, 'enter');
-}
 _this.setValue(data.points);
 GA.entered = true;
 }

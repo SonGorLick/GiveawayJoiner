@@ -175,15 +175,13 @@ else {
 fxlog = fxlog + _this.logBlack(fxid);
 }
 if (fxown === 0) {
-let html = 'err';
+let html = 'err',
+njoin = 0;
 $.ajax({
 url: link,
 success: function (htmls) {
 htmls = htmls.replace(/<img/gi, '<noload');
 html = htmls;
-if (html.indexOf('data-action="enter"') < 0) {
-html = 'err';
-}
 },
 complete: function () {
 if (html === 'err') {
@@ -199,6 +197,29 @@ _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 else {
+if (html.indexOf('data-action="enter"') < 0) {
+njoin = 1;
+}
+if (html.indexOf('data-dtext="Вступить в группу"') >= 0) {
+njoin = 2;
+}
+if (html.indexOf('Уже есть') >= 0) {
+njoin = 3;
+}
+if (_this.getConfig('log', true)) {
+switch (njoin) {
+case 1:
+_this.log(Lang.get('service.err_join'), 'err');
+break;
+case 2:
+_this.log(Lang.get('service.cant_join'), 'cant');
+break;
+case 3:
+_this.log(Lang.get('service.have_on_steam'), 'err');
+break;
+}
+}
+if (njoin === 0) {
 let body = 'err';
 $.ajax({
 method: 'POST',
@@ -231,6 +252,10 @@ _this.log(Lang.get('service.entered_in') + fxlog, 'enter');
 }
 }
 });
+}
+else {
+fxnext = 100;	
+}
 }
 }
 });

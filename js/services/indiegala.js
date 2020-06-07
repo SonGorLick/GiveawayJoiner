@@ -248,8 +248,11 @@ _this.totalTicks = 1;
 }
 if (tickets.length < 20 && _this.igprtry === 0 || _this.curr_value === 0 || !_this.started) {
 _this.pagemax = page;
-if (tickets.length > 0) {
+if (tickets.length > 0 && _this.curr_value !== 0 && _this.started) {
 _this.dcheck = 1;
+}
+if (_this.curr_value === 0) {
+_this.dcheck = 2;
 }
 }
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igprtry > 0) {
@@ -258,10 +261,10 @@ _this.dload = 0;
 }
 if (_this.igprtry === 0) {
 if (_this.getConfig('log', true)) {
-if (_this.curr_value === 0 && _this.dcheck === 0) {
+if (_this.curr_value === 0 && _this.dcheck === 2) {
 _this.log(Lang.get('service.value_label') + ' - 0', 'skip');
 }
-if (_this.dcheck !== 0 && !_this.sort && _this.started) {
+if (_this.dcheck === 1 && !_this.sort && _this.started) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
 let igplog = Lang.get('service.checked');
