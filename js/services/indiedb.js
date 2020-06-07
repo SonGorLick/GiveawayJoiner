@@ -162,11 +162,14 @@ new Audio(dirapp + 'sounds/won.wav').play();
 );
 }
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.reach_end'), 'skip');
+setTimeout(() => {
 _this.log(Lang.get('service.checked') + 'Giveaways', 'srch');
+}, 10000);
 }
 if (_this.started) {
+setTimeout(() => {
 _this.setStatus('good');
+}, 10000);
 }
 return;
 }
