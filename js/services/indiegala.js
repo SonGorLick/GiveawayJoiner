@@ -94,12 +94,15 @@ igchecked = ' [Check error]';
 if (tocheck.indexOf('>Check all<') >= 0) {
 igchck[0] = '0';
 }
-else {
+else if (tocheck.indexOf('"status": "ok", "html"')) {
 igchecks = '';
-igchecks = $(JSON.parse(tocheck).html).find('.library-giveaways-check-if-won-btn');
+igchecks = $(tocheck.html).find('.library-giveaways-check-if-won-btn');
 for (let i = 0; i < igchecks.length; i++) {
 igchck[i] = igchecks.eq(i).attr('onclick').replace("giveawayCheckIfWinner(this, event, '", "").replace("')", "");
 }
+}
+else {
+igchecks = 'err';
 }
 let ic = 0,
 iw = 0,
@@ -158,8 +161,13 @@ new Audio(dirapp + 'sounds/won.wav').play();
 });
 }
 else {
+if (igchecks === 'err') {
+_this.log(Lang.get('service.done') + 'Completed to check - 0' + igchecked, 'info');
+}
+else {
 _this.dload = 3;
 _this.log(Lang.get('service.done') + 'Completed to check - This list is actually empty', 'info');
+}
 }
 }, error: () => {}
 });
@@ -210,13 +218,14 @@ if (!_this.sort && _this.dsave > 0) {
 _this.lvl = 'all';
 }
 $.ajax({
-url: _this.url + '/giveaways/ajax_data/list?page_param=' + page + '&order_type_param=expiry&order_value_param=asc&filter_type_param=level&filter_value_param=' + _this.lvl,
+url: _this.url + '/giveaways/' + page + '/expiry/asc/level/' + _this.lvl,
 success: function (datas) {
+datas = datas.replace(/<img/gi, '<noload');	
 data = datas;
-if (data.indexOf('"status": "ok"') >= 0) {
+if (data.indexOf('<div class="giveaways">') >= 0) {
 _this.igprtry = 0;
-tickets = $(JSON.parse(data).content).find('.tickets-col');
-if (igpage > 1 && data.indexOf('prev-next palette-background-7') >= 0) {
+tickets = $(data).find('.page-contents-list > .items-list-row.row > div.items-list-col.col-3 > .items-list-item > .relative');
+if (igpage > 1 && data.indexOf('class="fa fa-angle-right"></i></a>') < 0) {
 _this.pagemax = page;
 _this.dcheck = 1;
 }
@@ -297,14 +306,15 @@ return;
 }
 let ignext = _this.interval();
 let ticket = tickets.eq(igcurr),
-price = ticket.find('.ticket-price strong').text(),
-level = parseInt(ticket.find('.type-level span').text().replace('+', '')),
-single = ticket.find('.extra-type .fa-clone').length === 0,
-id = ticket.find('.ticket-right .relative').attr('rel'),
-igsteam = ticket.find('.giv-game-img').attr('data-src'),
-name = ticket.find('h2 a').text(),
-time = ticket.find('.box_pad_5 > .info-row:nth-of-type(5)').text(),
-sold = ticket.find('.box_pad_5 > .info-row:nth-of-type(3) > .tickets-sold').text().trim(),
+singl = ticket.find('figcaption > .items-list-item-type').text().trim(),
+level = ticket.find('figcaption > .items-list-item-type > span').text().trim(),
+igsteam = ticket.find('a > noload').attr('data-img-src'),
+name = ticket.find('.items-list-item-title').text(),
+link = ticket.find('.items-list-item-title > a').attr('href'),
+time = ticket.find('.items-list-item-ticket.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-left > .items-list-item-data-left-bottom').text(),
+sold = ticket.find('.items-list-item-ticket.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-right > .items-list-item-data-right-bottom').text(),
+price = ticket.find('.items-list-item-ticket.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-button > a').attr('data-price'),
+single = false,
 entered = false,
 enterTimes = 1,
 igown = 0,
@@ -312,7 +322,23 @@ igapp = 0,
 igsub = 0,
 igbun = 0,
 igid = '???',
-igtime = '';
+igtime = '',
+id = link.split('/')[4];
+if (singl.includes('single ticket')) {
+single = true;
+}
+if (price !== undefined && price !== '') {
+price = parseInt(price);
+}
+if (sold !== undefined && sold !== '') {
+sold = parseInt(sold);
+}
+if (level === '') {
+level = 0;
+}
+else {
+level = parseInt((level.replace(/[^0-9]/g,'')));
+}
 if (name.length > 75) {
 name = name.slice(0, 75) + '...';
 }
@@ -342,27 +368,30 @@ igtime = time.replace(/[^0-9]/g,'') + 'm|';
 time = 0;
 }
 if (single) {
-entered = ticket.find('.giv-coupon').length === 0;
+if (price === undefined || price === '') {
+entered = true;
+}
 enterTimes = 0;
 }
 if (!single && Times === 0) {
-enterTimes = parseInt(ticket.find('.giv-coupon .palette-color-11').text());
-if (!_this.getConfig('multi_join', false)) {
-entered = enterTimes >= _this.getConfig('join_qty', 1);
-}
-if (isNaN(enterTimes)) {
 enterTimes = 0;
-igown = 8;
+if (!_this.getConfig('multi_join', false)) {
+entered = true;
 }
 }
-let iglog = _this.logLink(_this.url + '/giveaways/detail/' + id, name);
+let iglog = _this.logLink(_this.url + link, name);
 if (_this.getConfig('log', true)) {
+if (entered) {
+iglog = '|' + page + '#|' + (igcurr + 1) + '№|' + iglog;
+}
+else {
 iglog = '|' + page + '#|' + (igcurr + 1) + '№|' + sold + 't|' + igtime + level + 'L|' + price + '$|  ' + iglog;
+}
 if (igrtry === 0 && single) {
 _this.log(Lang.get('service.checking') + iglog + _this.logBlack(igid), 'chk');
 }
 if (igrtry === 0 && Times === 0 && !single) {
-_this.log('[' + enterTimes + '] ' + Lang.get('service.checking') + iglog + _this.logBlack(igid), 'chk');
+_this.log('[m] ' + Lang.get('service.checking') + iglog + _this.logBlack(igid), 'chk');
 }
 }
 else {
@@ -457,7 +486,7 @@ igrtry++;
 let resp = 'err';
 rq({
 method: 'POST',
-url: _this.url + '/giveaways/new_entry',
+url: _this.url + '/giveaways/join',
 headers: {
 'authority': 'www.indiegala.com',
 'accept': 'application/json, text/javascript, */*; q=0.01',
@@ -466,10 +495,10 @@ headers: {
 'sec-fetch-mode': 'cors',
 'x-requested-with': 'XMLHttpRequest',
 'user-agent': _this.ua,
-'referer': _this.url + '/giveaways/detail/' + id,
+'referer': _this.url + link,
 'cookie': _this.cookies
 },
-data: {giv_id: id, ticket_price: price}
+data: {id: id}
 })
 .then((resps) => {
 resp = resps.data;
@@ -481,7 +510,7 @@ ignext = 29000;
 else {
 if (resp.status === 'ok') {
 igrtry = 0;
-_this.setValue(resp.new_amount);
+_this.setValue(resp.silver_tot);
 if (Times === 0 && single) {
 igcurr++;
 _this.log(Lang.get('service.entered_in') + iglog, 'enter');
@@ -498,7 +527,7 @@ igcurr++;
 }
 }
 }
-else if (resp.status === 'unauthorized') {
+else if (resp.status === 'level') {
 Times = 0;
 igcurr++;
 igrtry = 0;
@@ -523,6 +552,7 @@ igrtry = 0;
 _this.log(Lang.get('service.entered_in') + iglog, 'enter');
 }
 else {
+_this.log(resp.status, 'err');
 ignext = (Math.floor(Math.random() * 1000)) + 1000;
 }
 }
