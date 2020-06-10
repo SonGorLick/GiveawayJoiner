@@ -220,7 +220,7 @@ _this.lvl = 'all';
 $.ajax({
 url: _this.url + '/giveaways/' + page + '/expiry/asc/level/' + _this.lvl,
 success: function (datas) {
-datas = datas.replace(/<img/gi, '<noload');	
+datas = datas.replace(/<img/gi, '<noload');
 data = datas;
 if (data.indexOf('<div class="giveaways">') >= 0) {
 _this.igprtry = 0;
@@ -538,7 +538,8 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.cant_join'), 'cant');
 }
 }
-else if (resp.status === 'insufficient_credit') {
+else if (resp.status === 'silver') {
+_this.setValue(price - 1);
 Times = 0;
 igcurr++;
 igrtry = 0;
@@ -553,6 +554,7 @@ _this.log(Lang.get('service.entered_in') + iglog, 'enter');
 }
 else {
 _this.log(resp.status, 'err');
+_this.log(JSON.stringify(resp), 'err');
 ignext = (Math.floor(Math.random() * 1000)) + 1000;
 }
 }
