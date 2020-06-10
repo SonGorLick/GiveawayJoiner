@@ -148,7 +148,7 @@ sgpage = sgtype;
 }
 let GA = {
 page: sgpage,
-order: index,
+order: (index + 1),
 chance: (chance === Infinity ? 0 : chance),
 pinned: sgaway.closest('.pinned-giveaways__outer-wrap').length > 0,
 lnk: link,

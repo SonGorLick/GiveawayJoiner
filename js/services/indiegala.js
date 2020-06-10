@@ -333,7 +333,7 @@ price = parseInt(price);
 if (sold !== undefined && sold !== '') {
 sold = parseInt(sold);
 }
-if (level === '') {
+if (level === undefined || level === '') {
 level = 0;
 }
 else {
@@ -382,7 +382,7 @@ entered = true;
 let iglog = _this.logLink(_this.url + link, name);
 if (_this.getConfig('log', true)) {
 if (entered) {
-iglog = '|' + page + '#|' + (igcurr + 1) + '№|' + iglog;
+iglog = '|' + page + '#|' + (igcurr + 1) + '№|  ' + iglog;
 }
 else {
 iglog = '|' + page + '#|' + (igcurr + 1) + '№|' + sold + 't|' + igtime + level + 'L|' + price + '$|  ' + iglog;

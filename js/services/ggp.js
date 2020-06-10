@@ -9,7 +9,36 @@ this.settings.interval_from = { type: 'number', trans: 'service.interval_from', 
 this.settings.interval_to = { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 15), max: 60, default: this.getConfig('interval_to', 20) };
 this.settings.free_only = { type: 'checkbox', trans: 'service.free_only', default: this.getConfig('free_only', false) };
 this.withValue = true;
+delete this.settings.check_in_steam;
+delete this.settings.blacklist_on;
+delete this.settings.sound;
 super.init();
+}
+authCheck(callback) {
+let html = 'err';
+$.ajax({
+url: 'https://ggplayers.com',
+success: function (htmls) {
+htmls = htmls.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
+html = htmls;
+
+},
+complete: function () {
+if (html === 'err') {
+callback(-1);
+}
+else if (html.indexOf('user-wrap') >= 0) {
+if (!fs.existsSync(dirdata + 'ggp_acc.txt')) {
+let mmbr = html.substring(html.indexOf('<a class="user-link" href="https://ggplayers.com/members/')+57,html.indexOf('<span class="user-name">')).replace('">', '').trim();
+fs.writeFile(dirdata + 'ggp_acc.txt', mmbr + ',0', (err) => { });
+}
+callback(1);
+}
+else {
+callback(0);
+}
+}
+});
 }
 getUserInfo(callback) {
 let userData = {
@@ -17,10 +46,10 @@ avatar: dirapp + 'images/GGP.png',
 username: 'GGP User',
 value: 0
 };
-if (fs.existsSync(dirdata + 'ggp_account.txt')) {
-let data = fs.readFileSync(dirdata + 'ggp_account.txt'),
+if (fs.existsSync(dirdata + 'ggp_acc.txt')) {
+let data = fs.readFileSync(dirdata + 'ggp_acc.txt'),
 dat = (data.toString()).split(',');
-userData.value = dat[2];
+userData.value = dat[1];
 }
 if (GJuser.username !== 'GiveawayJoiner') {
 userData.avatar = GJuser.avatar;
@@ -33,43 +62,19 @@ let _this = this;
 let ggptimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = ggptimer;
 let page = 1;
-_this.ggporder = 0;
+_this.dload = 0;
 _this.url = 'https://ggplayers.com';
 _this.pagemax = _this.getConfig('pages', 1);
-if (fs.existsSync(dirdata + 'ggp_account.txt')) {
-let ggpdata = fs.readFileSync(dirdata + 'ggp_account.txt'),
+if (_this.dsave === ',') {
+if (fs.existsSync(dirdata + 'ggp_acc.txt')) {
+let ggpdata = fs.readFileSync(dirdata + 'ggp_acc.txt'),
 ggpd = (ggpdata.toString()).split(',');
-_this.member = ggpd[0];
-_this.email = ggpd[1];
-if ((new Date()).getDate() !== _this.dcheck) {
-$.ajax({
-url: _this.url + '/members/' + _this.member,
-success: function (ggps) {
-ggps = $(ggps.replace(/<img/gi, '<noload'));
-let points = ggps.find('.bb-user-content-wrap > .gamipress-buddypress-points > .gamipress-buddypress-competition-rewards.gamipress-buddypress-points-type > .gamipress-buddypress-user-competition-rewards.gamipress-buddypress-user-points.activity').text().trim();
-fs.writeFile(dirdata + 'ggp_account.txt', _this.member + ',' + _this.email + ',' + points, (err) => { });
-_this.setValue(points);
-_this.dcheck = (new Date()).getDate();
-}
-});
+_this.dsave = ggpd[0];
+page = 0;
 }
 }
-else {
-$.ajax({
-url: _this.url + '/my-points/',
-success: function (mmbr) {
-mmbr = mmbr.replace(/<img/gi, '<noload');
-_this.member = mmbr.substring(mmbr.indexOf('<a class="user-link" href="https://ggplayers.com/members/')+57,mmbr.indexOf('<span class="user-name">')).replace('">', '').trim();
-$.ajax({
-url: _this.url + '/members/' + _this.member + 'settings/',
-success: function (mail) {
-mail = mail.replace(/<img/gi, '<noload');
-_this.email = mail.substring(mail.indexOf('name="email" id="email" value="')+31,mail.indexOf('<div class="info bp-feedback">')).replace('" class="settings-input"  autocapitalize="none"/>', '').trim();
-fs.writeFile(dirdata + 'ggp_account.txt', _this.member + ',' + _this.email + ',0', (err) => { });
-}
-});
-}
-});
+else if ((new Date()).getDate() !== _this.dcheck) {
+page = 0;
 }
 let callback = function () {
 page++;
@@ -82,18 +87,30 @@ this.enterOnPage(page, callback);
 enterOnPage(page, callback) {
 let _this = this;
 let data = 'err',
+ggpfound = '',
 ggpurl = _this.url + '/giveaways/';
 if (page > 1) {
 ggpurl = ggpurl + 'page/' + page + '/';
+}
+else if (page === 0) {
+ggpurl = _this.url + '/members/' + _this.dsave;
 }
 $.ajax({
 url: ggpurl,
 success: function (datas) {
 datas = datas.replace(/<img/gi, '<noload');
 data = $(datas);
+if (page === 0) {
+let points = data.find('.bb-user-content-wrap > .gamipress-buddypress-points > .gamipress-buddypress-competition-rewards.gamipress-buddypress-points-type > .gamipress-buddypress-user-competition-rewards.gamipress-buddypress-user-points.activity').text().trim();
+fs.writeFile(dirdata + 'ggp_acc.txt', _this.dsave + ',' + points, (err) => { });
+_this.setValue(points);
+_this.dcheck = (new Date()).getDate();
+}
+else {
+ggpfound = data.find('.bb-grid.site-content-grid > #primary > main > ul > li');
+}
 },
 complete: function () {
-let ggpfound = data.find('.bb-grid.site-content-grid > #primary > main > ul > li');
 let ggpcurr = 0,
 ggpcrr = 0,
 ggparray = Array.from(Array(ggpfound.length).keys());
@@ -102,30 +119,37 @@ _this.pagemax = page;
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 function giveawayEnter() {
-if (ggpfound.length === 0 || !_this.started) {
+if (ggpfound.length === 0 && page !== 0 || !_this.started) {
 _this.pagemax = page;
 }
 if (ggparray.length <= ggpcurr || !_this.started) {
-if (_this.started && page === _this.pagemax && _this.ggporder === 1) {
-let finish = 'err';
+if (_this.started && page === _this.pagemax && _this.dload === 1) {
+let finish = 'err',
+email = 'err';
 $.ajax({
 url: _this.url + '/checkout/',
 success: function (checkout) {
 checkout = checkout.replace(/<img/gi, '<noload');
+email = $(checkout).find('.woocommerce-input-wrapper > input').attr('value');
 finish = checkout.substring(checkout.indexOf('name="woocommerce-process-checkout-nonce" value="')+49,checkout.indexOf('</article>')).slice(0, 10);
 },
 complete: function () {
-if (finish === 'err') {
+if (finish === 'err' || email === 'err') {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 else {
 $.ajax({
 method: 'POST',
 url: _this.url + '/?wc-ajax=checkout',
-data: {billing_email: _this.email, payment_method: 'gamipress_competition-rewards', terms: 'on', 'terms-field': 1, 'woocommerce-process-checkout-nonce': finish, _wp_http_referer: '%2F%3Fwc-ajax%3Dupdate_order_review'},
-success: function () {
+data: {billing_email: email, payment_method: 'gamipress_competition-rewards', terms: 'on', 'terms-field': 1, 'woocommerce-process-checkout-nonce': finish, _wp_http_referer: '%2F%3Fwc-ajax%3Dupdate_order_review'},
+success: function (bill) {
+if (bill.result === 'success') {
 _this.log(Lang.get('service.done') + 'All orders purchased', 'enter');
-fs.writeFile(dirdata + 'ggp_account.txt', _this.member + ',' + _this.email + ',' + _this.curr_value, (err) => { });
+fs.writeFile(dirdata + 'ggp_acc.txt', _this.dsave + ',' + _this.curr_value, (err) => { });
+}
+else {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
 }
 });
 }
@@ -140,7 +164,7 @@ _this.log(Lang.get('service.reach_end'), 'skip');
 }
 _this.log(Lang.get('service.checked') + page + '#-' + _this.getConfig('pages', 1) + '#', 'srch');
 }
-else {
+else if (page !== 0) {
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 }, 15000);
@@ -173,7 +197,7 @@ ggpown = 2;
 if (cost > 0 && _this.getConfig('free_only', false)) {
 ggpown = 1;
 }
-if (enter === 'View winners') {
+if (enter === 'View winners' || _this.dsave === ',') {
 ggpown = 4;
 _this.pagemax = page;
 }
@@ -283,7 +307,7 @@ else {
 _this.log(Lang.get('service.added') + ggplog + ' [' + lotcheck + 't]', 'info');
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
-_this.ggporder = 1;
+_this.dload = 1;
 }
 }
 });
@@ -297,7 +321,7 @@ _this.ggporder = 1;
 });
 }
 else {
-ggpnext = 100;
+ggpnext = 500;
 }
 ggpcurr++;
 setTimeout(giveawayEnter, ggpnext);

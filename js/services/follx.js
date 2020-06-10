@@ -116,6 +116,8 @@ fxcrr = fxarray[fxcurr],
 card = fxfound.eq(fxcrr),
 link = card.find('.head_info a').attr('href'),
 name = card.find('.head_info').attr('title'),
+price = card.find('.head_info a .giveaway-icons span.energy').text().trim(),
+copies = card.find('.head_info a .giveaway-icons span.copies').text().trim(),
 entered = card.find('.entered').length > 0,
 fxsteam = card.find('.head_info').attr('style'),
 fxown = 0,
@@ -123,6 +125,9 @@ fxapp = 0,
 fxsub = 0,
 fxbun = 0,
 fxid = '???';
+if (copies === '') {
+copies = 1;
+}
 if (fxsteam.includes('apps/')) {
 fxapp = parseInt(fxsteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
 fxid = 'app/' + fxapp;
@@ -134,6 +139,9 @@ fxid = 'sub/' + fxsub;
 else if (fxsteam.includes('bundles/')) {
 fxbun = parseInt(fxsteam.split('bundles/')[1].split('/')[0].split('?')[0].split('#')[0]);
 fxid = 'bundle/' + fxbun;
+}
+if (price > _this.curr_value) {
+fxown = 5;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
@@ -154,7 +162,7 @@ fxown = 3;
 }
 let fxlog = _this.logLink(link, name);
 if (_this.getConfig('log', true)) {
-fxlog = '|' + page + '#|' + (fxcrr + 1) + '№|  ' + fxlog;
+fxlog = '|' + page + '#|' + (fxcrr + 1) + '№|' + copies + 'x|' + price + '$|  ' + fxlog;
 _this.log(Lang.get('service.checking') + fxlog + _this.logBlack(fxid), 'chk');
 switch (fxown) {
 case 1:
@@ -168,6 +176,9 @@ _this.log(Lang.get('service.already_joined'), 'jnd');
 break;
 case 4:
 _this.log(Lang.get('service.blacklisted'), 'black');
+break;
+case 5:
+_this.log(Lang.get('service.points_low'), 'skip');
 break;
 }
 }
