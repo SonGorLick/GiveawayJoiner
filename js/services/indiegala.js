@@ -7,6 +7,7 @@ this.authContent = 'Your account';
 this.websiteUrl = 'https://www.indiegala.com/library';
 this.authLink = 'https://www.indiegala.com/login';
 this.withValue = true;
+this.cards = true;
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
 this.settings.ending = { type: 'number', trans: this.transPath('ending'), min: 0, max: 720, default: this.getConfig('ending', 0) };
@@ -24,6 +25,7 @@ this.settings.reserve_for_smpl = { type: 'checkbox', trans: this.transPath('rese
 this.settings.sort_by_level = { type: 'checkbox', trans: 'service.sort_by_level', default: this.getConfig('sort_by_level', false) };
 this.settings.reserve_no_multi = { type: 'checkbox', trans: this.transPath('reserve_no_multi'), default: this.getConfig('reserve_no_multi', false) };
 this.settings.sbl_ending_ig = { type: 'checkbox', trans: this.transPath('sbl_ending_ig'), default: this.getConfig('sbl_ending_ig', false) };
+this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -380,6 +382,9 @@ entered = true;
 }
 }
 let iglog = _this.logLink(_this.url + link, name);
+if (GJuser.card.includes(',' + igapp + ',')) {
+iglog = '♦ ' + iglog;
+}
 if (_this.getConfig('log', true)) {
 if (entered) {
 iglog = '|' + page + '#|' + (igcurr + 1) + '№|  ' + iglog;
@@ -404,6 +409,7 @@ if (
 (_this.entmin > sold) ||
 (_this.lvlmin > level) ||
 (_this.lvlmax < level && _this.lvlmax !== 0) ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + igapp + ',')) ||
 (price < _this.getConfig('min_cost', 0) && _this.getConfig('min_cost', 0) !== 0) ||
 (price > _this.getConfig('max_cost', 0) && _this.getConfig('max_cost', 0) !== 0) ||
 (_this.reserve > (_this.curr_value - price) && !single && enterTimes > 0 && _this.getConfig('reserve_no_multi', false)) ||

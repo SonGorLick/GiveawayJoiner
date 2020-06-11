@@ -6,6 +6,7 @@ this.domain = 'indiedb.com';
 this.websiteUrl = 'https://www.indiedb.com';
 this.authContent = 'View your profile';
 this.authLink = 'https://www.indiedb.com/members/login';
+this.setConfig('check_in_steam', false);
 delete this.settings.pages;
 delete this.settings.interval_from;
 delete this.settings.interval_to;

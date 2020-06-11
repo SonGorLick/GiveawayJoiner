@@ -7,6 +7,7 @@ this.websiteUrl = 'https://tf2r.com';
 this.authContent = 'Notifications';
 this.authLink = 'https://tf2r.com/login';
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
+this.setConfig('check_in_steam', false);
 delete this.settings.pages;
 delete this.settings.check_in_steam;
 delete this.settings.blacklist_on;

@@ -6,10 +6,12 @@ this.websiteUrl = 'https://www.opiumpulses.com/giveaways';
 this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
 this.withValue = true;
+this.cards = true;
 this.settings.maxcost = { type: 'number', trans: this.transPath('maxcost'), min: 0, max: 1000, default: this.getConfig('maxcost', 0) };
 this.settings.free_only = { type: 'checkbox', trans: 'service.free_only', default: this.getConfig('free_only', false) };
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
 this.settings.remove_ga = { type: 'checkbox', trans: this.transPath('remove_ga'), default: this.getConfig('remove_ga', false) };
+this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -198,6 +200,9 @@ _this.dsave = _this.dsave + code + '(n),';
 }
 njoin = 1;
 }
+if (_this.getConfig('card_only', false) && !GJuser.card.includes(',' + opblack.replace('app/', '') + ',')) {
+njoin = 5;
+}
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps.includes(',' + opblack.replace('app/', '') + ',')) {
 njoin = 2;
@@ -225,10 +230,13 @@ njoin = 6;
 if (njoin > 6 && _this.getConfig('remove_ga', false)) {
 njoin = 0;
 }
+let oplog = _this.logLink(_this.url + link, name);
 if (opblack !== '') {
+if (GJuser.card.includes(',' + opblack.replace('app/', '') + ',')) {
+oplog = '♦ ' + oplog;
+}
 opblack = _this.logBlack(opblack);
 }
-let oplog = _this.logLink(_this.url + link, name);
 if (_this.getConfig('log', true)) {
 oplog = '|' + page + '#|' + (opcrr + 1) + '№|' + cost + '$|  ' + oplog;
 }
@@ -316,10 +324,12 @@ _this.dsave = _this.dsave + code + '(d=' + opid + '),';
 if (_this.curr_value < cost) {
 opown = 5;
 }
-if (_this.costmax < cost && _this.costmax !== 0) {
-opown = 6;
-}
-if (cost !== 0 && _this.getConfig('free_only', false)) {
+if (
+(_this.costmax < cost && _this.costmax !== 0) ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + opapp + ',')) ||
+(cost !== 0 && _this.getConfig('free_only', false))
+)
+{
 opown = 6;
 }
 if (openter === " You're not eligible to enter") {

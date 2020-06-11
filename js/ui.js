@@ -11,6 +11,7 @@ let mainWindow = shared.mainWindow;
 let intervalTicks = 0;
 GJuser.ownapps = '[]';
 GJuser.ownsubs = '[]';
+GJuser.card = '';
 GJuser.black = '';
 $(function () {
 if (!Config.get('steam_local', false)) {
@@ -21,10 +22,22 @@ success: function (data) {
 if (JSON.stringify(data.rgOwnedApps) !== '[]') {
 GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
 GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
+fs.writeFile(dirdata + 'steam_app.txt', GJuser.ownapps, (err) => { });
+fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
 }
 },error: () => {}
 });
 }
+$.ajax({
+url: 'https://bartervg.com/browse/cards/json/',
+dataType: 'json',
+success: function (data) {
+if (JSON.stringify(data).length > 7000) {
+GJuser.card = JSON.stringify(Object.keys(data)).replace(/"/g, '').replace('[', ',').replace(']', ',');
+fs.writeFile(dirdata + 'steam_card.txt', GJuser.card, (err) => { });
+}
+},error: () => {}
+});
 reloadLangStrings();
 profileSection();
 let setters = $('.settings .setter').each(function () {

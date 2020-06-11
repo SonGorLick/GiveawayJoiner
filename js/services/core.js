@@ -18,6 +18,7 @@ this.dsave = ',';
 this.dload = ',';
 this.dcheck = '';
 this.auto = false;
+this.cards = false;
 this.getTimeout = 19000;
 this.domain = 'google.com';
 this.auth = Lang.get('service.login') + this.constructor.name;
@@ -257,13 +258,7 @@ clearInterval(this.intervalVar);
 if (this.totalTicks % this.doTimer() === 0) {
 this.totalTicks = 1;
 this.updateCookies();
-if(
-(this.constructor.name === 'Astats') ||
-(this.constructor.name === 'Madjoki') ||
-(this.constructor.name === 'ZP') ||
-(this.withValue)
-)
-{
+if (this.getConfig('check_in_steam', true) || this.getConfig('blacklist_on', false)) {
 if (fs.existsSync(dirdata + 'steam_app.txt')) {
 let ownapps = fs.readFileSync(dirdata + 'steam_app.txt');
 GJuser.ownapps = ownapps.toString();
@@ -295,6 +290,22 @@ GJuser.black = GJuser.black + ',';
 }
 }
 }
+}
+if (this.cards === true) {
+if (fs.existsSync(dirdata + 'steam_card.txt')) {
+let card = fs.readFileSync(dirdata + 'steam_card.txt');
+GJuser.card = card.toString();
+}
+$.ajax({
+url: 'https://bartervg.com/browse/cards/json/',
+dataType: 'json',
+success: function (data) {
+if (JSON.stringify(data).length > 7000) {
+GJuser.card = JSON.stringify(Object.keys(data)).replace(/"/g, '').replace('[', ',').replace(']', ',');
+fs.writeFile(dirdata + 'steam_card.txt', GJuser.card, (err) => { });
+}
+},error: () => {}
+});
 }
 this.authCheck((authState) => {
 if (authState === 1) {

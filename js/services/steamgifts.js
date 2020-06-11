@@ -6,6 +6,7 @@ this.websiteUrl = 'https://www.steamgifts.com';
 this.authContent = 'Account';
 this.authLink = 'https://www.steamgifts.com/?login';
 this.withValue = true;
+this.cards = true;
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
 this.settings.ending = { type: 'number', trans: this.transPath('ending'), min: 0, max: 2880, default: this.getConfig('ending', 0) };
@@ -16,21 +17,23 @@ this.settings.max_level = { type: 'number', trans: 'service.max_level', min: thi
 this.settings.min_cost = { type: 'number', trans: 'service.min_cost', min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
 this.settings.max_cost = { type: 'number', trans: 'service.max_cost', min: this.getConfig('min_cost', 0), max: 300, default: this.getConfig('max_cost', 0) };
 this.settings.points_reserve = { type: 'number', trans: 'service.points_reserve', min: 0, max: 500, default: this.getConfig('points_reserve', 0) };
-this.settings.multiple_first = { type: 'checkbox', trans: this.transPath('multiple_first'), default: this.getConfig('multiple_first', false) };
+this.settings.card_first = { type: 'checkbox', trans: this.transPath('card_first'), default: this.getConfig('card_first', false) };
 this.settings.wishlist_first = { type: 'checkbox', trans: this.transPath('wishlist_first'), default: this.getConfig('wishlist_first', false) };
-this.settings.sort_by_copies = { type: 'checkbox', trans: this.transPath('sort_by_copies'), default: this.getConfig('sort_by_copies', false) };
+this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
 this.settings.group_first = { type: 'checkbox', trans: this.transPath('group_first'), default: this.getConfig('group_first', false) };
-this.settings.sort_by_level = { type: 'checkbox', trans: 'service.sort_by_level', default: this.getConfig('sort_by_level', false) };
+this.settings.multiple_first = { type: 'checkbox', trans: this.transPath('multiple_first'), default: this.getConfig('multiple_first', false) };
 this.settings.wishlist_only = { type: 'checkbox', trans: this.transPath('wishlist_only'), default: this.getConfig('wishlist_only', false) };
-this.settings.sort_by_chance = { type: 'checkbox', trans: this.transPath('sort_by_chance'), default: this.getConfig('sort_by_chance', false) };
+this.settings.sort_by_copies = { type: 'checkbox', trans: this.transPath('sort_by_copies'), default: this.getConfig('sort_by_copies', false) };
 this.settings.group_only = { type: 'checkbox', trans: this.transPath('group_only'), default: this.getConfig('group_only', false) };
-this.settings.free_ga = { type: 'checkbox', trans: this.transPath('free_ga'), default: this.getConfig('free_ga', false) };
+this.settings.sort_by_level = { type: 'checkbox', trans: 'service.sort_by_level', default: this.getConfig('sort_by_level', false) };
 this.settings.reserve_on_wish = { type: 'checkbox', trans: this.transPath('reserve_on_wish'), default: this.getConfig('reserve_on_wish', false) };
-this.settings.hide_ga = { type: 'checkbox', trans: this.transPath('hide_ga'), default: this.getConfig('hide_ga', false) };
+this.settings.sort_by_chance = { type: 'checkbox', trans: this.transPath('sort_by_chance'), default: this.getConfig('sort_by_chance', false) };
 this.settings.reserve_on_group = { type: 'checkbox', trans: this.transPath('reserve_on_group'), default: this.getConfig('reserve_on_group', false) };
-this.settings.remove_ga = { type: 'checkbox', trans: this.transPath('remove_ga'), default: this.getConfig('remove_ga', true) };
+this.settings.free_ga = { type: 'checkbox', trans: this.transPath('free_ga'), default: this.getConfig('free_ga', false) };
 this.settings.ignore_on_wish = { type: 'checkbox', trans: this.transPath('ignore_on_wish'), default: this.getConfig('ignore_on_wish', false) };
+this.settings.hide_ga = { type: 'checkbox', trans: this.transPath('hide_ga'), default: this.getConfig('hide_ga', false) };
 this.settings.ignore_on_group = { type: 'checkbox', trans: this.transPath('ignore_on_group'), default: this.getConfig('ignore_on_group', false) };
+this.settings.remove_ga = { type: 'checkbox', trans: this.transPath('remove_ga'), default: this.getConfig('remove_ga', true) };
 super.init();
 }
 getUserInfo(callback) {
@@ -163,16 +166,23 @@ levelPass: sgaway.find('.giveaway__column--contributor-level--negative').length 
 cost: cost,
 sgsteam: sgaway.find('a.giveaway__icon').attr('href'),
 entered: sgaway.find('.giveaway__row-inner-wrap.is-faded').length > 0,
-type: sgtype
+type: sgtype,
+card: false
 };
 if (GA.sgsteam === undefined) {
 GA.sgsteam = '';
 }
+else if (GA.sgsteam.includes('app/')) {
+let sgpp = parseInt(GA.sgsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
+if (GJuser.card.includes(',' + sgpp + ',')) {
+GA.card = true;
+}
+}
 if (
 (!GA.pinned && GA.levelPass) &&
 (this.getConfig('ending', 0) === 0 || GA.left <= this.getConfig('ending', 0)) &&
-(GA.type === 'p' || GA.type === 'g' && this.getConfig('group_first', false) || GA.type === 'g' && this.getConfig('group_only', false)) &&
-(GA.type === 'p' || GA.type === 'w' && this.getConfig('wishlist_first', false) || GA.type === 'g' && this.getConfig('wishlist_only', false))
+(!this.getConfig('card_only', false) || GA.card && this.getConfig('card_only', false)) &&
+(GA.type === 'p' || GA.type === 'g' && this.getConfig('group_first', false) || GA.type === 'g' && this.getConfig('group_only', false) || GA.type === 'w' && this.getConfig('wishlist_first', false) || GA.type === 'w' && this.getConfig('wishlist_only', false))
 )
 this.giveaways.push(GA);
 });
@@ -208,6 +218,11 @@ return b.copies - a.copies;
 if (this.getConfig('multiple_first', false)) {
 sga = this.giveaways.filter(GA => GA.copies > 1);
 sgb = this.giveaways.filter(GA => GA.copies === 1);
+this.giveaways = [].concat(sga, sgb);
+}
+if (this.getConfig('card_first', false)) {
+sga = this.giveaways.filter(GA => GA.card === true);
+sgb = this.giveaways.filter(GA => GA.card === false);
 this.giveaways = [].concat(sga, sgb);
 }
 if (this.getConfig('group_first', false)) {
@@ -310,6 +325,9 @@ if (GA.entered && sgown === 1) {
 sgown = 6;
 }
 let sglog = _this.logLink(GA.lnk, GA.nam);
+if (GA.card === true) {
+sglog = '♦ ' + sglog;
+}
 if (sgid !== '???') {
 sgblack = _this.logBlack(sgid);
 }

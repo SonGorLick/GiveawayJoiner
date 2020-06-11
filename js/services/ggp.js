@@ -9,6 +9,7 @@ this.settings.interval_from = { type: 'number', trans: 'service.interval_from', 
 this.settings.interval_to = { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 15), max: 60, default: this.getConfig('interval_to', 20) };
 this.settings.free_only = { type: 'checkbox', trans: 'service.free_only', default: this.getConfig('free_only', false) };
 this.withValue = true;
+this.setConfig('check_in_steam', false);
 delete this.settings.check_in_steam;
 delete this.settings.blacklist_on;
 delete this.settings.sound;
@@ -65,6 +66,10 @@ let page = 1;
 _this.dload = 0;
 _this.url = 'https://ggplayers.com';
 _this.pagemax = _this.getConfig('pages', 1);
+let gppdtnow = new Date();
+gppdtnow.setDate(gppdtnow.getUTCDate());
+gppdtnow.setHours(gppdtnow.getUTCHours() + 8);
+let gppdnow = gppdtnow.getDate();
 if (_this.dsave === ',') {
 if (fs.existsSync(dirdata + 'ggp_acc.txt')) {
 let ggpdata = fs.readFileSync(dirdata + 'ggp_acc.txt'),
@@ -73,7 +78,7 @@ _this.dsave = ggpd[0];
 page = 0;
 }
 }
-else if ((new Date()).getDate() !== _this.dcheck) {
+else if (gppdnow !== _this.dcheck) {
 page = 0;
 }
 let callback = function () {
@@ -104,7 +109,10 @@ if (page === 0) {
 let points = data.find('.bb-user-content-wrap > .gamipress-buddypress-points > .gamipress-buddypress-competition-rewards.gamipress-buddypress-points-type > .gamipress-buddypress-user-competition-rewards.gamipress-buddypress-user-points.activity').text().trim();
 fs.writeFile(dirdata + 'ggp_acc.txt', _this.dsave + ',' + points, (err) => { });
 _this.setValue(points);
-_this.dcheck = (new Date()).getDate();
+let gppdtnew = new Date();
+gppdtnew.setDate(gppdtnew.getUTCDate());
+gppdtnew.setHours(gppdtnew.getUTCHours() + 8);
+_this.dcheck = gppdtnew.getDate();
 }
 else {
 ggpfound = data.find('.bb-grid.site-content-grid > #primary > main > ul > li');
