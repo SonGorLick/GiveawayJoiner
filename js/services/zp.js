@@ -203,10 +203,12 @@ html = htmls;
 complete: function () {
 if (html === 'err') {
 zpnext = 59000;
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
+}
 if (zparray.filter(i => i === zpcrr).length === 1) {
 zparray.push(zpcrr);
 if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
 _this.log(Lang.get('service.err_join'), 'err');
 }
 }

@@ -364,6 +364,9 @@ opown = 7;
 }
 }
 if (_this.getConfig('log', true)) {
+if (GJuser.card.includes(',' + opapp + ',')) {
+oplog = oplog.replace('$|  ', '$|  ♦ ');
+}
 _this.log(Lang.get('service.checking') + oplog + _this.logBlack(opid), 'chk');
 switch (opown) {
 case 1:
@@ -396,6 +399,9 @@ break;
 }
 }
 else {
+if (GJuser.card.includes(',' + opapp + ',') && !oplog.includes('♦')) {
+oplog = '♦ ' + oplog;
+}
 oplog = oplog + _this.logBlack(opid);
 }
 if (opown === 0) {
