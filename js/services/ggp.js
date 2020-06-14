@@ -312,7 +312,12 @@ _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 else {
-_this.log(Lang.get('service.added') + ggplog + ' [' + lotcheck + 't]', 'info');
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.added') + ggplog.replace('$|  ', '$|' + lotcheck + 't|  '), 'info');
+}
+else {
+_this.log('[' + lotcheck + 't] ' + Lang.get('service.added') + ggplog, 'info');
+}
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
 _this.dload = 1;
