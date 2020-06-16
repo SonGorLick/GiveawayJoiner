@@ -32,7 +32,7 @@ $.ajax({
 url: 'https://bartervg.com/browse/cards/json/',
 dataType: 'json',
 success: function (data) {
-if (JSON.stringify(data).length > 7000) {
+if (Object.keys(data).length > 7000) {
 GJuser.card = JSON.stringify(Object.keys(data)).replace(/"/g, '').replace('[', ',').replace(']', ',');
 fs.writeFile(dirdata + 'steam_card.txt', GJuser.card, (err) => { });
 }

@@ -558,6 +558,16 @@ igcurr++;
 igrtry = 0;
 _this.log(Lang.get('service.entered_in') + iglog, 'enter');
 }
+else if (resp.status === 'not_logined') {
+igrtry = 0;
+_this.pagemax = page;
+igcurr = 200;
+ignext = 100;
+this.setStatus('net');
+this.tries++;
+this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost').replace('10', '5'), 'err');
+this.stimer = 5;
+}
 else {
 _this.log(resp.status, 'err');
 _this.log(JSON.stringify(resp), 'err');

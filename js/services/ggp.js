@@ -7,6 +7,7 @@ this.authLink = 'https://ggplayers.com/login/';
 this.authContent = 'user-wrap';
 this.settings.interval_from = { type: 'number', trans: 'service.interval_from', min: 10, max: this.getConfig('interval_to', 20), default: this.getConfig('interval_from', 15) };
 this.settings.interval_to = { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 15), max: 60, default: this.getConfig('interval_to', 20) };
+this.settings.cost_only = { type: 'checkbox', trans: 'service.cost_only', default: this.getConfig('cost_only', false) };
 this.settings.free_only = { type: 'checkbox', trans: 'service.free_only', default: this.getConfig('free_only', false) };
 this.withValue = true;
 this.setConfig('check_in_steam', false);
@@ -202,7 +203,11 @@ cost = 0;
 if (cost > _this.curr_value) {
 ggpown = 2;
 }
-if (cost > 0 && _this.getConfig('free_only', false)) {
+if (
+(cost > 0 && _this.getConfig('free_only', false)) ||
+(cost === 0 && _this.getConfig('cost_only', false))
+)
+{
 ggpown = 1;
 }
 if (enter === 'View winners' || _this.dsave === ',') {

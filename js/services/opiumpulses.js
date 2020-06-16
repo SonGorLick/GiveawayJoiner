@@ -364,7 +364,7 @@ opown = 7;
 }
 }
 if (_this.getConfig('log', true)) {
-if (GJuser.card.includes(',' + opapp + ',')) {
+if (GJuser.card.includes(',' + opapp + ',') && !oplog.includes('♦')) {
 oplog = oplog.replace('$|  ', '$|  ♦ ');
 }
 _this.log(Lang.get('service.checking') + oplog + _this.logBlack(opid), 'chk');
