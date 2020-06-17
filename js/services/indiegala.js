@@ -213,8 +213,7 @@ _this.enterOnPage(page, callback);
 enterOnPage(page, callback) {
 let _this = this,
 tickets = '',
-data = 'err',
-igpage = page;
+data = 'err';
 _this.dcheck = 0;
 if (!_this.sort && _this.dsave > 0) {
 _this.lvl = 'all';
