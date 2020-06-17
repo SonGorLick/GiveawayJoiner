@@ -213,18 +213,23 @@ _this.enterOnPage(page, callback);
 enterOnPage(page, callback) {
 let _this = this,
 tickets = '',
-data = 'err';
+data = 'err',
+igpage = page;
 _this.dcheck = 0;
 if (!_this.sort && _this.dsave > 0) {
 _this.lvl = 'all';
 }
 $.ajax({
-url: _this.url + '/giveaways/' + page + '/expiry/asc/level/' + _this.lvl,
+url: _this.url + '/giveaways/ajax/' + page + '/expiry/asc/level/' + _this.lvl,
 success: function (datas) {
 data = datas.replace(/\n/g, "\\n").replace('"text/javascript" src="', "'text/javascript' src='").replace('"></script>', "'></script>");
 if (data.indexOf('"status": "ok"') >= 0) {
 _this.igprtry = 0;
 tickets = $(JSON.parse(data).html).find('.items-list-row > .items-list-col > .items-list-item > .relative');
+if (igpage > 1 && data.indexOf('<i aria-hidden=\"true\" class=\"fa fa-angle-right\"></i>') >= 0) {
+_this.pagemax = page;
+_this.dcheck = 1;
+}
 }
 else {
 if (_this.igprtry < 3) {
