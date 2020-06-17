@@ -222,15 +222,10 @@ _this.lvl = 'all';
 $.ajax({
 url: _this.url + '/giveaways/' + page + '/expiry/asc/level/' + _this.lvl,
 success: function (datas) {
-datas = datas.replace(/<img/gi, '<noload');
-data = datas;
-if (data.indexOf('<div class="giveaways">') >= 0) {
+data = datas.replace(/\n/g, "\\n").replace('"text/javascript" src="', "'text/javascript' src='").replace('"></script>', "'></script>");
+if (data.indexOf('"status": "ok"') >= 0) {
 _this.igprtry = 0;
-tickets = $(data).find('.page-contents-list > .items-list-row.row > div.items-list-col.col-3 > .items-list-item > .relative');
-if (igpage > 1 && data.indexOf('class="fa fa-angle-right"></i></a>') < 0) {
-_this.pagemax = page;
-_this.dcheck = 1;
-}
+tickets = $(JSON.parse(data).html).find('.items-list-row > .items-list-col > .items-list-item > .relative');
 }
 else {
 if (_this.igprtry < 3) {
@@ -310,7 +305,7 @@ let ignext = _this.interval();
 let ticket = tickets.eq(igcurr),
 singl = ticket.find('figcaption > .items-list-item-type').text().trim(),
 level = ticket.find('figcaption > .items-list-item-type > span').text().trim(),
-igsteam = ticket.find('a > noload').attr('data-img-src'),
+igsteam = ticket.find('a > img').attr('data-img-src'),
 name = ticket.find('.items-list-item-title').text(),
 link = ticket.find('.items-list-item-title > a').attr('href'),
 time = ticket.find('.items-list-item-ticket.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-left > .items-list-item-data-left-bottom').text(),
@@ -533,6 +528,14 @@ igcurr++;
 }
 }
 }
+else if (resp.status === 'owner' || resp.status === 'limit_reached' || resp.status === 'not_available') {
+Times = 0;
+igcurr++;
+igrtry = 0;
+if (_this.getConfig('log', true)) {
+_this.log(Lang.get('service.cant_join'), 'cant');
+}
+}
 else if (resp.status === 'level') {
 Times = 0;
 igcurr++;
@@ -558,7 +561,7 @@ igcurr++;
 igrtry = 0;
 _this.log(Lang.get('service.entered_in') + iglog, 'enter');
 }
-else if (resp.status === 'not_logined') {
+else if (resp.status === 'login') {
 igrtry = 0;
 _this.pagemax = page;
 igcurr = 200;
