@@ -109,6 +109,11 @@ _this.pagemax = page;
 }
 if (oparray.length <= opcurr || !_this.started) {
 if (opfound.length <= opcurr && page === _this.pagemax) {
+let opdtnow = new Date();
+opdtnow.setDate(opdtnow.getUTCDate());
+opdtnow.setHours(opdtnow.getUTCHours() + 8);
+let opdnow = opdtnow.getDate();
+if (opdnow !== _this.dcheck) {
 let arpage = Math.floor(Math.random() * 9) + 1,
 arc = 'err';
 $.ajax({
@@ -125,12 +130,17 @@ if (arlnk !== undefined) {
 $.ajax({
 url: _this.url + arlnk,
 success: function () {
+let opdtnew = new Date();
+opdtnew.setDate(opdtnew.getUTCDate());
+opdtnew.setHours(opdtnew.getUTCHours() + 8);
+_this.dcheck = opdtnew.getDate();
 }, error: () => {}
 });
 }
 }
 }
 });
+}
 setTimeout(() => {
 fs.writeFile(dirdata + 'opiumpulses.txt', _this.dsave, (err) => { });
 if (_this.getConfig('log', true)) {

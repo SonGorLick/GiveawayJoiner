@@ -23,7 +23,6 @@ url: 'https://ggplayers.com',
 success: function (htmls) {
 htmls = htmls.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 html = htmls;
-
 },
 complete: function () {
 if (html === 'err') {
@@ -34,6 +33,14 @@ if (!fs.existsSync(dirdata + 'ggp_acc.txt')) {
 let mmbr = html.substring(html.indexOf('<a class="user-link" href="https://ggplayers.com/members/')+57,html.indexOf('<span class="user-name">')).replace('">', '').trim();
 fs.writeFile(dirdata + 'ggp_acc.txt', mmbr + ',0', (err) => { });
 }
+let i = html.substring(html.indexOf('gamipress_events = {"ajaxurl":"\/wp-admin\/admin-ajax.php",')+59,html.indexOf('gamipress_events = {"ajaxurl":"\/wp-admin\/admin-ajax.php",')+126),
+ii = i.split(','),
+iii = '{"action": "gamipress_track_visit", ' + ii[0] + ', ' + ii[1] + ', ' + ii[2] + '}';
+//$.ajax({
+//method: 'POST',
+//url: 'https://ggplayers.com/wp-admin/admin-ajax.php',
+//data: iii
+//});
 callback(1);
 }
 else {

@@ -122,12 +122,17 @@ if (page === _this.pagemax) {
 if (mjarray.length <= mjcurr) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
-_this.log(Lang.get('service.checked') + (page - 14) +  '#-' + _this.getConfig('pages', 1) + '#', 'srch');
+if (page - 14 < 0) {
+_this.log(Lang.get('service.checked') + '0#-' + _this.getConfig('pages', 1) + '#', 'srch');
+}
+else {
+_this.log(Lang.get('service.checked') + (page - 14) + '#-' + _this.getConfig('pages', 1) + '#', 'srch');
+}
 setTimeout(() => {
 fs.writeFile(dirdata + 'mj_blacklist.txt', _this.dload, (err) => { });
 }, 5000);
 }
-else if (page > 14) {
+else if (page - 14 > 0) {
 _this.log(Lang.get('service.checked') + (page - 14) + '#', 'srch');
 }
 }

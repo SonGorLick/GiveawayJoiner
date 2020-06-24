@@ -233,7 +233,7 @@ let html = 'err';
 $.ajax({
 url: _this.url + alink,
 success: function (htmls) {
-htmls = $(htmls.replace(/<img/gi, '<noload'));
+htmls = htmls.replace(/<img/gi, '<noload');
 html = htmls;
 },
 complete: function () {
@@ -250,7 +250,7 @@ _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 else {
-let ajoin = html.find('.input-group-btn').text().trim();
+let ajoin = $(html).find('.input-group-btn').text().trim();
 if (ajoin === 'Add') {
 asown = 1;
 if (!_this.dsave.includes(',' + asjoin + ',')) {
@@ -259,6 +259,9 @@ _this.dsave = _this.dsave + asjoin + ',';
 }
 else if (ajoin === 'Join') {
 asown = 0;
+}
+else if (html.indexOf('You need to have more AStats points to join.') >= 0) {
+asown = 3;
 }
 else {
 asown = 2;
@@ -270,6 +273,9 @@ _this.log(Lang.get('service.already_joined'), 'jnd');
 break;
 case 2:
 _this.log(Lang.get('service.cant_join'), 'cant');
+break;
+case 3:
+_this.log(Lang.get('service.points_low'), 'skip');
 break;
 }
 }
