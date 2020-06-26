@@ -258,7 +258,7 @@ clearInterval(this.intervalVar);
 if (this.totalTicks % this.doTimer() === 0) {
 this.totalTicks = 1;
 this.updateCookies();
-if (this.getConfig('check_in_steam', true) || this.getConfig('blacklist_on', false)) {
+if (this.getConfig('check_in_steam', true)) {
 if (fs.existsSync(dirdata + 'steam_app.txt')) {
 let ownapps = fs.readFileSync(dirdata + 'steam_app.txt');
 GJuser.ownapps = ownapps.toString();
@@ -281,6 +281,8 @@ fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
 }, error: () => {}
 });
 }
+}
+if (this.getConfig('blacklist_on', false)) {
 if (fs.existsSync(dirdata + 'blacklist.txt')) {
 let blacklist = fs.readFileSync(dirdata + 'blacklist.txt');
 if (blacklist.length > 0) {

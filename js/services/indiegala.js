@@ -389,7 +389,7 @@ if (entered) {
 iglog = '|' + page + '#|' + (igcurr + 1) + '№|  ' + iglog;
 }
 else {
-iglog = '|' + page + '#|' + (igcurr + 1) + '№|' + sold + 't|' + igtime + level + 'L|' + price + '$|  ' + iglog;
+iglog = '|' + page + '#|' + (igcurr + 1) + '№|' + sold + 'e|' + igtime + level + 'L|' + price + '$|  ' + iglog;
 }
 if (igrtry === 0 && single) {
 _this.log(Lang.get('service.checking') + iglog + _this.logBlack(igid), 'chk');
