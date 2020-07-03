@@ -47,6 +47,9 @@ fs.writeFile(storage.getDataPath() + '/user-agent.txt', _ua, (err) => { });
 if (!fs.existsSync(storage.getDataPath() + '/blacklist.txt')) {
 fs.writeFile(storage.getDataPath() + '/blacklist.txt', 'app/0,sub/0,bundle/0,', (err) => { });
 }
+if (!fs.existsSync(storage.getDataPath() + '/whitelist.txt')) {
+fs.writeFile(storage.getDataPath() + '/whitelist.txt', 'app/0,sub/0,bundle/0,', (err) => { });
+}
 if (fs.existsSync(storage.getDataPath() + '/devmode')) {
 devMode = true;
 }
@@ -69,7 +72,7 @@ _session.setUserAgent(_ua);
 Menu.setApplicationMenu(null);
 mainWindow = new BrowserWindow({
 width: 876,
-height: 600,
+height: 616,
 skipTaskbar: _bfr,
 title: 'GiveawayJoiner',
 icon: _icn,

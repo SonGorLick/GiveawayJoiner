@@ -293,6 +293,15 @@ GJuser.black = GJuser.black + ',';
 }
 }
 }
+if (fs.existsSync(dirdata + 'whitelist.txt')) {
+let whitelist = fs.readFileSync(dirdata + 'whitelist.txt');
+if (whitelist.length > 0) {
+GJuser.white = whitelist.toString();
+if (GJuser.white.slice(-1) !== ',') {
+GJuser.white = GJuser.white + ',';
+}
+}
+}
 if (this.cards === true) {
 if (fs.existsSync(dirdata + 'steam_card.txt')) {
 let card = fs.readFileSync(dirdata + 'steam_card.txt');
@@ -588,6 +597,11 @@ logBlack(steamappid) {
 let addblack = '<span class="add-blacklist" black="' + steamappid + '" title="' + Lang.get('service.add_tbl') + ' (' + steamappid + ')">  [+]</span>',
 rmvblack ='<span class="rmv-blacklist" black="' + steamappid + '" title="' + Lang.get('service.rmv_tbl') + ' (' + steamappid + ')">[-]</span>';
 return addblack + rmvblack;
+}
+logWhite(steamappid) {
+let addwhite = '<span class="add-whitelist" white="' + steamappid + '" title="' + Lang.get('service.add_twl') + ' (' + steamappid + ')">  [+]</span>',
+rmvwhite ='<span class="rmv-whitelist" white="' + steamappid + '" title="' + Lang.get('service.rmv_twl') + ' (' + steamappid + ')">[-]</span>';
+return addwhite + rmvwhite;
 }
 updateCookies() {
 mainWindow.webContents.session.cookies.get({domain: this.domain})

@@ -111,7 +111,7 @@ if (oparray.length <= opcurr || !_this.started) {
 if (opfound.length <= opcurr && page === _this.pagemax) {
 let opdtnow = new Date();
 opdtnow.setDate(opdtnow.getUTCDate());
-opdtnow.setHours(opdtnow.getUTCHours() + 8);
+opdtnow.setHours(opdtnow.getUTCHours() + 7);
 let opdnow = opdtnow.getDate();
 if (opdnow !== _this.dcheck) {
 let arpage = Math.floor(Math.random() * 9) + 1,
@@ -132,7 +132,7 @@ url: _this.url + arlnk,
 success: function () {
 let opdtnew = new Date();
 opdtnew.setDate(opdtnew.getUTCDate());
-opdtnew.setHours(opdtnew.getUTCHours() + 8);
+opdtnew.setHours(opdtnew.getUTCHours() + 7);
 _this.dcheck = opdtnew.getDate();
 }, error: () => {}
 });

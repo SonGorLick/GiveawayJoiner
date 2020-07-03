@@ -25,7 +25,7 @@ input[type="checkbox"]:checked:before { position: relative; left: 2px; bottom: 3
 .window-buttons span { cursor: pointer; font-size: 12px; display: inline-block; vertical-align: middle; width: 14px; height: inherit; line-height: inherit; margin-left: 6px; }
 .window-buttons span:hover { color: #00bcd4; }
 .window-buttons span.closer { font-size: 14px; }
-#content { height: 540px; border-bottom: 1px solid #222d32; background: #263238; }
+#content { height: 556px; border-bottom: 1px solid #222d32; background: #263238; }
 .content-item { position: relative; width: 100%; height: 100%; display: none; }
 .content-item.active { display: block; }
 .content-item[data-id=profile] .info { position: absolute; left: 0; top: 0; height: 100%; width: calc(100% - 250px); padding: 10px; }
@@ -38,7 +38,7 @@ input[type="checkbox"]:checked:before { position: relative; left: 2px; bottom: 3
 .content-item[data-id=profile] .settings .setter#lang:hover { color: #00bcd4; }
 .content-item[data-id=profile] .settings .build { width: 100%; position: absolute; bottom: 10px; left: 0; text-align: center; }
 .content-item[data-id=profile] .joiner-button.logout { position: absolute; right: 10px; bottom: 10px; text-align: right; }
-.services_switcher { background-color: #29353b; width: 110px; height: 513px; position: absolute; left: 0; top: 26px; border-right: 1px solid #222d32; border-top: 1px solid #222d32; overflow: hidden; }
+.services_switcher { background-color: #29353b; width: 110px; height: 529px; position: absolute; left: 0; top: 26px; border-right: 1px solid #222d32; border-top: 1px solid #222d32; overflow: hidden; }
 .service-icon { border: 1px solid transparent; cursor: pointer; position: relative; width: 105px; height: 60px; margin: 0 auto 3px; font-size: 12px; }
 .service-icon.active { border-color: #29353b; background: rgba(77, 182, 172, 0.7); }
 .service-icon:hover:not(.active) { background: rgba(0, 188, 212, 0.7); border-color: #29353b; }
@@ -70,7 +70,7 @@ input[type="checkbox"]:checked:before { position: relative; left: 2px; bottom: 3
 .service-panel > ul li.active { color: #b9c2c7; }
 .service-panel > ul li.active:hover { color: #00bcd4; }
 .service-panel > ul li+li { margin-left: 6px; }
-.in-service-panel { font-size: 14px; display: none; background: rgba(47, 61, 68, 1); height: 460px; padding: 15px; border-radius: 2px; border: 1px solid rgba(33, 43, 48, 1); }
+.in-service-panel { font-size: 14px; display: none; background: rgba(47, 61, 68, 1); height: 476px; padding: 15px; border-radius: 2px; border: 1px solid rgba(33, 43, 48, 1); }
 .in-service-panel.active { display: block; }
 .service-logs { font-size: 12px; overflow-x: auto; white-space: nowrap; text-overflow: ellipsis; }
 .service-logs .err { color: lightcoral; }
@@ -87,7 +87,9 @@ input[type="checkbox"]:checked:before { position: relative; left: 2px; bottom: 3
 .service-logs span.time { color: #4db6ac; padding-right: 16px; margin: -11px; }
 .service-logs span.open-website { cursor: pointer; text-decoration: underline; }
 .service-logs span.add-blacklist { cursor: pointer; text-decoration: none; color: black; }
+.service-logs span.add-whitelist { cursor: pointer; text-decoration: none; color: silver; }
 .service-logs span.rmv-blacklist { cursor: pointer; text-decoration: none; color: black; }
+.service-logs span.rmv-whitelist { cursor: pointer; text-decoration: none; color: silver; }
 .service-logs { -webkit-user-select: text; }
 .service-logs .clear-log { position: absolute; right: 18px; top: 4px; font-size: 16px; color: #4db6ac; cursor: pointer; }
 .service-logs .clear-log:hover { color: #00bcd4; }

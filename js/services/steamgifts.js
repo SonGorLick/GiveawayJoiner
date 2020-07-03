@@ -17,22 +17,24 @@ this.settings.max_level = { type: 'number', trans: 'service.max_level', min: thi
 this.settings.min_cost = { type: 'number', trans: 'service.min_cost', min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
 this.settings.max_cost = { type: 'number', trans: 'service.max_cost', min: this.getConfig('min_cost', 0), max: 300, default: this.getConfig('max_cost', 0) };
 this.settings.points_reserve = { type: 'number', trans: 'service.points_reserve', min: 0, max: 500, default: this.getConfig('points_reserve', 0) };
-this.settings.card_first = { type: 'checkbox', trans: this.transPath('card_first'), default: this.getConfig('card_first', false) };
+this.settings.whitelist_first = { type: 'checkbox', trans: this.transPath('whitelist_first'), default: this.getConfig('whitelist_first', false) };
 this.settings.wishlist_first = { type: 'checkbox', trans: this.transPath('wishlist_first'), default: this.getConfig('wishlist_first', false) };
-this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
-this.settings.group_first = { type: 'checkbox', trans: this.transPath('group_first'), default: this.getConfig('group_first', false) };
-this.settings.multiple_first = { type: 'checkbox', trans: this.transPath('multiple_first'), default: this.getConfig('multiple_first', false) };
+this.settings.whitelist_only = { type: 'checkbox', trans: 'service.whitelist_only', default: this.getConfig('whitelist_only', false) };
 this.settings.wishlist_only = { type: 'checkbox', trans: this.transPath('wishlist_only'), default: this.getConfig('wishlist_only', false) };
+this.settings.card_first = { type: 'checkbox', trans: this.transPath('card_first'), default: this.getConfig('card_first', false) };
+this.settings.reserve_on_wish = { type: 'checkbox', trans: this.transPath('reserve_on_wish'), default: this.getConfig('reserve_on_wish', false) };
+this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
+this.settings.ignore_on_wish = { type: 'checkbox', trans: this.transPath('ignore_on_wish'), default: this.getConfig('ignore_on_wish', false) };
+this.settings.multiple_first = { type: 'checkbox', trans: this.transPath('multiple_first'), default: this.getConfig('multiple_first', false) };
+this.settings.group_first = { type: 'checkbox', trans: this.transPath('group_first'), default: this.getConfig('group_first', false) };
 this.settings.sort_by_copies = { type: 'checkbox', trans: this.transPath('sort_by_copies'), default: this.getConfig('sort_by_copies', false) };
 this.settings.group_only = { type: 'checkbox', trans: this.transPath('group_only'), default: this.getConfig('group_only', false) };
 this.settings.sort_by_level = { type: 'checkbox', trans: 'service.sort_by_level', default: this.getConfig('sort_by_level', false) };
-this.settings.reserve_on_wish = { type: 'checkbox', trans: this.transPath('reserve_on_wish'), default: this.getConfig('reserve_on_wish', false) };
-this.settings.sort_by_chance = { type: 'checkbox', trans: this.transPath('sort_by_chance'), default: this.getConfig('sort_by_chance', false) };
 this.settings.reserve_on_group = { type: 'checkbox', trans: this.transPath('reserve_on_group'), default: this.getConfig('reserve_on_group', false) };
-this.settings.free_ga = { type: 'checkbox', trans: this.transPath('free_ga'), default: this.getConfig('free_ga', false) };
-this.settings.ignore_on_wish = { type: 'checkbox', trans: this.transPath('ignore_on_wish'), default: this.getConfig('ignore_on_wish', false) };
-this.settings.hide_ga = { type: 'checkbox', trans: this.transPath('hide_ga'), default: this.getConfig('hide_ga', false) };
+this.settings.sort_by_chance = { type: 'checkbox', trans: this.transPath('sort_by_chance'), default: this.getConfig('sort_by_chance', false) };
 this.settings.ignore_on_group = { type: 'checkbox', trans: this.transPath('ignore_on_group'), default: this.getConfig('ignore_on_group', false) };
+this.settings.free_ga = { type: 'checkbox', trans: this.transPath('free_ga'), default: this.getConfig('free_ga', false) };
+this.settings.hide_ga = { type: 'checkbox', trans: this.transPath('hide_ga'), default: this.getConfig('hide_ga', false) };
 this.settings.remove_ga = { type: 'checkbox', trans: this.transPath('remove_ga'), default: this.getConfig('remove_ga', true) };
 super.init();
 }
@@ -167,7 +169,8 @@ cost: cost,
 sgsteam: sgaway.find('a.giveaway__icon').attr('href'),
 entered: sgaway.find('.giveaway__row-inner-wrap.is-faded').length > 0,
 type: sgtype,
-card: false
+card: false,
+white: false
 };
 if (GA.sgsteam === undefined) {
 GA.sgsteam = '';
@@ -176,6 +179,21 @@ else if (GA.sgsteam.includes('app/')) {
 let sgpp = parseInt(GA.sgsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
 if (GJuser.card.includes(',' + sgpp + ',')) {
 GA.card = true;
+}
+if (GJuser.white.includes('app/' + sgpp + ',')) {
+GA.white = true;
+}
+}
+else if (GA.sgsteam.includes('sub/')) {
+let sgps = parseInt(GA.sgsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
+if (GJuser.white.includes('sub/' + sgps + ',')) {
+GA.white = true;
+}
+}
+else if (GA.sgsteam.includes('bundle/')) {
+let sgpb = parseInt(GA.sgsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
+if (GJuser.white.includes('bundle/' + sgpb + ',')) {
+GA.white = true;
 }
 }
 if (
@@ -235,6 +253,15 @@ sga = this.giveaways.filter(GA => GA.type === 'w');
 sgb = this.giveaways.filter(GA => GA.type !== 'w');
 this.giveaways = [].concat(sga, sgb);
 }
+if (this.getConfig('whitelist_first', false)) {
+sga = this.giveaways.filter(GA => GA.white === true);
+sgb = this.giveaways.filter(GA => GA.white === false);
+this.giveaways = [].concat(sga, sgb);
+}
+if (this.getConfig('whitelist_only', false)) {
+sga = this.giveaways.filter(GA => GA.white === true);
+this.giveaways = sga;
+}
 if (this.getConfig('wishlist_only', false) && !this.getConfig('group_only', false)) {
 sga = this.giveaways.filter(GA => GA.type === 'w');
 this.giveaways = sga;
@@ -271,6 +298,7 @@ sgapp = 0,
 sgsub = 0,
 sgbun = 0,
 sgblack = '',
+sgwhite = '',
 sgid = '???';
 if (GA.sgsteam.includes('app/')) {
 sgapp = parseInt(GA.sgsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
@@ -330,6 +358,7 @@ sglog = '♦ ' + sglog;
 }
 if (sgid !== '???') {
 sgblack = _this.logBlack(sgid);
+sgwhite = _this.logWhite(sgid);
 }
 if (
 (_this.getConfig('log', true)) &&
@@ -338,7 +367,7 @@ if (
 )
 {
 sglog = '|' + GA.page + '#|' + GA.order + '№|'+ GA.copies + 'x|' + GA.entries + 'e|' + GA.chance + '%|' + GA.level + 'L|' + GA.cost + '$|  ' + sglog;
-_this.log(Lang.get('service.checking') + sglog + sgblack, 'chk');
+_this.log(Lang.get('service.checking') + sglog + sgwhite + sgblack, 'chk');
 switch (sgown) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
@@ -363,7 +392,7 @@ break;
 }
 }
 else {
-sglog = sglog + sgblack;
+sglog = sglog + sgwhite + sgblack;
 }
 if (sgown === 6 && _this.getConfig('remove_ga', true)) {
 $.ajax({

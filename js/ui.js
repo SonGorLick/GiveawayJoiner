@@ -13,6 +13,7 @@ GJuser.ownapps = '[]';
 GJuser.ownsubs = '[]';
 GJuser.card = '';
 GJuser.black = '';
+GJuser.white = '';
 $(function () {
 if (!Config.get('steam_local', false)) {
 $.ajax({
@@ -96,11 +97,27 @@ fs.writeFile(dirdata + 'blacklist.txt', GJuser.black, (err) => { });
 }
 }
 });
+$(document).on('click', '.add-whitelist[white]', function () {
+if (GJuser.white !== '') {
+if (!GJuser.white.includes($(this).attr('white') + ',')) {
+GJuser.white = GJuser.white + $(this).attr('white') + ',';
+fs.writeFile(dirdata + 'whitelist.txt', GJuser.white, (err) => { });
+}
+}
+});
 $(document).on('click', '.rmv-blacklist[black]', function () {
 if (GJuser.black !== '') {
 if (GJuser.black.includes($(this).attr('black') + ',')) {
 GJuser.black = GJuser.black.replace(',' + $(this).attr('black') + ',', ',');
 fs.writeFile(dirdata + 'blacklist.txt', GJuser.black, (err) => { });
+}
+}
+});
+$(document).on('click', '.rmv-whitelist[white]', function () {
+if (GJuser.white !== '') {
+if (GJuser.white.includes($(this).attr('white') + ',')) {
+GJuser.white = GJuser.white.replace(',' + $(this).attr('white') + ',', ',');
+fs.writeFile(dirdata + 'whitelist.txt', GJuser.white, (err) => { });
 }
 }
 });
