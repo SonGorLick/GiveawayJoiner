@@ -199,7 +199,7 @@ GA.white = true;
 if (
 (!GA.pinned && GA.levelPass) &&
 (this.getConfig('ending', 0) === 0 || GA.left <= this.getConfig('ending', 0)) &&
-(!this.getConfig('card_only', false) || GA.card && this.getConfig('card_only', false)) &&
+(GA.type === 'w' || GA.white === true || !this.getConfig('card_only', false) || GA.card && this.getConfig('card_only', false)) &&
 (GA.type === 'p' || GA.type === 'g' && this.getConfig('group_first', false) || GA.type === 'g' && this.getConfig('group_only', false) || GA.type === 'w' && this.getConfig('wishlist_first', false) || GA.type === 'w' && this.getConfig('wishlist_only', false))
 )
 this.giveaways.push(GA);

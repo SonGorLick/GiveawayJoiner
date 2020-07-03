@@ -19,13 +19,16 @@ this.settings.min_cost = { type: 'number', trans: 'service.min_cost', min: 0, ma
 this.settings.max_cost = { type: 'number', trans: 'service.max_cost', min: this.getConfig('min_cost', 0), max: 240, default: this.getConfig('max_cost', 0) };
 this.settings.points_reserve = { type: 'number', trans: 'service.points_reserve', min: 0, max: 500, default: this.getConfig('points_reserve', 0) };
 this.settings.multi_join = { type: 'checkbox', trans: this.transPath('multi_join'), default: this.getConfig('multi_join', false) };
-this.settings.reserve_on_sbl = { type: 'checkbox', trans: this.transPath('reserve_on_sbl'), default: this.getConfig('reserve_on_sbl', false) };
-this.settings.ending_first = { type: 'checkbox', trans: this.transPath('ending_first'), default: this.getConfig('ending_first', false) };
-this.settings.reserve_for_smpl = { type: 'checkbox', trans: this.transPath('reserve_for_smpl'), default: this.getConfig('reserve_for_smpl', false) };
-this.settings.sort_by_level = { type: 'checkbox', trans: 'service.sort_by_level', default: this.getConfig('sort_by_level', false) };
+this.settings.sort_by_level = { type: 'checkbox', trans: this.transPath('sort_by_level'), default: this.getConfig('sort_by_level', false) };
 this.settings.reserve_no_multi = { type: 'checkbox', trans: this.transPath('reserve_no_multi'), default: this.getConfig('reserve_no_multi', false) };
+this.settings.ending_first = { type: 'checkbox', trans: this.transPath('ending_first'), default: this.getConfig('ending_first', false) };
+this.settings.sort_by_price = { type: 'checkbox', trans: 'service.sort_by_price', default: this.getConfig('sort_by_price', false) };
 this.settings.sbl_ending_ig = { type: 'checkbox', trans: this.transPath('sbl_ending_ig'), default: this.getConfig('sbl_ending_ig', false) };
+this.settings.sort_by_entries = { type: 'checkbox', trans: 'service.sort_by_entries', default: this.getConfig('sort_by_entries', false) };
+this.settings.reserve_on_sbl = { type: 'checkbox', trans: this.transPath('reserve_on_sbl'), default: this.getConfig('reserve_on_sbl', false) };
 this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
+this.settings.reserve_for_smpl = { type: 'checkbox', trans: this.transPath('reserve_for_smpl'), default: this.getConfig('reserve_for_smpl', false) };
+this.settings.whitelist_nocards = { type: 'checkbox', trans: this.transPath('whitelist_nocards'), default: this.getConfig('whitelist_nocards', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -212,6 +215,7 @@ _this.enterOnPage(page, callback);
 }
 enterOnPage(page, callback) {
 let _this = this,
+igsort = 'expiry/asc',
 tickets = '',
 data = 'err',
 igpage = page;
@@ -219,8 +223,14 @@ _this.dcheck = 0;
 if (!_this.sort && _this.dsave > 0) {
 _this.lvl = 'all';
 }
+if (_this.getConfig('sort_by_price', false)) {
+igsort = 'price/asc';
+}
+else if (_this.getConfig('sort_by_entries', false)) {
+igsort = 'participants/asc';
+}
 $.ajax({
-url: _this.url + '/giveaways/ajax/' + page + '/expiry/asc/level/' + _this.lvl,
+url: _this.url + '/giveaways/ajax/' + page + '/' + igsort + '/level/' + _this.lvl,
 success: function (datas) {
 data = datas.replace(/\n/g, "\\n").replace('"text/javascript" src="', "'text/javascript' src='").replace('"></script>', "'></script>");
 if (data.indexOf('"status": "ok"') >= 0) {
@@ -392,14 +402,14 @@ else {
 iglog = '|' + page + '#|' + (igcurr + 1) + '№|' + sold + 'e|' + igtime + level + 'L|' + price + '$|  ' + iglog;
 }
 if (igrtry === 0 && single) {
-_this.log(Lang.get('service.checking') + iglog + _this.logBlack(igid), 'chk');
+_this.log(Lang.get('service.checking') + iglog + _this.logWhite(igid) + _this.logBlack(igid), 'chk');
 }
 if (igrtry === 0 && Times === 0 && !single) {
-_this.log('[m] ' + Lang.get('service.checking') + iglog + _this.logBlack(igid), 'chk');
+_this.log('[m] ' + Lang.get('service.checking') + iglog + _this.logWhite(igid) + _this.logBlack(igid), 'chk');
 }
 }
 else {
-iglog = iglog + _this.logBlack(igid);
+iglog = iglog + _this.logWhite(igid) + _this.logBlack(igid);
 }
 if (_this.curr_value < price) {
 igown = 7;
@@ -408,7 +418,8 @@ if (
 (_this.entmin > sold) ||
 (_this.lvlmin > level) ||
 (_this.lvlmax < level && _this.lvlmax !== 0) ||
-(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + igapp + ',')) ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + igapp + ',') && !_this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + igapp + ',') && !GJuser.white.includes(igid + ',') && _this.getConfig('whitelist_nocards', false)) ||
 (price < _this.getConfig('min_cost', 0) && _this.getConfig('min_cost', 0) !== 0) ||
 (price > _this.getConfig('max_cost', 0) && _this.getConfig('max_cost', 0) !== 0) ||
 (_this.reserve > (_this.curr_value - price) && !single && enterTimes > 0 && _this.getConfig('reserve_no_multi', false)) ||
@@ -444,8 +455,6 @@ if (
 )
 {
 igown = 6;
-_this.pagemax = page;
-igcurr = 100;
 }
 if (igown > 0) {
 if (_this.getConfig('log', true)) {
