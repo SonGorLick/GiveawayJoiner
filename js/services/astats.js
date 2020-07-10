@@ -3,9 +3,9 @@ class Astats extends Joiner {
 constructor() {
 super();
 this.settings.timer_from.min = 5;
-this.websiteUrl = 'https://astats.astats.nl/astats/';
+this.websiteUrl = 'http://astats.astats.nl/astats/';
 this.authContent = 'Log out';
-this.authLink = 'https://astats.astats.nl/astats/profile/Login.php';
+this.authLink = 'http://astats.astats.nl/astats/profile/Login.php';
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
 super.init();
 }
@@ -26,7 +26,7 @@ let astimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _t
 _this.stimer = astimer;
 let page = 1;
 _this.won = _this.getConfig('won', 0);
-_this.url = 'https://astats.astats.nl';
+_this.url = 'http://astats.astats.nl';
 _this.pagemax = _this.getConfig('pages', 1);
 _this.dsave = ',';
 _this.dload = ',';
