@@ -267,10 +267,10 @@ _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 else {
-let enter = raff.indexOf('>Enter Raffle<') >= 0,
-entered = raff.indexOf('>Leave Raffle<') >= 0,
-hash = raff.substring(raff.indexOf("ScrapTF.Raffles.EnterRaffle(")+39,raff.indexOf("<i18n>Enter Raffle</i18n></button>")).slice(0, 64),
-spid = id;
+let enter = raff.indexOf(' Enter Raffle') >= 0,
+entered = raff.indexOf(' Leave Raffle') >= 0,
+spid = id,
+hash = raff.substring(raff.indexOf("ScrapTF.Raffles.EnterRaffle('" + spid + "', '")+39,raff.indexOf('><i class="fa fa-sign-in"></i> Enter Raffle</button>')).slice(0, 64);
 _this.csrf = raff.substring(raff.indexOf("ScrapTF.User.Hash =")+21,raff.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
 if (enter) {
 let tmout = Math.floor(spnext / 4) + 2000,

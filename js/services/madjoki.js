@@ -281,7 +281,7 @@ break;
 }
 }
 else {
-mjlog = mjlog + mjid;
+mjlog = mjlog  + _this.logBlack(mjid);
 }
 if (mjown === 0) {
 let rp = 'err';
