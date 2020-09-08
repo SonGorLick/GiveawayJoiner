@@ -104,7 +104,9 @@ _this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 }
 if (page === _this.pagemax && _this.started) {
+if (_this.statusIcon.attr('data-status') !== 'win') {
 _this.setStatus('good');
+}
 }
 if (callback) {
 callback();

@@ -101,7 +101,9 @@ _this.log(Lang.get('service.checked') + 'Public Raffles', 'srch');
 }
 if (_this.started) {
 setTimeout(() => {
+if (_this.statusIcon.attr('data-status') !== 'win') {
 _this.setStatus('good');
+}
 }, _this.interval());
 }
 return;

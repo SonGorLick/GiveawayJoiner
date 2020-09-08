@@ -307,6 +307,7 @@ _this.lvl = _this.lvlmax + 1;
 _this.sort_after = false;
 }
 if (page === _this.pagemax && _this.started) {
+if (_this.statusIcon.attr('data-status') !== 'win') {
 _this.setStatus('good');
 }
 }

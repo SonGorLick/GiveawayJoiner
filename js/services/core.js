@@ -163,9 +163,6 @@ setActive() {
 $('.service-icon, .service-panel').removeClass('active');
 this.icon.addClass('active');
 this.panel.addClass('active');
-if (this.statusIcon.attr('data-status') === 'win') {
-this.setStatus('good');
-}
 }
 authCheck(callback) {
 let authContent = this.authContent,
@@ -245,7 +242,9 @@ this.updateCookies();
 this.totalTicks = 0;
 this.started = true;
 this.stimer = 1440;
+if (this.statusIcon.attr('data-status') !== 'win') {
 this.setStatus('good');
+}
 this.log(Lang.get('service.started'));
 if (this.auto) {
 this.totalTicks = 86395;
@@ -323,7 +322,9 @@ fs.writeFile(dirdata + 'steam_card.txt', GJuser.card, (err) => { });
 }
 this.authCheck((authState) => {
 if (authState === 1) {
+if (this.statusIcon.attr('data-status') !== 'win') {
 this.setStatus('work');
+}
 this.tries = 0;
 this.updateUserInfo();
 if (this.getConfig('log_autoclear', false)) {
@@ -334,7 +335,9 @@ this.joinService();
 }
 else if (authState === 0) {
 if (this.tries < 3) {
+if (this.statusIcon.attr('data-status') !== 'win') {
 this.setStatus('net');
+}
 this.tries++;
 this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost').replace('10', '5'), 'err');
 this.stimer = 5;
@@ -347,7 +350,9 @@ this.stopJoiner(true);
 }
 else {
 if (this.tries < 8) {
+if (this.statusIcon.attr('data-status') !== 'win') {
 this.setStatus('net');
+}
 this.tries++;
 this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost').replace('0', '5'), 'err');
 this.stimer = 15;

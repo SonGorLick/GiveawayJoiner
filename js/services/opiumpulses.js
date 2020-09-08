@@ -161,7 +161,9 @@ _this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 if (page === _this.pagemax && _this.started) {
 setTimeout(() => {
+if (_this.statusIcon.attr('data-status') !== 'win') {
 _this.setStatus('good');
+}
 }, _this.interval());
 }
 if (callback) {

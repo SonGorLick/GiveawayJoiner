@@ -66,7 +66,9 @@ if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checked') + 'LootBoy', 'srch');
 }
 if (_this.started) {
+if (_this.statusIcon.attr('data-status') !== 'win') {
 _this.setStatus('good');
+}
 }
 return;
 }
