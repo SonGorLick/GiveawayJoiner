@@ -67,6 +67,7 @@ if (_this.started) {
 if (_this.statusIcon.attr('data-status') !== 'win') {
 _this.setStatus('good');
 }
+}
 return;
 }
 if (_this.dload > 0) {

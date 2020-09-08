@@ -311,6 +311,7 @@ if (_this.statusIcon.attr('data-status') !== 'win') {
 _this.setStatus('good');
 }
 }
+}
 if (callback) {
 callback();
 }
