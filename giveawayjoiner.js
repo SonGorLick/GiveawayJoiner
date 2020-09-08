@@ -89,7 +89,8 @@ backgroundThrottling: false,
 contextIsolation: false,
 nodeIntegration: true,
 webviewTag: true,
-webSecurity: false
+webSecurity: false,
+enableRemoteModule: true
 }
 });
 if (devMode) {
