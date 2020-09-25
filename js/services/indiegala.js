@@ -14,7 +14,7 @@ this.settings.ending = { type: 'number', trans: this.transPath('ending'), min: 0
 this.settings.join_qty = { type: 'number', trans: this.transPath('join_qty'), min: 1, max: 100, default: this.getConfig('join_qty', 1) };
 this.settings.min_entries = { type: 'ten_number', trans: 'service.min_entries', min: 0, max: 10000, default: this.getConfig('min_entries', 0) };
 this.settings.min_level = { type: 'number', trans: 'service.min_level', min: 0, max: this.getConfig('max_level', 0), default: this.getConfig('min_level', 0) };
-this.settings.max_level = { type: 'number', trans: 'service.max_level', min: this.getConfig('min_level', 0), max: 8, default: this.getConfig('max_level', 0) };
+this.settings.max_level = { type: 'number', trans: 'service.max_level', min: this.getConfig('min_level', 0), max: 9, default: this.getConfig('max_level', 0) };
 this.settings.min_cost = { type: 'number', trans: 'service.min_cost', min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
 this.settings.max_cost = { type: 'number', trans: 'service.max_cost', min: this.getConfig('min_cost', 0), max: 240, default: this.getConfig('max_cost', 0) };
 this.settings.points_reserve = { type: 'number', trans: 'service.points_reserve', min: 0, max: 500, default: this.getConfig('points_reserve', 0) };
@@ -29,6 +29,7 @@ this.settings.reserve_on_sbl = { type: 'checkbox', trans: this.transPath('reserv
 this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
 this.settings.reserve_for_smpl = { type: 'checkbox', trans: this.transPath('reserve_for_smpl'), default: this.getConfig('reserve_for_smpl', false) };
 this.settings.whitelist_nocards = { type: 'checkbox', trans: this.transPath('whitelist_nocards'), default: this.getConfig('whitelist_nocards', false) };
+this.settings.skip_ost = { type: 'checkbox', trans: 'service.skip_ost', default: this.getConfig('skip_ost', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -73,6 +74,9 @@ _this.ending_first = _this.getConfig('ending_first', false);
 _this.reserve = _this.getConfig('points_reserve', 0);
 _this.sort_after = false;
 _this.url = 'https://www.indiegala.com';
+if (_this.lvlmax === 0) {
+_this.lvlmax = 9;
+}
 if (_this.dsave === ',') {
 _this.dsave = _this.lvlmax;
 $.ajax({
@@ -337,6 +341,11 @@ igbun = 0,
 igid = '???',
 igtime = '',
 id = link.split('/')[4];
+if (_this.getConfig('skip_ost', false)) {
+if (name.includes(' Soundtrack') || name.includes(' - OST')) {
+igown = 5;
+}
+}
 if (singl.includes('single ticket')) {
 single = true;
 }

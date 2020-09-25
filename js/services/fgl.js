@@ -115,14 +115,38 @@ success: function (account) {
 let fgacc = JSON.parse(account.replace('var System = ', '').replace('}};', '}}'));
 fgid = fgacc.user.id;
 fgname = fgacc.user.login;
+if (!account.includes('"main":{"actual":null')) {
 fgmaindraw = fgacc.draws.main.actual.id;
-fgsurveydraw = fgacc.draws.survey.actual.id;
-fgvideodraw = fgacc.draws.video.actual.id;
-fgstackpotdraw = fgacc.draws.stackpot.actual.id;
 fgmainvisit = fgacc.draws.main.actual.haveVisited;
+}
+else {
+fgmaindraw = 1;
+fgmainvisit = true;
+}
+if (!account.includes('"survey":{"actual":null')) {
+fgsurveydraw = fgacc.draws.survey.actual.id;
 fgsurveyvisit = fgacc.draws.survey.actual.haveVisited;
+}
+else {
+fgsurveydraw = 1;
+fgsurveyvisit = true;
+}
+if (!account.includes('"video":{"actual":null')) {
+fgvideodraw = fgacc.draws.video.actual.id;
 fgvideovisit = fgacc.draws.video.actual.haveVisited;
+}
+else {
+fgvideodraw = 1;
+fgvideovisit = true;
+}
+if (!account.includes('"stackpot":{"actual":null')) {
+fgstackpotdraw = fgacc.draws.stackpot.actual.id;
 fgstackpotvisit = fgacc.draws.stackpot.actual.haveVisited;
+}
+else {
+fgstackpotdraw = 1;
+fgstackpotvisit = true;
+}
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.acc') + fgname);
 }
@@ -156,7 +180,7 @@ _this.log(Lang.get('service.acc') + fgname + ': ' + Lang.get('service.entered_in
 });
 }
 else {
-if (_this.getConfig('log', true)) {
+if (_this.getConfig('log', true) && fgmaindraw > 1) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Visit MAIN DRAW', 'chk');
 _this.log(Lang.get('service.skip'), 'skip');
 }
@@ -183,7 +207,7 @@ _this.log(Lang.get('service.acc') + fgname + ': ' + Lang.get('service.entered_in
 });
 }
 else {
-if (_this.getConfig('log', true)) {
+if (_this.getConfig('log', true) && fgsurveydraw > 1) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Visit SURVEY DRAW', 'chk');
 _this.log(Lang.get('service.skip'), 'skip');
 }
@@ -210,7 +234,7 @@ _this.log(Lang.get('service.acc') + fgname + ': ' + Lang.get('service.entered_in
 });
 }
 else {
-if (_this.getConfig('log', true)) {
+if (_this.getConfig('log', true) && fgvideodraw > 1) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Visit VIDEO DRAW', 'chk');
 _this.log(Lang.get('service.skip'), 'skip');
 }
@@ -237,7 +261,7 @@ _this.log(Lang.get('service.acc') + fgname + ': ' + Lang.get('service.entered_in
 });
 }
 else {
-if (_this.getConfig('log', true)) {
+if (_this.getConfig('log', true) && fgstackpotdraw > 1) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Visit STACKPOT', 'chk');
 _this.log(Lang.get('service.skip'), 'skip');
 }
