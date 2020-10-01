@@ -326,7 +326,6 @@ else if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.err_join'), 'err');
 }
 }
-
 }
 });
 }, tmout);
