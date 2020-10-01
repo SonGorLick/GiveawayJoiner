@@ -7,17 +7,16 @@
 <link rel="stylesheet" href="./css/styles.css">
 <script>
 const currentBuild = require('electron').remote.app.getVersion();
-
 function hideWindow() {
-  if (process.platform !== "darwin") {
-    remote.BrowserWindow.getFocusedWindow().hide();
-  } else {
-    remote.BrowserWindow.getFocusedWindow().minimize();
-  }
+if (process.platform !== "darwin") {
+remote.BrowserWindow.getFocusedWindow().hide();
 }
-
+else {
+remote.BrowserWindow.getFocusedWindow().minimize();
+}
+}
 function closeWindow() {
-  window.close();
+window.close();
 }
 </script>
 </head>

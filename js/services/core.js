@@ -12,7 +12,9 @@ this.started = false;
 this.waitAuth = false;
 this.cookies = '';
 this.withValue = false;
+this.withLevel = false;
 this.curr_value = 0;
+this.curr_level = 0;
 this.tries = 0;
 this.dsave = ',';
 this.dload = ',';
@@ -116,6 +118,15 @@ let value = $(document.createElement('span'))
 this.value_label = $(document.createElement('span'))
 .text(this.curr_value)
 .appendTo(value);
+}
+if (this.withLevel) {
+let level = $(document.createElement('span'))
+.addClass('level')
+.html('<span data-lang="' + Lang.get('service.level_label') + '">' + Lang.get('service.level_label') + '</span>: ')
+.appendTo(this.userInfo);
+this.level_label = $(document.createElement('span'))
+.text(this.curr_level)
+.appendTo(level);
 }
 $(document.createElement('button'))
 .addClass('open-website')
@@ -383,6 +394,9 @@ this.userInfo.find('.username').text(userData.username);
 if (this.withValue) {
 this.setValue(userData.value);
 }
+if (this.withLevel) {
+this.setLevel(userData.level);
+}
 this.userInfo.addClass('visible');
 });
 }
@@ -647,6 +661,12 @@ this.value_label.text(new_value);
 this.curr_value = parseInt(new_value);
 }
 }
+setLevel(new_level) {
+if (this.withLevel) {
+this.level_label.text(new_level);
+this.curr_level = parseInt(new_level);
+}
+}
 getConfig(key, def) {
 if (def === undefined) {
 def = this.settings[key].default;
@@ -679,7 +699,8 @@ getUserInfo(callback) {
 callback({
 avatar: dirapp + 'images/' + this.constructor.name + '.png',
 username: this.constructor.name + ' User',
-value: 0
+value: 0,
+level: 0
 });
 }
 }

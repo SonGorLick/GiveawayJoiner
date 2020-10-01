@@ -111,7 +111,7 @@ input[type="checkbox"]:checked:before { position: relative; left: 2px; bottom: 3
 .joiner-button.disabled { cursor: default; color: #b9c2c7; pointer-events: none; }
 .service-user-panel { position: relative; padding: 7px 0; height: 52px; }
 .service-user-panel .joiner-button { position: absolute; right: 0; bottom: 12px; }
-.service-user-panel .user-info { display: none; line-height: 16px; }
+.service-user-panel .user-info { display: none; line-height: 14px; }
 .service-user-panel .user-info.visible { display: block; }
 .service-user-panel .user-info .avatar { width: 40px; height: 40px; background: center/contain transparent no-repeat; border-radius: 1px; float: left; margin-right: 10px; }
 .service-user-panel .user-info > span { display: block; }

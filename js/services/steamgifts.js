@@ -6,6 +6,7 @@ this.websiteUrl = 'https://www.steamgifts.com';
 this.authContent = 'Account';
 this.authLink = 'https://www.steamgifts.com/?login';
 this.withValue = true;
+this.withLevel = true;
 this.cards = true;
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
@@ -42,7 +43,8 @@ getUserInfo(callback) {
 let userData = {
 avatar: dirapp + 'images/SteamGifts.png',
 username: 'SteamGifts User',
-value: 0
+value: 0,
+level: 0
 };
 $.ajax({
 url: 'https://www.steamgifts.com/account/settings/profile',
@@ -51,6 +53,7 @@ data = $(data.replace(/<img/gi, '<noload'));
 userData.avatar = data.find('.nav__avatar-inner-wrap').attr('style').replace('background-image:url(', '').replace(');', '');
 userData.username = data.find('input[name=username]').val();
 userData.value = data.find('.nav__points').text();
+userData.level = data.find('.nav__points').next().text().replace('Level ', '');
 },
 complete: function () {
 callback(userData);

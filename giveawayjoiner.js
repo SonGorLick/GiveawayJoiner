@@ -14,8 +14,8 @@ let Lang = null;
 let tray = null;
 let user = null;
 let _icn = null;
-let _bmd = true;
-let _bfr = false;
+let _bmd = 'true';
+let _bfr = 'false';
 let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
 app.commandLine.appendSwitch('--no-sandbox');
@@ -63,8 +63,12 @@ event.sender.send('change-lang', data);
 app.on('window-all-closed', () => {
 app.quit();
 });
-app.on('activate', () => { mainWindow.show() });
-app.on('before-quit', () => app.quitting = true);
+app.on('activate', () => {
+mainWindow.show();
+});
+app.on('before-quit', () => {
+app.quitting = true;
+});
 app.on('ready', () => {
 Config = new ConfigClass();
 Lang = new LanguageClass();
@@ -127,10 +131,11 @@ Browser.loadFile('blank.html');
 Browser.hide();
 });
 mainWindow.on('close', (e) => {
-if (app.quitting) {
+if (app.quitting || process.platform !== 'darwin') {
 mainWindow = null;
-} else {
-e.preventDefault()
+}
+else {
+e.preventDefault();
 mainWindow.hide();
 }
 });

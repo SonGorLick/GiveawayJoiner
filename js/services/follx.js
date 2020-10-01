@@ -6,13 +6,15 @@ this.websiteUrl = 'https://follx.com';
 this.authLink = 'https://follx.com/logIn';
 this.authContent = '/account';
 this.withValue = true;
+this.withLevel = true;
 super.init();
 }
 getUserInfo(callback) {
 let userData = {
 avatar: dirapp + 'images/Follx.png',
 username: 'Follx User',
-value: 0
+value: 0,
+level: 0
 };
 $.ajax({
 url: 'https://follx.com',
@@ -20,6 +22,7 @@ success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
 userData.username = data.find('.common-header .user .expander-content a.username.truncate').text().trim();
 userData.value = data.find('.common-header .user .expander-content .energy > span').text().trim();
+userData.level = data.find('.icons > span.level').text().slice(0, 11).replace(/[^0-9]/g, '');
 userData.avatar = data.find('.common-header .user span.avatar').attr('style').replace("background-image: url('",'').replace("')", '');
 },
 complete: function () {

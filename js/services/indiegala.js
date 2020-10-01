@@ -7,6 +7,7 @@ this.authContent = 'Your account';
 this.websiteUrl = 'https://www.indiegala.com/library';
 this.authLink = 'https://www.indiegala.com/login';
 this.withValue = true;
+this.withLevel = true;
 this.cards = true;
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
@@ -36,7 +37,8 @@ getUserInfo(callback) {
 let userData = {
 avatar: dirapp + 'images/IndieGala.png',
 username: 'IndieGala User',
-value: 0
+value: 0,
+level: 0
 };
 $.ajax({
 url: 'https://www.indiegala.com/library',
@@ -74,17 +76,19 @@ _this.ending_first = _this.getConfig('ending_first', false);
 _this.reserve = _this.getConfig('points_reserve', 0);
 _this.sort_after = false;
 _this.url = 'https://www.indiegala.com';
+if (_this.dsave === ',') {
 if (_this.lvlmax === 0) {
 _this.lvlmax = 9;
 }
-if (_this.dsave === ',') {
 _this.dsave = _this.lvlmax;
+_this.setLevel(_this.dsave);
 $.ajax({
 url: _this.url + '/library/giveaways/user-level-and-coins',
 dataType: 'json',
 success: function (iglevel) {
 if (iglevel.current_level !== undefined) {
 _this.dsave = iglevel.current_level;
+_this.setLevel(_this.dsave);
 if (_this.lvlmax > _this.dsave || _this.lvlmax === 0) {
 _this.lvlmax = _this.dsave;
 }
@@ -564,8 +568,13 @@ else if (resp.status === 'level') {
 Times = 0;
 igcurr++;
 igrtry = 0;
-if (_this.lvlmax > 0) {
-_this.lvlmax = _this.lvlmax - 1;
+_this.dsave = _this.dsave - 1;
+_this.setLevel(_this.dsave);
+if (_this.lvlmax > _this.dsave) {
+_this.lvlmax = _this.dsave;
+}
+if (_this.lvlmin > _this.dsave) {
+_this.lvlmin = _this.dsave;
 }
 if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.cant_join'), 'cant');
