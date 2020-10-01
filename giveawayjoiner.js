@@ -14,8 +14,8 @@ let Lang = null;
 let tray = null;
 let user = null;
 let _icn = null;
-let _bmd = 'true';
-let _bfr = 'false';
+let _bmd = true;
+let _bfr = false;
 let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
 app.commandLine.appendSwitch('--no-sandbox');
@@ -26,9 +26,8 @@ _itr = __dirname + '/icons/icon.ico';
 udata = (udata.slice(0, -4)).toLowerCase();
 }
 if (process.platform === 'darwin') {
-app.dock.hide();
-_bmd = 'false';
-_bfr = 'true';
+_bmd = false;
+_bfr = true;
 _itr = __dirname + '/icons/trayTemplate.png';
 udata = (udata.slice(0, -34)).toLowerCase();
 }
@@ -64,6 +63,8 @@ event.sender.send('change-lang', data);
 app.on('window-all-closed', () => {
 app.quit();
 });
+app.on('activate', () => { mainWindow.show() });
+app.on('before-quit', () => app.quitting = true);
 app.on('ready', () => {
 Config = new ConfigClass();
 Lang = new LanguageClass();
@@ -73,7 +74,7 @@ Menu.setApplicationMenu(null);
 mainWindow = new BrowserWindow({
 width: 876,
 height: 616,
-skipTaskbar: _bfr,
+skipTaskbar: false,
 title: 'GiveawayJoiner',
 icon: _icn,
 show: false,
@@ -125,11 +126,13 @@ e.preventDefault();
 Browser.loadFile('blank.html');
 Browser.hide();
 });
-mainWindow.on('close', () => {
-mainWindow.removeAllListeners('close');
-});
-mainWindow.on('closed', () => {
+mainWindow.on('close', (e) => {
+if (app.quitting) {
 mainWindow = null;
+} else {
+e.preventDefault()
+mainWindow.hide();
+}
 });
 tray = new Tray(nativeImage.createFromPath(_itr));
 tray.setToolTip('GiveawayJoiner');
