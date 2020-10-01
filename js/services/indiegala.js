@@ -92,9 +92,15 @@ _this.setLevel(_this.dsave);
 if (_this.lvlmax > _this.dsave || _this.lvlmax === 0) {
 _this.lvlmax = _this.dsave;
 }
+if (_this.lvlmin > _this.dsave) {
+_this.lvlmin = _this.dsave;
+}
 }
 }, error: () => {}
 });
+}
+else {
+_this.setLevel(_this.dsave);	
 }
 if (_this.dload === 0) {
 $.ajax({
@@ -365,8 +371,8 @@ level = 0;
 else {
 level = parseInt((level.replace(/[^0-9]/g,'')));
 }
-if (name.length > 75) {
-name = name.slice(0, 75) + '...';
+if (name.length > 72) {
+name = name.slice(0, 72) + '...';
 }
 if (igsteam.includes('apps/')) {
 igapp = parseInt(igsteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
