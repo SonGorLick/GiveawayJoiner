@@ -271,7 +271,7 @@ _this.log(Lang.get('service.connection_error'), 'err');
 else {
 let enter = raff.indexOf('<i class="fa fa-sign-in"></i> Enter Raffle</button>') > 0,
 entered = raff.indexOf('<i class="fa fa-sign-out"></i> Leave Raffle</button>') >= 0,
-btncheck = raff.indexOf('<button rel="tooltip-free" data-placement="top" title="This public raffle is free to enter by anyone" data-loading-text="Entering..." class="btn btn-embossed btn-info btn-lg" style="display: none;" id="raffle-enter" onclick="ScrapTF.Raffles.EnterRaffle') >= 0,
+btncheck = raff.indexOf('<div class="col-xs-7 enter-raffle-btns">') >= 0,
 spid = id,
 hash = raff.substring(raff.indexOf("ScrapTF.Raffles.EnterRaffle('" + spid + "', '")+39,raff.indexOf('><i class="fa fa-sign-in"></i> Enter Raffle</button>')).slice(0, 64);
 _this.csrf = raff.substring(raff.indexOf("ScrapTF.User.Hash =")+21,raff.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
