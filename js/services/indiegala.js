@@ -574,7 +574,9 @@ else if (resp.status === 'level') {
 Times = 0;
 igcurr++;
 igrtry = 0;
+if (_this.dsave > 0) {
 _this.dsave = _this.dsave - 1;
+}
 _this.setLevel(_this.dsave);
 if (_this.lvlmax > _this.dsave) {
 _this.lvlmax = _this.dsave;

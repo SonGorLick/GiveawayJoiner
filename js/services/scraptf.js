@@ -269,12 +269,13 @@ _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 else {
-let enter = raff.indexOf(' Enter Raffle') >= 0,
-entered = raff.indexOf(' Leave Raffle') >= 0,
+let enter = raff.indexOf('<i class="fa fa-sign-in"></i> Enter Raffle</button>') > 0,
+entered = raff.indexOf('<i class="fa fa-sign-out"></i> Leave Raffle</button>') >= 0,
+btncheck = raff.indexOf('<button rel="tooltip-free" data-placement="top" title="This public raffle is free to enter by anyone" data-loading-text="Entering..." class="btn btn-embossed btn-info btn-lg" style="display: none;" id="raffle-enter" onclick="ScrapTF.Raffles.EnterRaffle') >= 0,
 spid = id,
 hash = raff.substring(raff.indexOf("ScrapTF.Raffles.EnterRaffle('" + spid + "', '")+39,raff.indexOf('><i class="fa fa-sign-in"></i> Enter Raffle</button>')).slice(0, 64);
 _this.csrf = raff.substring(raff.indexOf("ScrapTF.User.Hash =")+21,raff.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
-if (enter) {
+if (enter && btncheck) {
 let tmout = Math.floor(spnext / 4) + 2000,
 resp = 'err';
 setTimeout(() => {
@@ -333,6 +334,9 @@ _this.log(Lang.get('service.err_join'), 'err');
 else if (_this.getConfig('log', true)) {
 if (entered) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
+}
+else if (!btncheck) {
+_this.log(Lang.get('service.cant_join'), 'black');
 }
 else {
 _this.log(Lang.get('service.cant_join'), 'cant');
