@@ -7,11 +7,14 @@ this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
 this.withValue = true;
 this.cards = true;
+this.dlc = true;
 this.settings.maxcost = { type: 'number', trans: this.transPath('maxcost'), min: 0, max: 1000, default: this.getConfig('maxcost', 0) };
 this.settings.free_only = { type: 'checkbox', trans: 'service.free_only', default: this.getConfig('free_only', false) };
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
 this.settings.remove_ga = { type: 'checkbox', trans: this.transPath('remove_ga'), default: this.getConfig('remove_ga', false) };
+this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default: this.getConfig('skip_dlc', false) };
 this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
+this.settings.skip_skipdlc = { type: 'checkbox', trans: 'service.skip_skipdlc', default: this.getConfig('skip_skipdlc', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -212,6 +215,12 @@ _this.dsave = _this.dsave + code + '(n),';
 }
 njoin = 1;
 }
+if (_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + opblack.replace('app/', '') + ',')) {
+njoin = 5;
+}
+if (_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + opblack.replace('app/', '') + ',')) {
+njoin = 5;
+}
 if (_this.getConfig('card_only', false) && !GJuser.card.includes(',' + opblack.replace('app/', '') + ',')) {
 njoin = 5;
 }
@@ -244,6 +253,9 @@ njoin = 0;
 }
 let oplog = _this.logLink(_this.url + link, name);
 if (opblack !== '') {
+if (GJuser.dlc.includes(',' + opblack.replace('app/', '') + ',')) {
+oplog = 'DLC: ' + oplog;
+}
 if (GJuser.card.includes(',' + opblack.replace('app/', '') + ',')) {
 oplog = '♦ ' + oplog;
 }
@@ -338,6 +350,8 @@ opown = 5;
 }
 if (
 (_this.costmax < cost && _this.costmax !== 0) ||
+(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + opapp + ',')) ||
+(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + opapp + ',')) ||
 (_this.getConfig('card_only', false) && !GJuser.card.includes(',' + opapp + ',')) ||
 (cost !== 0 && _this.getConfig('free_only', false))
 )
@@ -376,6 +390,9 @@ opown = 7;
 }
 }
 if (_this.getConfig('log', true)) {
+if (GJuser.dlc.includes(',' + opapp + ',') && !oplog.includes('DLC: ')) {
+oplog = oplog.replace('$|  ', '$|  DLC: ');
+}
 if (GJuser.card.includes(',' + opapp + ',') && !oplog.includes('♦')) {
 oplog = oplog.replace('$|  ', '$|  ♦ ');
 }
@@ -411,6 +428,9 @@ break;
 }
 }
 else {
+if (GJuser.dlc.includes(',' + opapp + ',') && !oplog.includes('DLC: ')) {
+oplog = 'DLC: ' + oplog;
+}
 if (GJuser.card.includes(',' + opapp + ',') && !oplog.includes('♦')) {
 oplog = '♦ ' + oplog;
 }

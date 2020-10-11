@@ -12,6 +12,10 @@ let intervalTicks = 0;
 GJuser.ownapps = '[]';
 GJuser.ownsubs = '[]';
 GJuser.card = '';
+GJuser.card_date = 0;
+GJuser.dlc = '';
+GJuser.dlc_date = 0;
+GJuser.skip_dlc = '';
 GJuser.black = '';
 GJuser.white = '';
 $(function () {
@@ -36,6 +40,16 @@ success: function (data) {
 if (Object.keys(data).length > 7000) {
 GJuser.card = JSON.stringify(Object.keys(data)).replace(/"/g, '').replace('[', ',').replace(']', ',');
 fs.writeFile(dirdata + 'steam_card.txt', GJuser.card, (err) => { });
+}
+},error: () => {}
+});
+$.ajax({
+url: 'https://bartervg.com/browse/dlc/json/',
+dataType: 'json',
+success: function (data) {
+if (Object.keys(data).length > 7000) {
+GJuser.dlc = JSON.stringify(Object.keys(data)).replace(/"/g, '').replace('[', ',').replace(']', ',');
+fs.writeFile(dirdata + 'steam_dlc.txt', GJuser.dlc, (err) => { });
 }
 },error: () => {}
 });

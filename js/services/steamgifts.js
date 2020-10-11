@@ -8,6 +8,7 @@ this.authLink = 'https://www.steamgifts.com/?login';
 this.withValue = true;
 this.withLevel = true;
 this.cards = true;
+this.dlc = true;
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
 this.settings.ending = { type: 'number', trans: this.transPath('ending'), min: 0, max: 2880, default: this.getConfig('ending', 0) };
@@ -37,6 +38,7 @@ this.settings.ignore_on_group = { type: 'checkbox', trans: this.transPath('ignor
 this.settings.free_ga = { type: 'checkbox', trans: this.transPath('free_ga'), default: this.getConfig('free_ga', false) };
 this.settings.hide_ga = { type: 'checkbox', trans: this.transPath('hide_ga'), default: this.getConfig('hide_ga', false) };
 this.settings.remove_ga = { type: 'checkbox', trans: this.transPath('remove_ga'), default: this.getConfig('remove_ga', true) };
+this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default: this.getConfig('skip_dlc', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -173,6 +175,7 @@ sgsteam: sgaway.find('a.giveaway__icon').attr('href'),
 entered: sgaway.find('.giveaway__row-inner-wrap.is-faded').length > 0,
 type: sgtype,
 card: false,
+dlc: false,
 white: false
 };
 if (GA.sgsteam === undefined) {
@@ -182,6 +185,9 @@ else if (GA.sgsteam.includes('app/')) {
 let sgpp = parseInt(GA.sgsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
 if (GJuser.card.includes(',' + sgpp + ',')) {
 GA.card = true;
+}
+if (GJuser.dlc.includes(',' + sgpp + ',')) {
+GA.dlc = true;
 }
 if (GJuser.white.includes('app/' + sgpp + ',')) {
 GA.white = true;
@@ -202,7 +208,8 @@ GA.white = true;
 if (
 (!GA.pinned && GA.levelPass) &&
 (this.getConfig('ending', 0) === 0 || GA.left <= this.getConfig('ending', 0)) &&
-(GA.type === 'w' || GA.white === true || !this.getConfig('card_only', false) || GA.card && this.getConfig('card_only', false)) &&
+(GA.white || !GA.dlc || GA.dlc && !this.getConfig('skip_dlc', false)) &&
+(GA.type === 'w' || GA.white || !this.getConfig('card_only', false) || GA.card && this.getConfig('card_only', false)) &&
 (GA.type === 'p' || GA.type === 'g' && this.getConfig('group_first', false) || GA.type === 'g' && this.getConfig('group_only', false) || GA.type === 'w' && this.getConfig('wishlist_first', false) || GA.type === 'w' && this.getConfig('wishlist_only', false))
 )
 this.giveaways.push(GA);
@@ -358,7 +365,10 @@ if (GA.entered && sgown === 1) {
 sgown = 6;
 }
 let sglog = _this.logLink(GA.lnk, GA.nam);
-if (GA.card === true) {
+if (GA.dlc) {
+sglog = 'DLC: ' + sglog;
+}
+if (GA.card) {
 sglog = '♦ ' + sglog;
 }
 if (sgid !== '???') {

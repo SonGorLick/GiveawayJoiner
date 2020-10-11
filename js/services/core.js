@@ -21,6 +21,7 @@ this.dload = ',';
 this.dcheck = '';
 this.auto = false;
 this.cards = false;
+this.dlc = false;
 this.getTimeout = 19000;
 this.domain = 'google.com';
 this.auth = Lang.get('service.login') + this.constructor.name;
@@ -320,6 +321,7 @@ if (fs.existsSync(dirdata + 'steam_card.txt')) {
 let card = fs.readFileSync(dirdata + 'steam_card.txt');
 GJuser.card = card.toString();
 }
+if ((new Date()).getDate() !== GJuser.card_date || GJuser.card === '') {
 $.ajax({
 url: 'https://bartervg.com/browse/cards/json/',
 dataType: 'json',
@@ -327,9 +329,45 @@ success: function (data) {
 if (Object.keys(data).length > 7000) {
 GJuser.card = JSON.stringify(Object.keys(data)).replace(/"/g, '').replace('[', ',').replace(']', ',');
 fs.writeFile(dirdata + 'steam_card.txt', GJuser.card, (err) => { });
+GJuser.card_date = (new Date()).getDate();
 }
 },error: () => {}
 });
+}
+}
+if (this.dlc === true) {
+if (fs.existsSync(dirdata + 'steam_dlc.txt')) {
+let dlc = fs.readFileSync(dirdata + 'steam_dlc.txt');
+GJuser.dlc = dlc.toString();
+}
+if (fs.existsSync(dirdata + 'steam_skipdlc.txt')) {
+let skipdlc = fs.readFileSync(dirdata + 'steam_skipdlc.txt');
+GJuser.skip_dlc = skipdlc.toString();
+}
+if ((new Date()).getDate() !== GJuser.dlc_date || GJuser.dlc === '') {
+$.ajax({
+url: 'https://bartervg.com/browse/dlc/json/',
+dataType: 'json',
+success: function (data) {
+if (Object.keys(data).length > 7000) {
+GJuser.dlc = JSON.stringify(Object.keys(data)).replace(/"/g, '').replace('[', ',').replace(']', ',');
+fs.writeFile(dirdata + 'steam_dlc.txt', GJuser.dlc, (err) => { });
+let skip_dlc = ',';
+Object.keys(data).forEach((i) => {
+let base = JSON.stringify(data[i].base_appID).replace(/"/g, '');
+if (!GJuser.ownapps.includes(',' + base + ',')) {
+skip_dlc = skip_dlc + JSON.stringify(i).replace(/"/g, '') + ',';
+}
+});
+if (skip_dlc !== ',') {
+fs.writeFile(dirdata + 'steam_skipdlc.txt', skip_dlc, (err) => { });
+GJuser.skip_dlc = skip_dlc;
+}
+GJuser.dlc_date = (new Date()).getDate();
+}
+},error: () => {}
+});
+}
 }
 this.authCheck((authState) => {
 if (authState === 1) {

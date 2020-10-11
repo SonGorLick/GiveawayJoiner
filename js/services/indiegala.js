@@ -9,6 +9,7 @@ this.authLink = 'https://www.indiegala.com/login';
 this.withValue = true;
 this.withLevel = true;
 this.cards = true;
+this.dlc = true;
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
 this.settings.ending = { type: 'number', trans: this.transPath('ending'), min: 0, max: 720, default: this.getConfig('ending', 0) };
@@ -30,7 +31,9 @@ this.settings.reserve_on_sbl = { type: 'checkbox', trans: this.transPath('reserv
 this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
 this.settings.reserve_for_smpl = { type: 'checkbox', trans: this.transPath('reserve_for_smpl'), default: this.getConfig('reserve_for_smpl', false) };
 this.settings.whitelist_nocards = { type: 'checkbox', trans: this.transPath('whitelist_nocards'), default: this.getConfig('whitelist_nocards', false) };
+this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default: this.getConfig('skip_dlc', false) };
 this.settings.skip_ost = { type: 'checkbox', trans: 'service.skip_ost', default: this.getConfig('skip_ost', false) };
+this.settings.skip_skipdlc = { type: 'checkbox', trans: 'service.skip_skipdlc', default: this.getConfig('skip_skipdlc', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -80,14 +83,28 @@ if (_this.dsave === ',') {
 if (_this.lvlmax === 0) {
 _this.lvlmax = 9;
 }
+if (fs.existsSync(dirdata + 'indiegala.txt')) {
+let igl = fs.readFileSync(dirdata + 'indiegala.txt');
+_this.dsave = igl.toString();
+if (_this.lvlmax > _this.dsave) {
+_this.lvlmax = _this.dsave;
+}
+if (_this.lvlmin > _this.dsave) {
+_this.lvlmin = _this.dsave;
+}
+_this.setLevel(_this.dsave);
+}
+else {
 _this.dsave = _this.lvlmax;
 _this.setLevel(_this.dsave);
+}
 $.ajax({
 url: _this.url + '/library/giveaways/user-level-and-coins',
 dataType: 'json',
 success: function (iglevel) {
 if (iglevel.current_level !== undefined) {
 _this.dsave = iglevel.current_level;
+fs.writeFile(dirdata + 'indiegala.txt', _this.dsave, (err) => { });
 _this.setLevel(_this.dsave);
 if (_this.lvlmax > _this.dsave || _this.lvlmax === 0) {
 _this.lvlmax = _this.dsave;
@@ -292,6 +309,7 @@ _this.dcheck = 2;
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igprtry > 0) {
 if (!_this.started) {
 _this.dload = 0;
+_this.dsave = ',';
 }
 if (_this.igprtry === 0) {
 if (_this.getConfig('log', true)) {
@@ -352,7 +370,7 @@ igid = '???',
 igtime = '',
 id = link.split('/')[4];
 if (_this.getConfig('skip_ost', false)) {
-if (name.includes(' Soundtrack') || name.includes(' - OST')) {
+if (name.includes(' SoundTrack') || name.includes(' Soundtrack') || name.includes(' - OST')) {
 igown = 5;
 }
 }
@@ -371,8 +389,8 @@ level = 0;
 else {
 level = parseInt((level.replace(/[^0-9]/g,'')));
 }
-if (name.length > 72) {
-name = name.slice(0, 72) + '...';
+if (name.length > 66) {
+name = name.slice(0, 66) + '...';
 }
 if (igsteam.includes('apps/')) {
 igapp = parseInt(igsteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
@@ -412,6 +430,9 @@ entered = true;
 }
 }
 let iglog = _this.logLink(_this.url + link, name);
+if (GJuser.dlc.includes(',' + igapp + ',')) {
+iglog = 'DLC: ' + iglog;
+}
 if (GJuser.card.includes(',' + igapp + ',')) {
 iglog = '♦ ' + iglog;
 }
@@ -439,6 +460,8 @@ if (
 (_this.entmin > sold) ||
 (_this.lvlmin > level) ||
 (_this.lvlmax < level && _this.lvlmax !== 0) ||
+(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + igapp + ',')) ||
+(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + igapp + ',')) ||
 (_this.getConfig('card_only', false) && !GJuser.card.includes(',' + igapp + ',') && !_this.getConfig('whitelist_nocards', false)) ||
 (_this.getConfig('card_only', false) && !GJuser.card.includes(',' + igapp + ',') && !GJuser.white.includes(igid + ',') && _this.getConfig('whitelist_nocards', false)) ||
 (price < _this.getConfig('min_cost', 0) && _this.getConfig('min_cost', 0) !== 0) ||
