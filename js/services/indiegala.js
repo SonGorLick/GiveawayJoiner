@@ -431,7 +431,12 @@ entered = true;
 }
 let iglog = _this.logLink(_this.url + link, name);
 if (GJuser.dlc.includes(',' + igapp + ',')) {
-iglog = 'DLC: ' + iglog;
+if (GJuser.skip_dlc.includes(',' + igapp + ',')) {
+iglog = '⊟ ' + iglog;
+}
+else {
+iglog = '⊞ ' + iglog;
+}
 }
 if (GJuser.card.includes(',' + igapp + ',')) {
 iglog = '♦ ' + iglog;
@@ -460,8 +465,10 @@ if (
 (_this.entmin > sold) ||
 (_this.lvlmin > level) ||
 (_this.lvlmax < level && _this.lvlmax !== 0) ||
-(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + igapp + ',')) ||
-(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + igapp + ',')) ||
+(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + igapp + ',') && !_this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + igapp + ',') && !GJuser.white.includes(igid + ',') && _this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + igapp + ',') && !_this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + igapp + ',') && !GJuser.white.includes(igid + ',') && _this.getConfig('whitelist_nocards', false)) ||
 (_this.getConfig('card_only', false) && !GJuser.card.includes(',' + igapp + ',') && !_this.getConfig('whitelist_nocards', false)) ||
 (_this.getConfig('card_only', false) && !GJuser.card.includes(',' + igapp + ',') && !GJuser.white.includes(igid + ',') && _this.getConfig('whitelist_nocards', false)) ||
 (price < _this.getConfig('min_cost', 0) && _this.getConfig('min_cost', 0) !== 0) ||

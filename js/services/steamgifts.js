@@ -37,8 +37,8 @@ this.settings.sort_by_chance = { type: 'checkbox', trans: this.transPath('sort_b
 this.settings.ignore_on_group = { type: 'checkbox', trans: this.transPath('ignore_on_group'), default: this.getConfig('ignore_on_group', false) };
 this.settings.free_ga = { type: 'checkbox', trans: this.transPath('free_ga'), default: this.getConfig('free_ga', false) };
 this.settings.hide_ga = { type: 'checkbox', trans: this.transPath('hide_ga'), default: this.getConfig('hide_ga', false) };
-this.settings.remove_ga = { type: 'checkbox', trans: this.transPath('remove_ga'), default: this.getConfig('remove_ga', true) };
 this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default: this.getConfig('skip_dlc', false) };
+this.settings.remove_ga = { type: 'checkbox', trans: this.transPath('remove_ga'), default: this.getConfig('remove_ga', true) };
 super.init();
 }
 getUserInfo(callback) {
@@ -128,7 +128,7 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }
 }
 }
-data.find('.giveaway__row-outer-wrap').each((index, item) => {
+data.find('div:nth-of-type(3) > div.giveaway__row-outer-wrap').each((index, item) => {
 let sgaway = $(item),
 copies = 1,
 link = this.url + sgaway.find('a.giveaway__heading__name').attr('href'),
@@ -160,7 +160,6 @@ let GA = {
 page: sgpage,
 order: (index + 1),
 chance: (chance === Infinity ? 0 : chance),
-pinned: sgaway.closest('.pinned-giveaways__outer-wrap').length > 0,
 lnk: link,
 left: (parseInt(left[0]) * factor),
 copies: copies,
@@ -206,10 +205,8 @@ GA.white = true;
 }
 }
 if (
-(!GA.pinned && GA.levelPass) &&
+(GA.levelPass) &&
 (this.getConfig('ending', 0) === 0 || GA.left <= this.getConfig('ending', 0)) &&
-(GA.white || !GA.dlc || GA.dlc && !this.getConfig('skip_dlc', false)) &&
-(GA.type === 'w' || GA.white || !this.getConfig('card_only', false) || GA.card && this.getConfig('card_only', false)) &&
 (GA.type === 'p' || GA.type === 'g' && this.getConfig('group_first', false) || GA.type === 'g' && this.getConfig('group_only', false) || GA.type === 'w' && this.getConfig('wishlist_first', false) || GA.type === 'w' && this.getConfig('wishlist_only', false))
 )
 this.giveaways.push(GA);
@@ -225,7 +222,6 @@ callback();
 giveawaysEnter(callback) {
 let _this = this;
 let sgcurr = 0,
-sgprize = 1000,
 sga = [],
 sgb = [];
 if (this.getConfig('sort_by_chance', false)) {
@@ -325,12 +321,7 @@ sgbun = parseInt(GA.sgsteam.split('bundle/')[1].split('/')[0].split('?')[0].spli
 sgid = 'bundle/' + sgbun;
 }
 if (_this.curr_value < GA.cost && GA.cost > 0) {
-if (sgprize > GA.cost) {
 sgown = 3;
-}
-else {
-sgown = 7;
-}
 }
 if (
 (GA.type === 'p') &&
@@ -340,6 +331,13 @@ if (
 )
 {
 sgown = 7;
+}
+if (
+(GA.type !== 'w' && !GA.white && GA.dlc && _this.getConfig('skip_dlc', false)) ||
+(GA.type !== 'w' && !GA.white && GA.card && _this.getConfig('card_only', false))
+)
+{
+sgown = 8;
 }
 if (GA.entered) {
 sgown = 5;
@@ -366,7 +364,12 @@ sgown = 6;
 }
 let sglog = _this.logLink(GA.lnk, GA.nam);
 if (GA.dlc) {
-sglog = 'DLC: ' + sglog;
+if (GJuser.skip_dlc.includes(',' + sgapp + ',')) {
+sglog = '⊟ ' + sglog;
+}
+else {
+sglog = '⊞ ' + sglog;
+}
 }
 if (GA.card) {
 sglog = '♦ ' + sglog;
@@ -377,7 +380,6 @@ sgwhite = _this.logWhite(sgid);
 }
 if (
 (_this.getConfig('log', true)) &&
-(sgown !== 7) &&
 (!_this.dsave.includes(',' + sgid + ',') || sgown === 6)
 )
 {
@@ -391,9 +393,7 @@ case 2:
 _this.log(Lang.get('service.steam_error'), 'err');
 break;
 case 3:
-sgprize = GA.cost;
 _this.log(Lang.get('service.points_low'), 'skip');
-_this.log(Lang.get('service.skip_more') + (GA.cost - 1) + '$', 'skip');
 break;
 case 4:
 _this.log(Lang.get('service.blacklisted'), 'black');
@@ -403,6 +403,12 @@ _this.log(Lang.get('service.already_joined'), 'jnd');
 break;
 case 6:
 _this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.have_on_steam').split('-')[1], 'err');
+break;
+case 7:
+_this.log(Lang.get('service.points_low') + ' (' + Lang.get('service.points_reserve') + ' - ' + _this.getConfig('points_reserve', 0) + ')', 'skip');
+break;
+case 8:
+_this.log(Lang.get('service.skipped'), 'skip');
 break;
 }
 }
@@ -421,9 +427,9 @@ code: GA.code
 },
 success: function (data) {
 if (data.type === 'success') {
-sgprize = 1000;
 _this.log(Lang.get('service.removed') + _this.logLink(GA.lnk, GA.nam), 'info');
 _this.setValue(data.points);
+GA.entered = false;
 }
 }
 });
