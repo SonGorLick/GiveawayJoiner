@@ -173,8 +173,8 @@
 		"indiegala": {
 			"join_qty": "Entries quantity",
 			"join_qty_title": "Join giveaways no more than the specified quantity of times for multiple join",
-			"whitelist_nocards": "Whitelist without cards",
-			"whitelist_nocards_title": "Join giveaway without cards if in whitelist file /giveawayjoinerdata/whitelist.txt",
+			"whitelist_nocards": "Ignore for whitelist",
+			"whitelist_nocards_title": "Ignore trading cards, DLC settings for giveaways in whitelist file /giveawayjoinerdata/whitelist.txt",
 			"multi_join": "Multiple join",
 			"multi_join_title": "Multiple join to the same giveaway the specified quantity of times, if possible",
 			"sort_by_level": "Filter by level",
@@ -195,6 +195,8 @@
 		"opiumpulses": {
 			"maxcost": "Max. Cost",
 			"maxcost_title": "Don't join giveaways with a cost higher than your set max.cost. 0 - don't consider a cost",
+			"ignore_free": "Ignore settings for free giveaways",
+			"ignore_free_title": "Ignore trading cards, DLC settings for giveaways with 0 points cost",
 			"remove_ga": "Remove joined giveaways",
 			"remove_ga_title": "Remove already joined giveaway, if you own giveaway in Steam or giveaway in blacklist"
 		},
