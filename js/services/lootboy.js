@@ -118,7 +118,7 @@ lblog = '';
 if (!_this.getConfig('log', true)) {
 lblog = Lang.get('service.acc') + stat.username + ': ';
 }
-_this.log(lblog + Lang.get('service.gems') + '- ' + stat.lootgemBalance + ',' + Lang.get('service.coins') + '- ' + stat.lootcoinBalance, 'jnd');
+_this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.gems') + '- ' + stat.lootgemBalance + ',' + Lang.get('service.coins') + '- ' + stat.lootcoinBalance, 'jnd');
 rq({
 method: 'PUT',
 url: _this.lburl + '/v2/users/self/appStart',
