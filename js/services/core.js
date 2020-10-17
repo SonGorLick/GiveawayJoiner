@@ -33,11 +33,11 @@ interval_from: { type: 'number', trans: 'service.interval_from', min: 5, max: th
 interval_to: { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 10), max: 60, default: this.getConfig('interval_to', 15) },
 pages: { type: 'number', trans: 'service.pages', min: 1, max: 50, default: this.getConfig('pages', 1) },
 autostart: { type: 'checkbox', trans: 'service.autostart', default: this.getConfig('autostart', false) },
-check_in_steam: { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) },
 log: { type: 'checkbox', trans: 'service.log', default: this.getConfig('log', true) },
-blacklist_on: { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) },
+check_in_steam: { type: 'checkbox', trans: 'service.check_in_steam', default: this.getConfig('check_in_steam', true) },
+sound: { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) },
 log_autoclear: { type: 'checkbox', trans: 'service.log_autoclear', default: this.getConfig('log_autoclear', false) },
-sound: { type: 'checkbox', trans: 'service.sound', default: this.getConfig('sound', true) }
+blacklist_on: { type: 'checkbox', trans: 'service.blacklist_on', default: this.getConfig('blacklist_on', false) }
 };
 }
 init() {
