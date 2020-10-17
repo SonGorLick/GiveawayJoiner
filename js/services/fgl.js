@@ -60,9 +60,7 @@ if (!_this.dcheck || !_this.started) {
 if (!_this.started) {
 _this.dload = 1;
 }
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checked') + 'FGL', 'srch');
-}
 if (_this.started) {
 if (_this.statusIcon.attr('data-status') !== 'win') {
 _this.setStatus('good');
@@ -82,9 +80,7 @@ _this.stimer = fgtimer;
 }
 }
 if (fs.existsSync(dirdata + 'fgl' + fgcurr + '.txt') && fgcurr > 0) {
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.open_file') + 'fgl' + fgcurr + '.txt', 'info');
-}
 let fgdata = fs.readFileSync(dirdata + 'fgl' + fgcurr + '.txt');
 if (fgdata.includes(',')) {
 let fgd = (fgdata.toString()).split(','),
@@ -99,7 +95,8 @@ fgstackpotdraw = 0,
 fgmainvisit = false,
 fgsurveyvisit = false,
 fgvideovisit = false,
-fgstackpotvisit = false;
+fgstackpotvisit = false,
+fglog = '';
 $.ajax({
 url: 'https://freegamelottery.com/user/login',
 method: 'POST',
@@ -147,16 +144,12 @@ else {
 fgstackpotdraw = 1;
 fgstackpotvisit = true;
 }
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.acc') + fgname);
+_this.log(Lang.get('service.acc') + fgname, 'jnd');
+if (!_this.getConfig('log', true)) {
+fglog = Lang.get('service.acc') + fgname + ': ';
 }
 if (account.indexOf('"winner":{"id":' + fgid + ',') >= 0) {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.win'), 'win');
-}
-else {
-_this.log(Lang.get('service.acc') + fgname + ': ' + Lang.get('service.win'), 'win');
-}
+_this.log(fglog + Lang.get('service.win'), 'win');
 _this.setStatus('win');
 if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
@@ -169,18 +162,13 @@ url: _this.url,
 method: 'POST',
 data: 'drawId=' + fgmaindraw,
 success: function () {
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Visit MAIN DRAW', 'chk');
-_this.log(Lang.get('service.entered_in') + 'MAIN DRAW', 'enter');
-}
-else {
-_this.log(Lang.get('service.acc') + fgname + ': ' + Lang.get('service.entered_in') + 'MAIN DRAW', 'enter');
-}
+_this.log(fglog + Lang.get('service.entered_in') + 'MAIN DRAW', 'enter');
 }
 });
 }
 else {
-if (_this.getConfig('log', true) && fgmaindraw > 1) {
+if (fgmaindraw > 1) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Visit MAIN DRAW', 'chk');
 _this.log(Lang.get('service.skip'), 'skip');
 }
@@ -196,18 +184,13 @@ url: _this.url,
 method: 'POST',
 data: 'type=survey&drawId=' + fgsurveydraw,
 success: function () {
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Visit SURVEY DRAW', 'chk');
-_this.log(Lang.get('service.entered_in') + 'SURVEY DRAW', 'enter');
-}
-else {
-_this.log(Lang.get('service.acc') + fgname + ': ' + Lang.get('service.entered_in') + 'SURVEY DRAW', 'enter');
-}
+_this.log(fglog + Lang.get('service.entered_in') + 'SURVEY DRAW', 'enter');
 }
 });
 }
 else {
-if (_this.getConfig('log', true) && fgsurveydraw > 1) {
+if (fgsurveydraw > 1) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Visit SURVEY DRAW', 'chk');
 _this.log(Lang.get('service.skip'), 'skip');
 }
@@ -223,18 +206,13 @@ url: _this.url,
 method: 'POST',
 data: 'drawId=' + fgvideodraw,
 success: function () {
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Visit VIDEO DRAW', 'chk');
-_this.log(Lang.get('service.entered_in') + 'VIDEO DRAW', 'enter');
-}
-else {
-_this.log(Lang.get('service.acc') + fgname + ': ' + Lang.get('service.entered_in') + 'VIDEO DRAW', 'enter');
-}
+_this.log(fglog + Lang.get('service.entered_in') + 'VIDEO DRAW', 'enter');
 }
 });
 }
 else {
-if (_this.getConfig('log', true) && fgvideodraw > 1) {
+if (fgvideodraw > 1) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Visit VIDEO DRAW', 'chk');
 _this.log(Lang.get('service.skip'), 'skip');
 }
@@ -250,18 +228,13 @@ url: _this.url,
 method: 'POST',
 data: 'type=stackpot&drawId=' + fgstackpotdraw,
 success: function () {
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Visit STACKPOT', 'chk');
-_this.log(Lang.get('service.entered_in') + 'STACKPOT', 'enter');
-}
-else {
-_this.log(Lang.get('service.acc') + fgname + ': ' + Lang.get('service.entered_in') + 'STACKPOT', 'enter');
-}
+_this.log(fglog + Lang.get('service.entered_in') + 'STACKPOT', 'enter');
 }
 });
 }
 else {
-if (_this.getConfig('log', true) && fgstackpotdraw > 1) {
+if (fgstackpotdraw > 1) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Visit STACKPOT', 'chk');
 _this.log(Lang.get('service.skip'), 'skip');
 }

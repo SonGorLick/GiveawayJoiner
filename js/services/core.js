@@ -727,9 +727,17 @@ log(text, logType) {
 if (logType === '' || logType === undefined) {
 logType = 'normal';
 }
+if (
+(this.getConfig('log', true)) ||
+(!this.getConfig('log', true) && logType === 'normal') ||
+(!this.getConfig('log', true) && logType === 'err') ||
+(!this.getConfig('log', true) && logType === 'enter')
+)
+{
 this.logField.append('<div class="' + logType + '"><span class="time">' + timeStr() + '</span>' + text + '</div>');
 if (Config.get('autoscroll')) {
 this.logWrap.scrollTop(this.logWrap[0].scrollHeight);
+}
 }
 }
 joinService() {}

@@ -147,12 +147,9 @@ _this.dcheck = opdtnew.getDate();
 }
 setTimeout(() => {
 fs.writeFile(dirdata + 'opiumpulses.txt', _this.dsave, (err) => { });
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
-}
 }, _this.interval());
 }
-if (_this.getConfig('log', true)) {
 if (opfound.length < 40) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
@@ -161,7 +158,6 @@ _this.log(Lang.get('service.checked') + page + '#-' + _this.getConfig('pages', 1
 }
 else {
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
-}
 }
 if (page === _this.pagemax && _this.started) {
 setTimeout(() => {
@@ -253,7 +249,8 @@ njoin = 6;
 if (njoin > 6 && _this.getConfig('remove_ga', false)) {
 njoin = 0;
 }
-let oplog = _this.logLink(_this.url + link, name);
+let oplog = _this.logLink(_this.url + link, name),
+oplg = '|' + page + '#|' + (opcrr + 1) + '№|' + cost + '$|  ';
 if (opblack !== '') {
 if (GJuser.skip_dlc.includes(',' + opblack.replace('app/', '') + ',')) {
 oplog = '⊟ ' + oplog;
@@ -267,10 +264,9 @@ oplog = '♦ ' + oplog;
 opblack = _this.logBlack(opblack);
 }
 if (_this.getConfig('log', true)) {
-oplog = '|' + page + '#|' + (opcrr + 1) + '№|' + cost + '$|  ' + oplog;
+oplog = oplg + oplog;
 }
 if (njoin > 0) {
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + oplog + opblack, 'chk');
 switch (njoin) {
 case 1:
@@ -293,12 +289,11 @@ case 6:
 _this.log(Lang.get('service.already_joined'), 'jnd');
 break;
 case 7:
-_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.have_on_steam').split('-')[1], 'err');
+_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.have_on_steam').split('-')[1], 'cant');
 break;
 case 8:
-_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.blacklisted').split('-')[1], 'err');
+_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.blacklisted').split('-')[1], 'cant');
 break;
-}
 }
 opnext = 100;
 }
@@ -315,12 +310,10 @@ if (html === 'err') {
 opnext = 59000;
 if (oparray.filter(i => i === opcrr).length === 1) {
 oparray.push(opcrr);
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + oplog + opblack, 'chk');
-_this.log(Lang.get('service.err_join'), 'err');
+_this.log(Lang.get('service.err_join'), 'cant');
 }
-}
-else if (_this.getConfig('log', true)) {
+else {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
@@ -364,7 +357,7 @@ if (cost !== 0 || !_this.getConfig('ignore_free', false)) {
 if (
 (_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + opapp + ',')) ||
 (_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + opapp + ',')) ||
-(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + opapp + ','))
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + opapp + ',') && opid !== '???')
 )
 {
 opown = 6;
@@ -401,15 +394,21 @@ else {
 opown = 7;
 }
 }
+oplog = _this.logLink(_this.url + link, name);
+if (GJuser.skip_dlc.includes(',' + opapp + ',')) {
+oplog = '⊟ ' + oplog;
+}
+else if (GJuser.dlc.includes(',' + opapp + ',')) {
+oplog = '⊞ ' + oplog;
+}
+if (GJuser.card.includes(',' + opapp + ',')) {
+oplog = '♦ ' + oplog;
+}
 if (_this.getConfig('log', true)) {
-if (GJuser.skip_dlc.includes(',' + opapp + ',') && !oplog.includes('⊟ ')) {
-oplog = oplog.replace('$|  ', '$|  ⊟ ');
+oplog = oplg + oplog;
 }
-else if (GJuser.dlc.includes(',' + opapp + ',') && !oplog.includes('⊞ ')) {
-oplog = oplog.replace('$|  ', '$|  ⊞ ');
-}
-if (GJuser.card.includes(',' + opapp + ',') && !oplog.includes('♦')) {
-oplog = oplog.replace('$|  ', '$|  ♦ ');
+else {
+oplog = oplog + _this.logBlack(opid);
 }
 _this.log(Lang.get('service.checking') + oplog + _this.logBlack(opid), 'chk');
 switch (opown) {
@@ -435,24 +434,11 @@ case 7:
 _this.log(Lang.get('service.already_joined'), 'jnd');
 break;
 case 8:
-_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.have_on_steam').split('-')[1], 'err');
+_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.have_on_steam').split('-')[1], 'cant');
 break;
 case 9:
-_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.blacklisted').split('-')[1], 'err');
+_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.blacklisted').split('-')[1], 'cant');
 break;
-}
-}
-else {
-if (GJuser.skip_dlc.includes(',' + opapp + ',') && !oplog.includes('⊟ ')) {
-oplog = '⊟ ' + oplog;
-}
-else if (GJuser.dlc.includes(',' + opapp + ',') && !oplog.includes('⊞ ')) {
-oplog = '⊞ ' + oplog;
-}
-if (GJuser.card.includes(',' + opapp + ',') && !oplog.includes('♦')) {
-oplog = '♦ ' + oplog;
-}
-oplog = oplog + _this.logBlack(opid);
 }
 if (opown === 0) {
 let tmout = Math.floor(opnext / 2);
@@ -473,11 +459,9 @@ if (resp === 'err') {
 opnext = 59000;
 if (oparray.filter(i => i === opcrr).length === 1) {
 oparray.push(opcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
+_this.log(Lang.get('service.err_join'), 'cant');
 }
-}
-else if (_this.getConfig('log', true)) {
+else {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 }

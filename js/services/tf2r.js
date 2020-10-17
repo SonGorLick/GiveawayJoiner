@@ -90,15 +90,11 @@ if (tfarray.length <= tfcurr || !_this.started) {
 if (giveaways.length <= tfcurr) {
 setTimeout(() => {
 fs.writeFile(dirdata + 'tf2r.txt', _this.dsave, (err) => { });
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
-}
 }, _this.interval());
 }
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 _this.log(Lang.get('service.checked') + 'Public Raffles', 'srch');
-}
 if (_this.started) {
 setTimeout(() => {
 if (_this.statusIcon.attr('data-status') !== 'win') {
@@ -120,8 +116,8 @@ name = '?????? ' + '(' + rid + ')';
 let tflog = _this.logLink(link, name);
 if (_this.getConfig('log', true)) {
 tflog = '|' + (tfcrr + 1) + '№|  ' + tflog;
-_this.log(Lang.get('service.checking') + tflog, 'chk');
 }
+_this.log(Lang.get('service.checking') + tflog, 'chk');
 if (!_this.dload.includes(rid + ',') || _this.getConfig('check_all', false)) {
 let html = 'err';
 $.ajax({
@@ -135,11 +131,9 @@ if (html === 'err') {
 tfnext = 59000;
 if (tfarray.filter(i => i === tfcrr).length === 1) {
 tfarray.push(tfcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
+_this.log(Lang.get('service.err_join'), 'cant');
 }
-}
-else if (_this.getConfig('log', true)) {
+else {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
@@ -173,11 +167,9 @@ if (body === 'err') {
 tfnext = 59000;
 if (tfarray.filter(i => i === tfcrr).length === 1) {
 tfarray.push(tfcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
+_this.log(Lang.get('service.err_join'), 'cant');
 }
-}
-else if (_this.getConfig('log', true)) {
+else {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
@@ -189,9 +181,7 @@ tfnext = 100;
 if (!_this.dsave.includes(rid + ',')) {
 _this.dsave = _this.dsave + rid + ',';
 }
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
-}
 }
 }
 }
@@ -202,10 +192,8 @@ tfnext = 100;
 if (!_this.dsave.includes(rid + ',')) {
 _this.dsave = _this.dsave + rid + ',';
 }
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
 _this.log(Lang.get('service.data_have'), 'skip');
-}
 }
 tfcurr++;
 setTimeout(giveawayEnter, tfnext);

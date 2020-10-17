@@ -312,7 +312,6 @@ _this.dload = 0;
 _this.dsave = ',';
 }
 if (_this.igprtry === 0) {
-if (_this.getConfig('log', true)) {
 if (_this.curr_value === 0 && _this.dcheck === 2) {
 _this.log(Lang.get('service.value_label') + ' - 0', 'skip');
 }
@@ -330,7 +329,6 @@ else {
 igplog = igplog + page + '#';
 }
 _this.log(igplog, 'srch');
-}
 if (_this.sort_after && page === _this.pagemax) {
 page = 1;
 _this.pagemax = _this.getConfig('pages', 1);
@@ -448,15 +446,15 @@ iglog = '|' + page + '#|' + (igcurr + 1) + '№|  ' + iglog;
 else {
 iglog = '|' + page + '#|' + (igcurr + 1) + '№|' + sold + 'e|' + igtime + level + 'L|' + price + '$|  ' + iglog;
 }
+}
+else {
+iglog = iglog + _this.logWhite(igid) + _this.logBlack(igid);
+}
 if (igrtry === 0 && single) {
 _this.log(Lang.get('service.checking') + iglog + _this.logWhite(igid) + _this.logBlack(igid), 'chk');
 }
 if (igrtry === 0 && Times === 0 && !single) {
 _this.log('[m] ' + Lang.get('service.checking') + iglog + _this.logWhite(igid) + _this.logBlack(igid), 'chk');
-}
-}
-else {
-iglog = iglog + _this.logWhite(igid) + _this.logBlack(igid);
 }
 if (_this.curr_value < price) {
 igown = 7;
@@ -469,8 +467,8 @@ if (
 (_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + igapp + ',') && !GJuser.white.includes(igid + ',') && _this.getConfig('whitelist_nocards', false)) ||
 (_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + igapp + ',') && !_this.getConfig('whitelist_nocards', false)) ||
 (_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + igapp + ',') && !GJuser.white.includes(igid + ',') && _this.getConfig('whitelist_nocards', false)) ||
-(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + igapp + ',') && !_this.getConfig('whitelist_nocards', false)) ||
-(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + igapp + ',') && !GJuser.white.includes(igid + ',') && _this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + igapp + ',') && !_this.getConfig('whitelist_nocards', false) && igid !== '???') ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + igapp + ',') && !GJuser.white.includes(igid + ',') && _this.getConfig('whitelist_nocards', false) && igid !== '???') ||
 (price < _this.getConfig('min_cost', 0) && _this.getConfig('min_cost', 0) !== 0) ||
 (price > _this.getConfig('max_cost', 0) && _this.getConfig('max_cost', 0) !== 0) ||
 (_this.reserve > (_this.curr_value - price) && !single && enterTimes > 0 && _this.getConfig('reserve_no_multi', false)) ||
@@ -508,7 +506,6 @@ if (
 igown = 6;
 }
 if (igown > 0) {
-if (_this.getConfig('log', true)) {
 switch (igown) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
@@ -539,7 +536,6 @@ break;
 case 8:
 _this.log(Lang.get('service.cant_join'), 'cant');
 break;
-}
 }
 ignext = 100;
 igrtry = 0;
@@ -596,9 +592,7 @@ else if (resp.status === 'owner' || resp.status === 'limit_reached' || resp.stat
 Times = 0;
 igcurr++;
 igrtry = 0;
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.cant_join'), 'cant');
-}
 }
 else if (resp.status === 'level') {
 Times = 0;
@@ -614,18 +608,14 @@ _this.lvlmax = _this.dsave;
 if (_this.lvlmin > _this.dsave) {
 _this.lvlmin = _this.dsave;
 }
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.cant_join'), 'cant');
-}
 }
 else if (resp.status === 'silver') {
 _this.setValue(price - 1);
 Times = 0;
 igcurr++;
 igrtry = 0;
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.points_low'), 'skip');
-}
 }
 else if (resp.status === 'duplicate') {
 igcurr++;
@@ -653,9 +643,7 @@ igrtry = 0;
 Times = 0;
 ignext = 29000;
 igcurr++;
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
-}
+_this.log(Lang.get('service.err_join'), 'cant');
 }
 });
 }

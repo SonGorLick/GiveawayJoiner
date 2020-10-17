@@ -286,7 +286,7 @@ if (_this.doTimer() - _this.totalTicks < 240) {
 _this.totalTicks = 1;
 }
 if (_this.giveaways.length <= sgcurr || !_this.started) {
-if (_this.getConfig('log', true) && sgcurr > 0) {
+if (sgcurr > 0) {
 _this.log(Lang.get('service.checked') + '1#-' + _this.getConfig('pages', 1) + '#', 'srch');
 }
 if (sgcurr > 0 && _this.started) {
@@ -378,12 +378,15 @@ if (sgid !== '???') {
 sgblack = _this.logBlack(sgid);
 sgwhite = _this.logWhite(sgid);
 }
-if (
-(_this.getConfig('log', true)) &&
-(!_this.dsave.includes(',' + sgid + ',') || sgown === 6)
-)
-{
+if (_this.getConfig('log', true)) {
 sglog = '|' + GA.page + '#|' + GA.order + '№|'+ GA.copies + 'x|' + GA.entries + 'e|' + GA.chance + '%|' + GA.level + 'L|' + GA.cost + '$|  ' + sglog;
+}
+else {
+sglog = sglog + sgwhite + sgblack;
+}
+if (_this.dsave.includes(',' + sgid + ',') && sgown !== 6) {
+sgown = 1;
+}
 _this.log(Lang.get('service.checking') + sglog + sgwhite + sgblack, 'chk');
 switch (sgown) {
 case 1:
@@ -402,7 +405,7 @@ case 5:
 _this.log(Lang.get('service.already_joined'), 'jnd');
 break;
 case 6:
-_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.have_on_steam').split('-')[1], 'err');
+_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.have_on_steam').split('-')[1], 'cant');
 break;
 case 7:
 _this.log(Lang.get('service.points_low') + ' (' + Lang.get('service.points_reserve') + ' - ' + _this.getConfig('points_reserve', 0) + ')', 'skip');
@@ -410,10 +413,6 @@ break;
 case 8:
 _this.log(Lang.get('service.skipped'), 'skip');
 break;
-}
-}
-else {
-sglog = sglog + sgwhite + sgblack;
 }
 if (sgown === 6 && _this.getConfig('remove_ga', true)) {
 $.ajax({
@@ -477,15 +476,13 @@ _this.setValue(data.points);
 GA.entered = true;
 }
 else {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
-}
+_this.log(Lang.get('service.err_join'), 'cant');
 }
 }
 });
 }
 else {
-if (sgown === 0 && _this.getConfig('log', true)) {
+if (sgown === 0) {
 _this.log(Lang.get('service.skipped'), 'skip');
 }
 if (sgown !== 6) {

@@ -190,7 +190,6 @@ if (sparray.length <= spcurr || !_this.started) {
 if (!_this.started) {
 _this.pagemax = page;
 }
-if (_this.getConfig('log', true)) {
 if (page === _this.pagemax) {
 if (_this.started) {
 _this.log(Lang.get('service.reach_end'), 'skip');
@@ -199,7 +198,6 @@ _this.log(Lang.get('service.checked') + page + '#-' + _this.getConfig('pages', 1
 }
 else {
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
-}
 }
 if (page === _this.pagemax && _this.started) {
 if (_this.statusIcon.attr('data-status') !== 'win') {
@@ -233,8 +231,8 @@ spname = spname.slice(0, 70) + '...';
 let splog = _this.logLink(_this.url + splink, spname);
 if (_this.getConfig('log', true)) {
 splog = '|' + page + '#|' + (spcrr + 1) + '№|  ' + splog;
-_this.log(Lang.get('service.checking') + splog, 'chk');
 }
+_this.log(Lang.get('service.checking') + splog, 'chk');
 if (!_this.dsave.includes(',' + id + ',') && !spended.includes('Ended')) {
 spnext = spnext + Math.floor(spnext / 4) + 2100;
 let raff = 'err';
@@ -260,11 +258,9 @@ if (raff === 'err') {
 spnext = 19000;
 if (sparray.filter(i => i === spcrr).length === 1) {
 sparray.push(spcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
+_this.log(Lang.get('service.err_join'), 'cant');
 }
-}
-else if (_this.getConfig('log', true)) {
+else {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
@@ -302,11 +298,9 @@ if (resp === 'err') {
 spnext = 19000;
 if (sparray.filter(i => i === spcrr).length === 1) {
 sparray.push(spcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
+_this.log(Lang.get('service.err_join'), 'cant');
 }
-}
-else if (_this.getConfig('log', true)) {
+else {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
@@ -319,19 +313,17 @@ else {
 spnext = 19000;
 if (sparray.filter(i => i === spcrr).length === 1) {
 sparray.push(spcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
+_this.log(Lang.get('service.err_join'), 'cant');
 }
-}
-else if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
+else {
+_this.log(Lang.get('service.err_join'), 'cant');
 }
 }
 }
 });
 }, tmout);
 }
-else if (_this.getConfig('log', true)) {
+else {
 if (entered) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
 }
@@ -347,9 +339,7 @@ _this.log(Lang.get('service.cant_join'), 'cant');
 }
 else {
 spnext = 100;
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
-}
 }
 spcurr++;
 setTimeout(giveawayEnter, spnext);

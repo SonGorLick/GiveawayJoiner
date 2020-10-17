@@ -95,7 +95,6 @@ if (fxfound.length < 20 || !_this.started) {
 _this.pagemax = page;
 }
 if (fxarray.length <= fxcurr || !_this.started) {
-if (_this.getConfig('log', true)) {
 if (fxfound.length < 20) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
@@ -104,7 +103,6 @@ _this.log(Lang.get('service.checked') + page + '#-' + _this.getConfig('pages', 1
 }
 else {
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
-}
 }
 if (page === _this.pagemax && _this.started) {
 if (_this.statusIcon.attr('data-status') !== 'win') {
@@ -168,6 +166,10 @@ fxown = 3;
 let fxlog = _this.logLink(link, name);
 if (_this.getConfig('log', true)) {
 fxlog = '|' + page + '#|' + (fxcrr + 1) + '№|' + copies + 'x|' + price + '$|  ' + fxlog;
+}
+else {
+fxlog = fxlog + _this.logBlack(fxid);
+}
 _this.log(Lang.get('service.checking') + fxlog + _this.logBlack(fxid), 'chk');
 switch (fxown) {
 case 1:
@@ -186,10 +188,6 @@ case 5:
 _this.log(Lang.get('service.points_low'), 'skip');
 break;
 }
-}
-else {
-fxlog = fxlog + _this.logBlack(fxid);
-}
 if (fxown === 0) {
 let html = 'err',
 njoin = 0;
@@ -204,11 +202,9 @@ if (html === 'err') {
 fxnext = 59000;
 if (fxarray.filter(i => i === fxcrr).length === 1) {
 fxarray.push(fxcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
+_this.log(Lang.get('service.err_join'), 'cant');
 }
-}
-else if (_this.getConfig('log', true)) {
+else {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
@@ -222,18 +218,16 @@ njoin = 2;
 if (html.indexOf('Уже есть') >= 0) {
 njoin = 3;
 }
-if (_this.getConfig('log', true)) {
 switch (njoin) {
 case 1:
-_this.log(Lang.get('service.err_join'), 'err');
+_this.log(Lang.get('service.err_join'), 'cant');
 break;
 case 2:
 _this.log(Lang.get('service.cant_join'), 'cant');
 break;
 case 3:
-_this.log(Lang.get('service.have_on_steam'), 'err');
+_this.log(Lang.get('service.have_on_steam'), 'steam');
 break;
-}
 }
 if (njoin === 0) {
 let body = 'err';
@@ -254,11 +248,9 @@ if (body === 'err' || !body.response) {
 fxnext = 59000;
 if (fxarray.filter(i => i === fxcrr).length === 1) {
 fxarray.push(fxcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
+_this.log(Lang.get('service.err_join'), 'cant');
 }
-}
-else if (_this.getConfig('log', true)) {
+else {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 }

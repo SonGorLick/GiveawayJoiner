@@ -114,7 +114,6 @@ if (_this.limit >= 50 || mjfound.length < 50 && page > 14) {
 _this.pagemax = page;
 }
 if (mjarray.length <= mjcurr || _this.limit >= 50 || !_this.started) {
-if (_this.getConfig('log', true)) {
 if (_this.limit >= 50) {
 _this.log('Steam limit - 50', 'skip');
 }
@@ -134,7 +133,6 @@ fs.writeFile(dirdata + 'mj_blacklist.txt', _this.dload, (err) => { });
 }
 else if (page - 14 > 0) {
 _this.log(Lang.get('service.checked') + (page - 14) + '#', 'srch');
-}
 }
 if (page === _this.pagemax) {
 if (
@@ -253,14 +251,20 @@ mjcurr = 1000;
 mjown = 6;
 }
 let mjlog = _this.logLink(mjsteam, name);
-if (_this.getConfig('log', true) && mjown !== 7) {
+if (_this.getConfig('log', true)) {
 if (page < 15) {
 mjlog = '|0#|' + mjsubid + '|' + mjname + '|  ' + mjlog;
 }
 else {
 mjlog = '|' + (page - 14) + '#|' + (mjcrr + 1) + '№|' + mjsubid + '|' + mjname + '|  ' + mjlog;
 }
+}
+else {
+mjlog = mjlog  + _this.logBlack(mjid);
+}
+if (mjown !== 7) {
 _this.log(Lang.get('service.checking') + mjlog + _this.logBlack(mjid), 'chk');
+}
 switch (mjown) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
@@ -281,10 +285,6 @@ case 6:
 _this.log('Steam g_session data error', 'err');
 break;
 }
-}
-else {
-mjlog = mjlog  + _this.logBlack(mjid);
-}
 if (mjown === 0) {
 let rp = 'err';
 $.ajax({
@@ -304,9 +304,7 @@ else if (rp.indexOf('error_box') >= 0) {
 if (_this.getConfig('auto_mj_black', true)) {
 _this.dload = _this.dload + mjsubid + ',';
 }
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.cant_join'), 'cant');
-}
 }
 else {
 rp = 'err';
@@ -318,11 +316,9 @@ if (rp === 'err') {
 mjnext = 29000;
 if (mjarray.filter(i => i === mjcrr).length === 1) {
 mjarray.push(mjcrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
+_this.log(Lang.get('service.err_join'), 'cant');
 }
-}
-else if (_this.getConfig('log', true)) {
+else {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 }

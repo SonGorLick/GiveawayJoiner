@@ -62,9 +62,7 @@ if (!_this.dcheck || !_this.started) {
 if (!_this.started) {
 _this.dload = 1;
 }
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checked') + 'LootBoy', 'srch');
-}
 if (_this.started) {
 if (_this.statusIcon.attr('data-status') !== 'win') {
 _this.setStatus('good');
@@ -90,11 +88,9 @@ else {
 lbua = _this.ua;
 }
 if (fs.existsSync(dirdata + 'lootboy' + lbcurr + '.txt') && lbcurr > 0) {
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.open_file') + 'lootboy' + lbcurr + '.txt', 'info');
 if (lbua !== _this.ua) {
 _this.log(lbua, 'skip');
-}
 }
 let lbdata = fs.readFileSync(dirdata + 'lootboy' + lbcurr + '.txt');
 if (lbdata.includes(',Bearer')) {
@@ -117,10 +113,12 @@ headers: {
 }
 })
 .then((stats) => {
-let stat = stats.data;
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.acc') + stat.username + ':' + Lang.get('service.gems') + '- ' + stat.lootgemBalance + ',' + Lang.get('service.coins') + '- ' + stat.lootcoinBalance);
+let stat = stats.data,
+lblog = '';
+if (!_this.getConfig('log', true)) {
+lblog = Lang.get('service.acc') + stat.username + ': ';
 }
+_this.log(lblog + Lang.get('service.gems') + '- ' + stat.lootgemBalance + ',' + Lang.get('service.coins') + '- ' + stat.lootcoinBalance, 'jnd');
 rq({
 method: 'PUT',
 url: _this.lburl + '/v2/users/self/appStart',
@@ -139,21 +137,12 @@ headers: {
 })
 .then((coins) => {
 let coin = coins.data;
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Coins', 'chk');
-}
 if (coin.newLootcoinBalance - stat.lootcoinBalance > 0) {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.received') + Lang.get('service.coins') + '- ' + (coin.newLootcoinBalance - stat.lootcoinBalance), 'enter');
+_this.log(lblog + Lang.get('service.received') + Lang.get('service.coins') + '- ' + (coin.newLootcoinBalance - stat.lootcoinBalance), 'enter');
 }
 else {
-_this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.received') + Lang.get('service.coins') + '- ' + (coin.newLootcoinBalance - stat.lootcoinBalance), 'enter');
-}
-}
-else {
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.skip'), 'skip');
-}
 }
 });
 rq({
@@ -198,9 +187,7 @@ if (lbcomics.length > 4) {
 lbcomics.length = 4;
 }
 if (lbcomics.length === 0) {
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.no_offer') + 'Read Comics', 'cant');
-}
 }
 else {
 lbcomics.forEach(function(comic) {
@@ -222,21 +209,12 @@ headers: {
 })
 .then((comreads) => {
 let comread = comreads.data;
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Comics #' + comic.number + ' ' + comic.title, 'chk');
-}
 if (comread.gotBonus) {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.received') + Lang.get('service.coins') + '- ' + comread.lootcoinBonus, 'enter');
+_this.log(lblog + Lang.get('service.received') + Lang.get('service.coins') + '- ' + comread.lootcoinBonus, 'enter');
 }
 else {
-_this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.coins') + '- ' + comread.lootcoinBonus, 'enter');
-}
-}
-else {
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.skip'), 'skip');
-}
 }
 });
 });
@@ -282,9 +260,7 @@ lboffers[i].have = lbtaken.includes(lboffers[i].id);
 }
 lboffers = lboffers.filter(off => off.have === false);
 if (lboffers.length === 0) {
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.no_offer') + 'Diamonds Quests', 'cant');
-}
 }
 else {
 lboffers.forEach(function(offer) {
@@ -306,21 +282,12 @@ headers: {
 })
 .then((gems) => {
 let gem = gems.data;
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim(), 'chk');
-}
 if (!gem.alreadyTaken) {
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.received') + Lang.get('service.gems') + '- ' + offer.diamondBonus, 'enter');
+_this.log(lblog + Lang.get('service.received') + Lang.get('service.gems') + '- ' + offer.diamondBonus, 'enter');
 }
 else {
-_this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.received') + Lang.get('service.gems') + '- ' + offer.diamondBonus, 'enter');
-}
-}
-else {
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.skip'), 'skip');
-}
 }
 });
 });

@@ -6,7 +6,12 @@ this.settings.timer_from.min = 5;
 this.websiteUrl = 'http://astats.astats.nl/astats/';
 this.authContent = 'Log out';
 this.authLink = 'http://astats.astats.nl/astats/profile/Login.php';
+this.cards = true;
+this.dlc = true;
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
+this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default: this.getConfig('skip_dlc', false) };
+this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
+this.settings.skip_skipdlc = { type: 'checkbox', trans: 'service.skip_skipdlc', default: this.getConfig('skip_skipdlc', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -121,19 +126,15 @@ url: _this.url + '/astats/User_Info.php'
 if (afound.length <= acurr && page === _this.pagemax) {
 setTimeout(() => {
 fs.writeFile(dirdata + 'astats.txt', _this.dsave, (err) => { });
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.data_saved'), 'info');
-}
 }, _this.interval());
 }
-if (_this.getConfig('log', true)) {
 if (page === _this.pagemax) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 _this.log(Lang.get('service.checked') + page + '#-' + _this.getConfig('pages', 1) + '#', 'srch');
 }
 else {
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
-}
 }
 if (page === _this.pagemax && _this.started) {
 setTimeout(() => {
@@ -179,6 +180,14 @@ else if (assteam.includes('bundle/')) {
 asbun = parseInt(assteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'bundle/' + asbun;
 }
+if (
+(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + asapp + ',')) ||
+(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + asapp + ',')) ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + asapp + ',') && asid !== '???')
+)
+{
+asown = 6;
+}
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
 asown = 2;
@@ -205,8 +214,21 @@ asown = 3;
 }
 }
 let aslog = _this.logLink(_this.url + alink, aname);
+if (GJuser.skip_dlc.includes(',' + asapp + ',')) {
+aslog = '⊟ ' + aslog;
+}
+else if (GJuser.dlc.includes(',' + asapp + ',')) {
+aslog = '⊞ ' + aslog;
+}
+if (GJuser.card.includes(',' + asapp + ',')) {
+aslog = '♦ ' + aslog;
+}
 if (_this.getConfig('log', true)) {
 aslog = '|' + page + '#|' + (acrr + 1) + '№|  ' + aslog;
+}
+else {
+aslog = aslog + _this.logBlack(asid);
+}
 _this.log(Lang.get('service.checking') + aslog + _this.logBlack(asid), 'chk');
 switch (asown) {
 case 1:
@@ -225,10 +247,9 @@ break;
 case 5:
 _this.log(Lang.get('service.cant_join') + ',' + Lang.get('service.have_on_steam').split('-')[1], 'cant');
 break;
-}
-}
-else {
-aslog = aslog + _this.logBlack(asid);
+case 6:
+_this.log(Lang.get('service.skipped'), 'skip');
+break;
 }
 if (asown === 0) {
 let html = 'err';
@@ -243,11 +264,9 @@ if (html === 'err') {
 asnext = 59000;
 if (aarray.filter(i => i === acrr).length === 1) {
 aarray.push(acrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
+_this.log(Lang.get('service.err_join'), 'cant');
 }
-}
-else if (_this.getConfig('log', true)) {
+else {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
@@ -268,7 +287,6 @@ asown = 3;
 else {
 asown = 2;
 }
-if (_this.getConfig('log', true)) {
 switch (asown) {
 case 1:
 _this.log(Lang.get('service.already_joined'), 'jnd');
@@ -279,7 +297,6 @@ break;
 case 3:
 _this.log(Lang.get('service.points_low'), 'skip');
 break;
-}
 }
 if (asown === 0) {
 let tmout = Math.floor(asnext / 2),
@@ -297,11 +314,9 @@ if (resp === 'err') {
 asnext = 59000;
 if (aarray.filter(i => i === acrr).length === 1) {
 aarray.push(acrr);
-if (_this.getConfig('log', true)) {
-_this.log(Lang.get('service.err_join'), 'err');
+_this.log(Lang.get('service.err_join'), 'cant');
 }
-}
-else if (_this.getConfig('log', true)) {
+else {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 }

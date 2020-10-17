@@ -95,11 +95,9 @@ if (link !== undefined) {
 id = data.substring(data.indexOf('<meta property="og:image" content="')+81).slice(0, 8).match(/[\d]+/)[0];
 enter = data.indexOf('"buttonenter buttongiveaway">Join Giveaway<') >= 0;
 entered = data.indexOf('"buttonenter buttonentered buttongiveaway">Success - Giveaway joined<') >= 0;
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.checking') + ' ' + _this.logLink(link, name), 'chk');
 if (entered) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
-}
 }
 }
 if (enter) {
@@ -162,12 +160,10 @@ new Audio(dirapp + 'sounds/won.wav').play();
 }
 );
 }
-if (_this.getConfig('log', true)) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 setTimeout(() => {
 _this.log(Lang.get('service.checked') + 'Giveaways', 'srch');
 }, 10000);
-}
 if (_this.started) {
 setTimeout(() => {
 if (_this.statusIcon.attr('data-status') !== 'win') {
@@ -197,12 +193,12 @@ let resp = resps.data;
 resp = resp.replace(/<img/gi, '<noload');
 let check = resp.indexOf('<p><strong>Support us by subscribing:</strong></p>') >= 0;
 if (!check) {
-_this.log(Lang.get('service.done') + name + ' - ' + finish, 'info');
+_this.log(Lang.get('service.done') + name + ' - ' + finish, 'enter');
 }
 })
 .finally(() => {
 if (!addlink.includes('the-challenge-of-adblock')) {
-_this.log(Lang.get('service.done') + name + ' - ' + finish, 'info');
+_this.log(Lang.get('service.done') + name + ' - ' + finish, 'enter');
 }
 });
 }
@@ -214,7 +210,7 @@ headers: _this.dload,
 responseType: 'document'
 })
 .finally(() => {
-_this.log(Lang.get('service.done') + name + ' - ' + finish, 'info');
+_this.log(Lang.get('service.done') + name + ' - ' + finish, 'enter');
 });
 }
 }
