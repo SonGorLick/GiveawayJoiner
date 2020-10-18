@@ -238,8 +238,7 @@ case 2:
 _this.log(Lang.get('service.steam_error'), 'err');
 break;
 case 3:
-_this.log(Lang.get('service.already_joined'), 'jnd');
-_this.log(Lang.get('service.data_have'), 'skip');
+_this.log(Lang.get('service.already_joined') + ', ' + Lang.get('service.data_have'), 'jnd');
 break;
 case 4:
 _this.log(Lang.get('service.blacklisted'), 'black');

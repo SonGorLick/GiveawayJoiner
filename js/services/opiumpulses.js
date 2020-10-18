@@ -270,8 +270,7 @@ if (njoin > 0) {
 _this.log(Lang.get('service.checking') + oplog + opblack, 'chk');
 switch (njoin) {
 case 1:
-_this.log(Lang.get('service.cant_join'), 'cant');
-_this.log(Lang.get('service.data_have'), 'skip');
+_this.log(Lang.get('service.cant_join') + ', ' + Lang.get('service.data_have'), 'cant');
 break;
 case 2:
 _this.log(Lang.get('service.have_on_steam'), 'steam');

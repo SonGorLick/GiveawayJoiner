@@ -200,12 +200,10 @@ case 2:
 _this.log(Lang.get('service.blacklisted'), 'black');
 break;
 case 3:
-_this.log(Lang.get('service.time'), 'cant');
-_this.log(Lang.get('service.data_have'), 'skip');
+_this.log(Lang.get('service.time') + ', ' + Lang.get('service.data_have'), 'cant');
 break;
 case 4:
-_this.log(Lang.get('service.won_skip'), 'jnd');
-_this.log(Lang.get('service.data_have'), 'skip');
+_this.log(Lang.get('service.won_skip') + ', ' + Lang.get('service.data_have'), 'jnd');
 break;
 case 5:
 _this.log(Lang.get('service.skipped'), 'skip');

@@ -215,7 +215,7 @@ _this.log(Lang.get('service.done') + name + ' - ' + finish, 'enter');
 }
 }
 else {
-idbnext = 100;
+idbnext = 200;
 }
 curradds++;
 setTimeout(giveawayEnter, idbnext);

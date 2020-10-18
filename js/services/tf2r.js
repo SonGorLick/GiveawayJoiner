@@ -192,8 +192,7 @@ tfnext = 100;
 if (!_this.dsave.includes(rid + ',')) {
 _this.dsave = _this.dsave + rid + ',';
 }
-_this.log(Lang.get('service.already_joined'), 'jnd');
-_this.log(Lang.get('service.data_have'), 'skip');
+_this.log(Lang.get('service.already_joined') + ', ' + Lang.get('service.data_have'), 'jnd');
 }
 tfcurr++;
 setTimeout(giveawayEnter, tfnext);
