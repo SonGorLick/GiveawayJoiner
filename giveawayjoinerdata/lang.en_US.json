@@ -101,6 +101,8 @@
 		"cost_only_title": "Join giveaways only with more than 0 points cost",
 		"whitelist_only": "Whitelist only",
 		"whitelist_only_title": "Join giveaways only from the whitelist file /giveawayjoinerdata/whitelist.txt",
+		"whitelist_nocards": "Ignore for whitelist",
+		"whitelist_nocards_title": "Ignore trading cards, DLC settings for giveaways in whitelist file /giveawayjoinerdata/whitelist.txt",
 		"sound": "Sound notifications",
 		"sound_title": "Play sound when winning a giveaway",
 		"blacklist_on": "Enable blacklist",
@@ -173,8 +175,6 @@
 		"indiegala": {
 			"join_qty": "Entries quantity",
 			"join_qty_title": "Join giveaways no more than the specified quantity of times for multiple join",
-			"whitelist_nocards": "Ignore for whitelist",
-			"whitelist_nocards_title": "Ignore trading cards, DLC settings for giveaways in whitelist file /giveawayjoinerdata/whitelist.txt",
 			"multi_join": "Multiple join",
 			"multi_join_title": "Multiple join to the same giveaway the specified quantity of times, if possible",
 			"sort_by_level": "Filter by level",
