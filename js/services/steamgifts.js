@@ -306,7 +306,6 @@ sgapp = 0,
 sgsub = 0,
 sgbun = 0,
 sgblack = '',
-sgwhite = '',
 sgid = '???';
 if (GA.sgsteam.includes('app/')) {
 sgapp = parseInt(GA.sgsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
@@ -375,19 +374,18 @@ if (GA.card) {
 sglog = '♦ ' + sglog;
 }
 if (sgid !== '???') {
-sgblack = _this.logBlack(sgid);
-sgwhite = _this.logWhite(sgid);
+sgblack = _this.logWhite(sgid) + _this.logBlack(sgid);
 }
 if (_this.getConfig('log', true)) {
 sglog = '|' + GA.page + '#|' + GA.order + '№|'+ GA.copies + 'x|' + GA.entries + 'e|' + GA.chance + '%|' + GA.level + 'L|' + GA.cost + '$|  ' + sglog;
 }
 else {
-sglog = sglog + sgwhite + sgblack;
+sglog = sglog + sgblack;
 }
 if (_this.dsave.includes(',' + sgid + ',') && sgown !== 6) {
 sgown = 1;
 }
-_this.log(Lang.get('service.checking') + sglog + sgwhite + sgblack, 'chk');
+_this.log(Lang.get('service.checking') + sglog + sgblack, 'chk');
 switch (sgown) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');

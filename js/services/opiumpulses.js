@@ -9,13 +9,14 @@ this.withValue = true;
 this.cards = true;
 this.dlc = true;
 this.settings.maxcost = { type: 'number', trans: this.transPath('maxcost'), min: 0, max: 1000, default: this.getConfig('maxcost', 0) };
-this.settings.free_only = { type: 'checkbox', trans: 'service.free_only', default: this.getConfig('free_only', false) };
+this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
 this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default: this.getConfig('skip_dlc', false) };
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
-this.settings.ignore_free = { type: 'checkbox', trans: this.transPath('ignore_free'), default: this.getConfig('ignore_free', false) };
+this.settings.whitelist_nocards = { type: 'checkbox', trans: 'service.whitelist_nocards', default: this.getConfig('whitelist_nocards', false) };
 this.settings.skip_skipdlc = { type: 'checkbox', trans: 'service.skip_skipdlc', default: this.getConfig('skip_skipdlc', false) };
 this.settings.remove_ga = { type: 'checkbox', trans: this.transPath('remove_ga'), default: this.getConfig('remove_ga', false) };
-this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
+this.settings.free_only = { type: 'checkbox', trans: 'service.free_only', default: this.getConfig('free_only', false) };
+this.settings.ignore_free = { type: 'checkbox', trans: this.transPath('ignore_free'), default: this.getConfig('ignore_free', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -214,9 +215,12 @@ njoin = 1;
 }
 if (cost !== 0 || !_this.getConfig('ignore_free', false)) {
 if (
-(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + opblack.replace('app/', '') + ',')) ||
-(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + opblack.replace('app/', '') + ',')) ||
-(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + opblack.replace('app/', '') + ','))
+(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + opblack.replace('app/', '') + ',') && !_this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + opblack.replace('app/', '') + ',') && !GJuser.white.includes(opblack + ',') && _this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + opblack.replace('app/', '') + ',') && !_this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + opblack.replace('app/', '') + ',') && !GJuser.white.includes(opblack + ',') && _this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + opblack.replace('app/', '') + ',') && !_this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + opblack.replace('app/', '') + ',') && !GJuser.white.includes(opblack + ',') && _this.getConfig('whitelist_nocards', false))
 )
 {
 njoin = 5;
@@ -261,7 +265,7 @@ oplog = '⊞ ' + oplog;
 if (GJuser.card.includes(',' + opblack.replace('app/', '') + ',')) {
 oplog = '♦ ' + oplog;
 }
-opblack = _this.logBlack(opblack);
+opblack = _this.logWhite(opblack) + _this.logBlack(opblack);
 }
 if (_this.getConfig('log', true)) {
 oplog = oplg + oplog;
@@ -354,9 +358,12 @@ opown = 6;
 }
 if (cost !== 0 || !_this.getConfig('ignore_free', false)) {
 if (
-(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + opapp + ',')) ||
-(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + opapp + ',')) ||
-(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + opapp + ',') && opid !== '???')
+(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + opapp + ',') && !_this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + opapp + ',') && !GJuser.white.includes(opid + ',') && _this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + opapp + ',') && !_this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + opapp + ',') && !GJuser.white.includes(opid + ',') && _this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + opapp + ',') && !_this.getConfig('whitelist_nocards', false) && opid !== '???') ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + opapp + ',') && !GJuser.white.includes(opid + ',') && _this.getConfig('whitelist_nocards', false) && opid !== '???')
 )
 {
 opown = 6;
@@ -407,9 +414,9 @@ if (_this.getConfig('log', true)) {
 oplog = oplg + oplog;
 }
 else {
-oplog = oplog + _this.logBlack(opid);
+oplog = oplog + _this.logWhite(opid) + _this.logBlack(opid);
 }
-_this.log(Lang.get('service.checking') + oplog + _this.logBlack(opid), 'chk');
+_this.log(Lang.get('service.checking') + oplog + _this.logWhite(opid) + _this.logBlack(opid), 'chk');
 switch (opown) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');

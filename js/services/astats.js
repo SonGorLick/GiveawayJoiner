@@ -8,9 +8,10 @@ this.authContent = 'Log out';
 this.authLink = 'http://astats.astats.nl/astats/profile/Login.php';
 this.cards = true;
 this.dlc = true;
-this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default: this.getConfig('skip_dlc', false) };
 this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
+this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default: this.getConfig('skip_dlc', false) };
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
+this.settings.whitelist_nocards = { type: 'checkbox', trans: 'service.whitelist_nocards', default: this.getConfig('whitelist_nocards', false) };
 this.settings.skip_skipdlc = { type: 'checkbox', trans: 'service.skip_skipdlc', default: this.getConfig('skip_skipdlc', false) };
 super.init();
 }
@@ -181,9 +182,12 @@ asbun = parseInt(assteam.split('bundle/')[1].split('/')[0].split('?')[0].split('
 asid = 'bundle/' + asbun;
 }
 if (
-(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + asapp + ',')) ||
-(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + asapp + ',')) ||
-(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + asapp + ',') && asid !== '???')
+(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + asapp + ',') && !_this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + asapp + ',') && !GJuser.white.includes(asid + ',') && _this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + asapp + ',') && !_this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + asapp + ',') && !GJuser.white.includes(asid + ',') && _this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + asapp + ',') && !_this.getConfig('whitelist_nocards', false) && asid !== '???') ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + asapp + ',') && !GJuser.white.includes(asid + ',') && _this.getConfig('whitelist_nocards', false) && asid !== '???')
 )
 {
 asown = 6;
@@ -227,9 +231,9 @@ if (_this.getConfig('log', true)) {
 aslog = '|' + page + '#|' + (acrr + 1) + '№|  ' + aslog;
 }
 else {
-aslog = aslog + _this.logBlack(asid);
+aslog = aslog + _this.logWhite(asid) + _this.logBlack(asid);
 }
-_this.log(Lang.get('service.checking') + aslog + _this.logBlack(asid), 'chk');
+_this.log(Lang.get('service.checking') + aslog + _this.logWhite(asid) + _this.logBlack(asid), 'chk');
 switch (asown) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');

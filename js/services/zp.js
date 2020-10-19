@@ -10,12 +10,13 @@ this.cards = true;
 this.dlc = true;
 this.settings.interval_from = { type: 'number', trans: 'service.interval_from', min: 10, max: this.getConfig('interval_to', 20), default: this.getConfig('interval_from', 15) };
 this.settings.interval_to = { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 15), max: 60, default: this.getConfig('interval_to', 20) };
-this.settings.skip_xbox = { type: 'checkbox', trans: this.transPath('skip_xbox'), default: this.getConfig('skip_xbox', false) };
+this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
 this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default: this.getConfig('skip_dlc', false) };
 this.settings.skip_after = { type: 'checkbox', trans: this.transPath('skip_after'), default: this.getConfig('skip_after', true) };
-this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
+this.settings.whitelist_nocards = { type: 'checkbox', trans: 'service.whitelist_nocards', default: this.getConfig('whitelist_nocards', false) };
 this.settings.skip_skipdlc = { type: 'checkbox', trans: 'service.skip_skipdlc', default: this.getConfig('skip_skipdlc', false) };
 this.settings.check_all = { type: 'checkbox', trans: this.transPath('check_all'), default: this.getConfig('check_all', false) };
+this.settings.skip_xbox = { type: 'checkbox', trans: this.transPath('skip_xbox'), default: this.getConfig('skip_xbox', false) };
 delete this.settings.pages;
 super.init();
 }
@@ -142,9 +143,12 @@ njoin = 3;
 }
 if (zpblack !== '') {
 if (
-(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + zpblack.replace('app/', '') + ',')) ||
-(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + zpblack.replace('app/', '') + ',')) ||
-(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + zpblack.replace('app/', '') + ','))
+(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + zpblack.replace('app/', '') + ',') && !_this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + zpblack.replace('app/', '') + ',') && !GJuser.white.includes(zpblack + ',') && _this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + zpblack.replace('app/', '') + ',') && !_this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + zpblack.replace('app/', '') + ',') && !GJuser.white.includes(zpblack + ',') && _this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + zpblack.replace('app/', '') + ',') && !_this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + zpblack.replace('app/', '') + ',') && !GJuser.white.includes(zpblack + ',') && _this.getConfig('whitelist_nocards', false))
 )
 {
 njoin = 5;
@@ -185,7 +189,7 @@ zplog = '⊞ ' + zplog;
 if (GJuser.card.includes(',' + zpblack.replace('app/', '') + ',')) {
 zplog = '♦ ' + zplog;
 }
-zpblack = _this.logBlack(zpblack);
+zpblack = _this.logWhite(zpblack) + _this.logBlack(zpblack);
 }
 if (_this.getConfig('log', true)) {
 zplog = zplg + zplog;
@@ -286,9 +290,12 @@ else if (zpid === '') {
 zpid = '???';
 }
 if (
-(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + zpapp + ',')) ||
-(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + zpapp + ',')) ||
-(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + zpapp + ',') && zpid !== '')
+(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + zpapp + ',') && !_this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + zpapp + ',') && !GJuser.white.includes(zpid + ',') && _this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + zpapp + ',') && !_this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + zpapp + ',') && !GJuser.white.includes(zpid + ',') && _this.getConfig('whitelist_nocards', false)) ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + zpapp + ',') && !_this.getConfig('whitelist_nocards', false) && zpid !== '???') ||
+(_this.getConfig('card_only', false) && !GJuser.card.includes(',' + zpapp + ',') && !GJuser.white.includes(zpid + ',') && _this.getConfig('whitelist_nocards', false) && zpid !== '???')
 )
 {
 zpown = 7;
@@ -325,7 +332,7 @@ zplog = '⊞ ' + zplog;
 if (GJuser.card.includes(',' + zpapp + ',')) {
 zplog = '♦ ' + zplog;
 }
-zpid = _this.logBlack(zpid);
+zpid = _this.logWhite(zpid) + _this.logBlack(zpid);
 }
 if (_this.getConfig('log', true)) {
 zplog = zplg + zplog;
