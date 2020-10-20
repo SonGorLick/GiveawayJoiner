@@ -129,6 +129,7 @@ Browser.on('close', (e) => {
 e.preventDefault();
 Browser.loadFile('blank.html');
 Browser.hide();
+mainWindow.focus();
 });
 mainWindow.on('close', (e) => {
 if (app.quitting || process.platform !== 'darwin') {

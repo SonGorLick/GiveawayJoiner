@@ -4,7 +4,7 @@ constructor() {
 super();
 this.websiteUrl = 'https://ggplayers.com';
 this.authLink = 'https://ggplayers.com/login/';
-this.authContent = 'user-wrap';
+this.authContent = 'Log Out';
 this.settings.interval_from = { type: 'number', trans: 'service.interval_from', min: 10, max: this.getConfig('interval_to', 20), default: this.getConfig('interval_from', 15) };
 this.settings.interval_to = { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 15), max: 60, default: this.getConfig('interval_to', 20) };
 this.settings.cost_only = { type: 'checkbox', trans: 'service.cost_only', default: this.getConfig('cost_only', false) };
@@ -28,19 +28,11 @@ complete: function () {
 if (html === 'err') {
 callback(-1);
 }
-else if (html.indexOf('user-wrap') >= 0) {
+else if (html.indexOf('Log Out') >= 0) {
 if (!fs.existsSync(dirdata + 'ggp_acc.txt')) {
-let mmbr = html.substring(html.indexOf('<a class="user-link" href="https://ggplayers.com/members/')+57,html.indexOf('<span class="user-name">')).replace('">', '').trim();
+let mmbr = ($(html).find('[id="menu-item-60694"]')).find('a').attr('href');
 fs.writeFile(dirdata + 'ggp_acc.txt', mmbr + ',0', (err) => { });
 }
-let i = html.substring(html.indexOf('gamipress_events = {"ajaxurl":"\/wp-admin\/admin-ajax.php",')+59,html.indexOf('gamipress_events = {"ajaxurl":"\/wp-admin\/admin-ajax.php",')+126),
-ii = i.split(','),
-iii = '{"action": "gamipress_track_visit", ' + ii[0] + ', ' + ii[1] + ', ' + ii[2] + '}';
-//$.ajax({
-//method: 'POST',
-//url: 'https://ggplayers.com/wp-admin/admin-ajax.php',
-//data: iii
-//});
 callback(1);
 }
 else {
@@ -106,7 +98,7 @@ if (page > 1) {
 ggpurl = ggpurl + 'page/' + page + '/';
 }
 else if (page === 0) {
-ggpurl = _this.url + '/members/' + _this.dsave;
+ggpurl = _this.dsave;
 }
 $.ajax({
 url: ggpurl,
@@ -114,7 +106,7 @@ success: function (datas) {
 datas = datas.replace(/<img/gi, '<noload');
 data = $(datas);
 if (page === 0) {
-let points = data.find('.bb-user-content-wrap > .gamipress-buddypress-points > .gamipress-buddypress-competition-rewards.gamipress-buddypress-points-type > .gamipress-buddypress-user-competition-rewards.gamipress-buddypress-user-points.activity').text().trim();
+let points = data.find('[class="activity gamipress-buddypress-user-points gamipress-buddypress-user-competition-rewards"]').text().trim();
 fs.writeFile(dirdata + 'ggp_acc.txt', _this.dsave + ',' + points, (err) => { });
 _this.setValue(points);
 let gppdtnew = new Date();
@@ -123,7 +115,7 @@ gppdtnew.setHours(gppdtnew.getUTCHours() + 8);
 _this.dcheck = gppdtnew.getDate();
 }
 else {
-ggpfound = data.find('.bb-grid.site-content-grid > #primary > main > ul > li');
+ggpfound = data.find('.container-wrapper > ul > li');
 }
 },
 complete: function () {

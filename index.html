@@ -7,17 +7,6 @@
 <link rel="stylesheet" href="./css/styles.css">
 <script>
 const currentBuild = require('electron').remote.app.getVersion();
-function hideWindow() {
-if (process.platform !== "darwin") {
-remote.BrowserWindow.getFocusedWindow().hide();
-}
-else {
-remote.BrowserWindow.getFocusedWindow().minimize();
-}
-}
-function closeWindow() {
-window.close();
-}
 </script>
 </head>
 <body>
@@ -36,7 +25,7 @@ window.close();
 </li>
 </ul>
 <div class="window-buttons">
-<span class="minimizer fa fa-window-minimize" onclick="hideWindow()"></span>
+<span class="minimizer fa fa-window-minimize" onclick="minimizeWindow()"></span>
 <span class="closer fa fa-times" onclick="closeWindow()"></span>
 </div>
 </div>
@@ -101,6 +90,7 @@ window.close();
 <script src="./js/services/astats.js"></script>
 <script src="./js/services/fgl.js"></script>
 <script src="./js/services/follx.js"></script>
+<script src="./js/services/ggp.js"></script>
 <script src="./js/services/indiedb.js"></script>
 <script src="./js/services/indiegala.js"></script>
 <script src="./js/services/lootboy.js"></script>
@@ -115,6 +105,7 @@ window.services = {
 astats: new Astats(),
 fgl: new FGL(),
 follx: new Follx(),
+ggp: new GGP(),
 indiedb: new IndieDB(),
 indiegala: new IndieGala(),
 lootboy: new LootBoy(),

@@ -206,3 +206,14 @@ Browser.loadURL(url);
 Browser.setTitle('GiveawayJoiner - ' + Lang.get('service.browser_loading'));
 Browser.show();
 }
+window.minimizeWindow = () => {
+if (process.platform !== "darwin") {
+remote.getCurrentWindow().hide();
+}
+else {
+remote.BrowserWindow.getFocusedWindow().minimize();
+}
+};
+window.closeWindow = () => {
+window.close();
+};
