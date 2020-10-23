@@ -111,15 +111,6 @@ this.userInfo = $(document.createElement('div'))
 .html('<div class="avatar"></div>' +
 '<span class="username"></span>')
 .appendTo(this.userPanel);
-if (this.withValue) {
-let value = $(document.createElement('span'))
-.addClass('value')
-.html('<span data-lang="' + Lang.get('service.value_label') + '">' + Lang.get('service.value_label') + '</span>: ')
-.appendTo(this.userInfo);
-this.value_label = $(document.createElement('span'))
-.text(this.curr_value)
-.appendTo(value);
-}
 if (this.withLevel) {
 let level = $(document.createElement('span'))
 .addClass('level')
@@ -128,6 +119,15 @@ let level = $(document.createElement('span'))
 this.level_label = $(document.createElement('span'))
 .text(this.curr_level)
 .appendTo(level);
+}
+if (this.withValue) {
+let value = $(document.createElement('span'))
+.addClass('value')
+.html('<span data-lang="' + Lang.get('service.value_label') + '">' + Lang.get('service.value_label') + '</span>: ')
+.appendTo(this.userInfo);
+this.value_label = $(document.createElement('span'))
+.text(this.curr_value)
+.appendTo(value);
 }
 $(document.createElement('button'))
 .addClass('open-website')
