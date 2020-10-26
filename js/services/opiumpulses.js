@@ -6,7 +6,7 @@ this.websiteUrl = 'https://www.opiumpulses.com/giveaways';
 this.authContent = 'site/logout';
 this.authLink = 'https://www.opiumpulses.com/site/login';
 this.withValue = true;
-this.cards = true;
+this.card = true;
 this.dlc = true;
 this.settings.maxcost = { type: 'number', trans: this.transPath('maxcost'), min: 0, max: 1000, default: this.getConfig('maxcost', 0) };
 this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
@@ -91,6 +91,7 @@ opwon = parseInt(opwon);
 }
 if (opwon > 0 && opwon > _this.won) {
 _this.log(_this.logLink(_this.url + '/user/giveawaykeys', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (opwon - _this.won) + ')'), 'win');
+_this.logWin(' OpiumPulses - ' + (opwon - _this.won));
 _this.setStatus('win');
 _this.setConfig('won', opwon);
 if (_this.getConfig('sound', true)) {
@@ -376,7 +377,7 @@ _this.dsave = _this.dsave + code + '(n),';
 opown = 3;
 }
 if (_this.getConfig('check_in_steam', true)) {
-if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
+if (GJuser.ownapps === '' && GJuser.ownsubs === '') {
 opown = 2;
 }
 if (GJuser.ownapps.includes(',' + opapp + ',') && opapp > 0) {

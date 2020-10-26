@@ -196,7 +196,7 @@ if (_this.dload.includes(',' + mjsubid + ',') && _this.getConfig('mj_black', tru
 mjown = 4;
 }
 if (_this.getConfig('check_in_steam', true)) {
-if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
+if (GJuser.ownapps === '' && GJuser.ownsubs === '') {
 mjown = 2;
 }
 if (GJuser.ownapps.includes(',' + mjapp + ',') && mjapp > 0) {

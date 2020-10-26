@@ -7,7 +7,7 @@ this.authContent = 'Account';
 this.authLink = 'https://www.steamgifts.com/?login';
 this.withValue = true;
 this.withLevel = true;
-this.cards = true;
+this.card = true;
 this.dlc = true;
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
@@ -121,6 +121,7 @@ this.setConfig('won', sgwon);
 }
 if (sgwon > 0 && sgwon > this.won) {
 this.log(this.logLink(this.url + '/giveaways/won', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (sgwon) + ')'), 'win');
+this.logWin(' SteamGifts - ' + (sgwon - this.won));
 this.setStatus('win');
 this.setConfig('won', sgwon);
 if (this.getConfig('sound', true)) {
@@ -345,7 +346,7 @@ else if (_this.giveaways.filter(i => i.code === GA.code && i.entered === true).l
 sgown = 5;
 }
 if (_this.getConfig('check_in_steam', true)) {
-if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
+if (GJuser.ownapps === '' && GJuser.ownsubs === '') {
 sgown = 2;
 }
 if (GJuser.ownapps.includes(',' + sgapp + ',') && sgapp > 0) {

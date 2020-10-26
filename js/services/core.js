@@ -20,7 +20,7 @@ this.dsave = ',';
 this.dload = ',';
 this.dcheck = '';
 this.auto = false;
-this.cards = false;
+this.card = false;
 this.dlc = false;
 this.getTimeout = 19000;
 this.domain = 'google.com';
@@ -135,8 +135,9 @@ $(document.createElement('button'))
 .attr('data-link', this.websiteUrl)
 .appendTo(this.userPanel);
 $(document.createElement('button'))
-.addClass('login')
+.addClass('open-website')
 .html('<div class="fa fa-user-circle" data-lang-title="' + this.auth + '"></div>')
+.css('margin-right', '-40px')
 .attr('data-link', this.authLink)
 .appendTo(this.userPanel);
 this.mainButton = $('<button>' + Lang.get('service.btn_start') + '</button>')
@@ -254,9 +255,7 @@ this.updateCookies();
 this.totalTicks = 0;
 this.started = true;
 this.stimer = 1440;
-if (this.statusIcon.attr('data-status') !== 'win') {
 this.setStatus('good');
-}
 this.log(Lang.get('service.started'));
 if (this.auto) {
 this.totalTicks = 86395;
@@ -272,108 +271,27 @@ clearInterval(this.intervalVar);
 if (this.totalTicks % this.doTimer() === 0) {
 this.totalTicks = 1;
 this.updateCookies();
-if (this.getConfig('check_in_steam', true)) {
-if (fs.existsSync(dirdata + 'steam_app.txt')) {
-let ownapps = fs.readFileSync(dirdata + 'steam_app.txt');
-GJuser.ownapps = ownapps.toString();
+GJuser.white = this.loadFile('whitelist');
+GJuser.black = this.loadFile('blacklist');
+if (Config.get('steam_local', false) && GJuser.own_date < Date.now()) {
+GJuser.ownapps = this.loadFile('steam_app');
+GJuser.ownsubs = this.loadFile('steam_sub');
+} 
+else if (!Config.get('steam_local', false) && GJuser.own_date < Date.now()) {
+this.updateSteam();
 }
-if (fs.existsSync(dirdata + 'steam_sub.txt')) {
-let ownsubs = fs.readFileSync(dirdata + 'steam_sub.txt');
-GJuser.ownsubs = ownsubs.toString();
+if (this.dlc && GJuser.dlc_date !== (new Date()).getDate()) {
+this.updateDlc();
 }
-if (!Config.get('steam_local', false)) {
-$.ajax({
-url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
-dataType: 'json',
-success: function (data) {
-if (JSON.stringify(data.rgOwnedApps) !== '[]') {
-GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
-GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
-fs.writeFile(dirdata + 'steam_app.txt', GJuser.ownapps, (err) => { });
-fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
+if (this.card && GJuser.card_date !== (new Date()).getDate()) {
+this.updateCard();
 }
-}, error: () => {}
-});
-}
-}
-if (this.getConfig('blacklist_on', false)) {
-if (fs.existsSync(dirdata + 'blacklist.txt')) {
-let blacklist = fs.readFileSync(dirdata + 'blacklist.txt');
-if (blacklist.length > 0) {
-GJuser.black = blacklist.toString();
-if (GJuser.black.slice(-1) !== ',') {
-GJuser.black = GJuser.black + ',';
-}
-}
-}
-}
-if (fs.existsSync(dirdata + 'whitelist.txt')) {
-let whitelist = fs.readFileSync(dirdata + 'whitelist.txt');
-if (whitelist.length > 0) {
-GJuser.white = whitelist.toString();
-if (GJuser.white.slice(-1) !== ',') {
-GJuser.white = GJuser.white + ',';
-}
-}
-}
-if (this.cards === true) {
-if (fs.existsSync(dirdata + 'steam_card.txt')) {
-let card = fs.readFileSync(dirdata + 'steam_card.txt');
-GJuser.card = card.toString();
-}
-if ((new Date()).getDate() !== GJuser.card_date || GJuser.card === '') {
-$.ajax({
-url: 'https://bartervg.com/browse/cards/json/',
-dataType: 'json',
-success: function (data) {
-if (Object.keys(data).length > 7000) {
-GJuser.card = JSON.stringify(Object.keys(data)).replace(/"/g, '').replace('[', ',').replace(']', ',');
-fs.writeFile(dirdata + 'steam_card.txt', GJuser.card, (err) => { });
-GJuser.card_date = (new Date()).getDate();
-}
-},error: () => {}
-});
-}
-}
-if (this.dlc === true) {
-if (fs.existsSync(dirdata + 'steam_dlc.txt')) {
-let dlc = fs.readFileSync(dirdata + 'steam_dlc.txt');
-GJuser.dlc = dlc.toString();
-}
-if (fs.existsSync(dirdata + 'steam_skipdlc.txt')) {
-let skipdlc = fs.readFileSync(dirdata + 'steam_skipdlc.txt');
-GJuser.skip_dlc = skipdlc.toString();
-}
-if ((new Date()).getDate() !== GJuser.dlc_date || GJuser.dlc === '') {
-$.ajax({
-url: 'https://bartervg.com/browse/dlc/json/',
-dataType: 'json',
-success: function (data) {
-if (Object.keys(data).length > 7000) {
-GJuser.dlc = JSON.stringify(Object.keys(data)).replace(/"/g, '').replace('[', ',').replace(']', ',');
-fs.writeFile(dirdata + 'steam_dlc.txt', GJuser.dlc, (err) => { });
-let skip_dlc = ',';
-Object.keys(data).forEach((i) => {
-let base = JSON.stringify(data[i].base_appID).replace(/"/g, '');
-if (!GJuser.ownapps.includes(',' + base + ',')) {
-skip_dlc = skip_dlc + JSON.stringify(i).replace(/"/g, '') + ',';
-}
-});
-if (skip_dlc !== ',') {
-fs.writeFile(dirdata + 'steam_skipdlc.txt', skip_dlc, (err) => { });
-GJuser.skip_dlc = skip_dlc;
-}
-GJuser.dlc_date = (new Date()).getDate();
-}
-},error: () => {}
-});
-}
+if (this.dlc && GJuser.skipdlc_date !== (new Date()).getDate()) {
+this.updateSkipdlc();
 }
 this.authCheck((authState) => {
 if (authState === 1) {
-if (this.statusIcon.attr('data-status') !== 'win') {
 this.setStatus('work');
-}
 this.tries = 0;
 this.updateUserInfo();
 if (this.getConfig('log_autoclear', false)) {
@@ -384,9 +302,7 @@ this.joinService();
 }
 else if (authState === 0) {
 if (this.tries < 3) {
-if (this.statusIcon.attr('data-status') !== 'win') {
 this.setStatus('net');
-}
 this.tries++;
 this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost').replace('10', '5'), 'err');
 this.stimer = 5;
@@ -399,9 +315,7 @@ this.stopJoiner(true);
 }
 else {
 if (this.tries < 8) {
-if (this.statusIcon.attr('data-status') !== 'win') {
 this.setStatus('net');
-}
 this.tries++;
 this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost').replace('0', '5'), 'err');
 this.stimer = 15;
@@ -663,6 +577,21 @@ let addwhite = '<span class="add-whitelist" white="' + steamappid + '" title="' 
 rmvwhite ='<span class="rmv-whitelist" white="' + steamappid + '" title="' + Lang.get('service.rmv_twl') + ' (' + steamappid + ')">[-]</span>';
 return addwhite + rmvwhite;
 }
+logWin(win) {
+win = '<br>' + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString() + win + '\n';
+if (fs.existsSync(dirdata + 'win.txt')) {
+let rd = fs.readFileSync(dirdata + 'win.txt');
+if (rd.length < 5000) {
+win = win + rd;
+}
+fs.writeFile(dirdata + 'win.txt', win, (err) => { });
+this.lastWin();
+}
+else {
+fs.writeFile(dirdata + 'win.txt', win, (err) => { });
+this.lastWin();
+}
+}
 updateCookies() {
 mainWindow.webContents.session.cookies.get({domain: this.domain})
 .then((cookies) => {
@@ -733,6 +662,108 @@ if (Config.get('autoscroll')) {
 this.logWrap.scrollTop(this.logWrap[0].scrollHeight);
 }
 }
+}
+lastWin() {
+if (fs.existsSync(dirdata + 'win.txt')) {
+let rd = fs.readFileSync(dirdata + 'win.txt').toString().split('\n', 10).join().replace(/,/g, '');
+$('.content-item .info .last_win').html(Lang.get('service.last_win') + rd);
+}
+}
+loadFile(lfile) {
+if (fs.existsSync(dirdata + lfile + '.txt')) {
+let lread = fs.readFileSync(dirdata + lfile + '.txt');
+if (lread.length > 0) {
+lread = lread.toString();
+if (lread.slice(-1) !== ',') {
+lread = lread + ',';
+}
+if (lread[0] !== ',') {
+lread = ',' + lread;
+}
+}
+$('.content-item .info .data_' + lfile).html(Lang.get('service.data_' + lfile) + (lread.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_file') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
+return lread;
+}
+else {
+$('.content-item .info .data_' + lfile).html(Lang.get('service.data_' + lfile) + ' ' + Lang.get('service.file_not_found') + ' /giveawayjoinerdata/' + lfile + '.txt');
+return '';
+}
+}
+updateSteam() {
+$.ajax({
+url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
+dataType: 'json',
+success: function (data) {
+if (JSON.stringify(data.rgOwnedApps) !== '[]') {
+GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
+GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
+fs.writeFile(dirdata + 'steam_app.txt', GJuser.ownapps, (err) => { });
+fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
+$('.content-item .info .data_steam_app').html(Lang.get('service.data_steam_app') + (GJuser.ownapps.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
+$('.content-item .info .data_steam_sub').html(Lang.get('service.data_steam_sub') + (GJuser.ownsubs.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
+GJuser.own_date = Date.now() + 10000;
+}
+else if (GJuser.ownapps === '' && GJuser.ownsubs === '') {
+$('.content-item .info .data_steam_app').html(Lang.get('service.data_steam_app') + ' ' + Lang.get('service.steam_error'));
+$('.content-item .info .data_steam_sub').html(Lang.get('service.data_steam_sub') + ' ' + Lang.get('service.steam_error'));
+}
+},error: () => {}
+});
+}
+updateDlc() {
+$.ajax({
+url: 'https://bartervg.com/browse/dlc/json/',
+dataType: 'json',
+success: function (data) {
+if (Object.keys(data).length > 7000) {
+GJuser.dlc = JSON.stringify(Object.keys(data)).replace(/"/g, '').replace('[', ',').replace(']', ',');
+fs.writeFile(dirdata + 'steam_dlc.txt', GJuser.dlc, (err) => { });
+$('.content-item .info .data_steam_dlc').html(Lang.get('service.data_steam_dlc') + (GJuser.dlc.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
+GJuser.dlc_date = (new Date()).getDate();
+}
+}
+});
+}
+updateSkipdlc() {
+if (GJuser.ownapps !== '') {
+$.ajax({
+url: 'https://bartervg.com/browse/dlc/json/',
+dataType: 'json',
+success: function (data) {
+if (Object.keys(data).length > 7000) {
+let skip_dlc = ',';
+Object.keys(data).forEach((i) => {
+if (!GJuser.ownapps.includes(',' + JSON.stringify(data[i].base_appID).replace(/"/g, '') + ',')) {
+skip_dlc = skip_dlc + JSON.stringify(i).replace(/"/g, '') + ',';
+}
+});
+if (skip_dlc !== ',') {
+fs.writeFile(dirdata + 'steam_skipdlc.txt', skip_dlc, (err) => { });
+GJuser.skip_dlc = skip_dlc;
+$('.content-item .info .data_steam_skipdlc').html(Lang.get('service.data_steam_skipdlc') + (GJuser.skip_dlc.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
+GJuser.skipdlc_date = (new Date()).getDate();
+}
+}
+}
+});
+}
+else {
+$('.content-item .info .data_steam_skipdlc').html(Lang.get('service.data_steam_skipdlc') + ' ' + Lang.get('service.steam_error'));
+}
+}
+updateCard() {
+$.ajax({
+url: 'https://bartervg.com/browse/cards/json/',
+dataType: 'json',
+success: function (data) {
+if (Object.keys(data).length > 7000) {
+GJuser.card = JSON.stringify(Object.keys(data)).replace(/"/g, '').replace('[', ',').replace(']', ',');
+fs.writeFile(dirdata + 'steam_card.txt', GJuser.card, (err) => { });
+$('.content-item .info .data_steam_card').html(Lang.get('service.data_steam_card') + (GJuser.card.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
+GJuser.card_date = (new Date()).getDate();
+}
+},error: () => {}
+});
 }
 joinService() {}
 getUserInfo(callback) {

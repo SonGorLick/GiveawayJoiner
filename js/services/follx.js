@@ -76,6 +76,7 @@ error: () => {}
 let fxwon = data.find('.hide-on-med-and-down.user-panel.s6.col > .icons > .has.marker.cup').attr('href');
 if (fxwon !== undefined) {
 _this.log(_this.logLink('https://follx.com/giveaways/won', Lang.get('service.win')), 'win');
+_this.logWin(' Follx');
 _this.setStatus('win');
 if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();
@@ -147,7 +148,7 @@ if (price > _this.curr_value) {
 fxown = 5;
 }
 if (_this.getConfig('check_in_steam', true)) {
-if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
+if (GJuser.ownapps === '' && GJuser.ownsubs === '') {
 fxown = 2;
 }
 if (GJuser.ownapps.includes(',' + fxapp + ',') && fxapp > 0) {

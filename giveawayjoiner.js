@@ -4,7 +4,7 @@ const storage = require('electron-json-storage');
 const fs = require('fs');
 const rq = require('axios').default;
 let devMode = false;
-let _ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36';
+let _ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36';
 let appLoaded = false;
 let mainWindow = null;
 let Browser = null;
@@ -44,10 +44,10 @@ else {
 fs.writeFile(storage.getDataPath() + '/user-agent.txt', _ua, (err) => { });
 }
 if (!fs.existsSync(storage.getDataPath() + '/blacklist.txt')) {
-fs.writeFile(storage.getDataPath() + '/blacklist.txt', 'app/0,sub/0,bundle/0,', (err) => { });
+fs.writeFile(storage.getDataPath() + '/blacklist.txt', ',app/0,sub/0,bundle/0,', (err) => { });
 }
 if (!fs.existsSync(storage.getDataPath() + '/whitelist.txt')) {
-fs.writeFile(storage.getDataPath() + '/whitelist.txt', 'app/0,sub/0,bundle/0,', (err) => { });
+fs.writeFile(storage.getDataPath() + '/whitelist.txt', ',app/0,sub/0,bundle/0,', (err) => { });
 }
 if (fs.existsSync(storage.getDataPath() + '/devmode')) {
 devMode = true;
@@ -164,9 +164,8 @@ return;
 let afterLangs = function () {
 let data = {
 response: {
-username: 'GiveawayJoiner',
-avatar: __dirname + '/icons/icon.png',
-steamid: '1'
+username: 'User',
+avatar: __dirname + '/icons/icon.png'
 }
 };
 user = data.response;

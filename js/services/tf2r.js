@@ -18,7 +18,7 @@ let userData = {
 avatar: dirapp + 'images/TF2R.png',
 username: 'TF2R User'
 };
-if (GJuser.username !== 'GiveawayJoiner') {
+if (GJuser.username !== 'User') {
 userData.avatar = GJuser.avatar;
 userData.username = GJuser.username;
 }
@@ -61,6 +61,7 @@ _this.setConfig('won', tfwon);
 }
 if (tfwon > 0 && tfwon > _this.won) {
 _this.log(_this.logLink(_this.url + '/notifications.html', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (tfwon - _this.won) + ')'), 'win');
+_this.logWin(' TF2R - ' + (tfwon - _this.won));
 _this.setStatus('win');
 _this.setConfig('won', tfwon);
 if (_this.getConfig('sound', true)) {

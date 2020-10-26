@@ -52,7 +52,7 @@ let data = fs.readFileSync(dirdata + 'ggp_acc.txt'),
 dat = (data.toString()).split(',');
 userData.value = dat[1];
 }
-if (GJuser.username !== 'GiveawayJoiner') {
+if (GJuser.username !== 'User') {
 userData.avatar = GJuser.avatar;
 userData.username = GJuser.username;
 }

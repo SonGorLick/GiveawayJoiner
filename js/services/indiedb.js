@@ -49,7 +49,7 @@ let userData = {
 avatar: dirapp + 'images/IndieDB.png',
 username: 'IndieDB User'
 };
-if (GJuser.username !== 'GiveawayJoiner') {
+if (GJuser.username !== 'User') {
 userData.avatar = GJuser.avatar;
 userData.username = GJuser.username;
 }
@@ -150,6 +150,7 @@ _this.setConfig('won', idbwon);
 }
 if (idbwon > 0 && idbwon > _this.won) {
 _this.log(_this.logLink(_this.url + '/giveaways/prizes', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (idbwon - _this.won) + ')'), 'win');
+_this.logWin(' IndieDB - ' + (idbwon - _this.won));
 _this.setStatus('win');
 _this.setConfig('won', idbwon);
 if (_this.getConfig('sound', true)) {

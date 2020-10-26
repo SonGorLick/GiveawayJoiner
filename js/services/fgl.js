@@ -150,6 +150,7 @@ fglog = Lang.get('service.acc') + fgname + ': ';
 }
 if (account.indexOf('"winner":{"id":' + fgid + ',') >= 0) {
 _this.log(fglog + Lang.get('service.win'), 'win');
+_this.logWin(' FGL (' + fgname + ')');
 _this.setStatus('win');
 if (_this.getConfig('sound', true)) {
 new Audio(dirapp + 'sounds/won.wav').play();

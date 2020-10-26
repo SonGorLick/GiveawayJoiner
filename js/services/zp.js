@@ -6,7 +6,7 @@ this.websiteUrl = 'https://www.zeepond.com';
 this.authContent = 'profile-pic';
 this.authLink = 'https://www.zeepond.com/cb-login';
 this.auth = this.auth + Lang.get('service.zp.login');
-this.cards = true;
+this.card = true;
 this.dlc = true;
 this.settings.interval_from = { type: 'number', trans: 'service.interval_from', min: 10, max: this.getConfig('interval_to', 20), default: this.getConfig('interval_from', 15) };
 this.settings.interval_to = { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 15), max: 60, default: this.getConfig('interval_to', 20) };
@@ -25,7 +25,7 @@ let userData = {
 avatar: dirapp + 'images/ZP.png',
 username: 'ZP User'
 };
-if (GJuser.username !== 'GiveawayJoiner') {
+if (GJuser.username !== 'User') {
 userData.avatar = GJuser.avatar;
 userData.username = GJuser.username;
 }
@@ -69,6 +69,7 @@ _this.setConfig('won', zpwon);
 }
 if (zpwon > 0 && zpwon > _this.won) {
 _this.log(_this.logLink(_this.url + '/my-account/my-prizes', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (zpwon - _this.won) + ')'), 'win');
+_this.logWin(' ZP - ' + (zpwon - _this.won));
 _this.setStatus('win');
 _this.setConfig('won', zpwon);
 if (_this.getConfig('sound', true)) {
@@ -301,7 +302,7 @@ if (
 zpown = 7;
 }
 if (_this.getConfig('check_in_steam', true)) {
-if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
+if (GJuser.ownapps === '' && GJuser.ownsubs === '') {
 zpown = 2;
 }
 if (GJuser.ownapps.includes(',' + zpapp + ',') && zpapp > 0) {

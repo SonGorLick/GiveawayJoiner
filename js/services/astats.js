@@ -6,7 +6,7 @@ this.settings.timer_from.min = 5;
 this.websiteUrl = 'http://astats.astats.nl/astats/';
 this.authContent = 'Log out';
 this.authLink = 'http://astats.astats.nl/astats/profile/Login.php';
-this.cards = true;
+this.card = true;
 this.dlc = true;
 this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
 this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default: this.getConfig('skip_dlc', false) };
@@ -20,7 +20,7 @@ let userData = {
 avatar: dirapp + 'images/Astats.png',
 username: 'Astats User'
 };
-if (GJuser.username !== 'GiveawayJoiner') {
+if (GJuser.username !== 'User') {
 userData.avatar = GJuser.avatar;
 userData.username = GJuser.username;
 }
@@ -70,6 +70,7 @@ _this.setConfig('won', aswon);
 }
 if (aswon > 0 && aswon > _this.won) {
 _this.log(_this.logLink(_this.url + '/astats/profile/User_Inbox.php', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (aswon - _this.won) + ')'), 'win');
+_this.logWin(' Astats - ' + (aswon - _this.won));
 _this.setStatus('win');
 _this.setConfig('won', aswon);
 if (_this.getConfig('sound', true)) {
@@ -193,7 +194,7 @@ if (
 asown = 6;
 }
 if (_this.getConfig('check_in_steam', true)) {
-if (GJuser.ownapps === '[]' && GJuser.ownsubs === '[]') {
+if (GJuser.ownapps === '' && GJuser.ownsubs === '') {
 asown = 2;
 }
 if (GJuser.ownapps.includes(',' + asapp + ',') && asapp > 0) {
