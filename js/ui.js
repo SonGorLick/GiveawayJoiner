@@ -201,35 +201,34 @@ $(document.createElement('button'))
 .html('<div class="fab fa-steam" title="' + Lang.get('service.steam_login') + '"></div>')
 .attr('steam_login', '')
 .appendTo('.content-item .steam_login');
-let upd_btn = $('<div class="fa fa-dataupd" title="' + Lang.get('service.update_data') + '"></div>');
-let upd_button = '<div class="fa fa-dataupd" title="' + Lang.get('service.update_data') + '"></div>';
+let upd_btn = '<div class="fa fa-dataupd" title="' + Lang.get('service.update_data') + '"></div>';
 $(document.createElement('button'))
 .addClass('update_data')
-.html(upd_button)
+.html(upd_btn)
 .appendTo('.content-item .update_whitelist');
 $(document.createElement('button'))
 .addClass('update_data')
-.html(upd_button)
+.html(upd_btn)
 .appendTo('.content-item .update_blacklist');
 $(document.createElement('button'))
 .addClass('update_data')
-.html(upd_button)
+.html(upd_btn)
 .appendTo('.content-item .update_steam_own');
 $(document.createElement('button'))
 .addClass('update_data')
-.html(upd_button)
+.html(upd_btn)
 .appendTo('.content-item .update_steam_dlc');
 $(document.createElement('button'))
 .addClass('update_data')
-.html(upd_button)
+.html(upd_btn)
 .appendTo('.content-item .update_steam_skipdlc');
 $(document.createElement('button'))
 .addClass('update_data')
-.html(upd_button)
+.html(upd_btn)
 .appendTo('.content-item .update_steam_card');
 $(document.createElement('button'))
 .addClass('update_data')
-.html(upd_button)
+.html(upd_btn)
 .appendTo('.content-item .update_ip');
 }
 function renderUser(userData) {
