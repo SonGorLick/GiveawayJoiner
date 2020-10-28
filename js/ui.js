@@ -123,7 +123,7 @@ $('.content-item .info .data_axios').html('Axios IP: ' + d.data.ip);
 $(document).on('click', '.devmode', function () {
 if (fs.existsSync(dirdata + 'devmode')) {
 fs.rename(dirdata + 'devmode', dirdata + 'devmode_off', (err) => { });
-$('.content-item .devmode').html('DevTools: Off');
+$('.content-item .devmode').html('DevTools: ' + Lang.get('profile.off'));
 }
 else {
 if (fs.existsSync(dirdata + 'devmode_off')) {
@@ -132,7 +132,7 @@ fs.rename(dirdata + 'devmode_off', dirdata + 'devmode', (err) => { });
 else {
 fs.writeFile(dirdata + 'devmode', '', (err) => { });
 }
-$('.content-item .devmode').html('DevTools: On');
+$('.content-item .devmode').html('DevTools: ' + Lang.get('profile.on'));
 }
 });
 $(document).on('click', '.open-website[steam_login]', function () {
@@ -197,10 +197,10 @@ $(this).attr('title', Lang.get($(this).attr('data-lang-title')));
 function profileSection() {
 renderUser(GJuser);
 if (fs.existsSync(dirdata + 'devmode')) {
-$('.content-item .devmode').html('DevTools: On');
+$('.content-item .devmode').html('DevTools: ' + Lang.get('profile.on'));
 }
 else {
-$('.content-item .devmode').html('DevTools: Off');
+$('.content-item .devmode').html('DevTools: ' + Lang.get('profile.off'));
 }
 $('.build .version').text(currentBuild + ' (Electron ' + process.versions.electron + ')');
 let lang_select = $('select#lang');
