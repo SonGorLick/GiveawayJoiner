@@ -75,6 +75,7 @@
 		"won_skip": "Skipped - already won this giveaway",
 		"cant_join": "Skipped - you're not eligible to join",
 		"err_join": "Skipped - failed to join giveaway due to an error ",
+		"err_offer": "Skipped - failed to complete offer due to an error ",
 		"points_low": "Skipped - not enough points",
 		"time": "Skipped - giveaway does not fit the time to join",
 		"skip_more": "skip all giveaways cost more ",
@@ -273,7 +274,9 @@
 		"steam_local_title": "Don't update App and Sub owned on Steam account from network",
 		"timer_view": "Display timer",
 		"timer_view_title": "Display the remaining time until the next giveaways search",
-		"devmode": "On/Off open DevTools on program load",
+		"on": "Enabled",
+		"off": "Disabled",
+		"devmode": "Enable/Disable open DevTools on program load",
 		"build_version": "Version"
 	}
 }
