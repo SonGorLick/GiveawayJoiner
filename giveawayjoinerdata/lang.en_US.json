@@ -273,6 +273,7 @@
 		"steam_local_title": "Don't update App and Sub owned on Steam account from network",
 		"timer_view": "Display timer",
 		"timer_view_title": "Display the remaining time until the next giveaways search",
+		"devmode": "On/Off open DevTools on program load",
 		"build_version": "Version"
 	}
 }
