@@ -271,23 +271,23 @@ clearInterval(this.intervalVar);
 if (this.totalTicks % this.doTimer() === 0) {
 this.totalTicks = 1;
 this.updateCookies();
-GJuser.white = this.loadFile('whitelist');
-GJuser.black = this.loadFile('blacklist');
-if (Config.get('steam_local', false) && GJuser.own_date < Date.now()) {
-GJuser.ownapps = this.loadFile('steam_app');
-GJuser.ownsubs = this.loadFile('steam_sub');
-} 
-else if (!Config.get('steam_local', false) && GJuser.own_date < Date.now()) {
-this.updateSteam();
+GJuser.white = loadFile('whitelist');
+GJuser.black = loadFile('blacklist');
+if (this.getConfig('check_in_steam', true) && Config.get('own_date') < Date.now()) {
+GJuser.ownapps = loadFile('steam_app');
+GJuser.ownsubs = loadFile('steam_sub');
+if (!Config.get('steam_local', false)) {
+updateSteam();
 }
-if (this.dlc && GJuser.dlc_date !== (new Date()).getDate()) {
-this.updateDlc();
 }
-if (this.card && GJuser.card_date !== (new Date()).getDate()) {
-this.updateCard();
+if (this.dlc && Config.get('dlc_date') < Date.now()) {
+updateDlc();
 }
-if (this.dlc && GJuser.skipdlc_date !== (new Date()).getDate()) {
-this.updateSkipdlc();
+if (this.card && Config.get('card_date') < Date.now()) {
+updateCard();
+}
+if (this.dlc && Config.get('skipdlc_date') < Date.now()) {
+updateSkipdlc();
 }
 this.authCheck((authState) => {
 if (authState === 1) {
@@ -585,11 +585,11 @@ if (rd.length < 5000) {
 win = win + rd;
 }
 fs.writeFile(dirdata + 'win.txt', win, (err) => { });
-this.lastWin();
+lastWin();
 }
 else {
 fs.writeFile(dirdata + 'win.txt', win, (err) => { });
-this.lastWin();
+lastWin();
 }
 }
 updateCookies() {
@@ -662,108 +662,6 @@ if (Config.get('autoscroll')) {
 this.logWrap.scrollTop(this.logWrap[0].scrollHeight);
 }
 }
-}
-lastWin() {
-if (fs.existsSync(dirdata + 'win.txt')) {
-let rd = fs.readFileSync(dirdata + 'win.txt').toString().split('\n', 10).join().replace(/,/g, '');
-$('.content-item .info .last_win').html(Lang.get('service.last_win') + rd);
-}
-}
-loadFile(lfile) {
-if (fs.existsSync(dirdata + lfile + '.txt')) {
-let lread = fs.readFileSync(dirdata + lfile + '.txt');
-if (lread.length > 0) {
-lread = lread.toString();
-if (lread.slice(-1) !== ',') {
-lread = lread + ',';
-}
-if (lread[0] !== ',') {
-lread = ',' + lread;
-}
-}
-$('.content-item .info .data_' + lfile).html(Lang.get('service.data_' + lfile) + (lread.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_file') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
-return lread;
-}
-else {
-$('.content-item .info .data_' + lfile).html(Lang.get('service.data_' + lfile) + ' ' + Lang.get('service.file_not_found') + ' /giveawayjoinerdata/' + lfile + '.txt');
-return '';
-}
-}
-updateSteam() {
-$.ajax({
-url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
-dataType: 'json',
-success: function (data) {
-if (JSON.stringify(data.rgOwnedApps) !== '[]') {
-GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
-GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
-fs.writeFile(dirdata + 'steam_app.txt', GJuser.ownapps, (err) => { });
-fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
-$('.content-item .info .data_steam_app').html(Lang.get('service.data_steam_app') + (GJuser.ownapps.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
-$('.content-item .info .data_steam_sub').html(Lang.get('service.data_steam_sub') + (GJuser.ownsubs.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
-GJuser.own_date = Date.now() + 10000;
-}
-else if (GJuser.ownapps === '' && GJuser.ownsubs === '') {
-$('.content-item .info .data_steam_app').html(Lang.get('service.data_steam_app') + ' ' + Lang.get('service.steam_error'));
-$('.content-item .info .data_steam_sub').html(Lang.get('service.data_steam_sub') + ' ' + Lang.get('service.steam_error'));
-}
-},error: () => {}
-});
-}
-updateDlc() {
-$.ajax({
-url: 'https://bartervg.com/browse/dlc/json/',
-dataType: 'json',
-success: function (data) {
-if (Object.keys(data).length > 7000) {
-GJuser.dlc = JSON.stringify(Object.keys(data)).replace(/"/g, '').replace('[', ',').replace(']', ',');
-fs.writeFile(dirdata + 'steam_dlc.txt', GJuser.dlc, (err) => { });
-$('.content-item .info .data_steam_dlc').html(Lang.get('service.data_steam_dlc') + (GJuser.dlc.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
-GJuser.dlc_date = (new Date()).getDate();
-}
-}
-});
-}
-updateSkipdlc() {
-if (GJuser.ownapps !== '') {
-$.ajax({
-url: 'https://bartervg.com/browse/dlc/json/',
-dataType: 'json',
-success: function (data) {
-if (Object.keys(data).length > 7000) {
-let skip_dlc = ',';
-Object.keys(data).forEach((i) => {
-if (!GJuser.ownapps.includes(',' + JSON.stringify(data[i].base_appID).replace(/"/g, '') + ',')) {
-skip_dlc = skip_dlc + JSON.stringify(i).replace(/"/g, '') + ',';
-}
-});
-if (skip_dlc !== ',') {
-fs.writeFile(dirdata + 'steam_skipdlc.txt', skip_dlc, (err) => { });
-GJuser.skip_dlc = skip_dlc;
-$('.content-item .info .data_steam_skipdlc').html(Lang.get('service.data_steam_skipdlc') + (GJuser.skip_dlc.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
-GJuser.skipdlc_date = (new Date()).getDate();
-}
-}
-}
-});
-}
-else {
-$('.content-item .info .data_steam_skipdlc').html(Lang.get('service.data_steam_skipdlc') + ' ' + Lang.get('service.steam_error'));
-}
-}
-updateCard() {
-$.ajax({
-url: 'https://bartervg.com/browse/cards/json/',
-dataType: 'json',
-success: function (data) {
-if (Object.keys(data).length > 7000) {
-GJuser.card = JSON.stringify(Object.keys(data)).replace(/"/g, '').replace('[', ',').replace(']', ',');
-fs.writeFile(dirdata + 'steam_card.txt', GJuser.card, (err) => { });
-$('.content-item .info .data_steam_card').html(Lang.get('service.data_steam_card') + (GJuser.card.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
-GJuser.card_date = (new Date()).getDate();
-}
-},error: () => {}
-});
 }
 joinService() {}
 getUserInfo(callback) {

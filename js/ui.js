@@ -9,10 +9,6 @@ let GJuser = remote.getGlobal('user');
 let Browser = shared.Browser;
 let mainWindow = shared.mainWindow;
 let intervalTicks = 0;
-GJuser.own_date = 0;
-GJuser.dlc_date = 0;
-GJuser.skipdlc_date = 0;
-GJuser.card_date = 0;
 $(function () {
 reloadLangStrings();
 $('.content-item .info .data_ajax').html('Ajax IP: ');
@@ -25,14 +21,20 @@ GJuser.ownsubs = loadFile('steam_sub');
 GJuser.dlc = loadFile('steam_dlc');
 GJuser.skip_dlc = loadFile('steam_skipdlc');
 GJuser.card = loadFile('steam_card');
-if (!Config.get('steam_local', false)) {
+if (!Config.get('steam_local', false) && Config.get('own_date') < Date.now()) {
 updateSteam();
 }
+if (Config.get('dlc_date') < Date.now()) {
 updateDlc();
+}
+if (Config.get('card_date') < Date.now()) {
 updateCard();
+}
+if (Config.get('skipdlc_date') < Date.now()) {
 setTimeout(() => {
 updateSkipdlc();
 }, 1000);
+}
 profileSection();
 lastWin();
 let setters = $('.settings .setter').each(function () {
@@ -118,6 +120,21 @@ url: ip
 $('.content-item .info .data_axios').html('Axios IP: ' + d.data.ip);
 });
 });
+$(document).on('click', '.devmode', function () {
+if (fs.existsSync(dirdata + 'devmode')) {
+fs.rename(dirdata + 'devmode', dirdata + 'devmode_off', (err) => { });
+$('.content-item .devmode').html('DevTools: Off');
+}
+else {
+if (fs.existsSync(dirdata + 'devmode_off')) {
+fs.rename(dirdata + 'devmode_off', dirdata + 'devmode', (err) => { });
+}
+else {
+fs.writeFile(dirdata + 'devmode', '', (err) => { });
+}
+$('.content-item .devmode').html('DevTools: On');
+}
+});
 $(document).on('click', '.open-website[steam_login]', function () {
 Browser.loadURL('https://store.steampowered.com/login');
 Browser.show();
@@ -179,6 +196,12 @@ $(this).attr('title', Lang.get($(this).attr('data-lang-title')));
 }
 function profileSection() {
 renderUser(GJuser);
+if (fs.existsSync(dirdata + 'devmode')) {
+$('.content-item .devmode').html('DevTools: On');
+}
+else {
+$('.content-item .devmode').html('DevTools: Off');
+}
 $('.build .version').text(currentBuild + ' (Electron ' + process.versions.electron + ')');
 let lang_select = $('select#lang');
 let lang_list = Lang.list();
@@ -230,9 +253,13 @@ $(document.createElement('button'))
 .addClass('update_data')
 .html(upd_btn)
 .appendTo('.content-item .update_ip');
+$(document.createElement('button'))
+.addClass('update_data')
+.html('<div class="devmode" title="' + Lang.get('profile.devmode') + '"></div>')
+.appendTo('.content-item .devmode');
 }
 function renderUser(userData) {
-$('.content-item .info .username').html('User');
+$('.content-item .info .username').html('User').attr('title', dirdata.replace('/giveawayjoinerdata/', ''));
 $('.content-item .info .avatar').css({'background-image': 'url("../app.asar/images/local.png")'});
 $.ajax({
 url: 'https://store.steampowered.com/account/languagepreferences',
@@ -246,7 +273,7 @@ $('.content-item .info .avatar').css({'background-image': 'url("' + userData.ava
 }
 if (name !== undefined && name.length > 0) {
 userData.username = name;
-$('.content-item .info .username').html(userData.username);
+$('.content-item .info .username').html(userData.username).attr('title', dirdata.replace('/giveawayjoinerdata/', ''));
 }
 }, error: () => {}
 });
@@ -282,14 +309,14 @@ $.ajax({
 url: 'https://store.steampowered.com/dynamicstore/userdata/?t=' + Date.now(),
 dataType: 'json',
 success: function (data) {
-if (JSON.stringify(data.rgOwnedApps) !== '[]') {
-GJuser.ownapps = (JSON.stringify(data.rgOwnedApps).replace('[', ',')).replace(']', ',');
-GJuser.ownsubs = (JSON.stringify(data.rgOwnedPackages).replace('[', ',')).replace(']', ',');
+if (data.rgOwnedApps.toString() !== '') {
+GJuser.ownapps = ',' + data.rgOwnedApps.toString() + ',';
+GJuser.ownsubs = ',' + data.rgOwnedPackages.toString() + ',';
 fs.writeFile(dirdata + 'steam_app.txt', GJuser.ownapps, (err) => { });
 fs.writeFile(dirdata + 'steam_sub.txt', GJuser.ownsubs, (err) => { });
 $('.content-item .info .data_steam_app').html(Lang.get('service.data_steam_app') + (GJuser.ownapps.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
 $('.content-item .info .data_steam_sub').html(Lang.get('service.data_steam_sub') + (GJuser.ownsubs.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
-GJuser.own_date = Date.now() + 10000;
+Config.set('own_date', Date.now() + 10000);
 }
 else if (GJuser.ownapps === '' && GJuser.ownsubs === '') {
 $('.content-item .info .data_steam_app').html(Lang.get('service.data_steam_app') + ' ' + Lang.get('service.steam_error'));
@@ -304,10 +331,10 @@ url: 'https://bartervg.com/browse/dlc/json/',
 dataType: 'json',
 success: function (data) {
 if (Object.keys(data).length > 7000) {
-GJuser.dlc = JSON.stringify(Object.keys(data)).replace(/"/g, '').replace('[', ',').replace(']', ',');
+GJuser.dlc = ',' + Object.keys(data).toString() + ',';
 fs.writeFile(dirdata + 'steam_dlc.txt', GJuser.dlc, (err) => { });
 $('.content-item .info .data_steam_dlc').html(Lang.get('service.data_steam_dlc') + (GJuser.dlc.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
-GJuser.dlc_date = (new Date()).getDate();
+Config.set('dlc_date', Date.now() + 43200000);
 }
 }
 });
@@ -319,18 +346,10 @@ url: 'https://bartervg.com/browse/dlc/json/',
 dataType: 'json',
 success: function (data) {
 if (Object.keys(data).length > 7000) {
-let skip_dlc = ',';
-Object.keys(data).forEach((i) => {
-if (!GJuser.ownapps.includes(',' + JSON.stringify(data[i].base_appID).replace(/"/g, '') + ',')) {
-skip_dlc = skip_dlc + JSON.stringify(i).replace(/"/g, '') + ',';
-}
-});
-if (skip_dlc !== ',') {
-fs.writeFile(dirdata + 'steam_skipdlc.txt', skip_dlc, (err) => { });
-GJuser.skip_dlc = skip_dlc;
+GJuser.skip_dlc = ',' + Object.keys(data).filter(i => GJuser.ownapps.indexOf(',' + JSON.stringify(data[i].base_appID).replace(/"/g, '') + ',') === -1).toString() + ',';
+fs.writeFile(dirdata + 'steam_skipdlc.txt', GJuser.skip_dlc, (err) => { });
 $('.content-item .info .data_steam_skipdlc').html(Lang.get('service.data_steam_skipdlc') + (GJuser.skip_dlc.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
-GJuser.skipdlc_date = (new Date()).getDate();
-}
+Config.set('skipdlc_date', Date.now() + 43200000);
 }
 }
 });
@@ -345,9 +364,10 @@ url: 'https://bartervg.com/browse/cards/json/',
 dataType: 'json',
 success: function (data) {
 if (Object.keys(data).length > 7000) {
-GJuser.card = JSON.stringify(Object.keys(data)).replace(/"/g, '').replace('[', ',').replace(']', ',');
+GJuser.card = ',' + Object.keys(data).toString() + ',';
 fs.writeFile(dirdata + 'steam_card.txt', GJuser.card, (err) => { });
 $('.content-item .info .data_steam_card').html(Lang.get('service.data_steam_card') + (GJuser.card.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
+Config.set('card_date', Date.now() + 43200000);
 GJuser.card_date = (new Date()).getDate();
 }
 },error: () => {}
