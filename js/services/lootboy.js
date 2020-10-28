@@ -48,7 +48,7 @@ _this.stopJoiner(true);
 }
 let lbcurr = _this.dload,
 lbua = _this.ua,
-lbnext = 15000;
+lbnext = 12000;
 function giveawayEnter() {
 if (!_this.dcheck || !_this.started) {
 if (!_this.started) {
@@ -139,9 +139,11 @@ lbdaily = JSON.stringify(daily.data);
 })
 .finally(() => {
 if (lbdaily === 'err') {
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Coins', 'chk');
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 else {
+_this.log(lbdaily);
 if (!lbdaily.includes('"enabled":true')) {
 _this.log(Lang.get('service.no_offer') + 'Daily Coins', 'cant');
 }
@@ -205,6 +207,7 @@ lbcomics = comics.data;
 })
 .finally(() => {
 if (lbcomics === 'err') {
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Read Comics', 'chk');
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 else {
@@ -229,6 +232,7 @@ lbreaded = JSON.stringify(readed.data);
 })
 .finally(() => {
 if (lbreaded === 'err') {
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Read Comics', 'chk');
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 else {
@@ -306,6 +310,7 @@ lboffers = offers.data;
 })
 .finally(() => {
 if (lboffers === 'err') {
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Diamonds Quests', 'chk');
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 else {
@@ -330,6 +335,7 @@ lbtaken = JSON.stringify(taken.data.offers);
 })
 .finally(() => {
 if (lbtaken === 'err') {
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Diamonds Quests', 'chk');
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 else {
