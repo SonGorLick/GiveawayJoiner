@@ -48,7 +48,7 @@ _this.stopJoiner(true);
 }
 let lbcurr = _this.dload,
 lbua = _this.ua,
-lbnext = 12000;
+lbnext = 10000;
 function giveawayEnter() {
 if (!_this.dcheck || !_this.started) {
 if (!_this.started) {
@@ -74,7 +74,7 @@ _this.stimer = lbtimer;
 }
 }
 if (fs.existsSync(dirdata + 'lootboy' + lbcurr + '_ua.txt') && lbcurr > 0) {
-lbua = fs.readFileSync(dirdata + 'lootboy' + lbcurr + '_ua.txt').toString();
+lbua = fs.readFileSync(dirdata + 'lootboy' + lbcurr + '_ua.txt').toString().split('\n')[0];
 }
 else {
 lbua = _this.ua;
@@ -84,11 +84,11 @@ _this.log(Lang.get('service.open_file') + 'lootboy' + lbcurr + '.txt', 'info');
 if (lbua !== _this.ua) {
 _this.log(lbua, 'skip');
 }
-let lbdata = fs.readFileSync(dirdata + 'lootboy' + lbcurr + '.txt').toString();
+let lbdata = fs.readFileSync(dirdata + 'lootboy' + lbcurr + '.txt').toString().split('\n')[0];
 if (lbdata.includes(',Bearer')) {
 let lbd = lbdata.split(','),
 lbauth = lbd[0],
-lbbrr = lbd[1].trim(),
+lbbrr = lbd[1],
 stat = 'err';
 rq({
 method: 'GET',
@@ -111,43 +111,15 @@ stat = stats.data;
 .finally(() => {
 if (stat === 'err') {
 _this.log(Lang.get('service.connection_error') + ' (' + Lang.get('service.ses_not_found') + '/' + Lang.get('service.session_expired') + ')', 'err');
+lbnext = 20000;
 }
 else {
+lbnext = 10000;
 let lblog = '';
 if (!_this.getConfig('log', true)) {
 lblog = Lang.get('service.acc') + stat.username + ': ';
 }
 _this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.gems') + '- ' + stat.lootgemBalance + ',' + Lang.get('service.coins') + '- ' + stat.lootcoinBalance, 'jnd');
-let lbdaily = 'err';
-rq({
-method: 'GET',
-url: _this.lburl + '/v1/daily-tasks?lang=en',
-headers: {
-'authority': 'api.lootboy.de',
-'Authorization': lbbrr,
-'user-agent': lbua,
-'content-type': 'application/json',
-'origin': _this.url,
-'sec-fetch-site': 'same-site',
-'sec-fetch-mode': 'cors',
-'sec-fetch-dest': 'empty',
-'referer': _this.url + '/offers',
-}
-})
-.then((daily) => {
-lbdaily = JSON.stringify(daily.data);
-})
-.finally(() => {
-if (lbdaily === 'err') {
-_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Coins', 'chk');
-_this.log(Lang.get('service.connection_error'), 'err');
-}
-else {
-_this.log(lbdaily);
-if (!lbdaily.includes('"enabled":true')) {
-_this.log(Lang.get('service.no_offer') + 'Daily Coins', 'cant');
-}
-else {
 let coin = 'err';
 rq({
 method: 'PUT',
@@ -170,19 +142,16 @@ coin = coins.data;
 })
 .finally(() => {
 if (coin === 'err') {
-_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Coins', 'chk');
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Boost', 'chk');
 _this.log(Lang.get('service.err_offer'), 'cant');
 }
 else {
-_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Coins', 'chk');
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Boost', 'chk');
 if (coin.newLootcoinBalance - stat.lootcoinBalance > 0) {
 _this.log(lblog + Lang.get('service.received') + Lang.get('service.coins') + '- ' + (coin.newLootcoinBalance - stat.lootcoinBalance), 'enter');
 }
 else {
 _this.log(Lang.get('service.skip'), 'skip');
-}
-}
-});
 }
 }
 });

@@ -35,9 +35,9 @@ _icn = _itr;
 app.setPath('userData', udata + 'data');
 storage.setDataPath(udata + 'data');
 if (fs.existsSync(storage.getDataPath() + '/user-agent.txt')) {
-let content = fs.readFileSync(storage.getDataPath() + '/user-agent.txt');
-if (content.length > 0) {
-_ua = content.toString();
+let content = fs.readFileSync(storage.getDataPath() + '/user-agent.txt').toString().split('\n')[0];
+if (content.length > 50) {
+_ua = content;
 }
 }
 else {
