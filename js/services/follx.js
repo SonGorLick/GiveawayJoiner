@@ -11,7 +11,7 @@ super.init();
 }
 getUserInfo(callback) {
 let userData = {
-avatar: dirapp + 'images/Follx.png',
+avatar: '../app.asar/images/Follx.png',
 username: 'Follx User',
 value: 0,
 level: 0
@@ -79,7 +79,7 @@ _this.log(_this.logLink('https://follx.com/giveaways/won', Lang.get('service.win
 _this.logWin(' Follx');
 _this.setStatus('win');
 if (_this.getConfig('sound', true)) {
-new Audio(dirapp + 'sounds/won.wav').play();
+new Audio('../app.asar/sounds/won.wav').play();
 }
 }
 }

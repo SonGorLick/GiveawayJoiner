@@ -48,7 +48,7 @@ callback(call);
 }
 getUserInfo(callback) {
 let userData = {
-avatar: dirapp + 'images/ScrapTF.png',
+avatar: '../app.asar/images/ScrapTF.png',
 username: 'ScrapTF User'
 };
 if (GJuser.username !== 'User') {
@@ -146,7 +146,7 @@ _this.logWin(' ScrapTF - ' + (spwon - _this.won));
 _this.setStatus('win');
 _this.setConfig('won', spwon);
 if (_this.getConfig('sound', true)) {
-new Audio(dirapp + 'sounds/won.wav').play();
+new Audio('../app.asar/sounds/won.wav').play();
 }
 }
 }

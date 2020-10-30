@@ -15,7 +15,7 @@ super.init();
 }
 getUserInfo(callback) {
 let userData = {
-avatar: dirapp + 'images/TF2R.png',
+avatar: '../app.asar/images/TF2R.png',
 username: 'TF2R User'
 };
 if (GJuser.username !== 'User') {
@@ -65,7 +65,7 @@ _this.logWin(' TF2R - ' + (tfwon - _this.won));
 _this.setStatus('win');
 _this.setConfig('won', tfwon);
 if (_this.getConfig('sound', true)) {
-new Audio(dirapp + 'sounds/won.wav').play();
+new Audio('../app.asar/sounds/won.wav').play();
 }
 }
 }, error: () => {}

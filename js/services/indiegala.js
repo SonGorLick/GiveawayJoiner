@@ -38,7 +38,7 @@ super.init();
 }
 getUserInfo(callback) {
 let userData = {
-avatar: dirapp + 'images/IndieGala.png',
+avatar: '../app.asar/images/IndieGala.png',
 username: 'IndieGala User',
 value: 0,
 level: 0
@@ -190,7 +190,7 @@ _this.log(_this.logLink(_this.url + '/library', Lang.get('service.win') + ' (' +
 _this.logWin(' IndieGala - ' + iw);
 _this.setStatus('win');
 if (_this.getConfig('sound', true)) {
-new Audio(dirapp + 'sounds/won.wav').play();
+new Audio('../app.asar/sounds/won.wav').play();
 }
 }
 }

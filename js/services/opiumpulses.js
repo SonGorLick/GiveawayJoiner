@@ -21,7 +21,7 @@ super.init();
 }
 getUserInfo(callback) {
 let userData = {
-avatar: dirapp + 'images/OpiumPulses.png',
+avatar: '../app.asar/images/OpiumPulses.png',
 username: 'OpiumPulses User',
 value: 0
 };
@@ -95,7 +95,7 @@ _this.logWin(' OpiumPulses - ' + (opwon - _this.won));
 _this.setStatus('win');
 _this.setConfig('won', opwon);
 if (_this.getConfig('sound', true)) {
-new Audio(dirapp + 'sounds/won.wav').play();
+new Audio('../app.asar/sounds/won.wav').play();
 }
 }
 }

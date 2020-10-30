@@ -43,7 +43,7 @@ callback(0);
 }
 getUserInfo(callback) {
 let userData = {
-avatar: dirapp + 'images/GGP.png',
+avatar: '../app.asar/images/GGP.png',
 username: 'GGP User',
 value: 0
 };

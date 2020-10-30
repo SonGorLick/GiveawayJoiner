@@ -11,8 +11,8 @@ let mainWindow = shared.mainWindow;
 let intervalTicks = 0;
 $(function () {
 reloadLangStrings();
-$('.content-item .info .data_ajax').html('Ajax IP: ');
-$('.content-item .info .data_axios').html('Axios IP: ');
+$('.content-item .settings .data_ajax').html('Ajax IP: ');
+$('.content-item .settings .data_axios').html('Axios IP: ');
 $('.content-item .info .ua').html(Lang.get('service.ua') + '<br>' + mainWindow.webContents.session.getUserAgent());
 GJuser.white = loadFile('whitelist');
 GJuser.black = loadFile('blacklist');
@@ -24,13 +24,13 @@ GJuser.card = loadFile('steam_card');
 if (!Config.get('steam_local', false) && Config.get('own_date') < Date.now()) {
 updateSteam();
 }
-if (Config.get('dlc_date') < Date.now()) {
+if (!Config.get('dlc_local', false) && Config.get('dlc_date') < Date.now()) {
 updateDlc();
 }
-if (Config.get('card_date') < Date.now()) {
+if (!Config.get('card_local', false) && Config.get('card_date') < Date.now()) {
 updateCard();
 }
-if (Config.get('skipdlc_date') < Date.now()) {
+if (!Config.get('skipdlc_local', false) && Config.get('skipdlc_date') < Date.now()) {
 setTimeout(() => {
 updateSkipdlc();
 }, 1000);
@@ -95,13 +95,28 @@ GJuser.ownsubs = loadFile('steam_sub');
 }
 });
 $(document).on('click', '.update_steam_dlc', function () {
+if (!Config.get('dlc_local', false)) {
 updateDlc();
+}
+else {
+GJuser.dlc = loadFile('steam_dlc');
+}
 });
 $(document).on('click', '.update_steam_skipdlc', function () {
+if (!Config.get('skipdlc_local', false)) {
 updateSkipdlc();
+}
+else {
+GJuser.skip_dlc = loadFile('steam_skipdlc');
+}
 });
 $(document).on('click', '.update_steam_card', function () {
+if (!Config.get('card_local', false)) {
 updateCard();
+}
+else {
+GJuser.card = loadFile('steam_card');
+}
 });
 $(document).on('click', '.update_ip', function () {
 let ip = 'https://api.ipify.org?format=json';
@@ -109,7 +124,7 @@ $.ajax({
 url: ip,
 dataType: 'json',
 success: function (data) {
-$('.content-item .info .data_ajax').html('Ajax IP: ' + data.ip);
+$('.content-item .settings .data_ajax').html('Ajax IP: ' + data.ip);
 }
 });
 rq({
@@ -117,7 +132,7 @@ method: 'GET',
 url: ip
 })
 .then((d) => {
-$('.content-item .info .data_axios').html('Axios IP: ' + d.data.ip);
+$('.content-item .settings .data_axios').html('Axios IP: ' + d.data.ip);
 });
 });
 $(document).on('click', '.devmode', function () {
@@ -259,7 +274,7 @@ $(document.createElement('button'))
 .appendTo('.content-item .devmode');
 }
 function renderUser(userData) {
-$('.content-item .info .username').html('User').attr('title', dirdata.replace('/giveawayjoinerdata/', ''));
+$('.content-item .info .username').html('User').attr('title', dirdata.replace('giveawayjoinerdata/', ''));
 $('.content-item .info .avatar').css({'background-image': 'url("../app.asar/images/local.png")'});
 $.ajax({
 url: 'https://store.steampowered.com/account/languagepreferences',
@@ -273,14 +288,14 @@ $('.content-item .info .avatar').css({'background-image': 'url("' + userData.ava
 }
 if (name !== undefined && name.length > 0) {
 userData.username = name;
-$('.content-item .info .username').html(userData.username).attr('title', dirdata.replace('/giveawayjoinerdata/', ''));
+$('.content-item .info .username').html(userData.username).attr('title', 'Steam');
 }
 }, error: () => {}
 });
 }
 function lastWin() {
 if (fs.existsSync(dirdata + 'win.txt')) {
-let rd = fs.readFileSync(dirdata + 'win.txt').toString().split('\n', 10).join().replace(/,/g, '');
+let rd = fs.readFileSync(dirdata + 'win.txt').toString().split('\n', 7).join().replace(/,/g, '');
 $('.content-item .info .last_win').html(Lang.get('service.last_win') + rd);
 }
 }

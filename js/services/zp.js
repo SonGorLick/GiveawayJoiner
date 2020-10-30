@@ -22,7 +22,7 @@ super.init();
 }
 getUserInfo(callback) {
 let userData = {
-avatar: dirapp + 'images/ZP.png',
+avatar: '../app.asar/images/ZP.png',
 username: 'ZP User'
 };
 if (GJuser.username !== 'User') {
@@ -73,7 +73,7 @@ _this.logWin(' ZP - ' + (zpwon - _this.won));
 _this.setStatus('win');
 _this.setConfig('won', zpwon);
 if (_this.getConfig('sound', true)) {
-new Audio(dirapp + 'sounds/won.wav').play();
+new Audio('../app.asar/sounds/won.wav').play();
 }
 }
 }, error: () => {}

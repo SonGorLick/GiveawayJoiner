@@ -29,7 +29,7 @@ callback(-1);
 }
 getUserInfo(callback) {
 let userData = {
-avatar: dirapp + 'images/FGL.png',
+avatar: '../app.asar/images/FGL.png',
 username: 'FGL'
 };
 callback(userData);
@@ -153,7 +153,7 @@ _this.log(fglog + Lang.get('service.win'), 'win');
 _this.logWin(' FGL (' + fgname + ')');
 _this.setStatus('win');
 if (_this.getConfig('sound', true)) {
-new Audio(dirapp + 'sounds/won.wav').play();
+new Audio('../app.asar/sounds/won.wav').play();
 }
 }
 if (fgmaindraw > 0) {

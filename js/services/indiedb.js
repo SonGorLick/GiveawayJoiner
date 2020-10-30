@@ -46,7 +46,7 @@ callback(call);
 }
 getUserInfo(callback) {
 let userData = {
-avatar: dirapp + 'images/IndieDB.png',
+avatar: '../app.asar/images/IndieDB.png',
 username: 'IndieDB User'
 };
 if (GJuser.username !== 'User') {
@@ -154,7 +154,7 @@ _this.logWin(' IndieDB - ' + (idbwon - _this.won));
 _this.setStatus('win');
 _this.setConfig('won', idbwon);
 if (_this.getConfig('sound', true)) {
-new Audio(dirapp + 'sounds/won.wav').play();
+new Audio('../app.asar/sounds/won.wav').play();
 }
 }
 }

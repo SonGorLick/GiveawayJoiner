@@ -51,15 +51,12 @@ const currentBuild = require('electron').remote.app.getVersion();
 <div class="data_steam_dlc" data-lang-title="service.data_steam_dlc_title"></div>
 <div class="data_steam_skipdlc" data-lang-title="service.data_steam_skipdlc_title"></div>
 <div class="data_steam_card" data-lang-title="service.data_steam_card_title"></div>
-<div class="data_ajax" data-lang-title="service.data_ajax"></div>
-<div class="data_axios" data-lang-title="service.data_axios"></div>
 <div class="update_whitelist"></div>
 <div class="update_blacklist"></div>
 <div class="update_steam_own"></div>
 <div class="update_steam_dlc"></div>
 <div class="update_steam_skipdlc"></div>
 <div class="update_steam_card"></div>
-<div class="update_ip"></div>
 <div class="last_win" data-lang-title="service.last_win_title"></div>
 <div class="ua" data-lang-title="service.ua_title"></div>
 <div class="steam_login"></div>
@@ -85,15 +82,33 @@ const currentBuild = require('electron').remote.app.getVersion();
 </label>
 </div>
 <div class="input-wrap checkbox">
+<input id="timer_view" class="setter" type="checkbox"/>
+<label for="timer_view" data-lang="profile.timer_view" data-lang-title="profile.timer_view_title">
+</label>
+</div>
+<div class="input-wrap checkbox">
 <input id="steam_local" class="setter" type="checkbox"/>
 <label for="steam_local" data-lang="profile.steam_local" data-lang-title="profile.steam_local_title">
 </label>
 </div>
 <div class="input-wrap checkbox">
-<input id="timer_view" class="setter" type="checkbox"/>
-<label for="timer_view" data-lang="profile.timer_view" data-lang-title="profile.timer_view_title">
+<input id="dlc_local" class="setter" type="checkbox"/>
+<label for="dlc_local" data-lang="profile.dlc_local" data-lang-title="profile.dlc_local_title">
 </label>
 </div>
+<div class="input-wrap checkbox">
+<input id="skipdlc_local" class="setter" type="checkbox"/>
+<label for="skipdlc_local" data-lang="profile.skipdlc_local" data-lang-title="profile.skipdlc_local_title">
+</label>
+</div>
+<div class="input-wrap checkbox">
+<input id="card_local" class="setter" type="checkbox"/>
+<label for="card_local" data-lang="profile.card_local" data-lang-title="profile.card_local_title">
+</label>
+</div>
+<div class="data_ajax" data-lang-title="service.data_ajax"></div>
+<div class="data_axios" data-lang-title="service.data_axios"></div>
+<div class="update_ip"></div>
 <div class="devmode" data-lang-title="profile.devmode"></div>
 <div class="build no-selectable">
 <span data-lang="profile.build_version"></span> <span class="version"></span>

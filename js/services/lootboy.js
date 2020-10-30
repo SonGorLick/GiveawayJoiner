@@ -18,11 +18,13 @@ delete this.settings.sound;
 super.init();
 }
 authCheck(callback) {
+setTimeout(() => {
 callback(1);
+}, 2000);
 }
 getUserInfo(callback) {
 let userData = {
-avatar: dirapp + 'images/LootBoy.png',
+avatar: '../app.asar/images/LootBoy.png',
 username: 'LootBoy'
 };
 callback(userData);

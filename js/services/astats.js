@@ -17,7 +17,7 @@ super.init();
 }
 getUserInfo(callback) {
 let userData = {
-avatar: dirapp + 'images/Astats.png',
+avatar: '../app.asar/images/Astats.png',
 username: 'Astats User'
 };
 if (GJuser.username !== 'User') {
@@ -74,7 +74,7 @@ _this.logWin(' Astats - ' + (aswon - _this.won));
 _this.setStatus('win');
 _this.setConfig('won', aswon);
 if (_this.getConfig('sound', true)) {
-new Audio(dirapp + 'sounds/won.wav').play();
+new Audio('../app.asar/sounds/won.wav').play();
 }
 }
 }

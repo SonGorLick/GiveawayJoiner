@@ -43,7 +43,7 @@ super.init();
 }
 getUserInfo(callback) {
 let userData = {
-avatar: dirapp + 'images/SteamGifts.png',
+avatar: '../app.asar/images/SteamGifts.png',
 username: 'SteamGifts User',
 value: 0,
 level: 0
@@ -125,7 +125,7 @@ this.logWin(' SteamGifts - ' + (sgwon - this.won));
 this.setStatus('win');
 this.setConfig('won', sgwon);
 if (this.getConfig('sound', true)) {
-new Audio(dirapp + 'sounds/won.wav').play();
+new Audio('../app.asar/sounds/won.wav').play();
 }
 }
 }

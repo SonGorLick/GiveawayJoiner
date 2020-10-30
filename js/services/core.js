@@ -1,7 +1,6 @@
 'use strict';
 const storage = require('electron').remote.require('electron-json-storage');
 const fs = require('electron').remote.require('fs');
-const dirapp = (__dirname).replace('electron.asar/renderer', 'app.asar') + '/';
 const dirdata = storage.getDataPath() + '/';
 class Joiner {
 constructor() {
@@ -274,20 +273,37 @@ this.updateCookies();
 GJuser.white = loadFile('whitelist');
 GJuser.black = loadFile('blacklist');
 if (this.getConfig('check_in_steam', true) && Config.get('own_date') < Date.now()) {
-GJuser.ownapps = loadFile('steam_app');
-GJuser.ownsubs = loadFile('steam_sub');
 if (!Config.get('steam_local', false)) {
 updateSteam();
 }
+else {
+GJuser.ownapps = loadFile('steam_app');
+GJuser.ownsubs = loadFile('steam_sub');
+}
 }
 if (this.dlc && Config.get('dlc_date') < Date.now()) {
+if (!Config.get('dlc_local', false)) {
 updateDlc();
 }
+else {
+GJuser.dlc = loadFile('steam_dlc');
+}
+}
 if (this.card && Config.get('card_date') < Date.now()) {
+if (!Config.get('card_local', false)) {
 updateCard();
 }
+else {
+GJuser.card = loadFile('steam_card');
+}
+}
 if (this.dlc && Config.get('skipdlc_date') < Date.now()) {
+if (!Config.get('skipdlc_local', false)) {
 updateSkipdlc();
+}
+else {
+GJuser.skip_dlc = loadFile('steam_skipdlc');
+}
 }
 this.authCheck((authState) => {
 if (authState === 1) {
@@ -666,7 +682,7 @@ this.logWrap.scrollTop(this.logWrap[0].scrollHeight);
 joinService() {}
 getUserInfo(callback) {
 callback({
-avatar: dirapp + 'images/' + this.constructor.name + '.png',
+avatar: '../app.asar/images/' + this.constructor.name + '.png',
 username: this.constructor.name + ' User',
 value: 0,
 level: 0
