@@ -331,7 +331,7 @@ $('.content-item .info .data_' + lfile).html(Lang.get('service.data_' + lfile) +
 return lread;
 }
 else {
-$('.content-item .info .data_' + lfile).html(Lang.get('service.data_' + lfile) + ' ' + Lang.get('service.file_not_found') + ' ../giveawayjoinerdata/' + lfile + '.txt');
+$('.content-item .info .data_' + lfile).html(Lang.get('service.data_' + lfile) + Lang.get('service.file_not_found') + '../giveawayjoinerdata/' + lfile + '.txt');
 return '';
 }
 }
@@ -350,8 +350,8 @@ $('.content-item .info .data_steam_sub').html(Lang.get('service.data_steam_sub')
 Config.set('own_date', Date.now() + 10000);
 }
 else if (GJuser.ownapps === '' && GJuser.ownsubs === '') {
-$('.content-item .info .data_steam_app').html(Lang.get('service.data_steam_app') + ' ' + Lang.get('service.steam_error'));
-$('.content-item .info .data_steam_sub').html(Lang.get('service.data_steam_sub') + ' ' + Lang.get('service.steam_error'));
+$('.content-item .info .data_steam_app').html(Lang.get('service.data_steam_app') + Lang.get('service.need_login'));
+$('.content-item .info .data_steam_sub').html(Lang.get('service.data_steam_sub') + Lang.get('service.need_login'));
 }
 },error: () => {}
 });
@@ -386,7 +386,7 @@ Config.set('skipdlc_date', Date.now() + 43200000);
 });
 }
 else {
-$('.content-item .info .data_steam_skipdlc').html(Lang.get('service.data_steam_skipdlc') + ' ' + Lang.get('service.steam_error'));
+$('.content-item .info .data_steam_skipdlc').html(Lang.get('service.data_steam_skipdlc') + Lang.get('service.need_login'));
 }
 }
 function updateCard() {

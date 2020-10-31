@@ -45,7 +45,7 @@ _this.lburl = 'https://api.lootboy.de';
 _this.url = 'https://www.lootboy.de';
 _this.dcheck = true;
 if (!fs.existsSync(dirdata + 'lootboy1.txt')) {
-_this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/lootboy1.txt', 'err');
+_this.log(Lang.get('service.dt_no') + '../giveawayjoinerdata/lootboy1.txt', 'err');
 _this.stopJoiner(true);
 }
 let lbcurr = _this.dload,
@@ -364,7 +364,7 @@ _this.log(Lang.get('service.skip'), 'skip');
 });
 }
 else {
-_this.log(Lang.get('service.dt_err') + '/giveawayjoinerdata/lootboy' + lbcurr + '.txt', 'err');
+_this.log(Lang.get('service.dt_err') + '../giveawayjoinerdata/lootboy' + lbcurr + '.txt', 'err');
 }
 }
 else {

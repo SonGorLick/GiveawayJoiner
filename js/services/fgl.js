@@ -50,7 +50,7 @@ _this.url = 'https://d.freegamelottery.com/draw/register-visit';
 _this.fgurl = 'https://d.freegamelottery.com';
 _this.dcheck = true;
 if (!fs.existsSync(dirdata + 'fgl1.txt')) {
-_this.log(Lang.get('service.dt_no') + '/giveawayjoinerdata/fgl1.txt', 'err');
+_this.log(Lang.get('service.dt_no') + '../giveawayjoinerdata/fgl1.txt', 'err');
 _this.stopJoiner(true);
 }
 let fgcurr = _this.dload,
@@ -257,7 +257,7 @@ _this.log(Lang.get('service.connection_error'), 'err');
 });
 }
 else {
-_this.log(Lang.get('service.dt_err') + '/giveawayjoinerdata/fgl' + fgcurr + '.txt', 'err');
+_this.log(Lang.get('service.dt_err') + '../giveawayjoinerdata/fgl' + fgcurr + '.txt', 'err');
 }
 }
 else {
