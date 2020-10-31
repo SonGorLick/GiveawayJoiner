@@ -140,7 +140,7 @@ _this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 if (page === _this.pagemax && _this.started) {
 setTimeout(() => {
-if (_this.statusIcon.attr('data-status') !== 'win') {
+if (_this.statusIcon.attr('data-status') === 'work') {
 _this.setStatus('good');
 }
 }, _this.interval());
@@ -178,8 +178,8 @@ else if (assteam.includes('sub/')) {
 assub = parseInt(assteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'sub/' + assub;
 }
-else if (assteam.includes('bundle/')) {
-asbun = parseInt(assteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
+else if (assteam.includes('bundles/')) {
+asbun = parseInt(assteam.split('bundles/')[1].split('/')[0].split('?')[0].split('#')[0]);
 asid = 'bundle/' + asbun;
 }
 if (

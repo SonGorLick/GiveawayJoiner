@@ -201,7 +201,7 @@ else {
 _this.log(Lang.get('service.checked') + page + '#', 'srch');
 }
 if (page === _this.pagemax && _this.started) {
-if (_this.statusIcon.attr('data-status') !== 'win') {
+if (_this.statusIcon.attr('data-status') === 'work') {
 _this.setStatus('good');
 }
 }

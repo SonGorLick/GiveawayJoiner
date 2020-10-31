@@ -62,7 +62,7 @@ _this.dload = 1;
 }
 _this.log(Lang.get('service.checked') + 'FGL', 'srch');
 if (_this.started) {
-if (_this.statusIcon.attr('data-status') !== 'win') {
+if (_this.statusIcon.attr('data-status') === 'work') {
 _this.setStatus('good');
 }
 }

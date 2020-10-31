@@ -34,6 +34,7 @@ this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default:
 this.settings.reserve_for_smpl = { type: 'checkbox', trans: this.transPath('reserve_for_smpl'), default: this.getConfig('reserve_for_smpl', false) };
 this.settings.whitelist_nocards = { type: 'checkbox', trans: 'service.whitelist_nocards', default: this.getConfig('whitelist_nocards', false) };
 this.settings.skip_skipdlc = { type: 'checkbox', trans: 'service.skip_skipdlc', default: this.getConfig('skip_skipdlc', false) };
+this.settings.skip_trial = { type: 'checkbox', trans: 'service.skip_trial', default: this.getConfig('skip_trial', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -338,7 +339,7 @@ _this.lvl = _this.lvlmax + 1;
 _this.sort_after = false;
 }
 if (page === _this.pagemax && _this.started) {
-if (_this.statusIcon.attr('data-status') !== 'win') {
+if (_this.statusIcon.attr('data-status') === 'work') {
 _this.setStatus('good');
 }
 }
@@ -482,6 +483,9 @@ igown = 5;
 if (_this.dsave < level) {
 igown = 8;
 }
+if (GJuser.trial.includes(igid + ',') && _this.getConfig('skip_trial', false)) {
+igown = 9;
+}
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '' && GJuser.ownsubs === '') {
 igown = 2;
@@ -536,6 +540,9 @@ _this.log(Lang.get('service.points_low'), 'skip');
 break;
 case 8:
 _this.log(Lang.get('service.cant_join'), 'cant');
+break;
+case 9:
+_this.log(Lang.get('service.trial'), 'info');
 break;
 }
 ignext = 100;

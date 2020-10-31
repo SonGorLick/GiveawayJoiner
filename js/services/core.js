@@ -53,7 +53,7 @@ this.icon = $(document.createElement('div'))
 .addClass('service-icon')
 .appendTo('.services-icons');
 $(document.createElement('div')).addClass('bg')
-.css({'background-image': "url('images/" + this.constructor.name + ".png')"})
+.css({'background-image': "url('../app.asar/images/" + this.constructor.name + ".png')"})
 .appendTo(this.icon);
 this.statusIcon = $(document.createElement('div'))
 .addClass('service-status')
@@ -225,7 +225,7 @@ this.waitAuth = false;
 });
 }
 });
-Browser.setTitle('GiveawayJoiner - ' + Lang.get('service.browser_loading'));
+Browser.setTitle(Lang.get('service.browser_loading'));
 Browser.loadURL(this.authLink);
 Browser.once('close', () => {
 Browser.webContents.removeAllListeners('did-finish-load');
@@ -295,6 +295,14 @@ updateCard();
 }
 else {
 GJuser.card = loadFile('steam_card');
+}
+}
+if (this.getConfig('skip_trial', false) && Config.get('trial_date') < Date.now()) {
+if (!Config.get('trial_local', false)) {
+updateTrial();
+}
+else {
+GJuser.trial = loadFile('steam_trial');
 }
 }
 if (this.dlc && Config.get('skipdlc_date') < Date.now()) {

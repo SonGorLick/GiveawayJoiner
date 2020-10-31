@@ -21,6 +21,7 @@ GJuser.ownsubs = loadFile('steam_sub');
 GJuser.dlc = loadFile('steam_dlc');
 GJuser.skip_dlc = loadFile('steam_skipdlc');
 GJuser.card = loadFile('steam_card');
+GJuser.trial = loadFile('steam_trial');
 if (!Config.get('steam_local', false) && Config.get('own_date') < Date.now()) {
 updateSteam();
 }
@@ -29,6 +30,9 @@ updateDlc();
 }
 if (!Config.get('card_local', false) && Config.get('card_date') < Date.now()) {
 updateCard();
+}
+if (!Config.get('trial_local', false) && Config.get('trial_date') < Date.now()) {
+updateTrial();
 }
 if (!Config.get('skipdlc_local', false) && Config.get('skipdlc_date') < Date.now()) {
 setTimeout(() => {
@@ -116,6 +120,14 @@ updateCard();
 }
 else {
 GJuser.card = loadFile('steam_card');
+}
+});
+$(document).on('click', '.update_steam_trial', function () {
+if (!Config.get('trial_local', false)) {
+updateTrial();
+}
+else {
+GJuser.trial = loadFile('steam_trial');
 }
 });
 $(document).on('click', '.update_ip', function () {
@@ -267,6 +279,10 @@ $(document.createElement('button'))
 $(document.createElement('button'))
 .addClass('update_data')
 .html(upd_btn)
+.appendTo('.content-item .update_steam_trial');
+$(document.createElement('button'))
+.addClass('update_data')
+.html(upd_btn)
 .appendTo('.content-item .update_ip');
 $(document.createElement('button'))
 .addClass('update_data')
@@ -315,7 +331,7 @@ $('.content-item .info .data_' + lfile).html(Lang.get('service.data_' + lfile) +
 return lread;
 }
 else {
-$('.content-item .info .data_' + lfile).html(Lang.get('service.data_' + lfile) + ' ' + Lang.get('service.file_not_found') + ' /giveawayjoinerdata/' + lfile + '.txt');
+$('.content-item .info .data_' + lfile).html(Lang.get('service.data_' + lfile) + ' ' + Lang.get('service.file_not_found') + ' ../giveawayjoinerdata/' + lfile + '.txt');
 return '';
 }
 }
@@ -383,18 +399,51 @@ GJuser.card = ',' + Object.keys(data).toString() + ',';
 fs.writeFile(dirdata + 'steam_card.txt', GJuser.card, (err) => { });
 $('.content-item .info .data_steam_card').html(Lang.get('service.data_steam_card') + (GJuser.card.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
 Config.set('card_date', Date.now() + 43200000);
-GJuser.card_date = (new Date()).getDate();
 }
+},error: () => {}
+});
+}
+function updateTrial() {
+$.ajax({
+url: 'https://www.freesteamkeys.com/giveaways/',
+success: function (data) {
+data = $(data.replace(/<img/gi, '<noload'));
+let fsg = data.find('.category-giveaways.status-publish.type-post.no-thumbnail.post'),
+fsgskip = ',';
+for (let i = 0; i < fsg.length; i++) {
+let name = fsg.eq(i).find('a').attr('title').toLowerCase();
+if (
+(name.includes('(alpha)')) || (name.includes('(beta)')) || (name.includes('(demo)')) || (name.includes('(trial)')) ||
+(name.includes('alpha key')) || (name.includes('beta key')) || (name.includes('demo key')) || (name.includes('trial key')) ||
+(name.includes('closed alpha')) || (name.includes('closed beta')) || (name.includes('closed demo')) ||
+(name.includes('early access')) || (name.includes('early alpha')) || (name.includes('early demo')) || (name.includes('early trial')) ||
+(name.includes('demo steam key')) || (name.includes('final beta'))
+)
+{
+let link = fsg.eq(i).find('a').text();
+if (link.includes('apps/')) {
+link = 'app/' + parseInt(link.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]) + ',';
+}
+else {
+link = '';
+}
+fsgskip = fsgskip + link;
+}
+}
+GJuser.trial = fsgskip;
+fs.writeFile(dirdata + 'steam_trial.txt', GJuser.trial, (err) => { });
+$('.content-item .info .data_steam_trial').html(Lang.get('service.data_steam_trial') + (GJuser.trial.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
+Config.set('trial_date', Date.now() + 10000);
 },error: () => {}
 });
 }
 function openWebsite(url) {
 Browser.loadURL(url);
-Browser.setTitle('GiveawayJoiner - ' + Lang.get('service.browser_loading'));
+Browser.setTitle(Lang.get('service.browser_loading'));
 Browser.show();
 }
 window.minimizeWindow = () => {
-if (process.platform !== "darwin") {
+if (process.platform !== 'darwin') {
 remote.getCurrentWindow().hide();
 }
 else {

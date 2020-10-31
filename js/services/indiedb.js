@@ -167,7 +167,7 @@ _this.log(Lang.get('service.checked') + 'Giveaways', 'srch');
 }, 10000);
 if (_this.started) {
 setTimeout(() => {
-if (_this.statusIcon.attr('data-status') !== 'win') {
+if (_this.statusIcon.attr('data-status') === 'work') {
 _this.setStatus('good');
 }
 }, 10000);
