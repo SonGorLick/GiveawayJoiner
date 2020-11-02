@@ -603,18 +603,16 @@ return addwhite + rmvwhite;
 }
 logWin(win) {
 win = '<br>' + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString() + win + '\n';
+let rd = '';
 if (fs.existsSync(dirdata + 'win.txt')) {
-let rd = fs.readFileSync(dirdata + 'win.txt');
-if (rd.length < 5000) {
-win = win + rd;
+rd = fs.readFileSync(dirdata + 'win.txt').toString();
 }
-fs.writeFile(dirdata + 'win.txt', win, (err) => { });
-lastWin();
+if (rd.length > 5000) {
+rd = '';
 }
-else {
-fs.writeFile(dirdata + 'win.txt', win, (err) => { });
-lastWin();
-}
+rd = win + rd;
+fs.writeFile(dirdata + 'win.txt', rd, (err) => { });
+$('.content-item .info .last_win').html(Lang.get('service.last_win') + rd.split('\n', 7).join().replace(/,/g, ''));
 }
 updateCookies() {
 mainWindow.webContents.session.cookies.get({domain: this.domain})
