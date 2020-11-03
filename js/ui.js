@@ -10,7 +10,6 @@ let Browser = shared.Browser;
 let mainWindow = shared.mainWindow;
 let intervalTicks = 0;
 $(function () {
-reloadLangStrings();
 $('.content-item .settings .data_ajax').html('Ajax IP: ');
 $('.content-item .settings .data_axios').html('Axios IP: ');
 $('.content-item .info .ua').html(Lang.get('service.ua') + '<br>' + mainWindow.webContents.session.getUserAgent());
@@ -212,6 +211,7 @@ $('.content-item .info .data_blacklist').html(Lang.get('service.data_blacklist')
 }
 }
 });
+reloadLangStrings();
 });
 function reloadLangStrings() {
 $('[data-lang]').each(function () {
@@ -248,10 +248,10 @@ lang_select.append(option);
 }
 $(document.createElement('button'))
 .addClass('open-website')
-.html('<div class="fab fa-steam" title="' + Lang.get('service.steam_login') + '"></div>')
+.html('<div class="fab fa-steam"></div>')
 .attr('steam_login', '')
 .appendTo('.content-item .steam_login');
-let upd_btn = '<div class="fa fa-dataupd" title="' + Lang.get('service.update_data') + '"></div>';
+let upd_btn = '<div class="fa fa-dataupd" data-lang-title="service.update_data"></div>';
 $(document.createElement('button'))
 .addClass('update_data')
 .html(upd_btn)
