@@ -2,6 +2,7 @@
 class SteamGifts extends Joiner {
 constructor() {
 super();
+this.domain = 'steamgifts.com';
 this.websiteUrl = 'https://www.steamgifts.com';
 this.authContent = 'Account';
 this.authLink = 'https://www.steamgifts.com/?login';
@@ -41,6 +42,35 @@ this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default:
 this.settings.sort_by_chance = { type: 'checkbox', trans: this.transPath('sort_by_chance'), default: this.getConfig('sort_by_chance', false) };
 super.init();
 }
+authCheck(callback) {
+let call = -1;
+rq({
+method: 'GET',
+url: 'https://www.steamgifts.com',
+headers: {
+'authority': 'https://www.steamgifts.com',
+'user-agent': this.ua,
+'sec-fetch-site': 'none',
+'sec-fetch-mode': 'navigate',
+'sec-fetch-user': '?1',
+'sec-fetch-dest': 'document',
+'cookie': this.cookies
+},
+responseType: 'document'
+})
+.then((auths) => {
+let auth = auths.data;
+if (auth.indexOf('Account') >= 0) {
+call = 1;
+}
+else {
+call = 0;
+}
+})
+.finally(() => {
+callback(call);
+});
+}
 getUserInfo(callback) {
 let userData = {
 avatar: '../app.asar/images/SteamGifts.png',
@@ -48,18 +78,29 @@ username: 'SteamGifts User',
 value: 0,
 level: 0
 };
-$.ajax({
+rq({
+method: 'GET',
 url: 'https://www.steamgifts.com/account/settings/profile',
-success: function (data) {
-data = $(data.replace(/<img/gi, '<noload'));
+headers: {
+'authority': 'https://www.steamgifts.com',
+'user-agent': this.ua,
+'sec-fetch-site': 'none',
+'sec-fetch-mode': 'navigate',
+'sec-fetch-user': '?1',
+'sec-fetch-dest': 'document',
+'cookie': this.cookies
+},
+responseType: 'document'
+})
+.then((data) => {
+data = $(data.data);
 userData.avatar = data.find('.nav__avatar-inner-wrap').attr('style').replace('background-image:url(', '').replace(');', '');
 userData.username = data.find('input[name=username]').val();
 userData.value = data.find('.nav__points').text();
 userData.level = data.find('.nav__points').next().text().replace('Level ', '');
-},
-complete: function () {
+})
+.finally(() => {
 callback(userData);
-}
 });
 }
 joinService() {
@@ -100,11 +141,22 @@ sgtype = 'g';
 else {
 sgurl = sgurl + 'page=' + page;
 }
-$.ajax({
-url: sgurl,
+rq({
 method: 'GET',
-success: (data) => {
-data = $('<div>' + data.replace(/<img/gi, '<noload') + '</div>');
+url: sgurl,
+headers: {
+'authority': this.url,
+'user-agent': this.ua,
+'sec-fetch-site': 'none',
+'sec-fetch-mode': 'navigate',
+'sec-fetch-user': '?1',
+'sec-fetch-dest': 'document',
+'cookie': this.cookies
+},
+responseType: 'document'
+})
+.then((data) => {
+data = $('<div>' + data.data.replace(/<img/gi, '<noload') + '</div>');
 this.token = data.find('input[name="xsrf_token"]').val();
 if (this.token.length < 10) {
 this.log(this.trans('token_error'), 'err');
@@ -212,11 +264,10 @@ if (
 )
 this.giveaways.push(GA);
 });
-},
-complete: () => {
+})
+.finally(() => {
 if (callback) {
 callback();
-}
 }
 });
 }
@@ -414,39 +465,58 @@ _this.log(Lang.get('service.skipped'), 'skip');
 break;
 }
 if (sgown === 6 && _this.getConfig('remove_ga', true)) {
-$.ajax({
-url: _this.url + '/ajax.php',
+rq({
 method: 'POST',
-dataType: 'json',
-data: {
-xsrf_token: _this.token,
-do: 'entry_delete',
-code: GA.code
+url: _this.url + '/ajax.php',
+headers: {
+'authority': _this.url,
+'from': 'esgst.extension@gmail.com',
+'user-agent': _this.ua,
+'esgst-version': '8.7.2',
+'content-type': 'application/x-www-form-urlencoded',
+'accept': '*/*',
+'origin': _this.url,
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'cors',
+'sec-fetch-dest': 'empty',
+'referer': _this.url + '/',
+'cookie': _this.cookies
 },
-success: function (data) {
+data: 'xsrf_token=' + _this.token + '&do=entry_delete&code=' + GA.code
+})
+.then((data) => {
+data = data.data;
 if (data.type === 'success') {
 _this.log(Lang.get('service.removed') + _this.logLink(GA.lnk, GA.nam), 'info');
 _this.setValue(data.points);
 GA.entered = false;
 }
-}
 });
 }
 if ((sgown === 1 || sgown === 6) && !_this.dsave.includes(',' + sgid + ',') && _this.getConfig('hide_ga', false)) {
 sgown = 6;
-$.ajax({
-url: _this.url + '/ajax.php',
+rq({
 method: 'POST',
-dataType: 'json',
-data: {
-xsrf_token: _this.token,
-do: 'hide_giveaways_by_game_id',
-game_id: GA.gameid
+url: _this.url + '/ajax.php',
+headers: {
+'authority': _this.url,
+'from': 'esgst.extension@gmail.com',
+'user-agent': _this.ua,
+'esgst-version': '8.7.2',
+'content-type': 'application/x-www-form-urlencoded',
+'accept': '*/*',
+'origin': _this.url,
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'cors',
+'sec-fetch-dest': 'empty',
+'referer': _this.url + '/',
+'cookie': _this.cookies
 },
-success: function () {
+data: 'xsrf_token=' + _this.token + '&do=hide_giveaways_by_game_id&game_id=' + GA.gameid
+})
+.then(() => {
 _this.log(Lang.get('service.hided') + _this.logLink(GA.lnk, GA.nam), 'info');
 _this.dsave = _this.dsave + sgid + ',';
-}
 });
 }
 if (
@@ -459,16 +529,27 @@ if (
 (GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('min_entries', 0) === 0 || GA.entries >= _this.getConfig('min_entries', 0))
 )
 {
-$.ajax({
-url: _this.url + '/ajax.php',
+rq({
 method: 'POST',
-dataType: 'json',
-data: {
-xsrf_token: _this.token,
-do: 'entry_insert',
-code: GA.code
+url: _this.url + '/ajax.php',
+headers: {
+'authority': _this.url,
+'from': 'esgst.extension@gmail.com',
+'user-agent': _this.ua,
+'esgst-version': '8.7.2',
+'content-type': 'application/x-www-form-urlencoded',
+'accept': '*/*',
+'origin': _this.url,
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'cors',
+'sec-fetch-dest': 'empty',
+'referer': _this.url + '/',
+'cookie': _this.cookies
 },
-success: function (data) {
+data: 'xsrf_token=' + _this.token + '&do=entry_insert&code=' + GA.code
+})
+.then((data) => {
+data = data.data;
 if (data.type === 'success') {
 _this.log(Lang.get('service.entered_in') + sglog, 'enter');
 _this.setValue(data.points);
@@ -476,7 +557,6 @@ GA.entered = true;
 }
 else {
 _this.log(Lang.get('service.err_join'), 'cant');
-}
 }
 });
 }
