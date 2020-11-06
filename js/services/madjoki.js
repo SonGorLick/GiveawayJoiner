@@ -3,7 +3,7 @@ class Madjoki extends Joiner {
 constructor() {
 super();
 this.websiteUrl = 'https://steam.madjoki.com/apps/free';
-this.authContent = 'Logout';
+this.authContent = '>Logout<';
 this.authLink = 'https://steam.madjoki.com/login';
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
@@ -111,7 +111,7 @@ _this.pagemax = page;
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 function giveawayEnter() {
-if (_this.limit >= 50 || mjfound.length < 50 && page > 14) {
+if (_this.limit >= 50 || mjfound.length < 50 && page > 14 || !_this.started) {
 _this.pagemax = page;
 }
 if (mjarray.length <= mjcurr || _this.limit >= 50 || !_this.started) {
@@ -297,7 +297,7 @@ case 5:
 _this.log(Lang.get('service.skipped'), 'skip');
 break;
 case 6:
-_this.log('Steam g_session data error', 'err');
+_this.log(Lang.get('service.steam_error').split('-')[0] + '-' + Lang.get('service.need_login'), 'err');
 break;
 }
 if (mjown === 0) {
@@ -315,11 +315,17 @@ if (rp.indexOf('add_free_content_success_area') >= 0) {
 _this.log(Lang.get('service.added') + mjlog, 'enter');
 _this.added = _this.added + mjsubid + ',';
 }
+else if (rp.indexOf('var g_AccountID = 0;') >= 0) {
+_this.pagemax = page;
+mjcurr = 1000;
+_this.log(Lang.get('service.steam_error').split('-')[0] + '-' + Lang.get('service.need_login'), 'err');
+}
 else if (rp.indexOf('error_box') >= 0) {
 if (_this.getConfig('auto_mj_black', true)) {
 _this.dload = _this.dload + mjsubid + ',';
 }
-_this.log(Lang.get('service.cant_join'), 'cant');
+let mjerr = $(rp).find('#error_box > span').text().toLowerCase().replace('steam', 'Steam').replace('.', '');
+_this.log(Lang.get('service.cant_join').split('-')[0] + '- ' + mjerr, 'cant');
 }
 else {
 rp = 'err';

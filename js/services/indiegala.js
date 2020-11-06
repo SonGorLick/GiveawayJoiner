@@ -635,10 +635,10 @@ igrtry = 0;
 _this.pagemax = page;
 igcurr = 200;
 ignext = 100;
-this.setStatus('net');
-this.tries++;
-this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost').replace('10', '5'), 'err');
-this.stimer = 5;
+_this.setStatus('net');
+_this.tries++;
+_this.log('[' + _this.tries + '] ' + Lang.get('service.connection_lost').replace('10', '5'), 'err');
+_this.stimer = 5;
 }
 else {
 _this.log(resp.status, 'err');

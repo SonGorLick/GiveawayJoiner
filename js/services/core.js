@@ -589,7 +589,7 @@ wrap.find('.btn-up').addClass('disabled');
 }
 }
 logLink(address, anchor) {
-return '<span class="open-website" data-link="' + address + '">' + anchor + '</span>';
+return '<span class="open-website" data-link="' + address + '" title="' + address + '">' + anchor + '</span>';
 }
 logBlack(steamappid) {
 let addblack = '<span class="add-blacklist" black="' + steamappid + '" title="' + Lang.get('service.add_tbl') + ' (' + steamappid + ')">  [+]</span>',
