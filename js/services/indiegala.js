@@ -483,7 +483,7 @@ igown = 5;
 if (_this.dsave < level) {
 igown = 8;
 }
-if (GJuser.trial.includes(igid + ',') && _this.getConfig('skip_trial', false)) {
+if (_this.getConfig('skip_trial', false) && GJuser.trial.includes(igid + ',')) {
 igown = 9;
 }
 if (_this.getConfig('check_in_steam', true)) {

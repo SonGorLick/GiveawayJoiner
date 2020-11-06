@@ -20,6 +20,7 @@ this.settings.add_pack = { type: 'checkbox', trans: this.transPath('add_pack'), 
 this.settings.add_demo = { type: 'checkbox', trans: this.transPath('add_demo'), default: this.getConfig('add_demo', false) };
 this.settings.add_series = { type: 'checkbox', trans: this.transPath('add_series'), default: this.getConfig('add_series', false) };
 this.settings.add_cfg = { type: 'checkbox', trans: this.transPath('add_cfg'), default: this.getConfig('add_cfg', false) };
+this.settings.skip_skipdlc = { type: 'checkbox', trans: 'service.skip_skipdlc', default: this.getConfig('skip_skipdlc', false) };
 delete this.settings.interval_from;
 delete this.settings.interval_to;
 delete this.settings.sound;
@@ -192,8 +193,11 @@ else if (mjsteam.includes('bundle/')) {
 mjbun = parseInt(mjsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
 mjid = 'bundle/' + mjbun;
 }
-if (_this.dload.includes(',' + mjsubid + ',') && _this.getConfig('mj_black', true)) {
+if (_this.getConfig('mj_black', true) && _this.dload.includes(',' + mjsubid + ',')) {
 mjown = 4;
+}
+if (_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + mjapp + ',')) {
+mjown = 5;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '' && GJuser.ownsubs === '') {
@@ -251,6 +255,17 @@ mjcurr = 1000;
 mjown = 6;
 }
 let mjlog = _this.logLink(mjsteam, name);
+if (GJuser.dlc.includes(',' + mjapp + ',')) {
+if (GJuser.skip_dlc.includes(',' + mjapp + ',')) {
+mjlog = '⊟ ' + mjlog;
+}
+else {
+mjlog = '⊞ ' + mjlog;
+}
+}
+if (GJuser.card.includes(',' + mjapp + ',')) {
+mjlog = '♦ ' + mjlog;
+}
 if (_this.getConfig('log', true)) {
 if (page < 15) {
 mjlog = '|0#|' + mjsubid + '|' + mjname + '|  ' + mjlog;
@@ -260,7 +275,7 @@ mjlog = '|' + (page - 14) + '#|' + (mjcrr + 1) + '№|' + mjsubid + '|' + mjname
 }
 }
 else {
-mjlog = mjlog  + _this.logBlack(mjid);
+mjlog = mjlog + _this.logBlack(mjid);
 }
 if (mjown !== 7) {
 _this.log(Lang.get('service.checking') + mjlog + _this.logBlack(mjid), 'chk');

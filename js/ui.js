@@ -411,13 +411,15 @@ data = $(data.replace(/<img/gi, '<noload'));
 let fsg = data.find('.category-giveaways.status-publish.type-post.no-thumbnail.post'),
 fsgskip = ',';
 for (let i = 0; i < fsg.length; i++) {
-let name = fsg.eq(i).find('a').attr('title').toLowerCase();
+let name = fsg.eq(i).find('a').attr('title').toLowerCase(),
+info = fsg.eq(i).find('p').text().toLowerCase();
 if (
 (name.includes('(alpha)')) || (name.includes('(beta)')) || (name.includes('(demo)')) || (name.includes('(trial)')) ||
 (name.includes('alpha key')) || (name.includes('beta key')) || (name.includes('demo key')) || (name.includes('trial key')) ||
 (name.includes('closed alpha')) || (name.includes('closed beta')) || (name.includes('closed demo')) ||
 (name.includes('early access')) || (name.includes('early alpha')) || (name.includes('early demo')) || (name.includes('early trial')) ||
-(name.includes('demo steam key')) || (name.includes('final beta'))
+(name.includes('alpha steam key')) || (name.includes('beta steam key')) || (name.includes('demo steam key')) || (name.includes('final beta')) || 
+(info.includes(' alpha key')) || (info.includes(' beta key')) || (info.includes(' demo key')) || (info.includes(' trial key'))
 )
 {
 let link = fsg.eq(i).find('a').text();

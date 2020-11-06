@@ -81,9 +81,9 @@ _this.stimer = fgtimer;
 }
 if (fs.existsSync(dirdata + 'fgl' + fgcurr + '.txt') && fgcurr > 0) {
 _this.log(Lang.get('service.open_file') + 'fgl' + fgcurr + '.txt', 'info');
-let fgdata = fs.readFileSync(dirdata + 'fgl' + fgcurr + '.txt');
+let fgdata = fs.readFileSync(dirdata + 'fgl' + fgcurr + '.txt').toString().split('\n')[0];
 if (fgdata.includes(',')) {
-let fgd = (fgdata.toString()).split(','),
+let fgd = fgdata.split(','),
 fglogin = fgd[0],
 fgpass= fgd[1],
 fgid = '',
