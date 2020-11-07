@@ -268,7 +268,7 @@ success: function (datas) {
 data = datas.replace(/\n/g, "\\n").replace('"text/javascript" src="', "'text/javascript' src='").replace('"></script>', "'></script>");
 if (data.indexOf('"status": "ok"') >= 0) {
 _this.igprtry = 0;
-tickets = $(JSON.parse(data).html).find('.items-list-row > .items-list-col > .items-list-item > .relative');
+tickets = $(JSON.parse(data).html).find('.items-list-item > .relative');
 if (igpage > 1 && data.indexOf('<i aria-hidden=\"true\" class=\"fa fa-angle-right\"></i>') >= 0) {
 _this.pagemax = page;
 _this.dcheck = 1;
