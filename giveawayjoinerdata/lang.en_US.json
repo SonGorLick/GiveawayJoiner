@@ -100,7 +100,7 @@
 		"intervalfrom_title": "Minimum interval between accounts in minutes. 0 - without interval",
 		"intervalto": "Max account timer (minutes)",
 		"intervalto_title": "Maximum interval between accounts in minutes. 0 - without interval",
-		"entered_in": "Joined to  ",
+		"entered_in": "Joined to ",
 		"pages": "Pages",
 		"pages_title": "How many first pages should be checked for the available giveaways",
 		"points_reserve": "Reserve of points",
