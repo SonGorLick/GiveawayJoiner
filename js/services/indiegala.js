@@ -4,7 +4,7 @@ constructor() {
 super();
 this.domain = 'indiegala.com';
 this.authContent = 'Your account';
-this.websiteUrl = 'https://www.indiegala.com/library';
+this.websiteUrl = 'https://www.indiegala.com';
 this.authLink = 'https://www.indiegala.com/login';
 this.withValue = true;
 this.withLevel = true;
@@ -66,10 +66,7 @@ let igtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 90) - _th
 _this.stimer = igtimer;
 let page = 1;
 _this.igprtry = 0;
-_this.dcheck = 0;
-if (_this.dload === ',') {
 _this.dload = 0;
-}
 _this.lvlmax = _this.getConfig('max_level', 0);
 _this.lvlmin = _this.getConfig('min_level', 0);
 _this.entmin = _this.getConfig('min_entries', 0);
@@ -80,78 +77,23 @@ _this.ending_first = _this.getConfig('ending_first', false);
 _this.reserve = _this.getConfig('points_reserve', 0);
 _this.sort_after = false;
 _this.url = 'https://www.indiegala.com';
-if (_this.dsave === ',') {
+if (fs.existsSync(dirdata + 'indiegala.txt')) {
+let igl = parseInt(fs.readFileSync(dirdata + 'indiegala.txt').toString());
+_this.setLevel(igl);
+if (_this.lvlmax > _this.curr_level || _this.lvlmax === 0) {
+_this.lvlmax = igl;
+}
+if (_this.lvlmin > igl) {
+_this.lvlmin = igl;
+}
+}
+if (_this.getConfig('ig_lvl_date', 0) < Date.now() || !fs.existsSync(dirdata + 'indiegala.txt')) {
 if (_this.lvlmax === 0) {
 _this.lvlmax = 9;
 }
-if (fs.existsSync(dirdata + 'indiegala.txt')) {
-let igl = fs.readFileSync(dirdata + 'indiegala.txt');
-_this.dsave = igl.toString();
-if (_this.lvlmax > _this.dsave) {
-_this.lvlmax = _this.dsave;
-}
-if (_this.lvlmin > _this.dsave) {
-_this.lvlmin = _this.dsave;
-}
-_this.setLevel(_this.dsave);
-}
-else {
-_this.dsave = _this.lvlmax;
-_this.setLevel(_this.dsave);
-}
-$.ajax({
-url: _this.url + '/library/giveaways/user-level-and-coins',
-dataType: 'json',
-success: function (iglevel) {
-if (iglevel.current_level !== undefined) {
-_this.dsave = iglevel.current_level;
-fs.writeFile(dirdata + 'indiegala.txt', _this.dsave, (err) => { });
-_this.setLevel(_this.dsave);
-if (_this.lvlmax > _this.dsave || _this.lvlmax === 0) {
-_this.lvlmax = _this.dsave;
-}
-if (_this.lvlmin > _this.dsave) {
-_this.lvlmin = _this.dsave;
-}
-}
-}, error: () => {}
-});
-}
-else {
-_this.setLevel(_this.dsave);	
-}
-if (_this.dload === 0) {
-$.ajax({
-url: _this.url + '/library/giveaways/giveaways-completed/tocheck',
-success: function (tocheck) {
-let igchecks = '-all',
-igchck = [],
-igchckid = '',
-igchecked = ' [Check error]';
-if (tocheck.indexOf('>Check all<') >= 0) {
-igchck[0] = '0';
-}
-else if (tocheck.indexOf('"status": "ok", "html"')) {
-igchecks = '';
-igchecks = $(tocheck.html).find('.library-giveaways-check-if-won-btn');
-for (let i = 0; i < igchecks.length; i++) {
-igchck[i] = igchecks.eq(i).attr('onclick').replace("giveawayCheckIfWinner(this, event, '", "").replace("')", "");
-}
-}
-else {
-igchecks = 'err';
-}
-let ic = 0,
-iw = 0,
-il = 0;
-if (igchck.length > 0) {
-igchck.forEach(function(check) {
-if (igchecks !== '-all') {
-igchckid = {entry_id: check};
-}
 rq({
-method: 'POST',
-url: _this.url + '/library/giveaways/check-if-winner' + igchecks,
+method: 'GET',
+url: _this.url + '/library/giveaways/user-level-and-coins',
 headers: {
 'authority': 'www.indiegala.com',
 'accept': 'application/json, text/javascript, */*; q=0.01',
@@ -162,58 +104,29 @@ headers: {
 'user-agent': _this.ua,
 'referer': _this.url + '/library',
 'cookie': _this.cookies
-},
-data: igchckid
-})
-.then((win) => {
-let igwin = win.data;
-if (igwin.checked >= 0) {
-_this.dload = 3;
-igchecked = ' [Check all]';
-iw = igwin.won;
-il = igwin.checked - iw;
-}
-else if (igwin.winner === true) {
-iw++;
-igchecked = ' [By one]';
-}
-else if (igwin.winner === false) {
-il++;
-igchecked = ' [By one]';
 }
 })
-.finally(() => {
-ic++;
-if (ic >= igchck.length) {
-_this.log(Lang.get('service.done') + 'Completed to check - ' + (iw + il) + igchecked, 'info');
-if (iw > 0) {
-_this.log(_this.logLink(_this.url + '/library', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + (iw) + ')'), 'win');
-_this.logWin(' IndieGala - ' + iw);
-_this.setStatus('win');
-if (_this.getConfig('sound', true)) {
-new Audio('../app.asar/sounds/won.wav').play();
+.then((iglevel) => {
+iglevel = iglevel.data;
+if (iglevel.current_level !== undefined && iglevel.current_level !== '-') {
+iglevel = parseInt(iglevel.current_level);
+_this.setLevel(iglevel);
+if (_this.lvlmax > iglevel || _this.lvlmax === 0) {
+_this.lvlmax = iglevel;
 }
+if (_this.lvlmin > iglevel) {
+_this.lvlmin = iglevel;
 }
+_this.setConfig('ig_lvl_date', Date.now() + 86400000);
+fs.writeFile(dirdata + 'indiegala.txt', iglevel, (err) => { });
+}
+else if (!fs.existsSync(dirdata + 'indiegala.txt')) {
+_this.setLevel(_this.lvlmax);
+fs.writeFile(dirdata + 'indiegala.txt', _this.lvlmax, (err) => { });
 }
 });
-});
 }
-else {
-if (igchecks === 'err') {
-_this.log(Lang.get('service.done') + 'Completed to check - 0' + igchecked, 'info');
-}
-else {
-_this.dload = 3;
-_this.log(Lang.get('service.done') + 'Completed to check - This list is actually empty', 'info');
-}
-}
-}, error: () => {}
-});
-}
-else {
-_this.dload = _this.dload - 1;
-}
-if (_this.dsave === 0) {
+if (_this.curr_level === 0) {
 _this.sort = false;
 }
 if (_this.curr_value === undefined || _this.curr_value === 0) {
@@ -223,11 +136,11 @@ if (_this.ending_first && _this.ending !== 0 && _this.sort) {
 _this.sort = false;
 _this.sort_after = true;
 }
-if (_this.lvlmax > _this.dsave || _this.lvlmax === 0) {
-_this.lvlmax = _this.dsave;
+if (_this.lvlmax > _this.curr_level || _this.lvlmax === 0) {
+_this.lvlmax = _this.curr_level;
 }
-if (_this.lvlmin > _this.dsave) {
-_this.lvlmin = _this.dsave;
+if (_this.lvlmin > _this.curr_level) {
+_this.lvlmin = _this.curr_level;
 }
 _this.lvl = _this.lvlmax;
 let callback = function () {
@@ -252,8 +165,8 @@ igsort = 'expiry/asc',
 tickets = '',
 data = 'err',
 igpage = page;
-_this.dcheck = 0;
-if (!_this.sort && _this.dsave > 0) {
+_this.dload = 0;
+if (!_this.sort && _this.curr_level !== 0) {
 _this.lvl = 'all';
 }
 if (_this.getConfig('sort_by_price', false)) {
@@ -271,7 +184,7 @@ _this.igprtry = 0;
 tickets = $(JSON.parse(data).html).find('.items-list-item > .relative');
 if (igpage > 1 && data.indexOf('<i aria-hidden=\"true\" class=\"fa fa-angle-right\"></i>') >= 0) {
 _this.pagemax = page;
-_this.dcheck = 1;
+_this.dload = 1;
 }
 }
 else {
@@ -302,22 +215,22 @@ _this.totalTicks = 1;
 if (tickets.length < 20 && _this.igprtry === 0 || _this.curr_value === 0 || !_this.started) {
 _this.pagemax = page;
 if (tickets.length > 0 && _this.curr_value !== 0 && _this.started) {
-_this.dcheck = 1;
+_this.dload = 1;
 }
 if (_this.curr_value === 0) {
-_this.dcheck = 2;
+_this.dload = 2;
 }
 }
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igprtry > 0) {
 if (!_this.started) {
-_this.dload = 0;
-_this.dsave = ',';
+_this.setConfig('ig_lvl_date', 0);
+_this.setConfig('ig_check_date', 0);
 }
 if (_this.igprtry === 0) {
-if (_this.curr_value === 0 && _this.dcheck === 2) {
+if (_this.curr_value === 0 && _this.dload === 2) {
 _this.log(Lang.get('service.value_label') + ' - 0', 'skip');
 }
-if (_this.dcheck === 1 && !_this.sort && _this.started) {
+if (_this.dload === 1 && !_this.sort && _this.started) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
 let igplog = Lang.get('service.checked');
@@ -326,6 +239,80 @@ igplog = igplog + _this.lvl + 'L|';
 }
 if (page === _this.pagemax) {
 igplog = igplog + page + '#-' + _this.getConfig('pages', 1) + '#';
+if (_this.getConfig('ig_check_date', 0) < Date.now()) {
+rq({
+method: 'GET',
+url: _this.url + '/library/giveaways/giveaways-completed/tocheck',
+headers: {
+'authority': 'www.indiegala.com',
+'accept': 'application/json, text/javascript, */*; q=0.01',
+'origin': _this.url,
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'cors',
+'x-requested-with': 'XMLHttpRequest',
+'user-agent': _this.ua,
+'referer': _this.url + '/library',
+'cookie': _this.cookies
+}
+})
+.then((tocheck) => {
+tocheck = JSON.stringify(tocheck.data);
+let igcheck = 'err';
+if (tocheck.indexOf('>Check all<') >= 0) {
+igcheck = 'all';
+}
+else if (tocheck.indexOf('"code":"e300"') >= 0) {
+igcheck = 'cant';
+}
+let iw = 0,
+il = 0;
+if (igcheck === 'all') {
+rq({
+method: 'POST',
+url: _this.url + '/library/giveaways/check-if-winner-all',
+headers: {
+'authority': 'www.indiegala.com',
+'accept': 'application/json, text/javascript, */*; q=0.01',
+'origin': _this.url,
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'cors',
+'x-requested-with': 'XMLHttpRequest',
+'user-agent': _this.ua,
+'referer': _this.url + '/library',
+'cookie': _this.cookies
+}
+})
+.then((win) => {
+let igwin = win.data;
+_this.setConfig('ig_check_date', Date.now() + 43200000);
+iw = igwin.won;
+il = igwin.checked;
+})
+.finally(() => {
+_this.log(Lang.get('service.done') + 'Completed to check - ' + il, 'info');
+if (iw > 0) {
+_this.log(_this.logLink(_this.url + '/library', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + iw + ')'), 'win');
+_this.logWin(' IndieGala - ' + iw);
+_this.setStatus('win');
+if (_this.getConfig('sound', true)) {
+new Audio('../app.asar/sounds/won.wav').play();
+}
+}
+});
+}
+else if (igcheck === 'err') {
+_this.log(Lang.get('service.done') + 'Completed to check - Error', 'info');
+}
+else if (igcheck === 'cant') {
+_this.setConfig('ig_check_date', Date.now() + 43200000);
+_this.log(Lang.get('service.done') + 'Completed to check - Sorry, these data are not available at this moment.', 'info');
+}
+else {
+_this.setConfig('ig_check_date', Date.now() + 43200000);
+_this.log(Lang.get('service.done') + 'Completed to check - This list is actually empty.', 'info');
+}
+});
+}
 }
 else {
 igplog = igplog + page + '#';
@@ -480,7 +467,7 @@ if (
 {
 igown = 5;
 }
-if (_this.dsave < level) {
+if (_this.curr_level < level) {
 igown = 8;
 }
 if (_this.getConfig('skip_trial', false) && GJuser.trial.includes(igid + ',')) {
@@ -606,15 +593,15 @@ else if (resp.status === 'level') {
 Times = 0;
 igcurr++;
 igrtry = 0;
-if (_this.dsave > 0) {
-_this.dsave = _this.dsave - 1;
+if (_this.curr_level > 0) {
+_this.curr_level = _this.curr_level - 1;
 }
-_this.setLevel(_this.dsave);
-if (_this.lvlmax > _this.dsave) {
-_this.lvlmax = _this.dsave;
+_this.setLevel(_this.curr_level);
+if (_this.lvlmax > _this.curr_level) {
+_this.lvlmax = _this.curr_level;
 }
-if (_this.lvlmin > _this.dsave) {
-_this.lvlmin = _this.dsave;
+if (_this.lvlmin > _this.curr_level) {
+_this.lvlmin = _this.curr_level;
 }
 _this.log(Lang.get('service.cant_join'), 'cant');
 }

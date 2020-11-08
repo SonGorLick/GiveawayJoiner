@@ -179,6 +179,8 @@ this.panel.addClass('active');
 authCheck(callback) {
 let authContent = this.authContent,
 html = 'err';
+if (Config.get(this.constructor.name + 'auth_date', 0) < Date.now()) {
+Config.set(this.constructor.name + 'auth_date', Date.now() + 10000);
 $.ajax({
 url: this.websiteUrl,
 timeout: this.getTimeout,
@@ -188,16 +190,23 @@ html = htmls;
 },
 complete: function () {
 if (html === 'err') {
+Config.set(this.constructor.name + 'auth_date', 0);
 callback(-1);
 }
 else if (html.indexOf(authContent) >= 0) {
+Config.set(this.constructor.name + 'auth_date', Date.now() + 20000);
 callback(1);
 }
 else {
+Config.set(this.constructor.name + 'auth_date', 0);
 callback(0);
 }
 }
 });
+}
+else {
+callback(1);
+}
 }
 startJoiner(autostart) {
 if (this.started) {
@@ -272,7 +281,7 @@ this.totalTicks = 1;
 this.updateCookies();
 GJuser.white = loadFile('whitelist');
 GJuser.black = loadFile('blacklist');
-if (this.getConfig('check_in_steam', true) && Config.get('own_date') < Date.now()) {
+if (this.getConfig('check_in_steam', true) && Config.get('own_date', 0) < Date.now()) {
 if (!Config.get('steam_local', false)) {
 updateSteam();
 }
@@ -281,7 +290,7 @@ GJuser.ownapps = loadFile('steam_app');
 GJuser.ownsubs = loadFile('steam_sub');
 }
 }
-if (this.dlc && Config.get('dlc_date') < Date.now()) {
+if (this.dlc && Config.get('dlc_date', 0) < Date.now()) {
 if (!Config.get('dlc_local', false)) {
 updateDlc();
 }
@@ -289,7 +298,7 @@ else {
 GJuser.dlc = loadFile('steam_dlc');
 }
 }
-if (this.card && Config.get('card_date') < Date.now()) {
+if (this.card && Config.get('card_date', 0) < Date.now()) {
 if (!Config.get('card_local', false)) {
 updateCard();
 }
@@ -297,7 +306,7 @@ else {
 GJuser.card = loadFile('steam_card');
 }
 }
-if (this.getConfig('skip_trial', false) && Config.get('trial_date') < Date.now()) {
+if (this.getConfig('skip_trial', false) && Config.get('trial_date', 0) < Date.now()) {
 if (!Config.get('trial_local', false)) {
 updateTrial();
 }
@@ -305,7 +314,7 @@ else {
 GJuser.trial = loadFile('steam_trial');
 }
 }
-if (this.dlc && Config.get('skipdlc_date') < Date.now()) {
+if (this.dlc && Config.get('skipdlc_date', 0) < Date.now()) {
 if (!Config.get('skipdlc_local', false)) {
 updateSkipdlc();
 }

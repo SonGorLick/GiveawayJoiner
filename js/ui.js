@@ -21,19 +21,19 @@ GJuser.dlc = loadFile('steam_dlc');
 GJuser.skip_dlc = loadFile('steam_skipdlc');
 GJuser.card = loadFile('steam_card');
 GJuser.trial = loadFile('steam_trial');
-if (!Config.get('steam_local', false) && Config.get('own_date') < Date.now()) {
+if (!Config.get('steam_local', false) && Config.get('own_date', 0) < Date.now()) {
 updateSteam();
 }
-if (!Config.get('dlc_local', false) && Config.get('dlc_date') < Date.now()) {
+if (!Config.get('dlc_local', false) && Config.get('dlc_date', 0) < Date.now()) {
 updateDlc();
 }
-if (!Config.get('card_local', false) && Config.get('card_date') < Date.now()) {
+if (!Config.get('card_local', false) && Config.get('card_date', 0) < Date.now()) {
 updateCard();
 }
-if (!Config.get('trial_local', false) && Config.get('trial_date') < Date.now()) {
+if (!Config.get('trial_local', false) && Config.get('trial_date', 0) < Date.now()) {
 updateTrial();
 }
-if (!Config.get('skipdlc_local', false) && Config.get('skipdlc_date') < Date.now()) {
+if (!Config.get('skipdlc_local', false) && Config.get('skipdlc_date', 0) < Date.now()) {
 setTimeout(() => {
 updateSkipdlc();
 }, 1000);

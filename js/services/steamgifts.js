@@ -48,7 +48,7 @@ rq({
 method: 'GET',
 url: 'https://www.steamgifts.com',
 headers: {
-'authority': 'https://www.steamgifts.com',
+'authority': 'www.steamgifts.com',
 'user-agent': this.ua,
 'sec-fetch-site': 'none',
 'sec-fetch-mode': 'navigate',
@@ -82,7 +82,7 @@ rq({
 method: 'GET',
 url: 'https://www.steamgifts.com/account/settings/profile',
 headers: {
-'authority': 'https://www.steamgifts.com',
+'authority': 'www.steamgifts.com',
 'user-agent': this.ua,
 'sec-fetch-site': 'none',
 'sec-fetch-mode': 'navigate',
@@ -145,7 +145,7 @@ rq({
 method: 'GET',
 url: sgurl,
 headers: {
-'authority': this.url,
+'authority': 'www.steamgifts.com',
 'user-agent': this.ua,
 'sec-fetch-site': 'none',
 'sec-fetch-mode': 'navigate',
@@ -358,7 +358,17 @@ sgapp = 0,
 sgsub = 0,
 sgbun = 0,
 sgblack = '',
-sgid = '???';
+sgid = '???',
+sgref = _this.url + '/';
+if (GA.page === 'w') {
+sgref = sgref + 'giveaways/search?type=wishlist';
+}
+else if (GA.page === 'g') {
+sgref = sgref + 'giveaways/search?type=group';
+}
+else if (GA.page > 1) {
+sgref = sgref + 'giveaways/search?page=' + GA.page;
+}
 if (GA.sgsteam.includes('app/')) {
 sgapp = parseInt(GA.sgsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
 sgid = 'app/' + sgapp;
@@ -469,7 +479,7 @@ rq({
 method: 'POST',
 url: _this.url + '/ajax.php',
 headers: {
-'authority': _this.url,
+'authority': 'www.steamgifts.com',
 'from': 'esgst.extension@gmail.com',
 'user-agent': _this.ua,
 'esgst-version': '8.8.3',
@@ -479,7 +489,7 @@ headers: {
 'sec-fetch-site': 'same-origin',
 'sec-fetch-mode': 'cors',
 'sec-fetch-dest': 'empty',
-'referer': _this.url + '/',
+'referer': sgref,
 'cookie': _this.cookies
 },
 data: 'xsrf_token=' + _this.token + '&do=entry_delete&code=' + GA.code
@@ -499,7 +509,7 @@ rq({
 method: 'POST',
 url: _this.url + '/ajax.php',
 headers: {
-'authority': _this.url,
+'authority': 'www.steamgifts.com',
 'from': 'esgst.extension@gmail.com',
 'user-agent': _this.ua,
 'esgst-version': '8.8.3',
@@ -509,7 +519,7 @@ headers: {
 'sec-fetch-site': 'same-origin',
 'sec-fetch-mode': 'cors',
 'sec-fetch-dest': 'empty',
-'referer': _this.url + '/',
+'referer': sgref,
 'cookie': _this.cookies
 },
 data: 'xsrf_token=' + _this.token + '&do=hide_giveaways_by_game_id&game_id=' + GA.gameid
@@ -533,7 +543,7 @@ rq({
 method: 'POST',
 url: _this.url + '/ajax.php',
 headers: {
-'authority': _this.url,
+'authority': 'www.steamgifts.com',
 'from': 'esgst.extension@gmail.com',
 'user-agent': _this.ua,
 'esgst-version': '8.8.3',
@@ -543,7 +553,7 @@ headers: {
 'sec-fetch-site': 'same-origin',
 'sec-fetch-mode': 'cors',
 'sec-fetch-dest': 'empty',
-'referer': _this.url + '/',
+'referer': sgref,
 'cookie': _this.cookies
 },
 data: 'xsrf_token=' + _this.token + '&do=entry_insert&code=' + GA.code
