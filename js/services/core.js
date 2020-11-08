@@ -178,9 +178,10 @@ this.panel.addClass('active');
 }
 authCheck(callback) {
 let authContent = this.authContent,
+authService = this.constructor.name,
 html = 'err';
-if (Config.get(this.constructor.name + 'auth_date', 0) < Date.now()) {
-Config.set(this.constructor.name + 'auth_date', Date.now() + 10000);
+if (Config.get(authService + '_auth_date', 0) < Date.now()) {
+Config.set(authService + '_auth_date', Date.now() + 10000);
 $.ajax({
 url: this.websiteUrl,
 timeout: this.getTimeout,
@@ -190,15 +191,15 @@ html = htmls;
 },
 complete: function () {
 if (html === 'err') {
-Config.set(this.constructor.name + 'auth_date', 0);
+Config.set(authService + '_auth_date', 0);
 callback(-1);
 }
 else if (html.indexOf(authContent) >= 0) {
-Config.set(this.constructor.name + 'auth_date', Date.now() + 20000);
+Config.set(authService + '_auth_date', Date.now() + 20000);
 callback(1);
 }
 else {
-Config.set(this.constructor.name + 'auth_date', 0);
+Config.set(this.constructor.name + '_auth_date', 0);
 callback(0);
 }
 }

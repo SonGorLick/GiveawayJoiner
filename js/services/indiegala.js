@@ -87,7 +87,7 @@ if (_this.lvlmin > igl) {
 _this.lvlmin = igl;
 }
 }
-if (_this.getConfig('ig_lvl_date', 0) < Date.now() || !fs.existsSync(dirdata + 'indiegala.txt')) {
+if (_this.getConfig('lvl_date', 0) < Date.now() || !fs.existsSync(dirdata + 'indiegala.txt')) {
 if (_this.lvlmax === 0) {
 _this.lvlmax = 9;
 }
@@ -117,7 +117,7 @@ _this.lvlmax = iglevel;
 if (_this.lvlmin > iglevel) {
 _this.lvlmin = iglevel;
 }
-_this.setConfig('ig_lvl_date', Date.now() + 86400000);
+_this.setConfig('lvl_date', Date.now() + 86400000);
 fs.writeFile(dirdata + 'indiegala.txt', iglevel, (err) => { });
 }
 else if (!fs.existsSync(dirdata + 'indiegala.txt')) {
@@ -223,8 +223,8 @@ _this.dload = 2;
 }
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igprtry > 0) {
 if (!_this.started) {
-_this.setConfig('ig_lvl_date', 0);
-_this.setConfig('ig_check_date', 0);
+_this.setConfig('lvl_date', 0);
+_this.setConfig('check_date', 0);
 }
 if (_this.igprtry === 0) {
 if (_this.curr_value === 0 && _this.dload === 2) {
@@ -239,7 +239,7 @@ igplog = igplog + _this.lvl + 'L|';
 }
 if (page === _this.pagemax) {
 igplog = igplog + page + '#-' + _this.getConfig('pages', 1) + '#';
-if (_this.getConfig('ig_check_date', 0) < Date.now()) {
+if (_this.getConfig('check_date', 0) < Date.now()) {
 rq({
 method: 'GET',
 url: _this.url + '/library/giveaways/giveaways-completed/tocheck',
@@ -284,7 +284,7 @@ headers: {
 })
 .then((win) => {
 let igwin = win.data;
-_this.setConfig('ig_check_date', Date.now() + 43200000);
+_this.setConfig('check_date', Date.now() + 43200000);
 iw = igwin.won;
 il = igwin.checked;
 })
@@ -304,11 +304,11 @@ else if (igcheck === 'err') {
 _this.log(Lang.get('service.done') + 'Completed to check - Error', 'info');
 }
 else if (igcheck === 'cant') {
-_this.setConfig('ig_check_date', Date.now() + 43200000);
+_this.setConfig('check_date', Date.now() + 43200000);
 _this.log(Lang.get('service.done') + 'Completed to check - Sorry, these data are not available at this moment.', 'info');
 }
 else {
-_this.setConfig('ig_check_date', Date.now() + 43200000);
+_this.setConfig('check_date', Date.now() + 43200000);
 _this.log(Lang.get('service.done') + 'Completed to check - This list is actually empty.', 'info');
 }
 });

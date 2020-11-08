@@ -115,13 +115,6 @@ let adds = '',
 curradds = 0;
 if (entered) {
 adds = cont.find('#giveawaysjoined > div p');
-rq({
-method: 'GET',
-url: _this.url + '/giveaways',
-headers: _this.dload,
-responseType: 'document'
-})
-.then(() => {});
 }
 function giveawayEnter() {
 if (adds.length <= curradds || !_this.started) {
