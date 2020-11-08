@@ -210,7 +210,7 @@ _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 else {
-if (html.indexOf('data-action="enter"') < 0) {
+if (html.indexOf('data-action="enter"') === -1) {
 njoin = 1;
 }
 if (html.indexOf('data-dtext="Вступить в группу"') >= 0) {

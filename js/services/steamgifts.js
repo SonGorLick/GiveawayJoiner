@@ -4,7 +4,7 @@ constructor() {
 super();
 this.domain = 'steamgifts.com';
 this.websiteUrl = 'https://www.steamgifts.com';
-this.authContent = 'Account';
+this.authContent = '>Logout<';
 this.authLink = 'https://www.steamgifts.com/?login';
 this.withValue = true;
 this.withLevel = true;
@@ -49,18 +49,24 @@ method: 'GET',
 url: 'https://www.steamgifts.com',
 headers: {
 'authority': 'www.steamgifts.com',
+'from': 'esgst.extension@gmail.com',
 'user-agent': this.ua,
-'sec-fetch-site': 'none',
-'sec-fetch-mode': 'navigate',
-'sec-fetch-user': '?1',
-'sec-fetch-dest': 'document',
+'esgst-version': '8.8.3',
+'content-type': 'application/x-www-form-urlencoded',
+'accept': '*/*',
+'origin': 'https://www.steamgifts.com',
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'cors',
+'sec-fetch-dest': 'empty',
+'referer': 'https://www.steamgifts.com/',
 'cookie': this.cookies
 },
 responseType: 'document'
 })
-.then((auths) => {
-let auth = auths.data;
-if (auth.indexOf('Account') >= 0) {
+.then((htmls) => {
+let html = htmls.data;
+html = html.replace(/<img/gi, '<noload');
+if (html.indexOf('>Logout<') >= 0) {
 call = 1;
 }
 else {
@@ -83,11 +89,16 @@ method: 'GET',
 url: 'https://www.steamgifts.com/account/settings/profile',
 headers: {
 'authority': 'www.steamgifts.com',
+'from': 'esgst.extension@gmail.com',
 'user-agent': this.ua,
-'sec-fetch-site': 'none',
-'sec-fetch-mode': 'navigate',
-'sec-fetch-user': '?1',
-'sec-fetch-dest': 'document',
+'esgst-version': '8.8.3',
+'content-type': 'application/x-www-form-urlencoded',
+'accept': '*/*',
+'origin': 'https://www.steamgifts.com',
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'cors',
+'sec-fetch-dest': 'empty',
+'referer': 'https://www.steamgifts.com/',
 'cookie': this.cookies
 },
 responseType: 'document'
@@ -146,11 +157,16 @@ method: 'GET',
 url: sgurl,
 headers: {
 'authority': 'www.steamgifts.com',
+'from': 'esgst.extension@gmail.com',
 'user-agent': this.ua,
-'sec-fetch-site': 'none',
-'sec-fetch-mode': 'navigate',
-'sec-fetch-user': '?1',
-'sec-fetch-dest': 'document',
+'esgst-version': '8.8.3',
+'content-type': 'application/x-www-form-urlencoded',
+'accept': '*/*',
+'origin': this.url,
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'cors',
+'sec-fetch-dest': 'empty',
+'referer': this.url + '/',
 'cookie': this.cookies
 },
 responseType: 'document'
@@ -195,10 +211,10 @@ case 'week': case 'weeks': factor = 10080; break;
 case 'month': case 'months': factor = 40320; break;
 }
 let cost = sgaway.find('.giveaway__heading__thin').first().text();
-if (cost.indexOf('P)') > 0) {
+if (cost.indexOf('P)') >= 0) {
 cost = parseInt(cost.replace(/[^0-9]/g, ''));
 }
-else if (cost.indexOf('Copies)') > 0) {
+else if (cost.indexOf('Copies)') >= 0) {
 copies = parseInt(cost.replace(/[^0-9]/g, ''));
 cost = parseInt(sgaway.find('.giveaway__heading__thin').eq(1).text().replace(/[^0-9]/g, ''));
 }

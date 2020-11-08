@@ -266,7 +266,7 @@ _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 else {
-let enter = raff.indexOf('<i class="fa fa-sign-in"></i> Enter Raffle</button>') > 0,
+let enter = raff.indexOf('<i class="fa fa-sign-in"></i> Enter Raffle</button>') >= 0,
 entered = raff.indexOf('<i class="fa fa-sign-out"></i> Leave Raffle</button>') >= 0,
 btncheck = raff.indexOf('<div class="col-xs-7 enter-raffle-btns">') >= 0,
 spid = id,

@@ -179,7 +179,7 @@ $.ajax({
 url: _this.url + '/giveaways/ajax/' + page + '/' + igsort + '/level/' + _this.lvl,
 success: function (datas) {
 data = datas.replace(/\n/g, "\\n").replace('"text/javascript" src="', "'text/javascript' src='").replace('"></script>', "'></script>");
-if (data.indexOf('"status": "ok"') >= 0) {
+if (data.indexOf('"status": "ok"') >= 0 && data.indexOf('>0 items<') === -1) {
 _this.igprtry = 0;
 tickets = $(JSON.parse(data).html).find('.items-list-item > .relative');
 if (igpage > 1 && data.indexOf('<i aria-hidden=\"true\" class=\"fa fa-angle-right\"></i>') >= 0) {

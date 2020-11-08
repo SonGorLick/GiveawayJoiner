@@ -78,7 +78,7 @@ data = datas;
 },
 complete: function () {
 let opfound = $(data).find('.giveaways-page-item');
-if (data.indexOf('li class="next"') < 0) {
+if (data.indexOf('li class="next"') === -1) {
 _this.pagemax = page;
 }
 if (page === 1) {
