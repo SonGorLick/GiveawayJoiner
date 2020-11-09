@@ -149,16 +149,16 @@ giveawaysFromUrl(page, callback) {
 let sgurl = this.url + '/giveaways/search?',
 sgtype = 'p',
 sgpage = page;
-if (page === -1) {
+if (sgpage === -1) {
 sgurl = sgurl + 'type=wishlist';
 sgtype = 'w';
 }
-else if (page === 0) {
+else if (sgpage === 0) {
 sgurl = sgurl + 'type=group';
 sgtype = 'g';
 }
 else {
-sgurl = sgurl + 'page=' + page;
+sgurl = sgurl + 'page=' + sgpage;
 }
 rq({
 method: 'GET',
@@ -187,7 +187,7 @@ this.log(this.trans('token_error'), 'err');
 this.stopJoiner(true);
 return;
 }
-if (page === -1) {
+if (sgpage === -1) {
 let sgwon = parseInt(data.find('.nav__button-container--active.nav__button-container--notification.nav__button-container:nth-of-type(2) > .nav__button > .nav__notification').text().trim());
 if (isNaN(sgwon)) {
 sgwon = 0;
@@ -300,62 +300,62 @@ let _this = this;
 let sgcurr = 0,
 sga = [],
 sgb = [];
-if (this.getConfig('sort_by_chance', false)) {
-this.giveaways.sort((a, b) => {
+if (_this.getConfig('sort_by_chance', false)) {
+_this.giveaways.sort((a, b) => {
 return b.chance - a.chance;
 });
 }
-if (this.getConfig('sort_by_level', false)) {
-this.giveaways.sort((a, b) => {
+if (_this.getConfig('sort_by_level', false)) {
+_this.giveaways.sort((a, b) => {
 return b.level - a.level;
 });
 }
-if (this.getConfig('sort_by_copies', false)) {
-this.giveaways.sort((a, b) => {
+if (_this.getConfig('sort_by_copies', false)) {
+_this.giveaways.sort((a, b) => {
 return b.copies - a.copies;
 });
 }
-if (this.getConfig('multiple_first', false)) {
-sga = this.giveaways.filter(GA => GA.copies > 1);
-sgb = this.giveaways.filter(GA => GA.copies === 1);
-this.giveaways = [].concat(sga, sgb);
+if (_this.getConfig('multiple_first', false)) {
+sga = _this.giveaways.filter(GA => GA.copies > 1);
+sgb = _this.giveaways.filter(GA => GA.copies === 1);
+_this.giveaways = [].concat(sga, sgb);
 }
-if (this.getConfig('card_first', false)) {
-sga = this.giveaways.filter(GA => GA.card === true);
-sgb = this.giveaways.filter(GA => GA.card === false);
-this.giveaways = [].concat(sga, sgb);
+if (_this.getConfig('card_first', false)) {
+sga = _this.giveaways.filter(GA => GA.card === true);
+sgb = _this.giveaways.filter(GA => GA.card === false);
+_this.giveaways = [].concat(sga, sgb);
 }
-if (this.getConfig('group_first', false)) {
-sga = this.giveaways.filter(GA => GA.type === 'g');
-sgb = this.giveaways.filter(GA => GA.type !== 'g');
-this.giveaways = [].concat(sga, sgb);
+if (_this.getConfig('group_first', false)) {
+sga = _this.giveaways.filter(GA => GA.type === 'g');
+sgb = _this.giveaways.filter(GA => GA.type !== 'g');
+_this.giveaways = [].concat(sga, sgb);
 }
-if (this.getConfig('wishlist_first', false)) {
-sga = this.giveaways.filter(GA => GA.type === 'w');
-sgb = this.giveaways.filter(GA => GA.type !== 'w');
-this.giveaways = [].concat(sga, sgb);
+if (_this.getConfig('wishlist_first', false)) {
+sga = _this.giveaways.filter(GA => GA.type === 'w');
+sgb = _this.giveaways.filter(GA => GA.type !== 'w');
+_this.giveaways = [].concat(sga, sgb);
 }
-if (this.getConfig('whitelist_first', false)) {
-sga = this.giveaways.filter(GA => GA.white === true);
-sgb = this.giveaways.filter(GA => GA.white === false);
-this.giveaways = [].concat(sga, sgb);
+if (_this.getConfig('whitelist_first', false)) {
+sga = _this.giveaways.filter(GA => GA.white === true);
+sgb = _this.giveaways.filter(GA => GA.white === false);
+_this.giveaways = [].concat(sga, sgb);
 }
-if (this.getConfig('whitelist_only', false)) {
-sga = this.giveaways.filter(GA => GA.white === true);
-this.giveaways = sga;
+if (_this.getConfig('whitelist_only', false)) {
+sga = _this.giveaways.filter(GA => GA.white === true);
+_this.giveaways = sga;
 }
-if (this.getConfig('wishlist_only', false) && !this.getConfig('group_only', false)) {
-sga = this.giveaways.filter(GA => GA.type === 'w');
-this.giveaways = sga;
+if (_this.getConfig('wishlist_only', false) && !_this.getConfig('group_only', false)) {
+sga = _this.giveaways.filter(GA => GA.type === 'w');
+_this.giveaways = sga;
 }
-if (this.getConfig('group_only', false) && !this.getConfig('wishlist_only', false)) {
-sga = this.giveaways.filter(GA => GA.type === 'g');
-this.giveaways = sga;
+if (_this.getConfig('group_only', false) && !_this.getConfig('wishlist_only', false)) {
+sga = _this.giveaways.filter(GA => GA.type === 'g');
+_this.giveaways = sga;
 }
-if (this.getConfig('wishlist_only', false) && this.getConfig('group_only', false)) {
-sga = this.giveaways.filter(GA => GA.type === 'w');
-sgb = this.giveaways.filter(GA => GA.type === 'g');
-this.giveaways = [].concat(sga, sgb);
+if (_this.getConfig('wishlist_only', false) && _this.getConfig('group_only', false)) {
+sga = _this.giveaways.filter(GA => GA.type === 'w');
+sgb = _this.giveaways.filter(GA => GA.type === 'g');
+_this.giveaways = [].concat(sga, sgb);
 }
 function processOne() {
 if (_this.doTimer() - _this.totalTicks < 240) {
