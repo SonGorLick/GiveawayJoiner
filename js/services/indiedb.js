@@ -15,6 +15,8 @@ delete this.settings.blacklist_on;
 super.init();
 }
 authCheck(callback) {
+if (Config.get('IndieDB_auth_date', 0) < Date.now()) {
+Config.set('IndieDB_auth_date', Date.now() + 10000);
 let call = -1;
 rq({
 method: 'GET',
@@ -34,15 +36,21 @@ responseType: 'document'
 let auth = auths.data;
 auth = auth.replace(/<img/gi, '<noload');
 if (auth.indexOf('View your profile') >= 0) {
+Config.set('IndieDB_auth_date', Date.now() + 20000);
 call = 1;
 }
 else {
+Config.set('IndieDB_auth_date', 0);
 call = 0;
 }
 })
 .finally(() => {
 callback(call);
 });
+}
+else {
+callback(1);
+}
 }
 getUserInfo(callback) {
 let userData = {

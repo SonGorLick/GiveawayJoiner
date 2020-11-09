@@ -17,6 +17,8 @@ delete this.settings.blacklist_on;
 super.init();
 }
 authCheck(callback) {
+if (Config.get('ScrapTF_auth_date', 0) < Date.now()) {
+Config.set('ScrapTF_auth_date', Date.now() + 10000);
 let call = -1;
 rq({
 method: 'GET',
@@ -36,15 +38,21 @@ responseType: 'document'
 let html = htmls.data;
 html = html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 if (html.indexOf('My Auctions') >= 0) {
+Config.set('ScrapTF_auth_date', Date.now() + 20000);
 call = 1;
 }
 else {
+Config.set('ScrapTF_auth_date', 0);
 call = 0;
 }
 })
 .finally(() => {
 callback(call);
 });
+}
+else {
+callback(1);
+}
 }
 getUserInfo(callback) {
 let userData = {

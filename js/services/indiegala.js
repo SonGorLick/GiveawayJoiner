@@ -189,6 +189,7 @@ _this.dload = 1;
 }
 else {
 if (_this.igprtry < 3) {
+ignext = 19000;
 _this.igprtry++;
 }
 else {
@@ -199,6 +200,7 @@ _this.igprtry = 0;
 complete: function () {
 if (data === 'err') {
 if (_this.igprtry < 3) {
+ignext = 19000;
 _this.igprtry++;
 }
 else {
@@ -628,9 +630,7 @@ _this.log('[' + _this.tries + '] ' + Lang.get('service.connection_lost').replace
 _this.stimer = 5;
 }
 else {
-_this.log(resp.status, 'err');
-_this.log(JSON.stringify(resp), 'err');
-ignext = (Math.floor(Math.random() * 1000)) + 1000;
+ignext = (Math.floor(Math.random() * 1000)) + 3000;
 }
 }
 if (igrtry >= 12) {

@@ -199,7 +199,7 @@ Config.set(authService + '_auth_date', Date.now() + 20000);
 callback(1);
 }
 else {
-Config.set(this.constructor.name + '_auth_date', 0);
+Config.set(authService + '_auth_date', 0);
 callback(0);
 }
 }
