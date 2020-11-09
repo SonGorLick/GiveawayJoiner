@@ -45,7 +45,6 @@ super.init();
 authCheck(callback) {
 if (Config.get('SteamGifts_auth_date', 0) < Date.now()) {
 Config.set('SteamGifts_auth_date', Date.now() + 10000);
-this.cookies = this.cookies.split('; ').pop();
 let call = -1;
 rq({
 method: 'GET',
