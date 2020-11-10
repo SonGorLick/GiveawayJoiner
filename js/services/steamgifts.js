@@ -180,7 +180,7 @@ headers: {
 responseType: 'document'
 })
 .then((data) => {
-data = $('<div>' + data.data.replace(/<img/gi, '<noload') + '</div>');
+data = $('<div>' + data.data + '</div>');
 this.token = data.find('input[name="xsrf_token"]').val();
 if (this.token.length < 10) {
 this.log(this.trans('token_error'), 'err');
@@ -205,7 +205,8 @@ new Audio('../app.asar/sounds/won.wav').play();
 }
 }
 }
-data.find('div:nth-of-type(3) > div.giveaway__row-outer-wrap').each((index, item) => {
+data.find('.pinned-giveaways__outer-wrap').remove();
+data.find('.giveaway__row-outer-wrap').each((index, item) => {
 let sgaway = $(item),
 copies = 1,
 link = this.url + sgaway.find('a.giveaway__heading__name').attr('href'),
