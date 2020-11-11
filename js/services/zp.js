@@ -17,6 +17,7 @@ this.settings.whitelist_nocards = { type: 'checkbox', trans: 'service.whitelist_
 this.settings.skip_skipdlc = { type: 'checkbox', trans: 'service.skip_skipdlc', default: this.getConfig('skip_skipdlc', false) };
 this.settings.check_all = { type: 'checkbox', trans: this.transPath('check_all'), default: this.getConfig('check_all', false) };
 this.settings.skip_xbox = { type: 'checkbox', trans: this.transPath('skip_xbox'), default: this.getConfig('skip_xbox', false) };
+this.settings.skip_origin = { type: 'checkbox', trans: this.transPath('skip_origin'), default: this.getConfig('skip_origin', false) };
 delete this.settings.pages;
 super.init();
 }
@@ -168,6 +169,11 @@ njoin = 2;
 }
 if (_this.getConfig('skip_xbox', false)) {
 if (zpnam.includes('-xbox-') || zpnam.includes('-x-box-')) {
+njoin = 5;
+}
+}
+if (_this.getConfig('skip_origin', false)) {
+if (zpnam.includes('-origin-key')) {
 njoin = 5;
 }
 }

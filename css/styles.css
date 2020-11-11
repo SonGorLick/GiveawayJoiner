@@ -89,7 +89,7 @@ input[type="checkbox"]:checked:before { position: relative; left: 2px; bottom: 3
 .service-panel > ul { list-style: none; font-size: 0; padding-left: 10px; padding-top: 2px; }
 .service-panel > ul li { border-radius: 2px 2px 0 0; color: #5a646a; cursor: pointer; display: inline-block; font-size: 14px; line-height: 14px; height: 18px; vertical-align: middle; padding: 3px 12px; background: rgba(34, 45, 50, 1); }
 .service-panel > ul li:hover { color: #00bcd4; }
-.service-panel > ul li.active { color: #b9c2c7; }
+.service-panel > ul li.active { color: #4db6ac; }
 .service-panel > ul li.active:hover { color: #00bcd4; }
 .service-panel > ul li+li { margin-left: 6px; }
 .in-service-panel { font-size: 14px; display: none; background: rgba(47, 61, 68, 1); height: 476px; padding: 15px; border-radius: 2px; border: 1px solid rgba(33, 43, 48, 1); }

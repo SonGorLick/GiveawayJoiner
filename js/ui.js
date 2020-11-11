@@ -353,7 +353,7 @@ else if (GJuser.ownapps === '' && GJuser.ownsubs === '') {
 $('.content-item .info .data_steam_app').html(Lang.get('service.data_steam_app') + Lang.get('service.need_login'));
 $('.content-item .info .data_steam_sub').html(Lang.get('service.data_steam_sub') + Lang.get('service.need_login'));
 }
-},error: () => {}
+}, error: () => {}
 });
 }
 function updateDlc() {
@@ -367,7 +367,7 @@ fs.writeFile(dirdata + 'steam_dlc.txt', GJuser.dlc, (err) => { });
 $('.content-item .info .data_steam_dlc').html(Lang.get('service.data_steam_dlc') + (GJuser.dlc.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
 Config.set('dlc_date', Date.now() + 43200000);
 }
-}
+}, error: () => {}
 });
 }
 function updateSkipdlc() {
@@ -382,7 +382,7 @@ fs.writeFile(dirdata + 'steam_skipdlc.txt', GJuser.skip_dlc, (err) => { });
 $('.content-item .info .data_steam_skipdlc').html(Lang.get('service.data_steam_skipdlc') + (GJuser.skip_dlc.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
 Config.set('skipdlc_date', Date.now() + 43200000);
 }
-}
+}, error: () => {}
 });
 }
 else {
@@ -400,7 +400,7 @@ fs.writeFile(dirdata + 'steam_card.txt', GJuser.card, (err) => { });
 $('.content-item .info .data_steam_card').html(Lang.get('service.data_steam_card') + (GJuser.card.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
 Config.set('card_date', Date.now() + 43200000);
 }
-},error: () => {}
+}, error: () => {}
 });
 }
 function updateTrial() {
@@ -436,7 +436,7 @@ GJuser.trial = fsgskip;
 fs.writeFile(dirdata + 'steam_trial.txt', GJuser.trial, (err) => { });
 $('.content-item .info .data_steam_trial').html(Lang.get('service.data_steam_trial') + (GJuser.trial.replace(/[^,]/g, '').length - 1) + Lang.get('service.data_upd_n') + new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString());
 Config.set('trial_date', Date.now() + 10000);
-},error: () => {}
+}, error: () => {}
 });
 }
 function openWebsite(url) {

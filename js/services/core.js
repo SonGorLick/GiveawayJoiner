@@ -78,7 +78,7 @@ this.panel = $(document.createElement('div'))
 .appendTo('.services-panels');
 $('<ul>' +
 '<li class="active fa fa-history" data-id="logs" data-lang-title="service.logs">' + '</li>' +
-'<li class="active fa fa-wrench" data-id="settings" data-lang-title="service.settings">' + '</li>' +
+'<li class="fa fa-wrench" data-id="settings" data-lang-title="service.settings">' + '</li>' +
 '</ul>')
 .appendTo(this.panel);
 this.logWrap = $(document.createElement('div'))

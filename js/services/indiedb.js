@@ -213,11 +213,18 @@ _this.log(Lang.get('service.done') + name + ' - ' + finish, 'enter');
 }
 else if (addlink.includes('http')) {
 rq({
-method: 'GET',
+method: 'POST',
 url: _this.url + '/giveaways/ajax/'+ finish + '/' + id,
-headers: _this.dload,
-responseType: 'document'
+headers: {
+'authority': _this.idburl,
+'user-agent': _this.ua,
+'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+'accept': 'application/json, text/javascript, */*; q=0.01',
+'cookie': _this.cookies
+},
+data: 'ajax=t'
 })
+.then((i) => {})
 .finally(() => {
 _this.log(Lang.get('service.done') + name + ' - ' + finish, 'enter');
 });

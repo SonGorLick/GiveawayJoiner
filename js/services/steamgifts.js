@@ -363,13 +363,9 @@ if (_this.doTimer() - _this.totalTicks < 240) {
 _this.totalTicks = 1;
 }
 if (_this.giveaways.length <= sgcurr || !_this.started) {
-if (sgcurr > 0) {
 _this.log(Lang.get('service.checked') + '1#-' + _this.getConfig('pages', 1) + '#', 'srch');
-}
-if (sgcurr > 0 && _this.started) {
 if (_this.statusIcon.attr('data-status') === 'work') {
 _this.setStatus('good');
-}
 }
 if (callback) {
 callback(false);
