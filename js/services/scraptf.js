@@ -368,9 +368,6 @@ _this.log(Lang.get('service.connection_error'), 'err');
 });
 }, tmout);
 }
-else {
-spnext = 1000;
-}
 }
 });
 }
