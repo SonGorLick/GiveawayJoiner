@@ -16,7 +16,7 @@ this.settings.ending = { type: 'number', trans: this.transPath('ending'), min: 0
 this.settings.join_qty = { type: 'number', trans: this.transPath('join_qty'), min: 1, max: 100, default: this.getConfig('join_qty', 1) };
 this.settings.min_entries = { type: 'ten_number', trans: 'service.min_entries', min: 0, max: 10000, default: this.getConfig('min_entries', 0) };
 this.settings.min_level = { type: 'number', trans: 'service.min_level', min: 0, max: this.getConfig('max_level', 0), default: this.getConfig('min_level', 0) };
-this.settings.max_level = { type: 'number', trans: 'service.max_level', min: this.getConfig('min_level', 0), max: 9, default: this.getConfig('max_level', 0) };
+this.settings.max_level = { type: 'number', trans: 'service.max_level', min: this.getConfig('min_level', 0), max: 8, default: this.getConfig('max_level', 0) };
 this.settings.min_cost = { type: 'number', trans: 'service.min_cost', min: 0, max: this.getConfig('max_cost', 0), default: this.getConfig('min_cost', 0) };
 this.settings.max_cost = { type: 'number', trans: 'service.max_cost', min: this.getConfig('min_cost', 0), max: 240, default: this.getConfig('max_cost', 0) };
 this.settings.points_reserve = { type: 'number', trans: 'service.points_reserve', min: 0, max: 500, default: this.getConfig('points_reserve', 0) };
@@ -80,7 +80,7 @@ _this.url = 'https://www.indiegala.com';
 if (fs.existsSync(dirdata + 'indiegala.txt')) {
 let igl = parseInt(fs.readFileSync(dirdata + 'indiegala.txt').toString());
 _this.setLevel(igl);
-if (_this.lvlmax > _this.curr_level || _this.lvlmax === 0) {
+if (_this.lvlmax > igl || _this.lvlmax === 0) {
 _this.lvlmax = igl;
 }
 if (_this.lvlmin > igl) {
@@ -89,7 +89,7 @@ _this.lvlmin = igl;
 }
 if (_this.getConfig('lvl_date', 0) < Date.now() || !fs.existsSync(dirdata + 'indiegala.txt')) {
 if (_this.lvlmax === 0) {
-_this.lvlmax = 9;
+_this.lvlmax = 8;
 }
 rq({
 method: 'GET',
@@ -593,15 +593,15 @@ else if (resp.status === 'level') {
 Times = 0;
 igcurr++;
 igrtry = 0;
-if (_this.curr_level > 0) {
-_this.curr_level = _this.curr_level - 1;
+if (_this.curr_level < level) {
+let newlvl = level - 1;
+_this.setLevel(newlvl);
+if (_this.lvlmax > newlvl || _this.lvlmax === 0) {
+_this.lvlmax = newlvl;
 }
-_this.setLevel(_this.curr_level);
-if (_this.lvlmax > _this.curr_level) {
-_this.lvlmax = _this.curr_level;
+if (_this.lvlmin > newlvl) {
+_this.lvlmin = newlvl;
 }
-if (_this.lvlmin > _this.curr_level) {
-_this.lvlmin = _this.curr_level;
 }
 _this.log(Lang.get('service.cant_join'), 'cant');
 }

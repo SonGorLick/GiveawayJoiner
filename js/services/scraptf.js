@@ -224,7 +224,8 @@ spcont = sptent.eq(spcrr),
 spname = spcont.find('.panel-heading .raffle-name a').text().trim(),
 splink = spcont.find('.panel-heading .raffle-name a').attr('href'),
 spended = spcont.find('.panel-heading .raffle-details span.raffle-state-ended').text().trim(),
-id = splink.replace('/raffles/', '');
+id = splink.replace('/raffles/', ''),
+spjoin = 0;
 if (spname === undefined) {
 spname = '?????? ' + '(' + id + ')';
 }
@@ -242,7 +243,21 @@ if (_this.getConfig('log', true)) {
 splog = '|' + page + '#|' + (spcrr + 1) + '№|  ' + splog;
 }
 _this.log(Lang.get('service.checking') + splog, 'chk');
-if (!_this.dsave.includes(',' + id + ',') && !spended.includes('Ended')) {
+if (spended.includes('Ended')) {
+spjoin = 1;
+}
+if (_this.dsave.includes(',' + id + ',')) {
+spjoin = 2;
+}
+switch (spjoin) {
+case 1:
+_this.log(Lang.get('service.cant_join'), 'cant');
+break;
+case 2:
+_this.log(Lang.get('service.already_joined'), 'jnd');
+break;
+}
+if (spjoin === 0) {
 spnext = spnext + Math.floor(spnext / 4) + 2100;
 let raff = 'err';
 rq({
@@ -278,9 +293,30 @@ let enter = raff.indexOf('<i class="fa fa-sign-in"></i> Enter Raffle</button>') 
 entered = raff.indexOf('<i class="fa fa-sign-out"></i> Leave Raffle</button>') >= 0,
 btncheck = raff.indexOf('<div class="col-xs-7 enter-raffle-btns">') >= 0,
 spid = id,
+spown = 0,
 hash = raff.substring(raff.indexOf("ScrapTF.Raffles.EnterRaffle('" + spid + "', '")+39,raff.indexOf('><i class="fa fa-sign-in"></i> Enter Raffle</button>')).slice(0, 64);
 _this.csrf = raff.substring(raff.indexOf("ScrapTF.User.Hash =")+21,raff.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
-if (enter && btncheck) {
+if (!enter) {
+spown = 3;
+}
+if (!btncheck) {
+spown = 2;
+}
+if (entered) {
+spown = 1;
+}
+switch (spown) {
+case 1:
+_this.log(Lang.get('service.already_joined'), 'jnd');
+break;
+case 2:
+_this.log(Lang.get('service.cant_join'), 'black');
+break;
+case 3:
+_this.log(Lang.get('service.cant_join'), 'cant');
+break;
+}
+if (spown === 0) {
 let tmout = Math.floor(spnext / 4) + 2000,
 resp = 'err';
 setTimeout(() => {
@@ -325,7 +361,7 @@ sparray.push(spcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 }
 else {
-_this.log(Lang.get('service.err_join'), 'cant');
+_this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 }
@@ -333,22 +369,13 @@ _this.log(Lang.get('service.err_join'), 'cant');
 }, tmout);
 }
 else {
-if (entered) {
-_this.log(Lang.get('service.already_joined'), 'jnd');
-}
-else if (!btncheck) {
-_this.log(Lang.get('service.cant_join'), 'black');
-}
-else {
-_this.log(Lang.get('service.cant_join'), 'cant');
-}
+spnext = 1000;
 }
 }
 });
 }
 else {
 spnext = 100;
-_this.log(Lang.get('service.already_joined'), 'jnd');
 }
 spcurr++;
 setTimeout(giveawayEnter, spnext);

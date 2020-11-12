@@ -120,7 +120,7 @@ responseType: 'document'
 _this.log(Lang.get('service.entered_in') + _this.logLink(link, name), 'enter');
 }
 let adds = '',
-curradds = 0;
+curradds = -1;
 if (entered) {
 adds = cont.find('#giveawaysjoined > div p');
 }
@@ -182,8 +182,9 @@ _this.setStatus('good');
 }
 return;
 }
-let idbnext = 8000,
-addlink = adds.eq(curradds).find('a').attr('href'),
+let idbnext = 5000;
+if (curradds >= 0) {
+let addlink = adds.eq(curradds).find('a').attr('href'),
 finish = adds.eq(curradds).find('a').attr('class');
 if (!finish.includes('buttonentered')) {
 finish = finish.replace('buttonenter buttoncomplete','').trim();
@@ -232,6 +233,7 @@ _this.log(Lang.get('service.done') + name + ' - ' + finish, 'enter');
 }
 else {
 idbnext = 200;
+}
 }
 curradds++;
 setTimeout(giveawayEnter, idbnext);
