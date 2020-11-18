@@ -215,6 +215,7 @@ return false;
 }
 if (autostart) {
 this.auto = true;
+this.runTimer();
 }
 this.buttonState(Lang.get('service.btn_checking'), 'disabled');
 this.authCheck((authState) => {

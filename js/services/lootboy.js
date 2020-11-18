@@ -314,7 +314,7 @@ for (let i = 0; i < lboffers.length; i++) {
 lboffers[i].have = lbtaken.includes(lboffers[i].id);
 }
 lboffers = lboffers.filter(off => off.have === false);
-lboffers = lboffers.filter(bad => (bad.description !== 'Play now!' && bad.description !== 'Participate now!'));
+lboffers = lboffers.filter(bad => !bad.description.includes(' now!'));
 if (lboffers.length === 0) {
 _this.log(Lang.get('service.no_offer') + 'Diamonds Quests', 'cant');
 }

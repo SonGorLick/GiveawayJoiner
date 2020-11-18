@@ -43,8 +43,8 @@ this.settings.sort_by_chance = { type: 'checkbox', trans: this.transPath('sort_b
 super.init();
 }
 authCheck(callback) {
-if (Config.get('SteamGifts_auth_date', 0) < Date.now()) {
-Config.set('SteamGifts_auth_date', Date.now() + 10000);
+if (this.getConfig('auth_date', 0) < Date.now()) {
+this.setConfig('auth_date', Date.now() + 10000);
 let call = -1;
 rq({
 method: 'GET',
@@ -69,11 +69,11 @@ responseType: 'document'
 let html = htmls.data;
 html = html.replace(/<img/gi, '<noload');
 if (html.indexOf('>Logout<') >= 0) {
-Config.set('SteamGifts_auth_date', Date.now() + 20000);
+this.setConfig('auth_date', Date.now() + 20000);
 call = 1;
 }
 else {
-Config.set('SteamGifts_auth_date', 0);
+this.setConfig('auth_date', 0);
 call = 0;
 }
 })
