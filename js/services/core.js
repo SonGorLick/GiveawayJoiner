@@ -217,6 +217,7 @@ if (autostart) {
 this.auto = true;
 this.runTimer();
 }
+else {
 this.buttonState(Lang.get('service.btn_checking'), 'disabled');
 this.authCheck((authState) => {
 if (authState !== 0) {
@@ -248,6 +249,7 @@ Browser.show();
 }
 }
 });
+}
 }
 stopJoiner(bad) {
 let status = bad ? 'bad' : 'normal';
