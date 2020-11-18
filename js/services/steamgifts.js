@@ -300,7 +300,8 @@ giveawaysEnter(callback) {
 let _this = this;
 let sgcurr = 0,
 sga = [],
-sgb = [];
+sgb = [],
+sgc = [];
 if (_this.getConfig('sort_by_chance', false)) {
 _this.giveaways.sort((a, b) => {
 return b.chance - a.chance;
@@ -341,22 +342,38 @@ sga = _this.giveaways.filter(GA => GA.white === true);
 sgb = _this.giveaways.filter(GA => GA.white === false);
 _this.giveaways = [].concat(sga, sgb);
 }
-if (_this.getConfig('whitelist_only', false)) {
+if (_this.getConfig('whitelist_only', false) && !_this.getConfig('wishlist_only', false) && !_this.getConfig('group_only', false)) {
 sga = _this.giveaways.filter(GA => GA.white === true);
 _this.giveaways = sga;
 }
-if (_this.getConfig('wishlist_only', false) && !_this.getConfig('group_only', false)) {
+if (_this.getConfig('whitelist_only', false) && _this.getConfig('wishlist_only', false) && !_this.getConfig('group_only', false)) {
+sga = _this.giveaways.filter(GA => GA.white === true);
+sgb = _this.giveaways.filter(GA => GA.type === 'w');
+_this.giveaways = [].concat(sga, sgb);
+}
+if (_this.getConfig('whitelist_only', false) && !_this.getConfig('wishlist_only', false) && _this.getConfig('group_only', false)) {
+sga = _this.giveaways.filter(GA => GA.white === true);
+sgb = _this.giveaways.filter(GA => GA.type === 'g');
+_this.giveaways = [].concat(sga, sgb);
+}
+if (!_this.getConfig('whitelist_only', false) && _this.getConfig('wishlist_only', false) && !_this.getConfig('group_only', false)) {
 sga = _this.giveaways.filter(GA => GA.type === 'w');
 _this.giveaways = sga;
 }
-if (_this.getConfig('group_only', false) && !_this.getConfig('wishlist_only', false)) {
+if (!_this.getConfig('whitelist_only', false) && !_this.getConfig('wishlist_only', false) && _this.getConfig('group_only', false)) {
 sga = _this.giveaways.filter(GA => GA.type === 'g');
 _this.giveaways = sga;
 }
-if (_this.getConfig('wishlist_only', false) && _this.getConfig('group_only', false)) {
+if (!_this.getConfig('whitelist_only', false) && _this.getConfig('wishlist_only', false) && _this.getConfig('group_only', false)) {
 sga = _this.giveaways.filter(GA => GA.type === 'w');
 sgb = _this.giveaways.filter(GA => GA.type === 'g');
 _this.giveaways = [].concat(sga, sgb);
+}
+if (_this.getConfig('whitelist_only', false) && _this.getConfig('wishlist_only', false) && _this.getConfig('group_only', false)) {
+sga = _this.giveaways.filter(GA => GA.white === true);
+sgb = _this.giveaways.filter(GA => GA.type === 'w');
+sgc = _this.giveaways.filter(GA => GA.type === 'g');
+_this.giveaways = [].concat(sga, sgb, sgc);
 }
 function processOne() {
 if (_this.doTimer() - _this.totalTicks < 240) {
@@ -406,6 +423,7 @@ if (_this.curr_value < GA.cost && GA.cost > 0) {
 sgown = 3;
 }
 if (
+(!GA.white) && 
 (GA.type === 'p') &&
 (_this.getConfig('points_reserve', 0) > 0) &&
 ((_this.curr_value - GA.cost) < _this.getConfig('points_reserve', 0)) &&
@@ -416,7 +434,7 @@ sgown = 7;
 }
 if (
 (GA.type !== 'w' && !GA.white && GA.dlc && _this.getConfig('skip_dlc', false)) ||
-(GA.type !== 'w' && !GA.white && GA.card && _this.getConfig('card_only', false))
+(GA.type !== 'w' && !GA.white && !GA.card && _this.getConfig('card_only', false))
 )
 {
 sgown = 8;
@@ -464,6 +482,9 @@ sglog = '|' + GA.page + '#|' + GA.order + '№|'+ GA.copies + 'x|' + GA.entries 
 }
 else {
 sglog = sglog + sgblack;
+}
+if (GA.white) {
+sglog = '[w] ' + sglog;
 }
 if (_this.dsave.includes(',' + sgid + ',') && sgown !== 6) {
 sgown = 1;
@@ -552,12 +573,12 @@ _this.dsave = _this.dsave + sgid + ',';
 }
 if (
 (sgown === 0) &&
-(GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_level', 0) === 0 || GA.level >= _this.getConfig('min_level', 0) && GA.level <= _this.getConfig('max_level', 0) && _this.getConfig('max_level', 0) > 0) &&
-(GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || GA.cost >= _this.getConfig('min_cost', 0) || GA.cost === 0 && _this.getConfig('free_ga', false)) &&
-(GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_cost', 0) === 0 || GA.cost <= _this.getConfig('max_cost', 0)) &&
-(GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || GA.type === 'w' && _this.getConfig('reserve_on_wish', false) || GA.type === 'g' && _this.getConfig('reserve_on_group', false) || (_this.curr_value - GA.cost) >= _this.getConfig('points_reserve', 0) || GA.cost === 0) &&
-(GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('min_chance', 0) === 0 || GA.chance >= _this.getConfig('min_chance', 0)) &&
-(GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('min_entries', 0) === 0 || GA.entries >= _this.getConfig('min_entries', 0))
+(GA.white || GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_level', 0) === 0 || GA.level >= _this.getConfig('min_level', 0) && GA.level <= _this.getConfig('max_level', 0) && _this.getConfig('max_level', 0) > 0) &&
+(GA.white || GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || GA.cost >= _this.getConfig('min_cost', 0) || GA.cost === 0 && _this.getConfig('free_ga', false)) &&
+(GA.white || GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_cost', 0) === 0 || GA.cost <= _this.getConfig('max_cost', 0)) &&
+(GA.white || GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || GA.type === 'w' && _this.getConfig('reserve_on_wish', false) || GA.type === 'g' && _this.getConfig('reserve_on_group', false) || (_this.curr_value - GA.cost) >= _this.getConfig('points_reserve', 0) || GA.cost === 0) &&
+(GA.white || GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('min_chance', 0) === 0 || GA.chance >= _this.getConfig('min_chance', 0)) &&
+(GA.white || GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('min_entries', 0) === 0 || GA.entries >= _this.getConfig('min_entries', 0))
 )
 {
 rq({
