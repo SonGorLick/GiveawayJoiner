@@ -158,6 +158,7 @@
 		"offer": "offer ",
 		"no_offer": "Skipped - no offers ",
 		"skip": "Skipped - offer already done",
+		"skip_rg": "Skipped - offer for another country region",
 		"wiki": "How to use the service ",
 		"dt_err": "Account data not found in file ",
 		"dt_no": "Add account data to file ",
