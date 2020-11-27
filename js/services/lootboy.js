@@ -129,7 +129,7 @@ let lblog = '';
 if (!_this.getConfig('log', true)) {
 lblog = Lang.get('service.acc') + stat.username + ': ';
 }
-_this.log('[' + lbregion + '] ' + Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.gems') + '- ' + stat.lootgemBalance + ',' + Lang.get('service.coins') + '- ' + stat.lootcoinBalance, 'jnd');
+_this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.gems') + '- ' + stat.lootgemBalance + ',' + Lang.get('service.coins') + '- ' + stat.lootcoinBalance + ' [' + lbregion + ']', 'jnd');
 let coin = 'err';
 rq({
 method: 'PUT',
@@ -271,7 +271,7 @@ _this.log(Lang.get('service.skip'), 'skip');
 let lboffers = 'err';
 rq({
 method: 'GET',
-url: _this.lburl + '/v1/offers?country=' + lbregion + '&platform=web&lang=en',
+url: _this.lburl + '/v1/offers?platform=web&lang=en',
 headers: {
 'authority': 'api.lootboy.de',
 'Authorization': lbbrr,
@@ -323,11 +323,16 @@ lboffers[i].have = lbtaken.includes(lboffers[i].id);
 }
 lboffers = lboffers.filter(off => off.have === false);
 if (lboffers.length === 0) {
-_this.log(Lang.get('service.no_offer') + 'Diamonds Quests', 'cant');
+_this.log(Lang.get('service.no_offer') + 'Diamonds Quests [' + lbregion + ']', 'cant');
 }
 else {
 lboffers.forEach(function(offer) {
-let gem = 'err';
+let gem = 'err',
+lbreg = ' ' + JSON.stringify(offer.availableInCountries).replace(/"/g, '');
+if (lbreg === '[]') {
+lbreg = '';
+}
+if (lbreg.includes(lbregion)) {
 rq({
 method: 'PUT',
 url: _this.lburl + '/v1/offers/' + offer.id + '?lang=en',
@@ -349,11 +354,11 @@ gem = gems.data;
 })
 .finally(() => {
 if (gem === 'err') {
-_this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim(), 'chk');
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim() + lbreg, 'chk');
 _this.log(Lang.get('service.err_offer'), 'cant');
 }
 else {
-_this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim(), 'chk');
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim() + lbreg, 'chk');
 if (!gem.alreadyTaken) {
 _this.log(lblog + Lang.get('service.received') + Lang.get('service.gems') + '- ' + offer.diamondBonus, 'enter');
 }
@@ -362,6 +367,11 @@ _this.log(Lang.get('service.skip'), 'skip');
 }
 }
 });
+}
+else {
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim() + lbreg, 'chk');
+_this.log(Lang.get('service.skip_rg'), 'skip');
+}
 });
 }
 }
