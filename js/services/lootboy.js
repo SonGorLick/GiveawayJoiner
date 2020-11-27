@@ -6,8 +6,8 @@ this.websiteUrl = 'https://www.lootboy.de';
 this.authContent = '';
 this.authLink = 'https://github.com/pumPCin/GiveawayJoiner/wiki/LootBoy';
 this.auth = Lang.get('service.wiki') + 'LootBoy';
-this.settings.intervalfrom = { type: 'number', trans: 'service.intervalfrom', min: 0, max: this.getConfig('intervalto', 0), default: this.getConfig('intervalfrom', 0) };
-this.settings.intervalto = { type: 'number', trans: 'service.intervalto', min: this.getConfig('intervalfrom', 0), max: 360, default: this.getConfig('intervalto', 0) };
+this.settings.intervalfrom = { type: 'number', trans: 'service.intervalfrom', min: 0, max: this.getConfig('intervalto', 15), default: this.getConfig('intervalto', 10) };
+this.settings.intervalto = { type: 'number', trans: 'service.intervalto', min: this.getConfig('intervalto', 10), max: 360, default: this.getConfig('intervalto', 15) };
 this.setConfig('check_in_steam', false);
 delete this.settings.interval_from;
 delete this.settings.interval_to;
@@ -33,7 +33,7 @@ joinService() {
 let _this = this;
 let lbtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = lbtimer;
-if (_this.getConfig('intervalfrom', 0) === 0 || _this.getConfig('intervalto', 0) === 0) {
+if (_this.getConfig('intervalto', 10) === 0 || _this.getConfig('intervalto', 15) === 0) {
 _this.dload = 0;
 }
 else {
@@ -43,7 +43,12 @@ _this.dload = 1;
 }
 _this.lburl = 'https://api.lootboy.de';
 _this.url = 'https://www.lootboy.de';
+_this.dsave = 1;
 _this.dcheck = true;
+let lbregion = 'RU';
+if (fs.existsSync(dirdata + 'lootboy_region.txt')) {
+lbregion = fs.readFileSync(dirdata + 'lootboy_region.txt').toString().split('\n')[0];
+}
 if (!fs.existsSync(dirdata + 'lootboy1.txt')) {
 _this.log(Lang.get('service.dt_no') + '../giveawayjoinerdata/lootboy1.txt', 'err');
 _this.stopJoiner(true);
@@ -56,10 +61,12 @@ if (!_this.dcheck || !_this.started) {
 if (!_this.started) {
 _this.dload = 1;
 }
+if (_this.dsave === 1) {
 _this.log(Lang.get('service.checked') + 'LootBoy', 'srch');
 if (_this.started) {
 if (_this.statusIcon.attr('data-status') === 'work') {
 _this.setStatus('good');
+}
 }
 }
 return;
@@ -71,7 +78,8 @@ if (!fs.existsSync(dirdata + 'lootboy' + _this.dload + '.txt')) {
 _this.dload = 1;
 }
 else {
-let lbtimer = (Math.floor(Math.random() * (_this.getConfig('intervalto', 0) - _this.getConfig('intervalfrom', 0))) + _this.getConfig('intervalfrom', 0));
+_this.dsave = 0;
+let lbtimer = (Math.floor(Math.random() * (_this.getConfig('intervalto', 15) - _this.getConfig('intervalto', 10))) + _this.getConfig('intervalto', 10));
 _this.stimer = lbtimer;
 }
 }
@@ -121,7 +129,7 @@ let lblog = '';
 if (!_this.getConfig('log', true)) {
 lblog = Lang.get('service.acc') + stat.username + ': ';
 }
-_this.log(Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.gems') + '- ' + stat.lootgemBalance + ',' + Lang.get('service.coins') + '- ' + stat.lootcoinBalance, 'jnd');
+_this.log('[' + lbregion + '] ' + Lang.get('service.acc') + stat.username + ': ' + Lang.get('service.gems') + '- ' + stat.lootgemBalance + ',' + Lang.get('service.coins') + '- ' + stat.lootcoinBalance, 'jnd');
 let coin = 'err';
 rq({
 method: 'PUT',
@@ -263,7 +271,7 @@ _this.log(Lang.get('service.skip'), 'skip');
 let lboffers = 'err';
 rq({
 method: 'GET',
-url: _this.lburl + '/v1/offers?lang=en',
+url: _this.lburl + '/v1/offers?country=' + lbregion + '&platform=web&lang=en',
 headers: {
 'authority': 'api.lootboy.de',
 'Authorization': lbbrr,
@@ -314,7 +322,6 @@ for (let i = 0; i < lboffers.length; i++) {
 lboffers[i].have = lbtaken.includes(lboffers[i].id);
 }
 lboffers = lboffers.filter(off => off.have === false);
-lboffers = lboffers.filter(bad => !bad.description.includes(' now!'));
 if (lboffers.length === 0) {
 _this.log(Lang.get('service.no_offer') + 'Diamonds Quests', 'cant');
 }
