@@ -323,16 +323,16 @@ lboffers[i].have = lbtaken.includes(lboffers[i].id);
 }
 lboffers = lboffers.filter(off => off.have === false);
 if (lboffers.length === 0) {
-_this.log(Lang.get('service.no_offer') + 'Diamonds Quests [' + lbregion + ']', 'cant');
+_this.log(Lang.get('service.no_offer') + 'Diamonds Quests', 'cant');
 }
 else {
 lboffers.forEach(function(offer) {
 let gem = 'err',
 lbreg = ' ' + JSON.stringify(offer.availableInCountries).replace(/"/g, '');
-if (lbreg === '[]') {
+if (lbreg === ' []') {
 lbreg = '';
 }
-if (lbreg.includes(lbregion)) {
+if (lbreg.includes(lbregion) || lbreg === '') {
 rq({
 method: 'PUT',
 url: _this.lburl + '/v1/offers/' + offer.id + '?lang=en',
