@@ -20,7 +20,7 @@ super.init();
 authCheck(callback) {
 setTimeout(() => {
 callback(1);
-}, 2000);
+}, 1000);
 }
 getUserInfo(callback) {
 let userData = {

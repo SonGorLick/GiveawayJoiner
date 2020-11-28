@@ -607,7 +607,7 @@ if (_this.lvlmin > newlvl) {
 _this.lvlmin = newlvl;
 }
 }
-_this.log(Lang.get('service.cant_join') + ' (' + Lang.get('service.level_label') + ' - ' + _this.curr_level + '?)', 'cant');
+_this.log(Lang.get('service.cant_join') + ' (' + Lang.get('service.level_label') + ' - ' + newlvl + '?)', 'cant');
 }
 else if (resp.status === 'silver') {
 _this.setValue(price - 1);
