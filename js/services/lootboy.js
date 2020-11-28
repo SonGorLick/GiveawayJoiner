@@ -6,8 +6,8 @@ this.websiteUrl = 'https://www.lootboy.de';
 this.authContent = '';
 this.authLink = 'https://github.com/pumPCin/GiveawayJoiner/wiki/LootBoy';
 this.auth = Lang.get('service.wiki') + 'LootBoy';
-this.settings.intervalfrom = { type: 'number', trans: 'service.intervalfrom', min: 0, max: this.getConfig('intervalto', 15), default: this.getConfig('intervalto', 10) };
-this.settings.intervalto = { type: 'number', trans: 'service.intervalto', min: this.getConfig('intervalto', 10), max: 360, default: this.getConfig('intervalto', 15) };
+this.settings.intervalfrom = { type: 'number', trans: 'service.intervalfrom', min: 0, max: this.getConfig('intervalto', 15), default: this.getConfig('intervalfrom', 10) };
+this.settings.intervalto = { type: 'number', trans: 'service.intervalto', min: this.getConfig('intervalfrom', 10), max: 360, default: this.getConfig('intervalto', 15) };
 this.setConfig('check_in_steam', false);
 delete this.settings.interval_from;
 delete this.settings.interval_to;
@@ -33,7 +33,7 @@ joinService() {
 let _this = this;
 let lbtimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _this.getConfig('timer_from', 500))) + _this.getConfig('timer_from', 500));
 _this.stimer = lbtimer;
-if (_this.getConfig('intervalto', 10) === 0 || _this.getConfig('intervalto', 15) === 0) {
+if (_this.getConfig('intervalfrom', 10) === 0 || _this.getConfig('intervalto', 15) === 0) {
 _this.dload = 0;
 }
 else {
@@ -61,12 +61,10 @@ if (!_this.dcheck || !_this.started) {
 if (!_this.started) {
 _this.dload = 1;
 }
-if (_this.dsave === 1) {
 _this.log(Lang.get('service.checked') + 'LootBoy', 'srch');
-if (_this.started) {
+if (_this.dsave === 1 && _this.started) {
 if (_this.statusIcon.attr('data-status') === 'work') {
 _this.setStatus('good');
-}
 }
 }
 return;
@@ -79,7 +77,7 @@ _this.dload = 1;
 }
 else {
 _this.dsave = 0;
-let lbtimer = (Math.floor(Math.random() * (_this.getConfig('intervalto', 15) - _this.getConfig('intervalto', 10))) + _this.getConfig('intervalto', 10));
+let lbtimer = (Math.floor(Math.random() * (_this.getConfig('intervalto', 15) - _this.getConfig('intervalfrom', 10))) + _this.getConfig('intervalfrom', 10));
 _this.stimer = lbtimer;
 }
 }
