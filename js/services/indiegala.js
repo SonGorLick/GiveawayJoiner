@@ -597,8 +597,8 @@ else if (resp.status === 'level') {
 Times = 0;
 igcurr++;
 igrtry = 0;
-if (_this.curr_level < level) {
 let newlvl = level - 1;
+if (_this.curr_level < level) {
 _this.setLevel(newlvl);
 if (_this.lvlmax > newlvl || _this.lvlmax === 0) {
 _this.lvlmax = newlvl;

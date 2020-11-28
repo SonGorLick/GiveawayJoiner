@@ -100,6 +100,23 @@ lbbrr = lbd[1],
 stat = 'err';
 rq({
 method: 'GET',
+url: _this.url,
+headers: {
+'authority': 'www.lootboy.de',
+'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+'user-agent': lbua,
+'sec-fetch-site': 'none',
+'sec-fetch-mode': 'navigate',
+'sec-fetch-user': '?1',
+'sec-fetch-dest': 'document',
+},
+responseType: 'document'
+})
+.then(() => {
+})
+.finally(() => {
+rq({
+method: 'GET',
 url: _this.lburl + '/v2/users/' + lbauth,
 headers: {
 'authority': 'api.lootboy.de',
@@ -377,6 +394,7 @@ _this.log(Lang.get('service.skip_rg'), 'skip');
 }
 });
 }
+});
 });
 }
 else {
