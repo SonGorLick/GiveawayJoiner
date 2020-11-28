@@ -347,9 +347,9 @@ level = ticket.find('figcaption > .items-list-item-type > span').text().trim(),
 igsteam = ticket.find('a > img').attr('data-img-src'),
 name = ticket.find('.items-list-item-title').text(),
 link = ticket.find('.items-list-item-title > a').attr('href'),
-time = ticket.find('.items-list-item-ticket.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-left > .items-list-item-data-left-bottom').text(),
-sold = ticket.find('.items-list-item-ticket.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-right > .items-list-item-data-right-bottom').text(),
-price = ticket.find('.items-list-item-ticket.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-button > a').attr('data-price'),
+time = ticket.find('.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-left > .items-list-item-data-left-bottom').text(),
+sold = ticket.find('.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-right > .items-list-item-data-right-bottom').text(),
+price = ticket.find('.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-button > a').attr('data-price'),
 single = false,
 entered = false,
 enterTimes = 1,
@@ -406,6 +406,10 @@ igtime = time + 'h|';
 }
 else if (time.includes('minute')) {
 igtime = time.replace(/[^0-9]/g,'') + 'm|';
+time = 0;
+}
+else if (time === 'Expired') {
+igtime = 'ended|';
 time = 0;
 }
 if (single) {
@@ -495,6 +499,7 @@ if (entered) {
 igown = 3;
 }
 if (
+(time === 'Expired') ||
 (time > _this.ending && _this.ending !== 0 && !_this.sort) ||
 (time > _this.ending && _this.ending !== 0 && _this.sort && !_this.getConfig('sbl_ending_ig', false))
 )
