@@ -79,6 +79,7 @@ _this.sort_after = false;
 _this.url = 'https://www.indiegala.com';
 if (fs.existsSync(dirdata + 'indiegala.txt')) {
 let igl = parseInt(fs.readFileSync(dirdata + 'indiegala.txt').toString());
+_this.curr_level = igl;
 _this.setLevel(igl);
 if (_this.lvlmax > igl || _this.lvlmax === 0) {
 _this.lvlmax = igl;
@@ -110,6 +111,7 @@ headers: {
 iglevel = iglevel.data;
 if (iglevel.current_level !== undefined && iglevel.current_level !== '-') {
 iglevel = parseInt(iglevel.current_level);
+_this.curr_level = iglevel;
 _this.setLevel(iglevel);
 if (_this.lvlmax > iglevel || _this.lvlmax === 0) {
 _this.lvlmax = iglevel;
@@ -121,6 +123,7 @@ _this.setConfig('lvl_date', Date.now() + 86400000);
 fs.writeFile(dirdata + 'indiegala.txt', iglevel, (err) => { });
 }
 else if (!fs.existsSync(dirdata + 'indiegala.txt')) {
+_this.curr_level = _this.lvlmax;
 _this.setLevel(_this.lvlmax);
 fs.writeFile(dirdata + 'indiegala.txt', _this.lvlmax, (err) => { });
 }
@@ -526,7 +529,7 @@ case 7:
 _this.log(Lang.get('service.points_low'), 'skip');
 break;
 case 8:
-_this.log(Lang.get('service.cant_join'), 'cant');
+_this.log(Lang.get('service.cant_join') + ' (' + Lang.get('service.level_label') + ' - ' + _this.curr_level + ')', 'skip');
 break;
 case 9:
 _this.log(Lang.get('service.trial'), 'info');
@@ -587,7 +590,7 @@ else if (resp.status === 'owner' || resp.status === 'limit_reached' || resp.stat
 Times = 0;
 igcurr++;
 igrtry = 0;
-_this.log(Lang.get('service.cant_join'), 'cant');
+_this.log(Lang.get('service.cant_join') + ' (' + resp.status + ')' , 'cant');
 }
 else if (resp.status === 'level') {
 Times = 0;
@@ -595,6 +598,7 @@ igcurr++;
 igrtry = 0;
 if (_this.curr_level < level) {
 let newlvl = level - 1;
+_this.curr_level = newlvl;
 _this.setLevel(newlvl);
 if (_this.lvlmax > newlvl || _this.lvlmax === 0) {
 _this.lvlmax = newlvl;
@@ -603,14 +607,14 @@ if (_this.lvlmin > newlvl) {
 _this.lvlmin = newlvl;
 }
 }
-_this.log(Lang.get('service.cant_join'), 'cant');
+_this.log(Lang.get('service.cant_join') + ' (' + Lang.get('service.level_label') + ' - ' + _this.curr_level + '?)', 'cant');
 }
 else if (resp.status === 'silver') {
 _this.setValue(price - 1);
 Times = 0;
 igcurr++;
 igrtry = 0;
-_this.log(Lang.get('service.points_low'), 'skip');
+_this.log(Lang.get('service.cant_join') + ' (' + Lang.get('service.value_label') + ' - ' + (price - 1) + '?)', 'cant');
 }
 else if (resp.status === 'duplicate') {
 igcurr++;
@@ -626,6 +630,7 @@ _this.setStatus('net');
 _this.tries++;
 _this.log('[' + _this.tries + '] ' + Lang.get('service.connection_lost').replace('10', '5'), 'err');
 _this.stimer = 5;
+return;
 }
 else {
 ignext = (Math.floor(Math.random() * 1000)) + 3000;
