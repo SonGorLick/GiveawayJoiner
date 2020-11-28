@@ -49,6 +49,10 @@ url: 'https://www.indiegala.com/library',
 success: function (html) {
 html = $(html.replace(/<img/gi, '<noload'));
 userData.value = html.find('.settings-galasilver').attr('value');
+if (fs.existsSync(dirdata + 'indiegala.txt')) {
+let lvl = parseInt(fs.readFileSync(dirdata + 'indiegala.txt').toString());
+userData.level = lvl;
+}
 userData.avatar = html.find('.profile-private-page-avatar > noload').attr('src');
 if (userData.avatar.includes('profile_backend')) {
 userData.avatar = 'https://www.indiegala.com' + userData.avatar;
@@ -79,7 +83,6 @@ _this.sort_after = false;
 _this.url = 'https://www.indiegala.com';
 if (fs.existsSync(dirdata + 'indiegala.txt')) {
 let igl = parseInt(fs.readFileSync(dirdata + 'indiegala.txt').toString());
-_this.curr_level = igl;
 _this.setLevel(igl);
 if (_this.lvlmax > igl || _this.lvlmax === 0) {
 _this.lvlmax = igl;
@@ -111,7 +114,6 @@ headers: {
 iglevel = iglevel.data;
 if (iglevel.current_level !== undefined && iglevel.current_level !== '-') {
 iglevel = parseInt(iglevel.current_level);
-_this.curr_level = iglevel;
 _this.setLevel(iglevel);
 if (_this.lvlmax > iglevel || _this.lvlmax === 0) {
 _this.lvlmax = iglevel;
@@ -123,7 +125,6 @@ _this.setConfig('lvl_date', Date.now() + 86400000);
 fs.writeFile(dirdata + 'indiegala.txt', iglevel, (err) => { });
 }
 else if (!fs.existsSync(dirdata + 'indiegala.txt')) {
-_this.curr_level = _this.lvlmax;
 _this.setLevel(_this.lvlmax);
 fs.writeFile(dirdata + 'indiegala.txt', _this.lvlmax, (err) => { });
 }
@@ -598,7 +599,6 @@ igcurr++;
 igrtry = 0;
 if (_this.curr_level < level) {
 let newlvl = level - 1;
-_this.curr_level = newlvl;
 _this.setLevel(newlvl);
 if (_this.lvlmax > newlvl || _this.lvlmax === 0) {
 _this.lvlmax = newlvl;
