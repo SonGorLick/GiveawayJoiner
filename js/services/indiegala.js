@@ -409,7 +409,7 @@ igtime = time.replace(/[^0-9]/g,'') + 'm|';
 time = 0;
 }
 else if (time === 'Expired') {
-igtime = 'ended|';
+igtime = 'end|';
 time = 0;
 }
 if (single) {
@@ -499,7 +499,7 @@ if (entered) {
 igown = 3;
 }
 if (
-(time === 'Expired') ||
+(igtime === 'end|') ||
 (time > _this.ending && _this.ending !== 0 && !_this.sort) ||
 (time > _this.ending && _this.ending !== 0 && _this.sort && !_this.getConfig('sbl_ending_ig', false))
 )
