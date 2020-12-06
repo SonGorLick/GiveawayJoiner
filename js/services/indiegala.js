@@ -268,6 +268,9 @@ igcheck = 'all';
 else if (tocheck.indexOf('"code":"e300"') >= 0) {
 igcheck = 'cant';
 }
+else if (tocheck.indexOf('This list is actually empty') >= 0) {
+igcheck = 'empty';
+}
 let iw = 0,
 il = 0;
 if (igcheck === 'all') {
@@ -291,6 +294,10 @@ let igwin = win.data;
 _this.setConfig('check_date', Date.now() + 43200000);
 iw = igwin.won;
 il = igwin.checked;
+if (igwin.status === 'server_error: 500') {
+il = 'All';
+iw = 0;
+}
 })
 .finally(() => {
 _this.log(Lang.get('service.done') + 'Completed to check - ' + il, 'info');
@@ -305,15 +312,15 @@ new Audio('../app.asar/sounds/won.wav').play();
 });
 }
 else if (igcheck === 'err') {
-_this.log(Lang.get('service.done') + 'Completed to check - Error', 'info');
+_this.log(Lang.get('service.done') + 'Completed to check - Check error', 'info');
 }
 else if (igcheck === 'cant') {
 _this.setConfig('check_date', Date.now() + 43200000);
-_this.log(Lang.get('service.done') + 'Completed to check - Sorry, these data are not available at this moment.', 'info');
+_this.log(Lang.get('service.done') + 'Completed to check - Data not available at this moment', 'info');
 }
 else {
 _this.setConfig('check_date', Date.now() + 43200000);
-_this.log(Lang.get('service.done') + 'Completed to check - This list is actually empty.', 'info');
+_this.log(Lang.get('service.done') + 'Completed to check - List empty', 'info');
 }
 });
 }
