@@ -3,7 +3,7 @@ class ZP extends Joiner {
 constructor() {
 super();
 this.domain = 'zeepond.com';
-this.websiteUrl = 'https://www.zeepond.com';
+this.websiteUrl = 'https://www.zeepond.com/zeepond/giveaways/enter-a-competition';
 this.authContent = 'profile-pic';
 this.authLink = 'https://www.zeepond.com/cb-login';
 this.auth = this.auth + Lang.get('service.zp.login');
