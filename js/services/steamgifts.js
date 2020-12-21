@@ -53,7 +53,7 @@ headers: {
 'authority': 'www.steamgifts.com',
 'from': 'esgst.extension@gmail.com',
 'user-agent': this.ua,
-'esgst-version': '8.8.5',
+'esgst-version': '8.8.6',
 'content-type': 'application/x-www-form-urlencoded',
 'accept': '*/*',
 'origin': 'https://www.steamgifts.com',
@@ -99,7 +99,7 @@ headers: {
 'authority': 'www.steamgifts.com',
 'from': 'esgst.extension@gmail.com',
 'user-agent': this.ua,
-'esgst-version': '8.8.5',
+'esgst-version': '8.8.6',
 'content-type': 'application/x-www-form-urlencoded',
 'accept': '*/*',
 'origin': 'https://www.steamgifts.com',
@@ -167,7 +167,7 @@ headers: {
 'authority': 'www.steamgifts.com',
 'from': 'esgst.extension@gmail.com',
 'user-agent': this.ua,
-'esgst-version': '8.8.5',
+'esgst-version': '8.8.6',
 'content-type': 'application/x-www-form-urlencoded',
 'accept': '*/*',
 'origin': this.url,
@@ -423,7 +423,7 @@ if (_this.curr_value < GA.cost && GA.cost > 0) {
 sgown = 3;
 }
 if (
-(!GA.white) && 
+(!GA.white) &&
 (GA.type === 'p') &&
 (_this.getConfig('points_reserve', 0) > 0) &&
 ((_this.curr_value - GA.cost) < _this.getConfig('points_reserve', 0)) &&
@@ -524,7 +524,7 @@ headers: {
 'authority': 'www.steamgifts.com',
 'from': 'esgst.extension@gmail.com',
 'user-agent': _this.ua,
-'esgst-version': '8.8.5',
+'esgst-version': '8.8.6',
 'content-type': 'application/x-www-form-urlencoded',
 'accept': '*/*',
 'origin': _this.url,
@@ -554,7 +554,7 @@ headers: {
 'authority': 'www.steamgifts.com',
 'from': 'esgst.extension@gmail.com',
 'user-agent': _this.ua,
-'esgst-version': '8.8.5',
+'esgst-version': '8.8.6',
 'content-type': 'application/x-www-form-urlencoded',
 'accept': '*/*',
 'origin': _this.url,
@@ -588,7 +588,7 @@ headers: {
 'authority': 'www.steamgifts.com',
 'from': 'esgst.extension@gmail.com',
 'user-agent': _this.ua,
-'esgst-version': '8.8.5',
+'esgst-version': '8.8.6',
 'content-type': 'application/x-www-form-urlencoded',
 'accept': '*/*',
 'origin': _this.url,

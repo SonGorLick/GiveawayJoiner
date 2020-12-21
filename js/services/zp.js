@@ -2,6 +2,7 @@
 class ZP extends Joiner {
 constructor() {
 super();
+this.domain = 'zeepond.com';
 this.websiteUrl = 'https://www.zeepond.com';
 this.authContent = 'profile-pic';
 this.authLink = 'https://www.zeepond.com/cb-login';
@@ -20,6 +21,36 @@ this.settings.skip_xbox = { type: 'checkbox', trans: this.transPath('skip_xbox')
 this.settings.skip_origin = { type: 'checkbox', trans: this.transPath('skip_origin'), default: this.getConfig('skip_origin', false) };
 delete this.settings.pages;
 super.init();
+}
+authCheck(callback) {
+let call = -1;
+rq({
+method: 'GET',
+url: 'https://www.zeepond.com',
+headers: {
+'authority': 'www.zeepond.com',
+'user-agent': this.ua,
+'sec-fetch-site': 'none',
+'sec-fetch-mode': 'navigate',
+'sec-fetch-user': '?1',
+'sec-fetch-dest': 'document',
+'cookie': this.cookies
+},
+responseType: 'document'
+})
+.then((htmls) => {
+let html = htmls.data;
+html = html.replace(/<img/gi, '<noload');
+if (html.indexOf('profile-pic') >= 0) {
+call = 1;
+}
+else {
+call = 0;
+}
+})
+.finally(() => {
+callback(call);
+});
 }
 getUserInfo(callback) {
 let userData = {
@@ -52,11 +83,60 @@ _this.month = 0;
 }
 _this.won = _this.getConfig('won', 0);
 _this.url = 'https://www.zeepond.com';
+let data = 'err';
+rq({
+method: 'GET',
+url: _this.url + '/zeepond/giveaways/enter-a-competition',
+headers: {
+'authority': 'www.zeepond.com',
+'user-agent': _this.ua,
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'navigate',
+'sec-fetch-user': '?1',
+'sec-fetch-dest': 'document',
+'referer': _this.url + '/',
+'cookie': _this.cookies
+},
+responseType: 'document'
+})
+.then((datas) => {
+data = datas.data;
+data = data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
+})
+.finally(() => {
+let comp = $(data).find('.bv-item-wrapper'),
+zpcurr = 0,
+zpcrr = 0,
+zparray = Array.from(Array(comp.length).keys());
+if (data === 'err') {
+_this.log(Lang.get('service.connection_error'), 'err');
+}
+function giveawayEnter() {
+if (zparray.length <= zpcurr || _this.skip || !_this.started) {
+if (comp.length <= zpcurr || _this.skip) {
 if ((new Date()).getDate() !== _this.dcheck) {
-$.ajax({
+let win = 'err';
+rq({
+method: 'GET',
 url: _this.url + '/my-account/my-prizes',
-success: function (win) {
-win = $(win.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
+headers: {
+'authority': 'www.zeepond.com',
+'user-agent': _this.ua,
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'navigate',
+'sec-fetch-user': '?1',
+'sec-fetch-dest': 'document',
+'referer': _this.url + '/zeepond/giveaways/enter-a-competition',
+'cookie': _this.cookies
+},
+responseType: 'document'
+})
+.then((wins) => {
+win = wins.data;
+win = win.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
+})
+.finally(() => {
+if (win !== 'err') {
 let zpwon = win.find('.form-group');
 _this.dcheck = (new Date()).getDate();
 if (zpwon === undefined) {
@@ -77,27 +157,9 @@ if (_this.getConfig('sound', true)) {
 new Audio('../app.asar/sounds/won.wav').play();
 }
 }
-}, error: () => {}
+}
 });
 }
-let data = 'err';
-$.ajax({
-url: _this.url + '/zeepond/giveaways/enter-a-competition',
-success: function (datas) {
-datas = datas.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
-data = datas;
-},
-complete: function () {
-let comp = $(data).find('.bv-item-wrapper'),
-zpcurr = 0,
-zpcrr = 0,
-zparray = Array.from(Array(comp.length).keys());
-if (data === 'err') {
-_this.log(Lang.get('service.connection_error'), 'err');
-}
-function giveawayEnter() {
-if (zparray.length <= zpcurr || _this.skip || !_this.started) {
-if (comp.length <= zpcurr || _this.skip) {
 setTimeout(() => {
 fs.writeFile(dirdata + 'zp.txt', _this.dsave, (err) => { });
 _this.log(Lang.get('service.data_saved'), 'info');
@@ -222,15 +284,27 @@ break;
 }
 }
 if (njoin === 0) {
-zpnext = zpnext + Math.floor(zpnext / 4) + 2100;
 let html = 'err';
-$.ajax({
+rq({
+method: 'GET',
 url: zplink,
-success: function (htmls) {
-htmls = htmls.replace(/<img/gi, '<noload');
-html = htmls;
+headers: {
+'authority': 'www.zeepond.com',
+'user-agent': _this.ua,
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'navigate',
+'sec-fetch-user': '?1',
+'sec-fetch-dest': 'document',
+'referer': _this.url + '/zeepond/giveaways/enter-a-competition',
+'cookie': _this.cookies
 },
-complete: function () {
+responseType: 'document'
+})
+.then((htmls) => {
+html = htmls.data;
+html = html.replace(/<img/gi, '<noload');
+})
+.finally(() => {
 if (html === 'err') {
 zpnext = 59000;
 _this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
@@ -372,15 +446,26 @@ _this.log(Lang.get('service.skipped'), 'skip');
 break;
 }
 if (zpown === 0) {
-let tmout = Math.floor(zpnext / 4) + 2000,
-resp = 'err';
-setTimeout(() => {
-$.ajax({
+let resp = 'err';
+rq({
+method: 'GET',
 url: zplink + '/enter_competition',
-success: function () {
-resp = 'ok';
+headers: {
+'authority': 'www.zeepond.com',
+'user-agent': _this.ua,
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'navigate',
+'sec-fetch-user': '?1',
+'sec-fetch-dest': 'document',
+'referer': zplink,
+'cookie': _this.cookies
 },
-complete: function () {
+responseType: 'document'
+})
+.then(() => {
+resp = 'ok';
+})
+.finally(() => {
 if (resp === 'err') {
 zpnext = 59000;
 if (zparray.filter(i => i === zpcrr).length === 1) {
@@ -399,10 +484,7 @@ let zpdnew = ('0' + zpdtnew.getDate().toString()).slice(-2);
 _this.dsave = _this.dsave + zpnam + '(z=' + zpdnew + '),';
 _this.log(Lang.get('service.entered_in') + zplog, 'enter');
 }
-}
 });
-}, tmout);
-}
 }
 }
 });
@@ -414,7 +496,6 @@ zpcurr++;
 setTimeout(giveawayEnter, zpnext);
 }
 giveawayEnter();
-}
 });
 }
 }
