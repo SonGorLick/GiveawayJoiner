@@ -3,7 +3,7 @@ class ZP extends Joiner {
 constructor() {
 super();
 this.domain = 'zeepond.com';
-this.websiteUrl = 'https://www.zeepond.com/zeepond/giveaways/enter-a-competition';
+this.websiteUrl = 'https://www.zeepond.com';
 this.authContent = 'profile-pic';
 this.authLink = 'https://www.zeepond.com/cb-login';
 this.auth = this.auth + Lang.get('service.zp.login');
@@ -23,6 +23,8 @@ delete this.settings.pages;
 super.init();
 }
 authCheck(callback) {
+if (this.getConfig('auth_date', 0) < Date.now()) {
+this.setConfig('auth_date', Date.now() + 10000);
 let call = -1;
 rq({
 method: 'GET',
@@ -42,15 +44,21 @@ responseType: 'document'
 let html = htmls.data;
 html = html.replace(/<img/gi, '<noload');
 if (html.indexOf('profile-pic') >= 0) {
+this.setConfig('auth_date', Date.now() + 20000);
 call = 1;
 }
 else {
+this.setConfig('auth_date', 0);
 call = 0;
 }
 })
 .finally(() => {
 callback(call);
 });
+}
+else {
+callback(1);
+}
 }
 getUserInfo(callback) {
 let userData = {
