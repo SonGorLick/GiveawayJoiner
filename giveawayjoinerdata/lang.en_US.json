@@ -147,6 +147,8 @@
 		"skip_skipdlc_title": "If possible, determine DLC giveaways without owned base on account and skip them",
 		"skip_trial": "Don't join Trial giveaways",
 		"skip_trial_title": "If possible, determine giveaways with Alpha/Beta/Demo/Trial key and skip them",
+		"startfrom": "Start once from (account)",
+		"startfrom_title": "Start once the service from account number",
 		"log": "Detailed log",
 		"log_title": "Detailed log of the service",
 		"acc": "Account ",
