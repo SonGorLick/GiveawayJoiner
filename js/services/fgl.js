@@ -3,6 +3,7 @@ class FGL extends Joiner {
 constructor() {
 super();
 this.websiteUrl = 'https://freegamelottery.com';
+this.website = this.websiteUrl;
 this.authContent = 'My Points';
 this.authLink = 'https://github.com/pumPCin/GiveawayJoiner/wiki/FGL';
 this.auth = Lang.get('service.wiki') + 'FGL';

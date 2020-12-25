@@ -227,7 +227,7 @@ else {
 this.buttonState(Lang.get('service.btn_awaiting'), 'disabled');
 this.waitAuth = true;
 Browser.webContents.on('did-finish-load', () => {
-if (this.waitAuth && Browser.getURL().indexOf(this.websiteUrl) >= 0) {
+if (this.waitAuth && Browser.getURL().indexOf(this.website) >= 0) {
 Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML')
 .then(body => {
 if (body.indexOf(this.authContent) >= 0) {

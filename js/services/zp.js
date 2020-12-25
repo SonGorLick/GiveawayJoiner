@@ -3,7 +3,8 @@ class ZP extends Joiner {
 constructor() {
 super();
 this.domain = 'zeepond.com';
-this.websiteUrl = 'https://www.zeepond.com';
+this.websiteUrl = 'https://www.zeepond.com/zeepond/giveaways/enter-a-competition';
+this.website = 'https://www.zeepond.com';
 this.authContent = 'profile-pic';
 this.authLink = 'https://www.zeepond.com/cb-login';
 this.auth = this.auth + Lang.get('service.zp.login');
@@ -21,44 +22,6 @@ this.settings.skip_xbox = { type: 'checkbox', trans: this.transPath('skip_xbox')
 this.settings.skip_origin = { type: 'checkbox', trans: this.transPath('skip_origin'), default: this.getConfig('skip_origin', false) };
 delete this.settings.pages;
 super.init();
-}
-authCheck(callback) {
-if (this.getConfig('auth_date', 0) < Date.now()) {
-this.setConfig('auth_date', Date.now() + 10000);
-let call = -1;
-rq({
-method: 'GET',
-url: 'https://www.zeepond.com',
-headers: {
-'authority': 'www.zeepond.com',
-'user-agent': this.ua,
-'sec-fetch-site': 'none',
-'sec-fetch-mode': 'navigate',
-'sec-fetch-user': '?1',
-'sec-fetch-dest': 'document',
-'cookie': this.cookies
-},
-responseType: 'document'
-})
-.then((htmls) => {
-let html = htmls.data;
-html = html.replace(/<img/gi, '<noload');
-if (html.indexOf('profile-pic') >= 0) {
-this.setConfig('auth_date', Date.now() + 20000);
-call = 1;
-}
-else {
-this.setConfig('auth_date', 0);
-call = 0;
-}
-})
-.finally(() => {
-callback(call);
-});
-}
-else {
-callback(1);
-}
 }
 getUserInfo(callback) {
 let userData = {
@@ -123,7 +86,8 @@ function giveawayEnter() {
 if (zparray.length <= zpcurr || _this.skip || !_this.started) {
 if (comp.length <= zpcurr || _this.skip) {
 if ((new Date()).getDate() !== _this.dcheck) {
-let win = 'err';
+let win = 'err',
+zpwon = '';
 rq({
 method: 'GET',
 url: _this.url + '/my-account/my-prizes',
@@ -141,11 +105,11 @@ responseType: 'document'
 })
 .then((wins) => {
 win = wins.data;
-win = win.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
+win = $(win.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
 })
 .finally(() => {
 if (win !== 'err') {
-let zpwon = win.find('.form-group');
+zpwon = win.find('.form-group');
 _this.dcheck = (new Date()).getDate();
 if (zpwon === undefined) {
 zpwon = 0;

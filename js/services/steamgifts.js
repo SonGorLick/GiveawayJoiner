@@ -4,6 +4,7 @@ constructor() {
 super();
 this.domain = 'steamgifts.com';
 this.websiteUrl = 'https://www.steamgifts.com';
+this.website = this.websiteUrl;
 this.authContent = '>Logout<';
 this.authLink = 'https://www.steamgifts.com/?login';
 this.withValue = true;

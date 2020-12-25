@@ -4,6 +4,7 @@ constructor() {
 super();
 this.domain = 'indiedb.com';
 this.websiteUrl = 'https://www.indiedb.com';
+this.website = this.websiteUrl;
 this.authContent = 'View your profile';
 this.authLink = 'https://www.indiedb.com/members/login';
 this.setConfig('check_in_steam', false);

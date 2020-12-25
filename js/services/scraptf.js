@@ -4,6 +4,7 @@ constructor() {
 super();
 this.domain = 'scrap.tf';
 this.websiteUrl = 'https://scrap.tf';
+this.website = this.websiteUrl;
 this.authContent = 'My Auctions';
 this.authLink = 'https://scrap.tf/login';
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };

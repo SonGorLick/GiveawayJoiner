@@ -4,6 +4,7 @@ constructor() {
 super();
 this.settings.timer_from.min = 5;
 this.websiteUrl = 'http://astats.astats.nl/astats/';
+this.website = 'http://astats.astats.nl';
 this.authContent = 'Log out';
 this.authLink = 'http://astats.astats.nl/astats/profile/Login.php';
 this.card = true;

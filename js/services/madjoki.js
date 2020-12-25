@@ -3,6 +3,7 @@ class Madjoki extends Joiner {
 constructor() {
 super();
 this.websiteUrl = 'https://steam.madjoki.com/apps/free';
+this.website = 'https://steam.madjoki.com';
 this.authContent = '>Logout<';
 this.authLink = 'https://steam.madjoki.com/login';
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };

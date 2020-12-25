@@ -4,6 +4,7 @@ constructor() {
 super();
 this.domain = 'tf2r.com';
 this.websiteUrl = 'https://tf2r.com';
+this.website = this.websiteUrl;
 this.authContent = 'Notifications';
 this.authLink = 'https://tf2r.com/login';
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };

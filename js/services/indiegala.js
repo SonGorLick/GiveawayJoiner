@@ -5,6 +5,7 @@ super();
 this.domain = 'indiegala.com';
 this.authContent = 'Your account';
 this.websiteUrl = 'https://www.indiegala.com';
+this.website = this.websiteUrl;
 this.authLink = 'https://www.indiegala.com/login';
 this.withValue = true;
 this.withLevel = true;

@@ -3,6 +3,7 @@ class LootBoy extends Joiner {
 constructor() {
 super();
 this.websiteUrl = 'https://www.lootboy.de';
+this.website = this.websiteUrl;
 this.authContent = '';
 this.authLink = 'https://github.com/pumPCin/GiveawayJoiner/wiki/LootBoy';
 this.auth = Lang.get('service.wiki') + 'LootBoy';
