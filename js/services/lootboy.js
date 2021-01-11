@@ -49,6 +49,7 @@ lbnext = 10000;
 if (_this.getConfig('startfrom', 1) > 1) {
 lbcurr = _this.getConfig('startfrom', 1);
 _this.setConfig('startfrom', 1);
+_this.reinitNumber('startfrom');
 }
 _this.lburl = 'https://api.lootboy.de';
 _this.url = 'https://www.lootboy.de';

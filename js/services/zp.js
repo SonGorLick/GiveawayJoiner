@@ -23,6 +23,32 @@ this.settings.skip_origin = { type: 'checkbox', trans: this.transPath('skip_orig
 delete this.settings.pages;
 super.init();
 }
+authCheck(callback) {
+this.waitAuth = true;
+Browser.webContents.on('did-finish-load', () => {
+if (this.waitAuth && Browser.getURL().indexOf('https://www.zeepond.com') >= 0) {
+Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML')
+.then((body) => {
+if (body.indexOf('profile-pic') >= 0) {
+Browser.webContents.removeAllListeners('did-finish-load');
+this.waitAuth = false;
+callback(1);
+}
+else {
+Browser.webContents.removeAllListeners('did-finish-load');
+this.waitAuth = false;
+callback(0);
+}
+});
+}
+else {
+Browser.webContents.removeAllListeners('did-finish-load');
+this.waitAuth = false;
+callback(-1);
+}
+});
+Browser.loadURL('https://www.zeepond.com/zeepond/giveaways/enter-a-competition');
+}
 getUserInfo(callback) {
 let userData = {
 avatar: '../app.asar/images/ZP.png',
@@ -85,7 +111,7 @@ _this.log(Lang.get('service.connection_error'), 'err');
 function giveawayEnter() {
 if (zparray.length <= zpcurr || _this.skip || !_this.started) {
 if (comp.length <= zpcurr || _this.skip) {
-if ((new Date()).getDate() !== _this.dcheck) {
+if ((new Date()).getDate() !== _this.dcheck && !_this.skip) {
 let win = 'err',
 zpwon = '';
 rq({
@@ -287,6 +313,12 @@ _this.log(Lang.get('service.err_join'), 'cant');
 else {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
+}
+else if (html.indexOf('profile-pic') < 0) {
+_this.totalTicks = 1;
+_this.stimer = 1;
+_this.skip = true;
+_this.log(Lang.get('service.ses_not_found') + ',' + Lang.get('service.connection_lost').split(',')[1].replace('0', ''), 'err');
 }
 else {
 let won = html.indexOf('You have already won a prize in this competition') >= 0,
