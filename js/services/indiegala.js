@@ -600,7 +600,7 @@ igcurr++;
 }
 }
 }
-else if (resp.status === 'owner' || resp.status === 'limit_reached' || resp.status === 'not_available') {
+else if (resp.status === 'owner' || resp.status === 'limit_reached' || resp.status === 'not_available' || resp.status === 'banned') {
 Times = 0;
 igcurr++;
 igrtry = 0;
