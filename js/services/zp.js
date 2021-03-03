@@ -18,8 +18,10 @@ this.settings.skip_after = { type: 'checkbox', trans: this.transPath('skip_after
 this.settings.whitelist_nocards = { type: 'checkbox', trans: 'service.whitelist_nocards', default: this.getConfig('whitelist_nocards', false) };
 this.settings.skip_skipdlc = { type: 'checkbox', trans: 'service.skip_skipdlc', default: this.getConfig('skip_skipdlc', false) };
 this.settings.check_all = { type: 'checkbox', trans: this.transPath('check_all'), default: this.getConfig('check_all', false) };
-this.settings.skip_xbox = { type: 'checkbox', trans: this.transPath('skip_xbox'), default: this.getConfig('skip_xbox', false) };
+this.settings.skip_epic = { type: 'checkbox', trans: this.transPath('skip_epic'), default: this.getConfig('skip_epic', false) };
 this.settings.skip_origin = { type: 'checkbox', trans: this.transPath('skip_origin'), default: this.getConfig('skip_origin', false) };
+this.settings.skip_ns = { type: 'checkbox', trans: this.transPath('skip_ns'), default: this.getConfig('skip_ns', false) };
+this.settings.skip_xbox = { type: 'checkbox', trans: this.transPath('skip_xbox'), default: this.getConfig('skip_xbox', false) };
 delete this.settings.pages;
 super.init();
 }
@@ -234,6 +236,16 @@ njoin = 5;
 }
 if (_this.getConfig('skip_origin', false)) {
 if (zpnam.includes('-origin-key')) {
+njoin = 5;
+}
+}
+if (_this.getConfig('skip_epic', false)) {
+if (zpnam.includes('-epic-key')) {
+njoin = 5;
+}
+}
+if (_this.getConfig('skip_ns', false)) {
+if (zpnam.includes('-nintendo-switch-key')) {
 njoin = 5;
 }
 }
