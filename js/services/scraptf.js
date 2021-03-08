@@ -19,7 +19,7 @@ super.init();
 }
 authCheck(callback) {
 if (this.getConfig('auth_date', 0) < Date.now()) {
-this.setConfig('auth_date', Date.now() + 10000);
+this.setConfig('auth_date', Date.now() + 15000);
 let call = -1;
 rq({
 method: 'GET',

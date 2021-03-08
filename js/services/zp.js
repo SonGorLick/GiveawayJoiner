@@ -205,7 +205,6 @@ _this.dsave = _this.dsave + zpnam + '(z=' + zpdga + '),';
 njoin = 3;
 }
 }
-}
 if (zpblack !== '') {
 if (
 (_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + zpblack.replace('app/', '') + ',') && !_this.getConfig('whitelist_nocards', false)) ||
@@ -230,6 +229,13 @@ if (GJuser.black.includes(zpblack + ',') && _this.getConfig('blacklist_on', fals
 njoin = 2;
 }
 }
+if (_this.dload.includes(',' + zpnam + '(w),')) {
+if (!_this.dsave.includes(',' + zpnam + '(w)')) {
+_this.dsave = _this.dsave + zpnam + '(w),';
+}
+njoin = 4;
+}
+}
 if (_this.getConfig('skip_xbox', false)) {
 if (zpnam.includes('-xbox-') || zpnam.includes('-x-box-')) {
 njoin = 5;
@@ -249,12 +255,6 @@ if (_this.getConfig('skip_ns', false)) {
 if (zpnam.includes('-nintendo-switch-key')) {
 njoin = 5;
 }
-}
-if (_this.dload.includes(',' + zpnam + '(w),')) {
-if (!_this.dsave.includes(',' + zpnam + '(w)')) {
-_this.dsave = _this.dsave + zpnam + '(w),';
-}
-njoin = 4;
 }
 let zplog = _this.logLink(zplink, zpnam.replace(/-/g, ' ')),
 zplg = '|' + (zpcrr + 1) + '№|  ';
