@@ -25,32 +25,6 @@ this.settings.skip_xbox = { type: 'checkbox', trans: this.transPath('skip_xbox')
 delete this.settings.pages;
 super.init();
 }
-authCheck(callback) {
-this.waitAuth = true;
-Browser.webContents.on('did-finish-load', () => {
-if (this.waitAuth && Browser.getURL().indexOf('https://www.zeepond.com') >= 0) {
-Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML')
-.then((body) => {
-if (body.indexOf('profile-pic') >= 0) {
-Browser.webContents.removeAllListeners('did-finish-load');
-this.waitAuth = false;
-callback(1);
-}
-else {
-Browser.webContents.removeAllListeners('did-finish-load');
-this.waitAuth = false;
-callback(0);
-}
-});
-}
-else {
-Browser.webContents.removeAllListeners('did-finish-load');
-this.waitAuth = false;
-callback(-1);
-}
-});
-Browser.loadURL('https://www.zeepond.com/zeepond/giveaways/enter-a-competition');
-}
 getUserInfo(callback) {
 let userData = {
 avatar: '../app.asar/images/ZP.png',

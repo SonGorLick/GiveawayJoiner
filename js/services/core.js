@@ -219,12 +219,15 @@ return false;
 }
 if (autostart) {
 this.auto = true;
+Browser.loadURL(this.websiteUrl);
+this.updateCookies();
 this.runTimer();
 }
 else {
 this.buttonState(Lang.get('service.btn_checking'), 'disabled');
 this.authCheck((authState) => {
 if (authState !== 0) {
+this.updateCookies();
 this.runTimer();
 }
 else {
@@ -236,6 +239,7 @@ Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML'
 .then((body) => {
 if (body.indexOf(this.authContent) >= 0) {
 Browser.close();
+this.updateCookies();
 this.waitAuth = false;
 }
 });
@@ -246,6 +250,7 @@ Browser.loadURL(this.authLink);
 Browser.once('close', () => {
 Browser.webContents.removeAllListeners('did-finish-load');
 this.waitAuth = false;
+this.updateCookies();
 this.runTimer();
 });
 if (!autostart) {
@@ -267,7 +272,6 @@ this.log(Lang.get('service.stopped'));
 this.buttonState(Lang.get('service.btn_start'));
 }
 runTimer() {
-this.updateCookies();
 this.totalTicks = 0;
 this.started = true;
 this.stimer = 1440;
@@ -286,7 +290,6 @@ clearInterval(this.intervalVar);
 }
 if (this.totalTicks % this.doTimer() === 0) {
 this.totalTicks = 1;
-this.updateCookies();
 GJuser.white = loadFile('whitelist');
 GJuser.black = loadFile('blacklist');
 if (this.getConfig('check_in_steam', true) && Config.get('own_date', 0) < Date.now()) {
@@ -334,6 +337,7 @@ this.authCheck((authState) => {
 if (authState === 1) {
 this.setStatus('work');
 this.tries = 0;
+this.updateCookies();
 this.updateUserInfo();
 if (this.getConfig('log_autoclear', false)) {
 this.logField.html('<div></div>');
@@ -347,6 +351,8 @@ this.setStatus('net');
 this.tries++;
 this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost').replace('10', '5'), 'err');
 this.stimer = 5;
+Browser.loadURL(this.websiteUrl);
+this.updateCookies();
 }
 else {
 this.tries = 0;
