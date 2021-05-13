@@ -176,6 +176,8 @@
 			"skip_epic_title": "If possible, determine giveaways for Epic store and skip them",
 			"skip_ns": "Don't join giveaways for NS",
 			"skip_ns_title": "If possible, determine giveaways for Nintendo Switch console and skip them",
+			"skip_ps": "Don't join giveaways for PS",
+			"skip_ps_title": "If possible, determine giveaways for PlayStation console and skip them",
 			"check_all": "Force check giveaways",
 			"check_all_title": "Force check giveaways, ignore the saved time of the last entry"
 		},
