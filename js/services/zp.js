@@ -22,6 +22,7 @@ this.settings.skip_epic = { type: 'checkbox', trans: this.transPath('skip_epic')
 this.settings.skip_origin = { type: 'checkbox', trans: this.transPath('skip_origin'), default: this.getConfig('skip_origin', false) };
 this.settings.skip_ns = { type: 'checkbox', trans: this.transPath('skip_ns'), default: this.getConfig('skip_ns', false) };
 this.settings.skip_xbox = { type: 'checkbox', trans: this.transPath('skip_xbox'), default: this.getConfig('skip_xbox', false) };
+this.settings.skip_ps = { type: 'checkbox', trans: this.transPath('skip_ps'), default: this.getConfig('skip_ps', false) };
 delete this.settings.pages;
 super.init();
 }
@@ -252,7 +253,12 @@ njoin = 5;
 }
 }
 if (_this.getConfig('skip_ns', false)) {
-if (zpnam.includes('-nintendo-switch-key')) {
+if (zpnam.includes('-nintendo-switch-')) {
+njoin = 5;
+}
+}
+if (_this.getConfig('skip_ps', false)) {
+if (zpnam.includes('-playstation-key') || zpnam.includes('-psp-key') || zpnam.includes('-ps4-key') || zpnam.includes('-ps5-key')) {
 njoin = 5;
 }
 }
@@ -297,7 +303,7 @@ if (njoin === 0) {
 let html = 'err';
 rq({
 method: 'GET',
-url: zplink,
+url: zplink.replace('™', '%E2%84%A2'),
 headers: {
 'authority': 'www.zeepond.com',
 'user-agent': _this.ua,
@@ -465,7 +471,7 @@ if (zpown === 0) {
 let resp = 'err';
 rq({
 method: 'GET',
-url: zplink + '/enter_competition',
+url: zplink.replace('™', '%E2%84%A2') + '/enter_competition',
 headers: {
 'authority': 'www.zeepond.com',
 'user-agent': _this.ua,
@@ -473,7 +479,7 @@ headers: {
 'sec-fetch-mode': 'navigate',
 'sec-fetch-user': '?1',
 'sec-fetch-dest': 'document',
-'referer': zplink,
+'referer': zplink.replace('™', '%E2%84%A2'),
 'cookie': _this.cookies
 },
 responseType: 'document'
