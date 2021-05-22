@@ -183,6 +183,7 @@ let zpnext = _this.interval(),
 zpcrr = zparray[zpcurr],
 zpcomp = comp.eq(zpcrr),
 zplink = _this.url + zpcomp.find('.bv-item-image a').attr('href'),
+zplnk = encodeURI(zplink),
 zpnam = zplink.replace('https://www.zeepond.com/zeepond/giveaways/enter-a-competition/', ''),
 njoin = 0,
 zpblack = '',
@@ -303,7 +304,7 @@ if (njoin === 0) {
 let html = 'err';
 rq({
 method: 'GET',
-url: zplink.replace('™', '%E2%84%A2'),
+url: zplnk,
 headers: {
 'authority': 'www.zeepond.com',
 'user-agent': _this.ua,
@@ -471,7 +472,7 @@ if (zpown === 0) {
 let resp = 'err';
 rq({
 method: 'GET',
-url: zplink.replace('™', '%E2%84%A2') + '/enter_competition',
+url: zplnk + '/enter_competition',
 headers: {
 'authority': 'www.zeepond.com',
 'user-agent': _this.ua,
@@ -479,7 +480,7 @@ headers: {
 'sec-fetch-mode': 'navigate',
 'sec-fetch-user': '?1',
 'sec-fetch-dest': 'document',
-'referer': zplink.replace('™', '%E2%84%A2'),
+'referer': zplnk,
 'cookie': _this.cookies
 },
 responseType: 'document'
