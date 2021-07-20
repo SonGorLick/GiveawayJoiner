@@ -239,27 +239,27 @@ njoin = 4;
 }
 }
 if (_this.getConfig('skip_xbox', false)) {
-if (zpnam.includes('-xbox-') || zpnam.includes('-x-box-')) {
+if (zpnam.includes('-xbox-') || zpnam.includes('-x-box-') || zpnam.includes('xbox-series') || zpnam.includes('x-box-series')) {
 njoin = 5;
 }
 }
 if (_this.getConfig('skip_origin', false)) {
-if (zpnam.includes('-origin-key')) {
+if (zpnam.includes('origin-key')) {
 njoin = 5;
 }
 }
 if (_this.getConfig('skip_epic', false)) {
-if (zpnam.includes('-epic-key')) {
+if (zpnam.includes('epic-key') || zpnam.includes('epic-store') || zpnam.includes('epic-games-key')) {
 njoin = 5;
 }
 }
 if (_this.getConfig('skip_ns', false)) {
-if (zpnam.includes('-nintendo-switch-')) {
+if (zpnam.includes('nintendo-switch-')) {
 njoin = 5;
 }
 }
 if (_this.getConfig('skip_ps', false)) {
-if (zpnam.includes('-playstation-key') || zpnam.includes('-psp-key') || zpnam.includes('-ps4-key') || zpnam.includes('-ps5-key')) {
+if (zpnam.includes('playstation-key') || zpnam.includes('psp-key') || zpnam.includes('ps4-key') || zpnam.includes('ps4-eu-key') || zpnam.includes('ps5-key') || zpnam.includes('ps5-eu-key')) {
 njoin = 5;
 }
 }

@@ -247,6 +247,22 @@ igplog = igplog + page + '#-' + _this.getConfig('pages', 1) + '#';
 if (_this.getConfig('check_date', 0) < Date.now()) {
 rq({
 method: 'GET',
+url: _this.url + '/library',
+headers: {
+'authority': 'www.indiegala.com',
+'accept': 'application/json, text/javascript, */*; q=0.01',
+'origin': _this.url,
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'navigate',
+'x-requested-with': 'XMLHttpRequest',
+'user-agent': _this.ua,
+'referer': _this.url + '/giveaways',
+'cookie': _this.cookies
+}
+})
+.finally(() => {
+rq({
+method: 'GET',
 url: _this.url + '/library/giveaways/giveaways-completed/tocheck',
 headers: {
 'authority': 'www.indiegala.com',
@@ -323,6 +339,7 @@ else {
 _this.setConfig('check_date', Date.now() + 43200000);
 _this.log(Lang.get('service.done') + 'Completed to check - List empty', 'info');
 }
+});
 });
 }
 }
