@@ -25,6 +25,8 @@
 		"login": "Sign in service ",
 		"browser_loading": "GJ Browser - loading",
 		"steam_login": "Sign in to Steam (Sign in for the second time with remember this device checkbox to save the session)",
+		"login_steam": "Steam OAuth",
+		"login_steam_title": "Auto login with Steam OAuth (need to restart program)",
 		"ua": "User-Agent:",
 		"ua_title": "You can change it in file ../giveawayjoinerdata/user-agent.txt",
 		"settings": "Settings",

@@ -25,6 +25,8 @@
 		"login": "Авторизоваться в сервисе ",
 		"browser_loading": "GJ Браузер - загрузка",
 		"steam_login": "Авторизоваться в Steam (для сохранения сессии потребуется повторно авторизоваться с запоминанием устройства)",
+		"login_steam": "Steam OAuth",
+		"login_steam_title": "Автоматическая авторизация с помощью Steam OAuth (требуется перезапуск программы)",
 		"ua": "User-Agent:",
 		"ua_title": "Изменить на другой можно в файле ../giveawayjoinerdata/user-agent.txt",
 		"settings": "Настройки",
