@@ -233,6 +233,9 @@ else {
 this.buttonState(Lang.get('service.btn_awaiting'), 'disabled');
 this.waitAuth = true;
 Browser.webContents.on('did-finish-load', () => {
+if (Browser.getURL().indexOf('https://steamcommunity.com/openid/login?openid.ns') >= 0) {
+Browser.webContents.executeJavaScript('document.getElementById("imageLogin").click()')
+}
 if (this.waitAuth && Browser.getURL().indexOf(this.website) >= 0) {
 Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML')
 .then((body) => {
@@ -250,9 +253,14 @@ Browser.webContents.removeAllListeners('did-finish-load');
 this.waitAuth = false;
 this.runTimer();
 });
-if (!autostart) {
+Browser.webContents.on('did-finish-load', () => {
+if (!autostart && !this.getConfig('login_steam', false)) {
 Browser.show();
 }
+else {
+this.waitAuth = true;
+}
+});
 }
 });
 }

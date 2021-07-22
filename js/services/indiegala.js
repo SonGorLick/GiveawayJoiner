@@ -33,9 +33,10 @@ this.settings.reserve_on_sbl = { type: 'checkbox', trans: this.transPath('reserv
 this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
 this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default: this.getConfig('skip_dlc', false) };
 this.settings.reserve_for_smpl = { type: 'checkbox', trans: this.transPath('reserve_for_smpl'), default: this.getConfig('reserve_for_smpl', false) };
-this.settings.whitelist_nocards = { type: 'checkbox', trans: 'service.whitelist_nocards', default: this.getConfig('whitelist_nocards', false) };
+this.settings.whitelist_only = { type: 'checkbox', trans: 'service.whitelist_only', default: this.getConfig('whitelist_only', false) };
 this.settings.skip_skipdlc = { type: 'checkbox', trans: 'service.skip_skipdlc', default: this.getConfig('skip_skipdlc', false) };
 this.settings.skip_trial = { type: 'checkbox', trans: 'service.skip_trial', default: this.getConfig('skip_trial', false) };
+this.settings.whitelist_nocards = { type: 'checkbox', trans: 'service.whitelist_nocards', default: this.getConfig('whitelist_nocards', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -471,6 +472,12 @@ iglog = '|' + page + '#|' + (igcurr + 1) + '№|' + sold + 'e|' + igtime + level
 }
 else {
 iglog = iglog + _this.logWhite(igid) + _this.logBlack(igid);
+}
+if (GJuser.white.includes(igid + ',')) {
+iglog = '[w] ' + iglog;
+}
+else if (_this.getConfig('whitelist_only', false)) {
+igown = 5;
 }
 if (igrtry === 0 && single) {
 _this.log(Lang.get('service.checking') + iglog + _this.logWhite(igid) + _this.logBlack(igid), 'chk');

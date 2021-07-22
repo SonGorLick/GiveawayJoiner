@@ -6,6 +6,7 @@ this.websiteUrl = 'https://follx.com';
 this.website = this.websiteUrl;
 this.authLink = 'https://follx.com/logIn';
 this.authContent = '/account';
+this.setConfig('login_steam', true);
 this.withValue = true;
 this.withLevel = true;
 super.init();

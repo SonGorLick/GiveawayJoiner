@@ -3,10 +3,9 @@ class Astats extends Joiner {
 constructor() {
 super();
 this.settings.timer_from.min = 5;
-this.websiteUrl = 'http://astats.astats.nl/astats/';
-this.website = 'http://astats.astats.nl';
+this.websiteUrl = 'https://astats.astats.nl/astats/';
+this.website = 'https://astats.astats.nl';
 this.authContent = 'Log out';
-this.authLink = 'http://astats.astats.nl/astats/profile/Login.php';
 this.card = true;
 this.dlc = true;
 this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
@@ -14,6 +13,13 @@ this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default:
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
 this.settings.whitelist_nocards = { type: 'checkbox', trans: 'service.whitelist_nocards', default: this.getConfig('whitelist_nocards', false) };
 this.settings.skip_skipdlc = { type: 'checkbox', trans: 'service.skip_skipdlc', default: this.getConfig('skip_skipdlc', false) };
+this.settings.login_steam = { type: 'checkbox', trans: 'service.login_steam', default: this.getConfig('login_steam', false) };
+if (this.getConfig('login_steam', false)) {
+this.authLink = 'https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=https%3A%2F%2Fastats.astats.nl%2Fastats%2Fprofile%2FLogin.php&openid.realm=https%3A%2F%2Fastats.astats.nl&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select#';
+}
+else {
+this.authLink = 'https://astats.astats.nl/astats/profile/Login.php';
+}
 super.init();
 }
 getUserInfo(callback) {
@@ -33,7 +39,7 @@ let astimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _t
 _this.stimer = astimer;
 let page = 1;
 _this.won = _this.getConfig('won', 0);
-_this.url = 'http://astats.astats.nl';
+_this.url = 'https://astats.astats.nl';
 _this.pagemax = _this.getConfig('pages', 1);
 _this.dsave = ',';
 _this.dload = ',';

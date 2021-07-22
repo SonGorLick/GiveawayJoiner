@@ -7,6 +7,7 @@ this.websiteUrl = 'https://scrap.tf';
 this.website = this.websiteUrl;
 this.authContent = 'My Auctions';
 this.authLink = 'https://scrap.tf/login';
+this.setConfig('login_steam', true);
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
 this.settings.interval_from = { type: 'number', trans: 'service.interval_from', min: 10, max: this.getConfig('interval_to', 15), default: this.getConfig('interval_from', 10) };
@@ -292,7 +293,8 @@ _this.log(Lang.get('service.connection_error'), 'err');
 else {
 let enter = raff.indexOf('<i class="fa fa-sign-in"></i> Enter Raffle</button>') >= 0,
 entered = raff.indexOf('<i class="fa fa-sign-out"></i> Leave Raffle</button>') >= 0,
-btncheck = raff.indexOf('<div class="col-xs-7 enter-raffle-btns">') >= 0,
+btn1 = raff.indexOf('<div class="col-xs-7 enter-raffle-btns">') >= 0,
+btn2 = raff.indexOf('<button  rel="tooltip-free" data-placement="top" title="This public raffle is free to enter by anyone" data-loading-text="Entering..." class="btn btn-embossed btn-info btn-lg" onclick="ScrapTF.Raffles.EnterRaffle(') >= 0,
 spid = id,
 spown = 0,
 hash = raff.substring(raff.indexOf("ScrapTF.Raffles.EnterRaffle('" + spid + "', '")+39,raff.indexOf('><i class="fa fa-sign-in"></i> Enter Raffle</button>')).slice(0, 64);
@@ -300,7 +302,7 @@ _this.csrf = raff.substring(raff.indexOf("ScrapTF.User.Hash =")+21,raff.indexOf(
 if (!enter) {
 spown = 3;
 }
-if (!btncheck) {
+if (!btn1 || !btn2) {
 spown = 2;
 }
 if (entered) {

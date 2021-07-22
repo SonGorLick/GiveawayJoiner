@@ -6,8 +6,13 @@ this.domain = 'indiedb.com';
 this.websiteUrl = 'https://www.indiedb.com';
 this.website = this.websiteUrl;
 this.authContent = 'View your profile';
+this.settings.login_steam = { type: 'checkbox', trans: 'service.login_steam', default: this.getConfig('login_steam', false) };
+if (this.getConfig('login_steam', false)) {
+this.authLink = 'https://www.indiedb.com/members/loginext/steam';
+}
+else {
 this.authLink = 'https://www.indiedb.com/members/login';
-this.setConfig('check_in_steam', false);
+}
 delete this.settings.pages;
 delete this.settings.interval_from;
 delete this.settings.interval_to;
