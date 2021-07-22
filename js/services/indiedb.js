@@ -12,6 +12,7 @@ this.authLink = 'https://www.indiedb.com/members/loginext/steam';
 }
 else {
 this.authLink = 'https://www.indiedb.com/members/login';
+}
 this.setConfig('check_in_steam', false);
 delete this.settings.pages;
 delete this.settings.interval_from;
