@@ -57,6 +57,10 @@ callback(-1);
 }
 });
 Browser.loadURL('https://www.zeepond.com/zeepond/giveaways/enter-a-competition');
+Browser.webContents.on('did-finish-load', () => {
+Browser.webContents.removeAllListeners('did-finish-load');
+Browser.close();
+});
 }
 getUserInfo(callback) {
 let userData = {

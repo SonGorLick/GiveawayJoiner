@@ -234,7 +234,7 @@ this.buttonState(Lang.get('service.btn_awaiting'), 'disabled');
 this.waitAuth = true;
 Browser.webContents.on('did-finish-load', () => {
 if (Browser.getURL().indexOf('https://steamcommunity.com/openid/login?openid.ns') >= 0) {
-Browser.webContents.executeJavaScript('document.getElementById("imageLogin").click()')
+Browser.webContents.executeJavaScript('document.getElementById("imageLogin").click()');
 }
 if (this.waitAuth && Browser.getURL().indexOf(this.website) >= 0) {
 Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML')
@@ -255,7 +255,11 @@ this.runTimer();
 });
 Browser.webContents.on('did-finish-load', () => {
 if (!autostart && !this.getConfig('login_steam', false)) {
+setTimeout(() => {
+if (this.waitAuth) {
 Browser.show();
+}
+}, 3000);
 }
 else {
 this.waitAuth = true;
@@ -284,8 +288,45 @@ this.stimer = 1440;
 this.setStatus('good');
 this.log(Lang.get('service.started'));
 if (this.auto) {
-this.totalTicks = 172790;
 this.auto = false;
+switch (this.constructor.name) {
+case 'Astats':
+this.totalTicks = 172790;
+break;
+case 'FGL':
+this.totalTicks = 259185;
+break;
+case 'Follx':
+this.totalTicks = 345580;
+break;
+case 'IndieDB':
+this.totalTicks = 431975;
+break;
+case 'IndieGala':
+this.totalTicks = 518370;
+break;
+case 'LootBoy':
+this.totalTicks = 604765;
+break;
+case 'Madjoki':
+this.totalTicks = 691160;
+break;
+case 'OpiumPulses':
+this.totalTicks = 777555;
+break;
+case 'ScrapTF':
+this.totalTicks = 863950;
+break;
+case 'SteamGifts':
+this.totalTicks = 950345;
+break;
+case 'TF2R':
+this.totalTicks = 1036740;
+break;
+case 'ZP':
+this.totalTicks = 1123135;
+break;
+}
 }
 if (this.intervalVar) {
 clearInterval(this.intervalVar);
