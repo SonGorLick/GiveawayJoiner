@@ -1,5 +1,6 @@
 'use strict';
 const { app, nativeImage, shell, session, Tray, BrowserWindow, Menu, ipcMain, ipcRenderer } = require('electron');
+require('@electron/remote/main').initialize();
 const storage = require('electron-json-storage');
 const fs = require('fs');
 const rq = require('axios').default;

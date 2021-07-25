@@ -1,6 +1,6 @@
 'use strict';
-const storage = require('electron').remote.require('electron-json-storage');
-const fs = require('electron').remote.require('fs');
+const storage = require('@electron/remote').require('electron-json-storage');
+const fs = require('@electron/remote').require('fs');
 const dirdata = storage.getDataPath() + '/';
 class Joiner {
 constructor() {

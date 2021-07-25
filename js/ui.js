@@ -1,5 +1,5 @@
 'use strict';
-const remote = require('electron').remote;
+const remote = require('@electron/remote');
 const ipc = require('electron').ipcRenderer;
 const shared = remote.getGlobal('sharedData');
 const rq = shared.rq;

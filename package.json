@@ -1,10 +1,11 @@
 {
   "name": "GiveawayJoiner",
   "productName": "GiveawayJoiner",
-  "version": "1.5.3b",
+  "version": "1.5.3c",
   "description": "Autojoin to steam game giveaways",
   "main": "giveawayjoiner.js",
   "dependencies": {
+    "@electron/remote": "latest",
     "axios": "latest",
     "electron-json-storage": "latest"
   },

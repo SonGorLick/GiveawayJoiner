@@ -40,11 +40,13 @@ Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML'
 .then((body) => {
 if (body.indexOf('profile-pic') >= 0) {
 Browser.webContents.removeAllListeners('did-finish-load');
+Browser.close();
 this.waitAuth = false;
 callback(1);
 }
 else {
 Browser.webContents.removeAllListeners('did-finish-load');
+Browser.close();
 this.waitAuth = false;
 callback(0);
 }
@@ -52,15 +54,12 @@ callback(0);
 }
 else {
 Browser.webContents.removeAllListeners('did-finish-load');
+Browser.close();
 this.waitAuth = false;
 callback(-1);
 }
 });
 Browser.loadURL('https://www.zeepond.com/zeepond/giveaways/enter-a-competition');
-Browser.webContents.on('did-finish-load', () => {
-Browser.webContents.removeAllListeners('did-finish-load');
-Browser.close();
-});
 }
 getUserInfo(callback) {
 let userData = {

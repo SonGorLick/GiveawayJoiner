@@ -246,35 +246,21 @@ igplog = igplog + _this.lvl + 'L|';
 if (page === _this.pagemax) {
 igplog = igplog + page + '#-' + _this.getConfig('pages', 1) + '#';
 if (_this.getConfig('check_date', 0) < Date.now()) {
-rq({
-method: 'GET',
+let igcheck = 'err',
+iw = 0,
+il = 0;
+$.ajax({
 url: _this.url + '/library/giveaways/giveaways-completed/tocheck',
-headers: {
-'authority': 'www.indiegala.com',
-'accept': 'application/json, text/javascript, */*; q=0.01',
-'origin': _this.url,
-'sec-fetch-site': 'same-origin',
-'sec-fetch-mode': 'cors',
-'x-requested-with': 'XMLHttpRequest',
-'user-agent': _this.ua,
-'referer': _this.url + '/library',
-'cookie': _this.cookies
-}
-})
-.then((tocheck) => {
-tocheck = JSON.stringify(tocheck.data);
-let igcheck = 'err';
-if (tocheck.indexOf('>Check all<') >= 0) {
+success: function (chk) {
+if (chk.indexOf('>Check all<') >= 0) {
 igcheck = 'all';
 }
-else if (tocheck.indexOf('"code":"e300"') >= 0) {
+else if (chk.indexOf('"code":"e300"') >= 0) {
 igcheck = 'cant';
 }
-else if (tocheck.indexOf('This list is actually empty') >= 0) {
+else if (chk.indexOf('This list is actually empty') >= 0) {
 igcheck = 'empty';
 }
-let iw = 0,
-il = 0;
 if (igcheck === 'all') {
 rq({
 method: 'POST',
@@ -323,6 +309,7 @@ _this.log(Lang.get('service.done') + 'Completed to check - Data not available at
 else {
 _this.setConfig('check_date', Date.now() + 43200000);
 _this.log(Lang.get('service.done') + 'Completed to check - List empty', 'info');
+}
 }
 });
 }

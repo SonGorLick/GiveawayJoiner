@@ -129,9 +129,11 @@ if (afound.length === 0 || !_this.started) {
 _this.pagemax = page;
 }
 if (aarray.length <= acurr || !_this.started) {
-$.ajax({
-url: _this.url + '/astats/User_Info.php'
+Browser.webContents.on('did-finish-load', () => {
+Browser.webContents.removeAllListeners('did-finish-load');
+Browser.close();
 });
+Browser.loadURL(_this.url + '/astats/User_Info.php');
 if (afound.length <= acurr && page === _this.pagemax) {
 setTimeout(() => {
 fs.writeFile(dirdata + 'astats.txt', _this.dsave, (err) => { });
