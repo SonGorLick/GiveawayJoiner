@@ -131,8 +131,10 @@ Browser.loadFile('blank.html');
 Browser.on('close', (e) => {
 e.preventDefault();
 Browser.loadFile('blank.html');
+if (Browser.isVisible()) {
 Browser.hide();
 mainWindow.focus();
+}
 });
 mainWindow.on('close', (e) => {
 if (app.quitting || process.platform !== 'darwin') {
