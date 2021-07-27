@@ -40,13 +40,12 @@ Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML'
 .then((body) => {
 if (body.indexOf('profile-pic') >= 0) {
 Browser.webContents.removeAllListeners('did-finish-load');
-Browser.close();
 this.waitAuth = false;
+Browser.loadFile('blank.html');
 callback(1);
 }
 else {
 Browser.webContents.removeAllListeners('did-finish-load');
-Browser.close();
 this.waitAuth = false;
 callback(0);
 }
@@ -54,7 +53,6 @@ callback(0);
 }
 else {
 Browser.webContents.removeAllListeners('did-finish-load');
-Browser.close();
 this.waitAuth = false;
 callback(-1);
 }
