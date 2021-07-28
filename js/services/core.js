@@ -277,7 +277,9 @@ return false;
 this.started = false;
 this.setStatus(status);
 clearInterval(this.intervalVar);
+if (this.tries === 0) {
 this.log(Lang.get('service.stopped'));
+}
 this.buttonState(Lang.get('service.btn_start'));
 }
 runTimer() {
@@ -286,7 +288,9 @@ this.totalTicks = 0;
 this.started = true;
 this.stimer = 1440;
 this.setStatus('good');
+if (this.tries === 0) {
 this.log(Lang.get('service.started'));
+}
 if (this.auto) {
 this.auto = false;
 switch (this.constructor.name) {
@@ -394,22 +398,27 @@ this.joinService();
 }
 else if (authState === 0) {
 if (this.tries < 3) {
-this.setStatus('net');
 this.tries++;
-this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost').replace('10', '5'), 'err');
-this.stimer = 5;
+this.stopJoiner();
+this.setStatus('net');
+this.log('[' + this.tries + '] ' + Lang.get('service.session_expired'), 'err');
+setTimeout(() => {
+if (!this.started) {
+this.startJoiner();
+}
+}, 5000);
 }
 else {
 this.tries = 0;
-this.log(Lang.get('service.session_expired'), 'err');
+this.log(Lang.get('service.ses_not_found'), 'err');
 this.stopJoiner(true);
 }
 }
 else {
-if (this.tries < 8) {
+if (this.tries < 10) {
 this.setStatus('net');
 this.tries++;
-this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost').replace('0', '5'), 'err');
+this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost'), 'err');
 this.stimer = 15;
 }
 else {

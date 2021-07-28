@@ -19,7 +19,7 @@ let _bmd = 'true';
 let _bfr = 'false';
 let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
-app.commandLine.appendSwitch('--no-sandbox');
+app.commandLine.appendSwitch('no-sandbox');
 app.commandLine.appendSwitch('disk-cache-size', 100);
 app.commandLine.appendSwitch('disable-site-isolation-trials');
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
