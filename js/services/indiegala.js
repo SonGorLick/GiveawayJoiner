@@ -227,6 +227,25 @@ if (_this.curr_value === 0) {
 _this.dload = 2;
 }
 }
+if (page === 1 && tickets.length === 0 && _this.started) {
+_this.setConfig('auth_date', 0);
+if (_this.tries < 3) {
+_this.tries++;
+_this.stopJoiner();
+_this.setStatus('net');
+_this.log('[' + _this.tries + '] ' + Lang.get('service.connection_lost'), 'err');
+setTimeout(() => {
+if (!_this.started) {
+_this.startJoiner();
+}
+}, 5000);
+}
+else {
+_this.tries = 0;
+_this.log(Lang.get('connection_error'), 'err');
+_this.stopJoiner(true);
+}
+}
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igprtry > 0) {
 if (!_this.started) {
 _this.setConfig('lvl_date', 0);
@@ -245,7 +264,7 @@ igplog = igplog + _this.lvl + 'L|';
 }
 if (page === _this.pagemax) {
 igplog = igplog + page + '#-' + _this.getConfig('pages', 1) + '#';
-if (_this.getConfig('check_date', 0) < Date.now()) {
+if (_this.getConfig('check_date', 0) < Date.now() && _this.started) {
 let igcheck = 'err',
 iw = 0,
 il = 0;

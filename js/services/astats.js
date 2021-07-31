@@ -129,11 +129,17 @@ if (afound.length === 0 || !_this.started) {
 _this.pagemax = page;
 }
 if (aarray.length <= acurr || !_this.started) {
+if (!_this.started) {
+_this.setConfig('check_date', 0);
+}	
+if (_this.getConfig('check_date', 0) < Date.now() && _this.started) {
+_this.setConfig('check_date', Date.now() + 43200000);
 Browser.webContents.on('did-finish-load', () => {
 Browser.webContents.removeAllListeners('did-finish-load');
-Browser.close();
+Browser.loadFile('blank.html');
 });
 Browser.loadURL(_this.url + '/astats/User_Info.php');
+}
 if (afound.length <= acurr && page === _this.pagemax) {
 setTimeout(() => {
 fs.writeFile(dirdata + 'astats.txt', _this.dsave, (err) => { });

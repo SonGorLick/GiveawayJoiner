@@ -178,7 +178,7 @@ this.panel.addClass('active');
 }
 authCheck(callback) {
 let authContent = this.authContent,
-authService = this.constructor.name,
+authService = this.constructor.name.toLowerCase(),
 html = 'err';
 if (Config.get(authService + '_auth_date', 0) < Date.now()) {
 Config.set(authService + '_auth_date', Date.now() + 15000);
@@ -254,16 +254,11 @@ this.waitAuth = false;
 this.runTimer();
 });
 Browser.webContents.on('did-finish-load', () => {
-if (!autostart && !this.getConfig('login_steam', false)) {
 setTimeout(() => {
 if (this.waitAuth) {
 Browser.show();
 }
-}, 3000);
-}
-else {
-this.waitAuth = true;
-}
+}, 10000);
 });
 }
 });
@@ -397,6 +392,7 @@ this.log(Lang.get('service.connection_good'), 'srch');
 this.joinService();
 }
 else if (authState === 0) {
+this.setConfig('auth_date', 0);
 if (this.tries < 3) {
 this.tries++;
 this.stopJoiner();
@@ -415,6 +411,7 @@ this.stopJoiner(true);
 }
 }
 else {
+this.setConfig('auth_date', 0);
 if (this.tries < 10) {
 this.setStatus('net');
 this.tries++;
