@@ -240,7 +240,9 @@ if (this.waitAuth && Browser.getURL().indexOf(this.website) >= 0) {
 Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML')
 .then((body) => {
 if (body.indexOf(this.authContent) >= 0) {
-Browser.close();
+if (Browser.isVisible()) {
+Browser.hide();
+}
 this.waitAuth = false;
 }
 });
@@ -382,6 +384,9 @@ GJuser.skip_dlc = loadFile('steam_skipdlc');
 }
 this.authCheck((authState) => {
 if (authState === 1) {
+if (Browser.isVisible() & Browser.getURL().indexOf(this.website) >= 0) {
+Browser.hide();
+}
 this.setStatus('work');
 this.tries = 0;
 this.updateUserInfo();
@@ -399,7 +404,7 @@ this.stopJoiner();
 this.setStatus('net');
 this.log('[' + this.tries + '] ' + Lang.get('service.session_expired'), 'err');
 setTimeout(() => {
-if (!this.started) {
+if (this.statusIcon.attr('data-status') === 'net') {
 this.startJoiner();
 }
 }, 5000);
@@ -410,7 +415,7 @@ this.log(Lang.get('service.ses_not_found'), 'err');
 this.stopJoiner(true);
 }
 }
-else {
+else if (authState === -1) {
 this.setConfig('auth_date', 0);
 if (this.tries < 10) {
 this.setStatus('net');
