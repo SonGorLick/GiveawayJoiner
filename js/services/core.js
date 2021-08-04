@@ -240,10 +240,11 @@ if (this.waitAuth && Browser.getURL().indexOf(this.website) >= 0) {
 Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML')
 .then((body) => {
 if (body.indexOf(this.authContent) >= 0) {
-if (Browser.isVisible()) {
-Browser.hide();
-}
 this.waitAuth = false;
+Browser.close();
+}
+else if (!Browser.isVisible()) {
+Browser.show();
 }
 });
 }
@@ -257,7 +258,7 @@ this.runTimer();
 });
 Browser.webContents.on('did-finish-load', () => {
 setTimeout(() => {
-if (this.waitAuth) {
+if (this.waitAuth && !Browser.isVisible()) {
 Browser.show();
 }
 }, 10000);
@@ -384,7 +385,7 @@ GJuser.skip_dlc = loadFile('steam_skipdlc');
 }
 this.authCheck((authState) => {
 if (authState === 1) {
-if (Browser.isVisible() & Browser.getURL().indexOf(this.website) >= 0) {
+if (Browser.isVisible() && Browser.getURL().indexOf(this.website) >= 0) {
 Browser.hide();
 }
 this.setStatus('work');
@@ -417,11 +418,12 @@ this.stopJoiner(true);
 }
 else if (authState === -1) {
 this.setConfig('auth_date', 0);
-if (this.tries < 10) {
+if (this.tries < 12) {
 this.setStatus('net');
 this.tries++;
-this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost'), 'err');
-this.stimer = 15;
+let minutes = 5 * this.tries;
+this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost').replace('15', minutes), 'err');
+this.stimer = minutes;
 }
 else {
 this.tries = 0;

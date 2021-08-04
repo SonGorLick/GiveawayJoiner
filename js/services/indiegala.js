@@ -652,11 +652,23 @@ igrtry = 0;
 _this.pagemax = page;
 igcurr = 200;
 ignext = 100;
-_this.setStatus('net');
+_this.setConfig('auth_date', 0);
+if (_this.tries < 3) {
 _this.tries++;
-_this.log('[' + _this.tries + '] ' + Lang.get('service.connection_lost').replace('10', '5'), 'err');
-_this.stimer = 5;
-return;
+_this.stopJoiner();
+_this.setStatus('net');
+_this.log('[' + _this.tries + '] ' + Lang.get('service.session_expired'), 'err');
+setTimeout(() => {
+if (!_this.started) {
+_this.startJoiner();
+}
+}, 5000);
+}
+else {
+_this.tries = 0;
+_this.log(Lang.get('service.ses_not_found'), 'err');
+_this.stopJoiner(true);
+}
 }
 else {
 ignext = (Math.floor(Math.random() * 1000)) + 3000;
@@ -665,9 +677,26 @@ ignext = (Math.floor(Math.random() * 1000)) + 3000;
 if (igrtry >= 12) {
 igrtry = 0;
 Times = 0;
-ignext = 29000;
+ignext = 1000;
 igcurr++;
 _this.log(Lang.get('service.err_join'), 'cant');
+_this.setConfig('auth_date', 0);
+if (_this.tries < 3) {
+_this.tries++;
+_this.stopJoiner();
+_this.setStatus('net');
+_this.log('[' + _this.tries + '] ' + Lang.get('service.connection_lost').split(',')[0] + Lang.get('service.session_expired').split(',')[1], 'err');
+setTimeout(() => {
+if (!_this.started) {
+_this.startJoiner();
+}
+}, 5000);
+}
+else {
+_this.tries = 0;
+_this.log(Lang.get('connection_error'), 'err');
+_this.stopJoiner(true);
+}
 }
 });
 }

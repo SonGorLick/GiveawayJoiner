@@ -142,7 +142,7 @@ stat = stats.data;
 })
 .finally(() => {
 if (stat === 'err') {
-_this.log(Lang.get('service.connection_error') + ' (' + Lang.get('service.ses_not_found') + ')', 'err');
+_this.log(Lang.get('service.connection_error') + ' (' + Lang.get('service.ses_not_found') + '/' + Lang.get('service.session_expired').split(',')[0] + ')', 'err');
 lbnext = 20000;
 }
 else {
