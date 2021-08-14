@@ -166,7 +166,7 @@ Browser.loadURL('https://store.steampowered.com/login');
 Browser.show();
 Browser.once('close', () => {
 renderUser(GJuser);
-if (!Config.get('steam_local', false) {
+if (!Config.get('steam_local', false)) {
 updateSteam();
 setTimeout(() => {
 updateSkipdlc();
