@@ -9,8 +9,8 @@ this.authContent = 'profile-pic';
 this.auth = this.auth + Lang.get('service.zp.login');
 this.card = true;
 this.dlc = true;
-this.settings.interval_from = { type: 'number', trans: 'service.interval_from', min: 10, max: this.getConfig('interval_to', 20), default: this.getConfig('interval_from', 15) };
-this.settings.interval_to = { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 15), max: 60, default: this.getConfig('interval_to', 20) };
+this.settings.interval_from = { type: 'number', trans: 'service.interval_from', min: 10, max: this.getConfig('interval_to', 30), default: this.getConfig('interval_from', 25) };
+this.settings.interval_to = { type: 'number', trans: 'service.interval_to', min: this.getConfig('interval_from', 25), max: 60, default: this.getConfig('interval_to', 30) };
 this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
 this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default: this.getConfig('skip_dlc', false) };
 this.settings.skip_after = { type: 'checkbox', trans: this.transPath('skip_after'), default: this.getConfig('skip_after', true) };
@@ -44,16 +44,14 @@ this.waitAuth = false;
 Browser.loadFile('blank.html');
 callback(1);
 }
-else {
+else if (body.indexOf('is using a security service for protection against online attacks') < 0) {
 Browser.webContents.removeAllListeners('did-finish-load');
-this.waitAuth = false;
 callback(0);
 }
 });
 }
 else {
 Browser.webContents.removeAllListeners('did-finish-load');
-this.waitAuth = false;
 callback(-1);
 }
 });
@@ -116,11 +114,33 @@ zpcurr = 0,
 zpcrr = 0,
 zparray = Array.from(Array(comp.length).keys());
 if (data === 'err') {
-_this.log(Lang.get('service.connection_error'), 'err');
+_this.log(Lang.get('connection_error'), 'err');
+}
+else if (data.indexOf('is using a security service for protection against online attacks') >= 0) {
+_this.setConfig('auth_date', 0);
+if (_this.tries < 3) {
+_this.tries++;
+_this.setStatus('net');
+_this.totalTicks = 1;
+if (data.indexOf('You will be redirected once the validation is complete') >= 0) {
+_this.stimer = 1;
+_this.log('[' + _this.tries + '] ' + Lang.get('service.connection_lost').split(',')[0] + ',' + Lang.get('service.session_expired').split(',')[1].replace('10', '60'), 'err');
+}
+else {
+let minutes = 5 * _this.tries;
+_this.log('[' + _this.tries + '] ' + Lang.get('service.connection_lost').replace('15', minutes), 'err');
+_this.stimer = minutes;
+}
+}
+else {
+_this.tries = 0;
+_this.log(Lang.get('connection_error'), 'err');
+_this.stopJoiner(true);
+}
 }
 function giveawayEnter() {
 if (zparray.length <= zpcurr || _this.skip || !_this.started) {
-if (comp.length <= zpcurr || _this.skip) {
+if (comp.length > 0 || _this.skip) {
 if ((new Date()).getDate() !== _this.dcheck && !_this.skip) {
 let win = 'err',
 zpwon = '';
@@ -153,7 +173,7 @@ zpwon = 0;
 else {
 zpwon = zpwon.length;
 }
-if (zpwon < _this.won) {
+if (zpwon < _this.won && zpwon > 0) {
 _this.setConfig('won', zpwon);
 }
 if (zpwon > 0 && zpwon > _this.won) {
@@ -173,10 +193,12 @@ fs.writeFile(dirdata + 'zp.txt', _this.dsave, (err) => { });
 _this.log(Lang.get('service.data_saved'), 'info');
 }, _this.interval());
 }
+if (comp.length > 0) {
 if (_this.started && !_this.skip) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
 _this.log(Lang.get('service.checked') + 'Giveaways', 'srch');
+}
 if (_this.started) {
 setTimeout(() => {
 if (_this.statusIcon.attr('data-status') === 'work') {
@@ -329,7 +351,7 @@ html = htmls.data;
 html = html.replace(/<img/gi, '<noload');
 })
 .finally(() => {
-if (html === 'err') {
+if (html === 'err' || html.indexOf('is using a security service for protection against online attacks') >= 0) {
 zpnext = 59000;
 _this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
 if (zparray.filter(i => i === zpcrr).length === 1) {
@@ -340,11 +362,22 @@ else {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
-else if (html.indexOf('profile-pic') < 0) {
+else if (html.indexOf('You must log in before you can see this view') >= 0) {
+_this.log(Lang.get('service.err_join'), 'cant');
+_this.setConfig('auth_date', 0);
+if (_this.tries < 3) {
 _this.totalTicks = 1;
 _this.stimer = 1;
 _this.skip = true;
-_this.log(Lang.get('service.ses_not_found') + ',' + Lang.get('service.connection_lost').split(',')[1].replace('0', ''), 'err');
+_this.tries++;
+_this.setStatus('net');
+_this.log('[' + _this.tries + '] ' + Lang.get('service.session_expired').replace('10', '60'), 'err');
+}
+else {
+_this.tries = 0;
+_this.log(Lang.get('service.ses_not_found'), 'err');
+_this.stopJoiner(true);
+}
 }
 else {
 let won = html.indexOf('You have already won a prize in this competition') >= 0,

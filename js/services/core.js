@@ -423,6 +423,7 @@ this.setStatus('net');
 this.tries++;
 let minutes = 5 * this.tries;
 this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost').replace('15', minutes), 'err');
+this.totalTicks = 1;
 this.stimer = minutes;
 }
 else {

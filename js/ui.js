@@ -36,7 +36,7 @@ updateTrial();
 if (!Config.get('skipdlc_local', false) && Config.get('skipdlc_date', 0) < Date.now()) {
 setTimeout(() => {
 updateSkipdlc();
-}, 1000);
+}, 2000);
 }
 profileSection();
 lastWin();
@@ -166,10 +166,12 @@ Browser.loadURL('https://store.steampowered.com/login');
 Browser.show();
 Browser.once('close', () => {
 renderUser(GJuser);
+if (!Config.get('steam_local', false) {
 updateSteam();
 setTimeout(() => {
 updateSkipdlc();
-}, 1000);
+}, 2000);
+}
 });
 });
 $(document).on('click', '.open-website[data-link]', function () {
