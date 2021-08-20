@@ -13,6 +13,7 @@ $(function () {
 $('.content-item .settings .data_ajax').html('Ajax IP: ');
 $('.content-item .settings .data_axios').html('Axios IP: ');
 $('.content-item .info .ua').html(Lang.get('service.ua') + '<br>' + mainWindow.webContents.session.getUserAgent());
+GJuser.waitAuth = false;
 GJuser.white = loadFile('whitelist');
 GJuser.black = loadFile('blacklist');
 GJuser.ownapps = loadFile('steam_app');
@@ -162,6 +163,7 @@ $('.content-item .devmode').html('DevTools: ' + Lang.get('profile.on'));
 }
 });
 $(document).on('click', '.open-website[steam_login]', function () {
+Browser.setTitle(Lang.get('service.browser_loading'));
 Browser.loadURL('https://store.steampowered.com/login');
 Browser.show();
 Browser.once('close', () => {
@@ -442,8 +444,8 @@ Config.set('trial_date', Date.now() + 10000);
 });
 }
 function openWebsite(url) {
-Browser.loadURL(url);
 Browser.setTitle(Lang.get('service.browser_loading'));
+Browser.loadURL(url);
 Browser.show();
 }
 window.minimizeWindow = () => {

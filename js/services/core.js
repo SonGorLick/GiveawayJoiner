@@ -8,7 +8,7 @@ this.intervalVar = undefined;
 this.totalTicks = 0;
 this.usrUpdTimer = 60;
 this.started = false;
-this.waitAuth = false;
+this.fail_restart = false;
 this.cookies = '';
 this.withValue = false;
 this.withLevel = false;
@@ -166,6 +166,7 @@ this.startJoiner();
 }
 else {
 this.tries = 0;
+this.fail_restart = false;
 this.stopJoiner();
 }
 })
@@ -231,20 +232,18 @@ this.runTimer();
 }
 else {
 this.buttonState(Lang.get('service.btn_awaiting'), 'disabled');
-this.waitAuth = true;
+if (!GJuser.waitAuth) {
+GJuser.waitAuth = true;
 Browser.webContents.on('did-finish-load', () => {
-if (Browser.getURL().indexOf('https://steamcommunity.com/openid/login?openid.ns') >= 0) {
+if (GJuser.waitAuth && Browser.getURL().indexOf('https://steamcommunity.com/openid/login?openid.ns') >= 0) {
 Browser.webContents.executeJavaScript('document.getElementById("imageLogin").click()');
 }
-if (this.waitAuth && Browser.getURL().indexOf(this.website) >= 0) {
+if (GJuser.waitAuth && Browser.getURL().indexOf(this.website) >= 0) {
 Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML')
 .then((body) => {
-if (body.indexOf(this.authContent) >= 0) {
-this.waitAuth = false;
+if (GJuser.waitAuth && body.indexOf(this.authContent) >= 0) {
 Browser.close();
-}
-else if (!Browser.isVisible()) {
-Browser.show();
+GJuser.waitAuth = false;
 }
 });
 }
@@ -253,16 +252,24 @@ Browser.setTitle(Lang.get('service.browser_loading'));
 Browser.loadURL(this.authLink);
 Browser.once('close', () => {
 Browser.webContents.removeAllListeners('did-finish-load');
-this.waitAuth = false;
+GJuser.waitAuth = false;
 this.runTimer();
 });
-Browser.webContents.on('did-finish-load', () => {
 setTimeout(() => {
-if (this.waitAuth && !Browser.isVisible()) {
+if (GJuser.waitAuth && !Browser.isVisible()) {
 Browser.show();
 }
-}, 10000);
-});
+}, 20000);
+setTimeout(() => {
+if (GJuser.waitAuth) {
+Browser.close();
+GJuser.waitAuth = false;
+}
+}, 60000);
+}
+else {
+this.runTimer();
+}
 }
 });
 }
@@ -279,6 +286,10 @@ if (this.tries === 0) {
 this.log(Lang.get('service.stopped'));
 }
 this.buttonState(Lang.get('service.btn_start'));
+if (this.fail_restart) {
+this.fail_restart = false;
+this.startJoiner();
+}
 }
 runTimer() {
 this.updateCookies();
@@ -286,9 +297,7 @@ this.totalTicks = 0;
 this.started = true;
 this.stimer = 1440;
 this.setStatus('good');
-if (this.tries === 0) {
 this.log(Lang.get('service.started'));
-}
 if (this.auto) {
 this.auto = false;
 switch (this.constructor.name) {
@@ -337,7 +346,11 @@ this.intervalVar = setInterval(() => {
 if (!this.started) {
 clearInterval(this.intervalVar);
 }
-if (this.totalTicks % this.doTimer() === 0) {
+if (this.totalTicks % this.doTimer() === 0 && this.fail_restart) {
+this.totalTicks = 1;
+this.stopJoiner();
+}
+if (this.totalTicks % this.doTimer() === 0 && !this.fail_restart) {
 this.totalTicks = 1;
 this.updateCookies();
 GJuser.white = loadFile('whitelist');
@@ -384,7 +397,7 @@ GJuser.skip_dlc = loadFile('steam_skipdlc');
 }
 }
 this.authCheck((authState) => {
-if (authState === 1) {
+if (authState === 1 && !this.fail_restart) {
 if (Browser.isVisible() && Browser.getURL().indexOf(this.website) >= 0) {
 Browser.hide();
 }
@@ -397,38 +410,38 @@ this.logField.html('<div></div>');
 this.log(Lang.get('service.connection_good'), 'srch');
 this.joinService();
 }
-else if (authState === 0) {
+else if (authState === 0 && !this.fail_restart) {
 this.setConfig('auth_date', 0);
 if (this.tries < 3) {
 this.tries++;
-this.stopJoiner();
+this.fail_restart = true;
 this.setStatus('net');
 this.log('[' + this.tries + '] ' + Lang.get('service.session_expired'), 'err');
-setTimeout(() => {
-if (this.statusIcon.attr('data-status') === 'net') {
-this.startJoiner();
-}
-}, 5000);
+this.totalTicks = 1;
+this.stimer = 1;
 }
 else {
 this.tries = 0;
+this.fail_restart = false;
 this.log(Lang.get('service.ses_not_found'), 'err');
 this.stopJoiner(true);
 }
 }
-else if (authState === -1) {
+else if (authState === -1 && !this.fail_restart) {
 this.setConfig('auth_date', 0);
 if (this.tries < 12) {
 this.setStatus('net');
 this.tries++;
+this.fail_restart = true;
 let minutes = 5 * this.tries;
-this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost').replace('15', minutes), 'err');
+this.log('[' + this.tries + '] ' + Lang.get('service.connection_lost').replace('5', minutes), 'err');
 this.totalTicks = 1;
 this.stimer = minutes;
 }
 else {
 this.tries = 0;
-this.log(Lang.get('connection_error'), 'err');
+this.fail_restart = false;
+this.log(Lang.get('service.connection_error'), 'err');
 this.stopJoiner(true);
 }
 }

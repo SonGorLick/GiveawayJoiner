@@ -227,42 +227,40 @@ if (_this.curr_value === 0) {
 _this.dload = 2;
 }
 }
-if (page === 1 && tickets.length === 0 && _this.started) {
+if (page === 1 && tickets.length === 0 && _this.started && !_this.fail_restart) {
 _this.setConfig('auth_date', 0);
 if (_this.tries < 3) {
 _this.tries++;
-_this.stopJoiner();
+_this.fail_restart = true;
 _this.setStatus('net');
-_this.log('[' + _this.tries + '] ' + Lang.get('service.connection_lost'), 'err');
-setTimeout(() => {
-if (!_this.started) {
-_this.startJoiner();
-}
-}, 5000);
+_this.log('[' + _this.tries + '] ' + Lang.get('service.connection_lost').split(',')[0] + ',' + Lang.get('service.session_expired').split(',')[1], 'err');
+_this.totalTicks = 1;
+_this.stimer = 1;
 }
 else {
 _this.tries = 0;
-_this.log(Lang.get('connection_error'), 'err');
+_this.fail_restart = false;
+_this.log(Lang.get('service.connection_error'), 'err');
 _this.stopJoiner(true);
 }
 }
-if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igprtry > 0) {
+if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igprtry > 0 || _this.fail_restart) {
 if (!_this.started) {
 _this.setConfig('lvl_date', 0);
 _this.setConfig('check_date', 0);
 }
 if (_this.igprtry === 0) {
-if (_this.curr_value === 0 && _this.dload === 2) {
+if (_this.curr_value === 0 && _this.dload === 2 && !_this.fail_restart) {
 _this.log(Lang.get('service.value_label') + ' - 0', 'skip');
 }
-if (_this.dload === 1 && !_this.sort && _this.started) {
+if (_this.dload === 1 && !_this.sort && _this.started && !_this.fail_restart) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
 let igplog = Lang.get('service.checked');
 if (_this.sort) {
 igplog = igplog + _this.lvl + 'L|';
 }
-if (page === _this.pagemax) {
+if (page === _this.pagemax && !_this.fail_restart) {
 igplog = igplog + page + '#-' + _this.getConfig('pages', 1) + '#';
 if (_this.getConfig('check_date', 0) < Date.now() && _this.started) {
 let igcheck = 'err',
@@ -336,6 +334,7 @@ _this.log(Lang.get('service.done') + 'Completed to check - List empty', 'info');
 else {
 igplog = igplog + page + '#';
 }
+if (!_this.fail_restart) {
 _this.log(igplog, 'srch');
 if (_this.sort_after && page === _this.pagemax) {
 page = 1;
@@ -347,6 +346,7 @@ _this.sort_after = false;
 if (page === _this.pagemax && _this.started) {
 if (_this.statusIcon.attr('data-status') === 'work') {
 _this.setStatus('good');
+}
 }
 }
 }
@@ -655,18 +655,16 @@ ignext = 100;
 _this.setConfig('auth_date', 0);
 if (_this.tries < 3) {
 _this.tries++;
-_this.stopJoiner();
+_this.fail_restart = true;
 _this.setStatus('net');
 _this.log('[' + _this.tries + '] ' + Lang.get('service.session_expired'), 'err');
-setTimeout(() => {
-if (!_this.started) {
-_this.startJoiner();
-}
-}, 5000);
+_this.totalTicks = 1;
+_this.stimer = 1;
 }
 else {
 _this.tries = 0;
-_this.log(Lang.get('service.ses_not_found'), 'err');
+_this.fail_restart = false;
+_this.log(Lang.get('service.connection_error'), 'err');
 _this.stopJoiner(true);
 }
 }
@@ -682,19 +680,17 @@ igcurr++;
 _this.log(Lang.get('service.err_join'), 'cant');
 _this.setConfig('auth_date', 0);
 if (_this.tries < 3) {
-_this.tries++;
-_this.stopJoiner();
 _this.setStatus('net');
-_this.log('[' + _this.tries + '] ' + Lang.get('service.connection_lost').split(',')[0] + Lang.get('service.session_expired').split(',')[1], 'err');
-setTimeout(() => {
-if (!_this.started) {
-_this.startJoiner();
-}
-}, 5000);
+_this.tries++;
+_this.fail_restart = true;
+_this.log('[' + _this.tries + '] ' + Lang.get('service.connection_lost'), 'err');
+_this.totalTicks = 1;
+_this.stimer = 5;
 }
 else {
 _this.tries = 0;
-_this.log(Lang.get('connection_error'), 'err');
+_this.fail_restart = false;
+_this.log(Lang.get('service.connection_error'), 'err');
 _this.stopJoiner(true);
 }
 }

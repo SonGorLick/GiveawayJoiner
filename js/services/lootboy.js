@@ -350,11 +350,15 @@ _this.log(Lang.get('service.no_offer') + 'Diamonds Quests', 'cant');
 else {
 lboffers.forEach(function(offer) {
 let gem = 'err',
-lbreg = ' ' + JSON.stringify(offer.availableInCountries).replace(/"/g, '');
-if (lbreg === ' []') {
-lbreg = '';
+lbrega = ' = ' + JSON.stringify(offer.availableInCountries).replace(/"/g, ''),
+lbregb = ' ≠ ' + JSON.stringify(offer.excludedCountries).replace(/"/g, '');
+if (lbrega === ' = []') {
+lbrega = '';
 }
-if (lbreg.includes(lbregion) || lbreg === '') {
+if (lbregb === ' ≠ []') {
+lbregb = '';
+}
+if ((lbrega.includes(lbregion) || lbrega === '') && !lbregb.includes(lbregion)) {
 rq({
 method: 'PUT',
 url: _this.lburl + '/v1/offers/' + offer.id + '?lang=en',
@@ -376,11 +380,11 @@ gem = gems.data;
 })
 .finally(() => {
 if (gem === 'err') {
-_this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim() + lbreg, 'chk');
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim() + lbrega + lbregb, 'chk');
 _this.log(Lang.get('service.err_offer'), 'cant');
 }
 else {
-_this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim() + lbreg, 'chk');
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim() + lbrega + lbregb, 'chk');
 if (!gem.alreadyTaken) {
 _this.log(lblog + Lang.get('service.received') + Lang.get('service.gems') + '- ' + offer.diamondBonus, 'enter');
 }
@@ -391,7 +395,7 @@ _this.log(Lang.get('service.skip'), 'skip');
 });
 }
 else {
-_this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim() + lbreg, 'chk');
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim() + lbrega + lbregb, 'chk');
 _this.log(Lang.get('service.skip_rg'), 'skip');
 }
 });
