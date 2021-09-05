@@ -107,6 +107,7 @@ link = cont.find('h2 a').attr('href'),
 name = cont.find('h2 a').text(),
 id = '';
 if (link !== undefined) {
+link = _this.url + link;
 id = data.substring(data.indexOf('<meta property="og:image" content="')+81).slice(0, 8).match(/[\d]+/)[0];
 enter = data.indexOf('"buttonenter buttongiveaway">Join Giveaway<') >= 0;
 entered = data.indexOf('"buttonenter buttonentered buttongiveaway">Success - Giveaway joined<') >= 0;

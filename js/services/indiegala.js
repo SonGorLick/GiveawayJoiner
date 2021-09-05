@@ -114,7 +114,7 @@ headers: {
 })
 .then((iglevel) => {
 iglevel = iglevel.data;
-if (iglevel.current_level !== undefined && iglevel.current_level !== '-') {
+if (iglevel.current_level !== null && iglevel.current_level !== undefined && iglevel.current_level !== '-') {
 iglevel = parseInt(iglevel.current_level);
 _this.setLevel(iglevel);
 if (_this.lvlmax > iglevel || _this.lvlmax === 0) {
@@ -124,7 +124,7 @@ if (_this.lvlmin > iglevel) {
 _this.lvlmin = iglevel;
 }
 _this.setConfig('lvl_date', Date.now() + 86400000);
-fs.writeFile(dirdata + 'indiegala.txt', iglevel, (err) => { });
+fs.writeFile(dirdata + 'indiegala.txt', iglevel.toString(), (err) => { });
 }
 else if (!fs.existsSync(dirdata + 'indiegala.txt')) {
 _this.setLevel(_this.lvlmax);
@@ -228,39 +228,33 @@ _this.dload = 2;
 }
 }
 if (page === 1 && tickets.length === 0 && _this.started && !_this.fail_restart) {
-_this.setConfig('auth_date', 0);
-if (_this.tries < 3) {
-_this.tries++;
 _this.fail_restart = true;
+igrtry = 0;
+igcurr = 200;
+_this.pagemax = page;
+_this.setConfig('auth_date', 0);
 _this.setStatus('net');
-_this.log('[' + _this.tries + '] ' + Lang.get('service.connection_lost').split(',')[0] + ',' + Lang.get('service.session_expired').split(',')[1], 'err');
+_this.log(Lang.get('service.connection_lost').split(',')[0] + ',' + Lang.get('service.session_expired').split(',')[1], 'err');
 _this.totalTicks = 1;
 _this.stimer = 1;
-}
-else {
-_this.tries = 0;
-_this.fail_restart = false;
-_this.log(Lang.get('service.connection_error'), 'err');
-_this.stopJoiner(true);
-}
 }
 if (tickets.length <= igcurr || !_this.started || _this.curr_value === 0 || _this.igprtry > 0 || _this.fail_restart) {
 if (!_this.started) {
 _this.setConfig('lvl_date', 0);
 _this.setConfig('check_date', 0);
 }
-if (_this.igprtry === 0) {
-if (_this.curr_value === 0 && _this.dload === 2 && !_this.fail_restart) {
+if (_this.igprtry === 0 && !_this.fail_restart) {
+if (_this.curr_value === 0 && _this.dload === 2) {
 _this.log(Lang.get('service.value_label') + ' - 0', 'skip');
 }
-if (_this.dload === 1 && !_this.sort && _this.started && !_this.fail_restart) {
+if (_this.dload === 1 && !_this.sort && _this.started) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
 let igplog = Lang.get('service.checked');
 if (_this.sort) {
 igplog = igplog + _this.lvl + 'L|';
 }
-if (page === _this.pagemax && !_this.fail_restart) {
+if (page === _this.pagemax) {
 igplog = igplog + page + '#-' + _this.getConfig('pages', 1) + '#';
 if (_this.getConfig('check_date', 0) < Date.now() && _this.started) {
 let igcheck = 'err',
@@ -394,9 +388,6 @@ level = 0;
 }
 else {
 level = parseInt((level.replace(/[^0-9]/g,'')));
-}
-if (name.length > 66) {
-name = name.slice(0, 66) + '...';
 }
 if (igsteam.includes('apps/')) {
 igapp = parseInt(igsteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
@@ -648,51 +639,34 @@ igrtry = 0;
 _this.log(Lang.get('service.entered_in') + iglog, 'enter');
 }
 else if (resp.status === 'login') {
+_this.fail_restart = true;
 igrtry = 0;
-_this.pagemax = page;
 igcurr = 200;
 ignext = 100;
+_this.pagemax = page;
 _this.setConfig('auth_date', 0);
-if (_this.tries < 3) {
-_this.tries++;
-_this.fail_restart = true;
 _this.setStatus('net');
-_this.log('[' + _this.tries + '] ' + Lang.get('service.session_expired'), 'err');
+_this.log(Lang.get('service.err_join'), 'cant');
+_this.log(Lang.get('service.session_expired'), 'err');
 _this.totalTicks = 1;
 _this.stimer = 1;
-}
-else {
-_this.tries = 0;
-_this.fail_restart = false;
-_this.log(Lang.get('service.connection_error'), 'err');
-_this.stopJoiner(true);
-}
 }
 else {
 ignext = (Math.floor(Math.random() * 1000)) + 3000;
 }
 }
 if (igrtry >= 12) {
-igrtry = 0;
-Times = 0;
-ignext = 1000;
-igcurr++;
-_this.log(Lang.get('service.err_join'), 'cant');
-_this.setConfig('auth_date', 0);
-if (_this.tries < 3) {
-_this.setStatus('net');
-_this.tries++;
 _this.fail_restart = true;
-_this.log('[' + _this.tries + '] ' + Lang.get('service.connection_lost'), 'err');
+igrtry = 0;
+igcurr = 200;
+ignext = 100;
+_this.pagemax = page;
+_this.setConfig('auth_date', 0);
+_this.setStatus('net');
+_this.log(Lang.get('service.err_join'), 'cant');
+_this.log(Lang.get('service.connection_lost'), 'err');
 _this.totalTicks = 1;
 _this.stimer = 5;
-}
-else {
-_this.tries = 0;
-_this.fail_restart = false;
-_this.log(Lang.get('service.connection_error'), 'err');
-_this.stopJoiner(true);
-}
 }
 });
 }

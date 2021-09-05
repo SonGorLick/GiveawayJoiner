@@ -228,17 +228,11 @@ splink = spcont.find('.panel-heading .raffle-name a').attr('href'),
 spended = spcont.find('.panel-heading .raffle-details span.raffle-state-ended').text().trim(),
 id = splink.replace('/raffles/', ''),
 spjoin = 0;
-if (spname === undefined) {
+if (spname === '' || spname === undefined) {
 spname = '?????? ' + '(' + id + ')';
 }
 else if (spname.includes('<noload')) {
 spname = '?????? ' + '(' + id + ')';
-}
-if (spname === '') {
-spname = '?????? ' + '(' + id + ')';
-}
-else if (spname.length > 70) {
-spname = spname.slice(0, 70) + '...';
 }
 let splog = _this.logLink(_this.url + splink, spname);
 if (_this.getConfig('log', true)) {

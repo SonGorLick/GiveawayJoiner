@@ -397,7 +397,7 @@ GJuser.skip_dlc = loadFile('steam_skipdlc');
 }
 }
 this.authCheck((authState) => {
-if (authState === 1 && !this.fail_restart) {
+if (authState === 1) {
 if (Browser.isVisible() && Browser.getURL().indexOf(this.website) >= 0) {
 Browser.hide();
 }
@@ -410,7 +410,7 @@ this.logField.html('<div></div>');
 this.log(Lang.get('service.connection_good'), 'srch');
 this.joinService();
 }
-else if (authState === 0 && !this.fail_restart) {
+else if (authState === 0) {
 this.setConfig('auth_date', 0);
 if (this.tries < 3) {
 this.tries++;
@@ -427,7 +427,7 @@ this.log(Lang.get('service.ses_not_found'), 'err');
 this.stopJoiner(true);
 }
 }
-else if (authState === -1 && !this.fail_restart) {
+else if (authState === -1) {
 this.setConfig('auth_date', 0);
 if (this.tries < 12) {
 this.setStatus('net');

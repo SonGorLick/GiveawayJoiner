@@ -5,7 +5,7 @@ const storage = require('electron-json-storage');
 const fs = require('fs');
 const rq = require('axios').default;
 let devMode = false;
-let _ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36';
+let _ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36';
 let appLoaded = false;
 let mainWindow = null;
 let Browser = null;
@@ -81,13 +81,14 @@ Menu.setApplicationMenu(null);
 mainWindow = new BrowserWindow({
 width: 876,
 height: 616,
+minWidth: 876,
+minHeight: 616,
 skipTaskbar: false,
 title: 'GiveawayJoiner',
 icon: _icn,
 show: false,
 center: true,
 backgroundColor: '#263238',
-resizable: false,
 frame: false,
 hasShadow: false,
 webPreferences: {
@@ -108,8 +109,8 @@ Browser = new BrowserWindow({
 parent: mainWindow,
 icon: _icn,
 title: 'GiveawayJoiner',
-width: 1200,
-height: 700,
+width: 1024,
+height: 768,
 minWidth: 800,
 minHeight: 600,
 modal: _bmd,
@@ -121,6 +122,7 @@ hasShadow: false,
 webPreferences: {
 session: _session,
 devTools: false,
+backgroundThrottling: false,
 contextIsolation: false,
 webviewTag: true,
 webSecurity: false,

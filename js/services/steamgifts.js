@@ -37,11 +37,12 @@ this.settings.ignore_on_group = { type: 'checkbox', trans: this.transPath('ignor
 this.settings.multiple_first = { type: 'checkbox', trans: this.transPath('multiple_first'), default: this.getConfig('multiple_first', false) };
 this.settings.sort_by_copies = { type: 'checkbox', trans: this.transPath('sort_by_copies'), default: this.getConfig('sort_by_copies', false) };
 this.settings.hide_ga = { type: 'checkbox', trans: this.transPath('hide_ga'), default: this.getConfig('hide_ga', false) };
-this.settings.free_ga = { type: 'checkbox', trans: this.transPath('free_ga'), default: this.getConfig('free_ga', false) };
+this.settings.skip_ost = { type: 'checkbox', trans: 'service.skip_ost', default: this.getConfig('skip_ost', false) };
 this.settings.sort_by_level = { type: 'checkbox', trans: 'service.sort_by_level', default: this.getConfig('sort_by_level', false) };
 this.settings.remove_ga = { type: 'checkbox', trans: this.transPath('remove_ga'), default: this.getConfig('remove_ga', true) };
 this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default: this.getConfig('skip_dlc', false) };
 this.settings.sort_by_chance = { type: 'checkbox', trans: this.transPath('sort_by_chance'), default: this.getConfig('sort_by_chance', false) };
+this.settings.free_ga = { type: 'checkbox', trans: this.transPath('free_ga'), default: this.getConfig('free_ga', false) };
 super.init();
 }
 authCheck(callback) {
@@ -409,6 +410,11 @@ sgref = sgref + 'giveaways/search?type=group';
 else if (GA.page > 1) {
 sgref = sgref + 'giveaways/search?page=' + GA.page;
 }
+if (_this.getConfig('skip_ost', false)) {
+if (GA.nam.includes(' SoundTrack') || GA.nam.includes(' Soundtrack') || GA.nam.includes(' - OST')) {
+sgown = 8;
+}
+}
 if (GA.sgsteam.includes('app/')) {
 sgapp = parseInt(GA.sgsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
 sgid = 'app/' + sgapp;
@@ -492,6 +498,7 @@ if (_this.dsave.includes(',' + sgid + ',') && sgown !== 6) {
 sgown = 1;
 }
 _this.log(Lang.get('service.checking') + sglog + sgblack, 'chk');
+if (sgown > 0) {
 switch (sgown) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
@@ -517,6 +524,7 @@ break;
 case 8:
 _this.log(Lang.get('service.skipped'), 'skip');
 break;
+}
 }
 if (sgown === 6 && _this.getConfig('remove_ga', true)) {
 rq({
@@ -584,6 +592,45 @@ if (
 )
 {
 rq({
+method: 'GET',
+url: GA.lnk,
+headers: {
+'authority': 'www.steamgifts.com',
+'from': 'esgst.extension@gmail.com',
+'user-agent': _this.ua,
+'esgst-version': '8.9.1',
+'content-type': 'application/x-www-form-urlencoded',
+'accept': '*/*',
+'origin': _this.url,
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'cors',
+'sec-fetch-dest': 'empty',
+'referer': sgref,
+'cookie': _this.cookies
+},
+responseType: 'document'
+})
+.then((ga) => {
+ga = ga.data;
+ga = $(ga.replace(/<img/gi, '<noload'));
+let sgname = ga.find('.featured__heading__medium').text();
+sglog = sglog.replace(GA.nam, sgname);
+if (_this.getConfig('skip_ost', false)) {
+if (sgname.includes(' SoundTrack') || sgname.includes(' Soundtrack') || sgname.includes(' - OST')) {
+sgown = 1;
+}
+}
+})
+.finally(() => {
+if (sgown > 0) {
+switch (sgown) {
+case 1:
+_this.log(Lang.get('service.skipped'), 'skip');
+break;
+}
+}
+else {
+rq({
 method: 'POST',
 url: _this.url + '/ajax.php',
 headers: {
@@ -611,6 +658,8 @@ GA.entered = true;
 }
 else {
 _this.log(Lang.get('service.err_join'), 'cant');
+}
+});
 }
 });
 }
