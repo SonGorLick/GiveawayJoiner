@@ -109,8 +109,6 @@ responseType: 'document'
 .then((datas) => {
 data = datas.data;
 data = data.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
-Browser.setTitle(Lang.get('service.browser_loading'));
-Browser.loadURL('https://www.zeepond.com/zeepond/giveaways/enter-a-competition');
 })
 .finally(() => {
 let comp = $(data).find('.bv-item-wrapper'),
@@ -147,11 +145,11 @@ responseType: 'document'
 })
 .then((wins) => {
 win = wins.data;
-win = $(win.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload'));
+win = win.replace(/<img/gi, '<noload').replace(/<ins/gi, '<noload');
 })
 .finally(() => {
 if (win !== 'err') {
-zpwon = win.find('.form-group');
+zpwon = $(win).find('.form-group');
 _this.dcheck = (new Date()).getDate();
 if (zpwon === undefined) {
 zpwon = 0;
@@ -344,7 +342,7 @@ html = htmls.data;
 html = html.replace(/<img/gi, '<noload');
 })
 .finally(() => {
-if (html === 'err' || html.indexOf('is using a security service for protection against online attacks.') >= 0) {
+if (html === 'err') {
 zpnext = 50000;
 _this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
 if (zparray.filter(i => i === zpcrr).length < 3) {
@@ -354,6 +352,21 @@ _this.log(Lang.get('service.err_join'), 'cant');
 else {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
+}
+else if (html.indexOf('is using a security service for protection against online attacks.') >= 0) {
+if (!GJuser.waitAuth) {
+GJuser.waitAuth = true;
+Browser.show();
+Browser.setTitle(Lang.get('service.browser_loading'));
+Browser.loadURL('https://www.zeepond.com/zeepond/giveaways/enter-a-competition');
+setTimeout(() => {
+GJuser.waitAuth = false;
+Browser.hide();
+}, 12000);
+}
+_this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
+zparray.push(zpcrr);
+_this.log(Lang.get('service.err_join'), 'cant');
 }
 else if (html.indexOf('You must log in before you can see this view') >= 0) {
 _this.fail_restart = true;
@@ -525,6 +538,20 @@ _this.log(Lang.get('service.err_join'), 'cant');
 else {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
+}
+else if (html.indexOf('is using a security service for protection against online attacks.') >= 0) {
+if (!GJuser.waitAuth) {
+GJuser.waitAuth = true;
+Browser.show();
+Browser.setTitle(Lang.get('service.browser_loading'));
+Browser.loadURL('https://www.zeepond.com/zeepond/giveaways/enter-a-competition');
+setTimeout(() => {
+GJuser.waitAuth = false;
+Browser.hide();
+}, 12000);
+}
+zparray.push(zpcrr);
+_this.log(Lang.get('service.err_join'), 'cant');
 }
 else if (resp.indexOf('>You have successfully entered this competition<') >= 0) {
 let zpdtnew = new Date();

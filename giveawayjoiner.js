@@ -1,4 +1,5 @@
 'use strict';
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 const { app, nativeImage, shell, session, Tray, BrowserWindow, Menu, ipcMain, ipcRenderer } = require('electron');
 require('@electron/remote/main').initialize();
 const storage = require('electron-json-storage');
