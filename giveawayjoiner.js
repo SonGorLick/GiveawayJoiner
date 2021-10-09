@@ -73,6 +73,10 @@ mainWindow.show();
 app.on('before-quit', () => {
 app.quitting = true;
 });
+app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+event.preventDefault();
+callback(true);
+});
 app.on('ready', () => {
 Config = new ConfigClass();
 Lang = new LanguageClass();
@@ -95,6 +99,7 @@ hasShadow: false,
 webPreferences: {
 session: _session,
 devTools: devMode,
+allowRunningInsecureContent: true,
 backgroundThrottling: false,
 contextIsolation: false,
 nodeIntegration: true,
@@ -123,6 +128,7 @@ hasShadow: false,
 webPreferences: {
 session: _session,
 devTools: false,
+allowRunningInsecureContent: true,
 backgroundThrottling: false,
 contextIsolation: false,
 webviewTag: true,
