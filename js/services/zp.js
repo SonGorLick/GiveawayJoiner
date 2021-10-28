@@ -276,7 +276,19 @@ njoin = 5;
 }
 }
 if (_this.getConfig('skip_ps', false)) {
-if (zpnam.includes('playstation-key') || zpnam.includes('psp-key') || zpnam.includes('ps4-key') || zpnam.includes('ps4-eu-key') || zpnam.includes('ps5-key') || zpnam.includes('ps5-eu-key')) {
+if (
+(zpnam.includes('playstation-key')) ||
+(zpnam.includes('psp-key')) ||
+(zpnam.includes('psp-eu-key')) ||
+(zpnam.includes('psp-usa-key')) ||
+(zpnam.includes('ps4-key')) ||
+(zpnam.includes('ps4-eu-key')) ||
+(zpnam.includes('ps4-usa-key')) ||
+(zpnam.includes('ps5-key')) ||
+(zpnam.includes('ps5-eu-key')) ||
+(zpnam.includes('ps5-usa-key'))
+)
+{
 njoin = 5;
 }
 }

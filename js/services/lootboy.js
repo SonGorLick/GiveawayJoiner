@@ -45,7 +45,7 @@ _this.dload = 1;
 }
 let lbcurr = _this.dload,
 lbua = _this.ua,
-lbnext = 10000;
+lbnext = 19000;
 if (_this.getConfig('startfrom', 1) > 1) {
 lbcurr = _this.getConfig('startfrom', 1);
 _this.setConfig('startfrom', 1);
@@ -85,6 +85,7 @@ _this.dload = 1;
 else {
 _this.dsave = 0;
 let lbtimer = (Math.floor(Math.random() * (_this.getConfig('intervalto', 15) - _this.getConfig('intervalfrom', 10))) + _this.getConfig('intervalfrom', 10));
+_this.totalTicks = 1;
 _this.stimer = lbtimer;
 }
 }
@@ -143,10 +144,10 @@ stat = stats.data;
 .finally(() => {
 if (stat === 'err') {
 _this.log(Lang.get('service.connection_error') + ' (' + Lang.get('service.ses_not_found') + '/' + Lang.get('service.session_expired').split(',')[0] + ')', 'err');
-lbnext = 20000;
+lbnext = 50000;
 }
 else {
-lbnext = 10000;
+lbnext = 19000;
 let lblog = '';
 if (!_this.getConfig('log', true)) {
 lblog = Lang.get('service.acc') + stat.username + ': ';
@@ -174,17 +175,16 @@ coin = coins.data;
 })
 .finally(() => {
 if (coin === 'err') {
-_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Boost', 'chk');
-_this.log(Lang.get('service.err_offer'), 'cant');
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Claim', 'chk');
+_this.log(Lang.get('service.err_offer'), 'err');
 }
-else {
-_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Boost', 'chk');
-if (coin.newLootcoinBalance - stat.lootcoinBalance > 0) {
+else if (coin.newLootcoinBalance - stat.lootcoinBalance > 0) {
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Claim', 'chk');
 _this.log(lblog + Lang.get('service.received') + Lang.get('service.coins') + '- ' + (coin.newLootcoinBalance - stat.lootcoinBalance), 'enter');
 }
 else {
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Daily Claim', 'chk');
 _this.log(Lang.get('service.skip'), 'skip');
-}
 }
 });
 let lbcomics = 'err';
@@ -245,7 +245,8 @@ if (lbcomics.length > 4) {
 lbcomics.length = 4;
 }
 if (lbcomics.length === 0) {
-_this.log(Lang.get('service.no_offer') + 'Read Comics', 'cant');
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Read Comics', 'chk');
+_this.log(Lang.get('service.no_offer') + 'Read Comics', 'skip');
 }
 else {
 lbcomics.forEach(function(comic) {
@@ -272,16 +273,15 @@ comread = comreads.data;
 .finally(() => {
 if (comread === 'err') {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Comics #' + comic.number + ' ' + comic.title, 'chk');
-_this.log(Lang.get('service.err_offer'), 'cant');
+_this.log(Lang.get('service.err_offer'), 'err');
 }
-else {
+else if (comread.gotBonus) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Comics #' + comic.number + ' ' + comic.title, 'chk');
-if (comread.gotBonus) {
 _this.log(lblog + Lang.get('service.received') + Lang.get('service.coins') + '- ' + comread.lootcoinBonus, 'enter');
 }
 else {
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Comics #' + comic.number + ' ' + comic.title, 'chk');
 _this.log(Lang.get('service.skip'), 'skip');
-}
 }
 });
 });
@@ -345,7 +345,8 @@ lboffers[i].have = lbtaken.includes(lboffers[i].id);
 }
 lboffers = lboffers.filter(off => off.have === false);
 if (lboffers.length === 0) {
-_this.log(Lang.get('service.no_offer') + 'Diamonds Quests', 'cant');
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + 'Diamonds Quests', 'chk');
+_this.log(Lang.get('service.no_offer') + 'Diamonds Quests', 'skip');
 }
 else {
 lboffers.forEach(function(offer) {
@@ -381,16 +382,15 @@ gem = gems.data;
 .finally(() => {
 if (gem === 'err') {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim() + lbrega + lbregb, 'chk');
-_this.log(Lang.get('service.err_offer'), 'cant');
+_this.log(Lang.get('service.err_offer'), 'err');
 }
-else {
+else if (!gem.alreadyTaken) {
 _this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim() + lbrega + lbregb, 'chk');
-if (!gem.alreadyTaken) {
 _this.log(lblog + Lang.get('service.received') + Lang.get('service.gems') + '- ' + offer.diamondBonus, 'enter');
 }
 else {
+_this.log(Lang.get('service.checking') + Lang.get('service.offer') + offer.description.trim() + lbrega + lbregb, 'chk');
 _this.log(Lang.get('service.skip'), 'skip');
-}
 }
 });
 }
