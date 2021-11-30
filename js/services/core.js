@@ -69,6 +69,9 @@ $(document.createElement('span'))
 .appendTo(this.icon);
 this.icon.on('click', () => {
 this.setActive();
+if (Config.get('autoscroll')) {
+this.logWrap.scrollTop(this.logWrap[0].scrollHeight);
+}
 });
 }
 addPanel() {

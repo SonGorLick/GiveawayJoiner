@@ -215,12 +215,15 @@ copies = 1,
 link = this.url + sgaway.find('a.giveaway__heading__name').attr('href'),
 entries = parseInt(sgaway.find('.fa.fa-tag+span').text().replace(/[^0-9]/g, '')),
 left = sgaway.find('[data-timestamp]').first().text().split(' '),
+time = 'm',
 factor = 1;
 switch (left[1]) {
-case 'hour': case 'hours': factor = 60; break;
-case 'day': case 'days': factor = 1440; break;
-case 'week': case 'weeks': factor = 10080; break;
-case 'month': case 'months': factor = 40320; break;
+case 'second': case 'seconds': time = 's'; break;
+case 'minute': case 'minutes': time = 'm'; break;
+case 'hour': case 'hours': factor = 60; time = 'h'; break;
+case 'day': case 'days': factor = 1440; time = 'd'; break;
+case 'week': case 'weeks': factor = 10080; time = 'w'; break;
+case 'month': case 'months': factor = 40320; time = 'mth'; break;
 }
 let cost = sgaway.find('.giveaway__heading__thin').first().text();
 if (cost.indexOf('P)') >= 0) {
@@ -243,6 +246,7 @@ order: (index + 1),
 chance: (chance === Infinity ? 0 : chance),
 lnk: link,
 left: (parseInt(left[0]) * factor),
+time: left[0] + time,
 copies: copies,
 entries: entries,
 code: link.match(/away\/(.*)\//)[1],
@@ -486,7 +490,7 @@ if (sgid !== '???') {
 sgblack = _this.logWhite(sgid) + _this.logBlack(sgid);
 }
 if (_this.getConfig('log', true)) {
-sglog = '|' + GA.page + '#|' + GA.order + '№|'+ GA.copies + 'x|' + GA.entries + 'e|' + GA.chance + '%|' + GA.level + 'L|' + GA.cost + '$|  ' + sglog;
+sglog = '|' + GA.page + '#|' + GA.order + '№|'+ GA.copies + 'x|' + GA.time + '|' + GA.entries + 'e|' + GA.chance + '%|' + GA.level + 'L|' + GA.cost + '$|  ' + sglog;
 }
 else {
 sglog = sglog + sgblack;

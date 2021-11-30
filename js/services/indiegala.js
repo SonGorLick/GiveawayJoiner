@@ -37,6 +37,7 @@ this.settings.whitelist_only = { type: 'checkbox', trans: 'service.whitelist_onl
 this.settings.skip_skipdlc = { type: 'checkbox', trans: 'service.skip_skipdlc', default: this.getConfig('skip_skipdlc', false) };
 this.settings.skip_trial = { type: 'checkbox', trans: 'service.skip_trial', default: this.getConfig('skip_trial', false) };
 this.settings.whitelist_nocards = { type: 'checkbox', trans: 'service.whitelist_nocards', default: this.getConfig('whitelist_nocards', false) };
+this.settings.steam_only = { type: 'checkbox', trans: this.transPath('steam_only'), default: this.getConfig('steam_only', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -83,6 +84,13 @@ _this.ending_first = _this.getConfig('ending_first', false);
 _this.reserve = _this.getConfig('points_reserve', 0);
 _this.sort_after = false;
 _this.url = 'https://www.indiegala.com';
+_this.notsteam = ',';
+if (fs.existsSync(dirdata + 'ig_notsteam.txt')) {
+let igdata = fs.readFileSync(dirdata + 'ig_notsteam.txt');
+if (igdata.length > 1 && igdata.length < 5000) {
+_this.notsteam = igdata.toString();
+}
+}
 if (fs.existsSync(dirdata + 'indiegala.txt')) {
 let igl = parseInt(fs.readFileSync(dirdata + 'indiegala.txt').toString());
 _this.setLevel(igl);
@@ -256,6 +264,7 @@ igplog = igplog + _this.lvl + 'L|';
 }
 if (page === _this.pagemax) {
 igplog = igplog + page + '#-' + _this.getConfig('pages', 1) + '#';
+fs.writeFile(dirdata + 'ig_notsteam.txt', _this.notsteam, (err) => { });
 if (_this.getConfig('check_date', 0) < Date.now() && _this.started) {
 let igcheck = 'err',
 iw = 0,
@@ -518,6 +527,9 @@ if (
 {
 igown = 6;
 }
+if (_this.getConfig('steam_only', false) && _this.notsteam.includes(',' + id + ',')) {
+igown = 10;
+}
 if (igown > 0) {
 switch (igown) {
 case 1:
@@ -552,6 +564,9 @@ break;
 case 9:
 _this.log(Lang.get('service.trial'), 'info');
 break;
+case 10:
+_this.log(Lang.get('service.not_steam') + ', ' + Lang.get('service.data_have'), 'info');
+break;
 }
 ignext = 100;
 igrtry = 0;
@@ -560,6 +575,56 @@ igcurr++;
 }
 else {
 igrtry++;
+let igga = 'err';
+$.ajax({
+url: _this.url + link,
+success: function (iggas) {
+igga = $(iggas.replace(/<img/gi, '<noload'));
+igga = igga.find('.card-description').text().trim();
+},
+complete: function () {
+if (igga !== 'err') {
+igga = igga.toLowerCase();
+_this.log(igga);
+}
+if (_this.getConfig('steam_only', false)) {
+if (
+igga.includes('gog.com') ||
+igga.includes('gog key') ||
+igga.includes('origin key') ||
+igga.includes('epic key')
+)
+{
+igown = 1;
+}
+}
+if (_this.getConfig('skip_trial', false)) {
+if (
+igga.includes('alpha key') ||
+igga.includes('beta key')
+)
+{
+igown = 2;
+}
+}
+if (igown > 0) {
+switch (igown) {
+case 1:
+_this.log(Lang.get('service.not_steam'), 'info');
+if (!_this.notsteam.includes(',' + id + ',')) {
+_this.notsteam = _this.notsteam + id + ',';
+}
+break;
+case 2:
+_this.log(Lang.get('service.trial'), 'info');
+break;
+}
+ignext = 100;
+igrtry = 0;
+Times = 0;
+igcurr++;
+}
+else {
 let resp = 'err';
 rq({
 method: 'POST',
@@ -667,6 +732,9 @@ _this.log(Lang.get('service.err_join'), 'cant');
 _this.log(Lang.get('service.connection_lost'), 'err');
 _this.totalTicks = 1;
 _this.stimer = 5;
+}
+});
+}
 }
 });
 }
