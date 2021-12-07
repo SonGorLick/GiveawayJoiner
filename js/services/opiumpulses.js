@@ -346,6 +346,23 @@ let opsteam = html.find('.giveaways-single-sponsored h1 a').attr('href');
 if (opsteam === undefined) {
 opsteam = html.find('.giveaways-single-sponsored h4 a').attr('href');
 }
+if (!opsteam.includes('app/') && !opsteam.includes('sub/') && !opsteam.includes('bundle/')) {
+opsteam = html.find('.giveaways-single-sponsored-content-descr noload').first().attr('src');
+if (opsteam !== undefined) {
+if (opsteam.includes('/apps/')) {
+opsteam = opsteam.replace('/apps/', '/app/');
+}
+else if (opsteam.includes('/subs/')) {
+opsteam = opsteam.replace('/subs/', '/sub/');
+}
+else if (opsteam.includes('/bundles/')) {
+opsteam = opsteam.replace('/bundles/', '/bundle/');
+}
+}
+else {
+opsteam = '';
+}
+}
 let openter = html.find('.giveaways-single-promo-content-info-points p').text();
 let opown = 0,
 opapp = 0,

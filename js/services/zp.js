@@ -415,6 +415,15 @@ _this.dsave = _this.dsave + zpnam + '(z=' + zpdnow + '),';
 }
 }
 }
+if (entered) {
+if (!_this.dsave.includes(',' + zpnam + '(z=' + zpdnow + '),')) {
+_this.dsave = _this.dsave + zpnam + '(z=' + zpdnow + '),';
+}
+zpown = 5;
+if (_this.getConfig('skip_after', true)) {
+_this.skip = true;
+}
+}
 if (zpsteam !== undefined) {
 if (zpsteam.includes('app/')) {
 zpapp = parseInt(zpsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
@@ -464,15 +473,6 @@ if (won) {
 zpown = 6;
 if (!_this.dsave.includes(',' + zpnam + '(w),')) {
 _this.dsave = _this.dsave + zpnam + '(w),';
-}
-}
-if (entered) {
-if (!_this.dsave.includes(',' + zpnam + '(z=' + zpdnow + '),')) {
-_this.dsave = _this.dsave + zpnam + '(z=' + zpdnow + '),';
-}
-zpown = 5;
-if (_this.getConfig('skip_after', true)) {
-_this.skip = true;
 }
 }
 zplog = _this.logLink(zplink, zpname);

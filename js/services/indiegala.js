@@ -264,8 +264,10 @@ igplog = igplog + _this.lvl + 'L|';
 }
 if (page === _this.pagemax) {
 igplog = igplog + page + '#-' + _this.getConfig('pages', 1) + '#';
+setTimeout(() => {
 fs.writeFile(dirdata + 'ig_notsteam.txt', _this.notsteam, (err) => { });
 _this.log(Lang.get('service.data_saved'), 'info');
+}, _this.interval());
 if (_this.getConfig('check_date', 0) < Date.now() && _this.started) {
 let igcheck = 'err',
 iw = 0,
