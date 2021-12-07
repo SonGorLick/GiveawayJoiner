@@ -265,6 +265,7 @@ igplog = igplog + _this.lvl + 'L|';
 if (page === _this.pagemax) {
 igplog = igplog + page + '#-' + _this.getConfig('pages', 1) + '#';
 fs.writeFile(dirdata + 'ig_notsteam.txt', _this.notsteam, (err) => { });
+_this.log(Lang.get('service.data_saved'), 'info');
 if (_this.getConfig('check_date', 0) < Date.now() && _this.started) {
 let igcheck = 'err',
 iw = 0,
@@ -499,8 +500,19 @@ igown = 5;
 if (_this.curr_level < level) {
 igown = 8;
 }
+if (
+(igtime === 'end|') ||
+(time > _this.ending && _this.ending !== 0 && !_this.sort) ||
+(time > _this.ending && _this.ending !== 0 && _this.sort && !_this.getConfig('sbl_ending_ig', false))
+)
+{
+igown = 6;
+}
 if (_this.getConfig('skip_trial', false) && GJuser.trial.includes(igid + ',')) {
 igown = 9;
+}
+if (_this.getConfig('steam_only', false) && _this.notsteam.includes(',' + id + ',')) {
+igown = 10;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '' && GJuser.ownsubs === '') {
@@ -518,17 +530,6 @@ igown = 4;
 }
 if (entered) {
 igown = 3;
-}
-if (
-(igtime === 'end|') ||
-(time > _this.ending && _this.ending !== 0 && !_this.sort) ||
-(time > _this.ending && _this.ending !== 0 && _this.sort && !_this.getConfig('sbl_ending_ig', false))
-)
-{
-igown = 6;
-}
-if (_this.getConfig('steam_only', false) && _this.notsteam.includes(',' + id + ',')) {
-igown = 10;
 }
 if (igown > 0) {
 switch (igown) {
@@ -585,13 +586,13 @@ igga = igga.find('.card-description').text().trim();
 complete: function () {
 if (igga !== 'err') {
 igga = igga.toLowerCase();
+_this.log(igga);
 }
 if (_this.getConfig('steam_only', false)) {
 if (
-igga.includes('gog.com') ||
-igga.includes('gog key') ||
-igga.includes('origin key') ||
-igga.includes('epic key')
+(igga.includes('gog key')) || (igga.includes('key gog')) || (igga.includes('key for gog')) || (igga.includes('gog.com')) ||
+(igga.includes('origin key')) || (igga.includes('key origin')) || (igga.includes('key for origin')) ||
+(igga.includes('epic key')) || (igga.includes('key epic')) || (igga.includes('key for epic'))
 )
 {
 igown = 1;
@@ -599,9 +600,10 @@ igown = 1;
 }
 if (_this.getConfig('skip_trial', false)) {
 if (
-igga.includes('alpha key') ||
-igga.includes('beta key') ||
-igga.includes('early access')
+(igga.includes('alpha key')) || (igga.includes('beta key')) || (igga.includes('demo key')) || (igga.includes('trial key')) ||
+(igga.includes('closed alpha')) || (igga.includes('closed beta')) || (igga.includes('closed demo')) ||
+(igga.includes('early access')) || (igga.includes('early alpha')) || (igga.includes('early demo')) || (igga.includes('early trial')) ||
+(igga.includes('alpha steam key')) || (igga.includes('beta steam key')) || (igga.includes('demo steam key')) || (igga.includes('final beta'))
 )
 {
 igown = 2;

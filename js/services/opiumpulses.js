@@ -179,6 +179,7 @@ opcrr = oparray[opcurr],
 opway = opfound.eq(opcrr),
 link = opway.find('.giveaways-page-item-img-btn-more').attr('href'),
 name = opway.find('.giveaways-page-item-footer-name').text().trim(),
+type = opway.find('.giveaways-page-item-footer noload noload').attr('src'),
 entered = opway.find('.giveaways-page-item-img-btn-wrapper').text(),
 check = opway.find('.giveaways-page-item-img-btn-wrapper a').attr('onclick'),
 eLink = opway.find('.giveaways-page-item-img-btn-enter').attr('href'),
@@ -186,6 +187,24 @@ cost = parseInt(opway.find('.giveaways-page-item-header-points').text().replace(
 code = link.slice(11, 16),
 njoin = 0,
 opblack = '';
+if (type.includes('everyone')) {
+type = 'E|';
+}
+else if (type.includes('veterans')) {
+type = 'V|';
+}
+else if (type.includes('newbies')) {
+type = 'N|';
+}
+else if (type.includes('customers')) {
+type = 'C|';
+}
+else if (type.includes('underdogs')) {
+type = 'U|';
+}
+else {
+type = '?|';
+}
 if (isNaN(cost)) {
 cost = 0;
 }
@@ -256,7 +275,7 @@ if (njoin > 6 && _this.getConfig('remove_ga', false)) {
 njoin = 0;
 }
 let oplog = _this.logLink(_this.url + link, name),
-oplg = '|' + page + '#|' + (opcrr + 1) + '№|' + cost + '$|  ';
+oplg = '|' + page + '#|' + (opcrr + 1) + '№|' + type + cost + '$|  ';
 if (opblack !== '') {
 if (GJuser.skip_dlc.includes(',' + opblack.replace('app/', '') + ',')) {
 oplog = '⊟ ' + oplog;
