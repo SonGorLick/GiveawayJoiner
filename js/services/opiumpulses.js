@@ -205,7 +205,7 @@ optype = 'C|';
 else if (type.includes('underdogs')) {
 optype = 'U|';
 }
-type = ' (for ' + type.split('/')[7].replace('-r.png', '') + ')';
+type = ' (for_' + type.split('/')[7].replace('-r.png', '') + ')';
 }
 if (isNaN(cost)) {
 cost = 0;

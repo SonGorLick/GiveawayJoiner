@@ -295,7 +295,8 @@ _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 else {
-let ajoin = $(html).find('.input-group-btn').text().trim();
+let ajoin = $(html).find('.input-group-btn').text().trim(),
+astype = ' (' + $(html).find('.panel-body').eq(2).text().trim() + ')';
 if (ajoin === 'Add') {
 asown = 1;
 if (!_this.dsave.includes(',' + asjoin + ',')) {
@@ -316,7 +317,7 @@ case 1:
 _this.log(Lang.get('service.already_joined'), 'jnd');
 break;
 case 2:
-_this.log(Lang.get('service.cant_join'), 'cant');
+_this.log(Lang.get('service.cant_join') + astype, 'cant');
 break;
 case 3:
 _this.log(Lang.get('service.points_low'), 'skip');
