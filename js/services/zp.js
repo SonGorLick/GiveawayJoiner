@@ -6,7 +6,6 @@ this.domain = 'zeepond.com';
 this.websiteUrl = 'https://www.zeepond.com/zeepond/giveaways/enter-a-competition';
 this.website = 'https://www.zeepond.com';
 this.authContent = 'profile-pic';
-this.authLink = 'https://www.zeepond.com/cb-login';
 this.auth = this.auth + Lang.get('service.zp.login');
 this.card = true;
 this.dlc = true;
@@ -23,6 +22,13 @@ this.settings.skip_origin = { type: 'checkbox', trans: this.transPath('skip_orig
 this.settings.skip_ns = { type: 'checkbox', trans: this.transPath('skip_ns'), default: this.getConfig('skip_ns', false) };
 this.settings.skip_xbox = { type: 'checkbox', trans: this.transPath('skip_xbox'), default: this.getConfig('skip_xbox', false) };
 this.settings.skip_ps = { type: 'checkbox', trans: this.transPath('skip_ps'), default: this.getConfig('skip_ps', false) };
+this.settings.login_steam = { type: 'checkbox', trans: 'service.login_steam', default: this.getConfig('login_steam', false) };
+if (this.getConfig('login_steam', false)) {
+this.authLink = 'https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=https%3A%2F%2Fwww.zeepond.com%2Fcomponents%2Fcom_comprofiler%2Fplugin%2Fuser%2Fplug_cbconnect%2Fendpoint.php%3Fprovider%3Dsteam&openid.realm=https%3A%2F%2Fwww.zeepond.com&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select';
+}
+else {
+this.authLink = 'https://www.zeepond.com/cb-login';
+}
 delete this.settings.pages;
 super.init();
 }

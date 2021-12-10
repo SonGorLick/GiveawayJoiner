@@ -141,6 +141,7 @@ let opdtnew = new Date();
 opdtnew.setDate(opdtnew.getUTCDate());
 opdtnew.setHours(opdtnew.getUTCHours() + 7);
 _this.dcheck = opdtnew.getDate();
+_this.log(Lang.get('service.done') + 'Play Game - ' + arlnk.split('/')[3].replace(/-/g, ' '), 'info');
 }, error: () => {}
 });
 }
@@ -186,24 +187,25 @@ eLink = opway.find('.giveaways-page-item-img-btn-enter').attr('href'),
 cost = parseInt(opway.find('.giveaways-page-item-header-points').text().replace('points', '').trim()),
 code = link.slice(11, 16),
 njoin = 0,
+optype ='?|',
 opblack = '';
+if (type !== undefined) {
 if (type.includes('everyone')) {
-type = 'E|';
+optype = 'E|';
 }
 else if (type.includes('veterans')) {
-type = 'V|';
+optype = 'V|';
 }
 else if (type.includes('newbies')) {
-type = 'N|';
+optype = 'N|';
 }
 else if (type.includes('customers')) {
-type = 'C|';
+optype = 'C|';
 }
 else if (type.includes('underdogs')) {
-type = 'U|';
+optype = 'U|';
 }
-else {
-type = '?|';
+type = ' (for ' + type.split('/')[7].replace('-r.png', '') + ')';
 }
 if (isNaN(cost)) {
 cost = 0;
@@ -275,7 +277,7 @@ if (njoin > 6 && _this.getConfig('remove_ga', false)) {
 njoin = 0;
 }
 let oplog = _this.logLink(_this.url + link, name),
-oplg = '|' + page + '#|' + (opcrr + 1) + '№|' + type + cost + '$|  ';
+oplg = '|' + page + '#|' + (opcrr + 1) + '№|' + optype + cost + '$|  ';
 if (opblack !== '') {
 if (GJuser.skip_dlc.includes(',' + opblack.replace('app/', '') + ',')) {
 oplog = '⊟ ' + oplog;
@@ -463,7 +465,7 @@ case 2:
 _this.log(Lang.get('service.steam_error'), 'err');
 break;
 case 3:
-_this.log(Lang.get('service.cant_join'), 'cant');
+_this.log(Lang.get('service.cant_join') + type, 'cant');
 break;
 case 4:
 _this.log(Lang.get('service.blacklisted'), 'black');

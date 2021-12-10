@@ -414,7 +414,7 @@ sgref = sgref + 'giveaways/search?type=group';
 else if (GA.page > 1) {
 sgref = sgref + 'giveaways/search?page=' + GA.page;
 }
-if (_this.getConfig('skip_ost', false)) {
+if (_this.getConfig('skip_ost', false) && !GA.nam.includes(' + Original Soundtrack')) {
 if (GA.nam.includes(' SoundTrack') || GA.nam.includes(' Soundtrack') || GA.nam.includes(' - OST')) {
 sgown = 8;
 }
@@ -490,7 +490,7 @@ if (sgid !== '???') {
 sgblack = _this.logWhite(sgid) + _this.logBlack(sgid);
 }
 if (_this.getConfig('log', true)) {
-sglog = '|' + GA.page + '#|' + GA.order + '№|'+ GA.copies + 'x|' + GA.time + '|' + GA.entries + 'e|' + GA.chance + '%|' + GA.level + 'L|' + GA.cost + '$|  ' + sglog;
+sglog = '|' + GA.page + '#|' + GA.order + '№|'+ GA.copies + 'x|' + GA.entries + 'e|' + GA.chance + '%|' + GA.time + '|' + GA.level + 'L|' + GA.cost + '$|  ' + sglog;
 }
 else {
 sglog = sglog + sgblack;
@@ -619,7 +619,7 @@ ga = ga.data;
 ga = $(ga.replace(/<img/gi, '<noload'));
 let sgname = ga.find('.featured__heading__medium').text();
 sglog = sglog.replace(GA.nam, sgname);
-if (_this.getConfig('skip_ost', false)) {
+if (_this.getConfig('skip_ost', false) && !sgname.includes(' + Original Soundtrack')) {
 if (sgname.includes(' SoundTrack') || sgname.includes(' Soundtrack') || sgname.includes(' - OST')) {
 sgown = 1;
 }

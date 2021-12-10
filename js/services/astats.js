@@ -131,7 +131,7 @@ _this.pagemax = page;
 if (aarray.length <= acurr || !_this.started) {
 if (!_this.started) {
 _this.setConfig('check_date', 0);
-}	
+}
 if (_this.getConfig('check_date', 0) < Date.now() && _this.started) {
 if (!GJuser.waitAuth) {
 GJuser.waitAuth = true;
@@ -139,6 +139,7 @@ _this.setConfig('check_date', Date.now() + 43200000);
 Browser.webContents.on('did-finish-load', () => {
 Browser.webContents.removeAllListeners('did-finish-load');
 GJuser.waitAuth = false;
+_this.log(Lang.get('service.done') + 'Visit Profile Page', 'info');
 });
 Browser.setTitle(Lang.get('service.browser_loading'));
 Browser.loadURL(_this.url + '/astats/User_Info.php');

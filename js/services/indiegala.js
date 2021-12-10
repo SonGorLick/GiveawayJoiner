@@ -85,8 +85,8 @@ _this.reserve = _this.getConfig('points_reserve', 0);
 _this.sort_after = false;
 _this.url = 'https://www.indiegala.com';
 _this.notsteam = ',';
-if (fs.existsSync(dirdata + 'ig_notsteam.txt')) {
-let igdata = fs.readFileSync(dirdata + 'ig_notsteam.txt');
+if (fs.existsSync(dirdata + 'indiegala2.txt')) {
+let igdata = fs.readFileSync(dirdata + 'indiegala2.txt');
 if (igdata.length > 1 && igdata.length < 5000) {
 _this.notsteam = igdata.toString();
 }
@@ -265,7 +265,7 @@ igplog = igplog + _this.lvl + 'L|';
 if (page === _this.pagemax) {
 igplog = igplog + page + '#-' + _this.getConfig('pages', 1) + '#';
 setTimeout(() => {
-fs.writeFile(dirdata + 'ig_notsteam.txt', _this.notsteam, (err) => { });
+fs.writeFile(dirdata + 'indiegala2.txt', _this.notsteam, (err) => { });
 _this.log(Lang.get('service.data_saved'), 'info');
 }, _this.interval());
 if (_this.getConfig('check_date', 0) < Date.now() && _this.started) {
@@ -311,7 +311,7 @@ iw = 0;
 }
 })
 .finally(() => {
-_this.log(Lang.get('service.done') + 'Completed to check - ' + il, 'info');
+_this.log(Lang.get('service.done') + 'Completed To Check - ' + il + ' checked', 'info');
 if (iw > 0) {
 _this.log(_this.logLink(_this.url + '/library', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + iw + ')'), 'win');
 _this.logWin(' IndieGala - ' + iw);
@@ -323,15 +323,15 @@ new Audio('../app.asar/sounds/won.wav').play();
 });
 }
 else if (igcheck === 'err') {
-_this.log(Lang.get('service.done') + 'Completed to check - Check error', 'info');
+_this.log(Lang.get('service.done') + 'Completed To Check - check error', 'info');
 }
 else if (igcheck === 'cant') {
 _this.setConfig('check_date', Date.now() + 43200000);
-_this.log(Lang.get('service.done') + 'Completed to check - Data not available at this moment', 'info');
+_this.log(Lang.get('service.done') + 'Completed To Check - data not available at this moment', 'info');
 }
 else {
 _this.setConfig('check_date', Date.now() + 43200000);
-_this.log(Lang.get('service.done') + 'Completed to check - List empty', 'info');
+_this.log(Lang.get('service.done') + 'Completed To Check - list empty', 'info');
 }
 }
 });
@@ -381,7 +381,7 @@ igbun = 0,
 igid = '???',
 igtime = '',
 id = link.split('/')[4];
-if (_this.getConfig('skip_ost', false)) {
+if (_this.getConfig('skip_ost', false) && !name.includes(' + Original Soundtrack')) {
 if (name.includes(' SoundTrack') || name.includes(' Soundtrack') || name.includes(' - OST')) {
 igown = 5;
 }
@@ -513,8 +513,11 @@ igown = 6;
 if (_this.getConfig('skip_trial', false) && GJuser.trial.includes(igid + ',')) {
 igown = 9;
 }
-if (_this.getConfig('steam_only', false) && _this.notsteam.includes(',' + id + ',')) {
+if (_this.getConfig('skip_trial', false) && _this.notsteam.includes(',' + id + 't,')) {
 igown = 10;
+}
+if (_this.getConfig('steam_only', false) && _this.notsteam.includes(',' + id + 'n,')) {
+igown = 11;
 }
 if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps === '' && GJuser.ownsubs === '') {
@@ -568,6 +571,9 @@ case 9:
 _this.log(Lang.get('service.trial'), 'info');
 break;
 case 10:
+_this.log(Lang.get('service.trial') + ', ' + Lang.get('service.data_have'), 'info');
+break;
+case 11:
 _this.log(Lang.get('service.not_steam') + ', ' + Lang.get('service.data_have'), 'info');
 break;
 }
@@ -588,17 +594,6 @@ igga = igga.find('.card-description').text().trim();
 complete: function () {
 if (igga !== 'err') {
 igga = igga.toLowerCase();
-_this.log(igga);
-}
-if (_this.getConfig('steam_only', false)) {
-if (
-(igga.includes('gog key')) || (igga.includes('key gog')) || (igga.includes('key for gog')) || (igga.includes('gog.com')) ||
-(igga.includes('origin key')) || (igga.includes('key origin')) || (igga.includes('key for origin')) ||
-(igga.includes('epic key')) || (igga.includes('key epic')) || (igga.includes('key for epic'))
-)
-{
-igown = 1;
-}
 }
 if (_this.getConfig('skip_trial', false)) {
 if (
@@ -608,19 +603,32 @@ if (
 (igga.includes('alpha steam key')) || (igga.includes('beta steam key')) || (igga.includes('demo steam key')) || (igga.includes('final beta'))
 )
 {
+igown = 1;
+if (!_this.notsteam.includes(',' + id + 't,')) {
+_this.notsteam = _this.notsteam + id + 't,';
+}
+}
+}
+if (_this.getConfig('steam_only', false)) {
+if (
+(igga.includes('gog key')) || (igga.includes('key gog')) || (igga.includes('key for gog')) || (igga.includes('gog.com')) ||
+(igga.includes('origin key')) || (igga.includes('key origin')) || (igga.includes('key for origin')) || (igga.includes('origin.com')) ||
+(igga.includes('epic key')) || (igga.includes('key epic')) || (igga.includes('key for epic')) || (igga.includes('epicgames.com'))
+)
+{
 igown = 2;
+if (!_this.notsteam.includes(',' + id + 'n,')) {
+_this.notsteam = _this.notsteam + id + 'n,';
+}
 }
 }
 if (igown > 0) {
 switch (igown) {
 case 1:
-_this.log(Lang.get('service.not_steam'), 'info');
-if (!_this.notsteam.includes(',' + id + ',')) {
-_this.notsteam = _this.notsteam + id + ',';
-}
+_this.log(Lang.get('service.trial'), 'info');
 break;
 case 2:
-_this.log(Lang.get('service.trial'), 'info');
+_this.log(Lang.get('service.not_steam'), 'info');
 break;
 }
 ignext = 100;
