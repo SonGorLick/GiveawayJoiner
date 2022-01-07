@@ -594,6 +594,7 @@ igga = igga.find('.card-description').text().trim();
 complete: function () {
 if (igga !== 'err') {
 igga = igga.toLowerCase();
+_this.log(igga);
 }
 if (_this.getConfig('skip_trial', false)) {
 if (

@@ -617,12 +617,16 @@ responseType: 'document'
 .then((ga) => {
 ga = ga.data;
 ga = $(ga.replace(/<img/gi, '<noload'));
-let sgname = ga.find('.featured__heading__medium').text();
+let sgname = ga.find('.featured__heading__medium').text(),
+sgend = ga.find('.sidebar > form');
 sglog = sglog.replace(GA.nam, sgname);
 if (_this.getConfig('skip_ost', false) && !sgname.includes(' + Original Soundtrack')) {
 if (sgname.includes(' SoundTrack') || sgname.includes(' Soundtrack') || sgname.includes(' - OST')) {
 sgown = 1;
 }
+}
+if (sgend === undefined) {
+sgown = 2;
 }
 })
 .finally(() => {
@@ -630,6 +634,9 @@ if (sgown > 0) {
 switch (sgown) {
 case 1:
 _this.log(Lang.get('service.skipped'), 'skip');
+break;
+case 2:
+_this.log(Lang.get('service.time'), 'cant');
 break;
 }
 }

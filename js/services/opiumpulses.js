@@ -18,6 +18,7 @@ this.settings.skip_skipdlc = { type: 'checkbox', trans: 'service.skip_skipdlc', 
 this.settings.remove_ga = { type: 'checkbox', trans: this.transPath('remove_ga'), default: this.getConfig('remove_ga', false) };
 this.settings.free_only = { type: 'checkbox', trans: 'service.free_only', default: this.getConfig('free_only', false) };
 this.settings.ignore_free = { type: 'checkbox', trans: this.transPath('ignore_free'), default: this.getConfig('ignore_free', false) };
+this.settings.skip_origin = { type: 'checkbox', trans: this.transPath('skip_origin'), default: this.getConfig('skip_origin', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -180,6 +181,7 @@ opcrr = oparray[opcurr],
 opway = opfound.eq(opcrr),
 link = opway.find('.giveaways-page-item-img-btn-more').attr('href'),
 name = opway.find('.giveaways-page-item-footer-name').text().trim(),
+store = opway.find('.giveaways-page-item-footer noload').attr('src'),
 type = opway.find('.giveaways-page-item-footer noload noload').attr('src'),
 entered = opway.find('.giveaways-page-item-img-btn-wrapper').text(),
 check = opway.find('.giveaways-page-item-img-btn-wrapper a').attr('onclick'),
@@ -187,8 +189,19 @@ eLink = opway.find('.giveaways-page-item-img-btn-enter').attr('href'),
 cost = parseInt(opway.find('.giveaways-page-item-header-points').text().replace('points', '').trim()),
 code = link.slice(11, 16),
 njoin = 0,
+opstore = 'steam',
 optype ='?|',
 opblack = '';
+if (store !== undefined && store.includes('-icon-origin-')) {
+opstore = 'origin';
+opblack = opstore;
+if (!_this.dload.includes(',' + code + '(d=' + opblack + '),')) {
+_this.dload = _this.dload + code + '(d=' + opblack + '),';
+}
+if (!_this.dsave.includes(',' + code + '(d=' + opblack + '),')) {
+_this.dsave = _this.dsave + code + '(d=' + opblack + '),';
+}
+}
 if (type !== undefined) {
 if (type.includes('everyone')) {
 optype = 'E|';
@@ -249,7 +262,7 @@ if (
 njoin = 5;
 }
 }
-if (_this.getConfig('check_in_steam', true)) {
+if (_this.getConfig('check_in_steam', true) && opstore === 'steam') {
 if (GJuser.ownapps.includes(',' + opblack.replace('app/', '') + ',')) {
 njoin = 2;
 }
@@ -261,6 +274,9 @@ if (GJuser.black.includes(opblack + ',') && _this.getConfig('blacklist_on', fals
 njoin = 3;
 }
 }
+}
+if (_this.getConfig('skip_origin', false) && opstore === 'origin') {
+njoin = 5;
 }
 if (entered.includes('ENTERED') && _this.dload.includes(',' + code + '(d=')) {
 if (njoin === 2) {
@@ -288,7 +304,12 @@ oplog = '⊞ ' + oplog;
 if (GJuser.card.includes(',' + opblack.replace('app/', '') + ',')) {
 oplog = '♦ ' + oplog;
 }
+if (opstore === 'steam') {
 opblack = _this.logWhite(opblack) + _this.logBlack(opblack);
+}
+else {
+opblack = '';
+}
 }
 if (_this.getConfig('log', true)) {
 oplog = oplg + oplog;
@@ -348,7 +369,7 @@ let opsteam = html.find('.giveaways-single-sponsored h1 a').attr('href');
 if (opsteam === undefined) {
 opsteam = html.find('.giveaways-single-sponsored h4 a').attr('href');
 }
-if (!opsteam.includes('app/') && !opsteam.includes('sub/') && !opsteam.includes('bundle/')) {
+if (opsteam !== undefined && !opsteam.includes('app/') && !opsteam.includes('sub/') && !opsteam.includes('bundle/')) {
 opsteam = html.find('.giveaways-single-sponsored-content-descr noload').first().attr('src');
 if (opsteam !== undefined) {
 if (opsteam.includes('/apps/')) {
@@ -371,6 +392,10 @@ opapp = 0,
 opsub = 0,
 opbun = 0,
 opid = '???';
+if (opstore === 'origin') {
+opid = opstore;
+}
+if (opsteam !== undefined && opstore === 'steam') {
 if (opsteam.includes('app/')) {
 opapp = parseInt(opsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
 opid = 'app/' + opapp;
@@ -383,7 +408,8 @@ else if (opsteam.includes('bundle/')) {
 opbun = parseInt(opsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
 opid = 'bundle/' + opbun;
 }
-if (!_this.dsave.includes(',' + code + '(d=') && opid !== '???') {
+}
+if (!_this.dsave.includes(',' + code + '(d=')) {
 _this.dsave = _this.dsave + code + '(d=' + opid + '),';
 }
 if (_this.curr_value < cost) {
@@ -429,6 +455,9 @@ opown = 1;
 if (GJuser.black.includes(opid + ',') && _this.getConfig('blacklist_on', false)) {
 opown = 4;
 }
+if (_this.getConfig('skip_origin', false) && opstore === 'origin') {
+opown = 6;
+}
 if (entered.includes('ENTERED')) {
 if (opown === 1) {
 opown = 8;
@@ -441,6 +470,12 @@ opown = 7;
 }
 }
 oplog = _this.logLink(_this.url + link, name);
+if (opstore === 'steam') {
+opblack = _this.logWhite(opid) + _this.logBlack(opid);
+}
+else {
+opblack = '';
+}
 if (GJuser.skip_dlc.includes(',' + opapp + ',')) {
 oplog = '⊟ ' + oplog;
 }
@@ -454,9 +489,9 @@ if (_this.getConfig('log', true)) {
 oplog = oplg + oplog;
 }
 else {
-oplog = oplog + _this.logWhite(opid) + _this.logBlack(opid);
+oplog = oplog + opblack;
 }
-_this.log(Lang.get('service.checking') + oplog + _this.logWhite(opid) + _this.logBlack(opid), 'chk');
+_this.log(Lang.get('service.checking') + oplog + opblack, 'chk');
 switch (opown) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
