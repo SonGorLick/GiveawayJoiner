@@ -254,7 +254,7 @@ _this.log(Lang.get('service.already_joined'), 'jnd');
 break;
 }
 if (spjoin === 0) {
-spnext = spnext + Math.floor(spnext / 4) + 2100;
+spnext = spnext + Math.floor(spnext / 4) + 3200;
 let raff = 'err';
 rq({
 method: 'GET',
@@ -285,19 +285,37 @@ _this.log(Lang.get('service.connection_error'), 'err');
 }
 }
 else {
-let enter = raff.indexOf('<i class="fa fa-sign-in"></i> Enter Raffle</button>') >= 0,
+_this.csrf = raff.substring(raff.indexOf("ScrapTF.User.Hash =")+21,raff.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
+let spid = id,
+hash = raff.substring(raff.indexOf("ScrapTF.Raffles.EnterRaffle('" + spid + "', '")+39,raff.indexOf('><i class="fa fa-sign-in"></i> Enter Raffle</button>')).slice(0, 64),
+enter = raff.indexOf('<i class="fa fa-sign-in"></i> Enter Raffle</button>') >= 0,
 entered = raff.indexOf('<i class="fa fa-sign-out"></i> Leave Raffle</button>') >= 0,
 btn1 = raff.indexOf('<div class="col-xs-7 enter-raffle-btns">') >= 0,
 btn2 = raff.indexOf('<button  rel="tooltip-free" data-placement="top" title="This public raffle is free to enter by anyone" data-loading-text="Entering..." class="btn btn-embossed btn-info btn-lg" onclick="ScrapTF.Raffles.EnterRaffle(') >= 0,
-spid = id,
 spown = 0,
-hash = raff.substring(raff.indexOf("ScrapTF.Raffles.EnterRaffle('" + spid + "', '")+39,raff.indexOf('><i class="fa fa-sign-in"></i> Enter Raffle</button>')).slice(0, 64);
-_this.csrf = raff.substring(raff.indexOf("ScrapTF.User.Hash =")+21,raff.indexOf("ScrapTF.User.QueueHash")).slice(0, 64);
-if (!enter) {
-spown = 3;
+spcheck = $(raff).find('.raffle-well .raffle-message').text().trim();
+if (spcheck === null || spcheck === undefined) {
+spcheck = '';
+}
+else {
+spcheck = spcheck.toLowerCase();
 }
 if (!btn1 || !btn2) {
 spown = 2;
+}
+if (
+(spcheck.includes('if you join') && spcheck.includes('get banned')) ||
+(spcheck.includes('if you join') && spcheck.includes('be banned')) ||
+(spcheck.includes("don't join")) ||
+(spcheck.includes('dont join')) ||
+(spcheck.includes('do not join')) ||
+(spcheck.includes('to catch') && spcheck.includes('bots'))
+)
+{
+spown = 2;
+}
+if (!enter) {
+spown = 3;
 }
 if (entered) {
 spown = 1;
@@ -314,7 +332,7 @@ _this.log(Lang.get('service.cant_join'), 'cant');
 break;
 }
 if (spown === 0) {
-let tmout = Math.floor(spnext / 4) + 2000,
+let tmout = Math.floor(spnext / 4) + 3000,
 resp = 'err';
 setTimeout(() => {
 rq({

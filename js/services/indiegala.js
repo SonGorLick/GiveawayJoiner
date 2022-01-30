@@ -492,9 +492,9 @@ if (
 (_this.getConfig('card_only', false) && !GJuser.card.includes(',' + igapp + ',') && !GJuser.white.includes(igid + ',') && _this.getConfig('whitelist_nocards', false) && igid !== '???') ||
 (price < _this.getConfig('min_cost', 0) && _this.getConfig('min_cost', 0) !== 0) ||
 (price > _this.getConfig('max_cost', 0) && _this.getConfig('max_cost', 0) !== 0) ||
-(_this.reserve > (_this.curr_value - price) && !single && enterTimes > 0 && _this.getConfig('reserve_no_multi', false)) ||
-(_this.reserve > (_this.curr_value - price) && !_this.sort && !_this.getConfig('reserve_for_smpl', false)) ||
-(_this.reserve > (_this.curr_value - price) && _this.sort && !_this.getConfig('reserve_on_sbl', false))
+(_this.reserve !== 0 && _this.reserve > (_this.curr_value - price) && !single && enterTimes > 0 && _this.getConfig('reserve_no_multi', false)) ||
+(_this.reserve !== 0 && _this.reserve > (_this.curr_value - price) && !_this.sort && !_this.getConfig('reserve_for_smpl', false)) ||
+(_this.reserve !== 0 && _this.reserve > (_this.curr_value - price) && _this.sort && !_this.getConfig('reserve_on_sbl', false))
 )
 {
 igown = 5;
@@ -510,11 +510,14 @@ if (
 {
 igown = 6;
 }
-if (_this.getConfig('skip_trial', false) && GJuser.trial.includes(igid + ',')) {
-igown = 9;
-}
 if (_this.getConfig('skip_trial', false) && _this.notsteam.includes(',' + id + 't,')) {
 igown = 10;
+}
+if (_this.getConfig('skip_trial', false) && GJuser.trial.includes(igid + ',') && igown !== 10) {
+igown = 9;
+if (!_this.notsteam.includes(',' + id + 't,')) {
+_this.notsteam = _this.notsteam + id + 't,';
+}
 }
 if (_this.getConfig('steam_only', false) && _this.notsteam.includes(',' + id + 'n,')) {
 igown = 11;
@@ -594,16 +597,21 @@ igga = igga.find('.card-description').text().trim();
 complete: function () {
 if (igga !== 'err') {
 igga = igga.toLowerCase();
+//_this.log(igga);
 }
 if (_this.getConfig('skip_trial', false)) {
 if (
 (igga.includes('alpha key')) || (igga.includes('beta key')) || (igga.includes('demo key')) || (igga.includes('trial key')) ||
 (igga.includes('closed alpha')) || (igga.includes('closed beta')) || (igga.includes('closed demo')) ||
 (igga.includes('early access')) || (igga.includes('early alpha')) || (igga.includes('early demo')) || (igga.includes('early trial')) ||
-(igga.includes('alpha steam key')) || (igga.includes('beta steam key')) || (igga.includes('demo steam key')) || (igga.includes('final beta'))
+(igga.includes('alpha steam key')) || (igga.includes('beta steam key')) || (igga.includes('demo steam key')) || (igga.includes('final beta')) ||
+(igga.includes(' this beta'))
 )
 {
 igown = 1;
+if (!GJuser.trial.includes(igid + ',')) {
+GJuser.trial = GJuser.trial + igid + ',';
+}
 if (!_this.notsteam.includes(',' + id + 't,')) {
 _this.notsteam = _this.notsteam + id + 't,';
 }
