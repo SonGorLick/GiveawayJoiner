@@ -31,9 +31,18 @@ $.ajax({
 url: 'https://www.opiumpulses.com/user/account',
 success: function (html) {
 html = $(html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
-userData.username = html.find('.page-header__nav-func-user-wrapper a').text().split('Account')[0].trim();
-userData.avatar = html.find('.input-group noload').attr('src').replace('/uploads/', 'https://www.opiumpulses.com/uploads/');
-userData.value = html.find('.points-items li a').first().text().replace('Points:', '').trim();
+let username = html.find('.page-header__nav-func-user-wrapper a').text(),
+avatar = html.find('.input-group noload').attr('src'),
+value = html.find('.points-items li a').first().text();
+if (value !== undefined) {
+userData.value = value.replace('Points:', '').trim();
+}
+if (username !== undefined) {
+userData.username = username.split('Account')[0].trim();
+}
+if (avatar !== undefined) {
+userData.avatar = avatar.replace('/uploads/', 'https://www.opiumpulses.com/uploads/');
+}
 },
 complete: function () {
 callback(userData);

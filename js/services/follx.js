@@ -22,10 +22,22 @@ $.ajax({
 url: 'https://follx.com',
 success: function (data) {
 data = $(data.replace(/<img/gi, '<noload'));
-userData.username = data.find('.common-header .user .expander-content a.username.truncate').text().trim();
-userData.value = data.find('.common-header .user .expander-content .energy > span').text().trim();
-userData.level = data.find('.icons > span.level').text().slice(0, 11).replace(/[^0-9]/g, '');
-userData.avatar = data.find('.common-header .user span.avatar').attr('style').replace("background-image: url('",'').replace("')", '');
+let username = data.find('.common-header .user .expander-content a.username.truncate').text(),
+value = data.find('.common-header .user .expander-content .energy > span').text(),
+level = data.find('.icons > span.level').text(),
+avatar = data.find('.common-header .user span.avatar').attr('style');
+if (level !== undefined) {
+userData.level = level.slice(0, 11).replace(/[^0-9]/g, '');
+}
+if (value !== undefined) {
+userData.value = value.trim();
+}
+if (username !== undefined) {
+userData.username = username.trim();
+}
+if (avatar !== undefined) {
+userData.avatar = avatar.replace("background-image: url('",'').replace("')", '');
+}
 },
 complete: function () {
 callback(userData);

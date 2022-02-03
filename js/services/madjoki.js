@@ -2,10 +2,10 @@
 class Madjoki extends Joiner {
 constructor() {
 super();
-this.websiteUrl = 'https://steam.madjoki.com/apps/free';
-this.website = 'https://steam.madjoki.com';
+this.websiteUrl = 'https://steam-old.madjoki.com/apps/free';
+this.website = 'https://steam-old.madjoki.com';
 this.authContent = '>Logout<';
-this.authLink = 'https://steam.madjoki.com/login';
+this.authLink = 'https://steam-old.madjoki.com/login';
 this.setConfig('login_steam', true);
 this.settings.timer_from = { type: 'number', trans: 'service.timer_from', min: 5, max: this.getConfig('timer_to', 90), default: this.getConfig('timer_from', 70) };
 this.settings.timer_to = { type: 'number', trans: 'service.timer_to', min: this.getConfig('timer_from', 70), max: 2880, default: this.getConfig('timer_to', 90) };
@@ -55,7 +55,7 @@ _this.dload = mjdata.toString();
 else {
 fs.writeFile(dirdata + 'mj_blacklist.txt', ',', (err) => { });
 }
-_this.url = 'https://steam.madjoki.com/';
+_this.url = 'https://steam-old.madjoki.com/';
 let callback = function () {
 page++;
 if (page <= _this.pagemax) {

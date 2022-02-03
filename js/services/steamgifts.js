@@ -116,10 +116,22 @@ responseType: 'document'
 })
 .then((data) => {
 data = $(data.data);
-userData.avatar = data.find('.nav__avatar-inner-wrap').attr('style').replace('background-image:url(', '').replace(');', '');
-userData.username = data.find('input[name=username]').val();
-userData.value = data.find('.nav__points').text();
-userData.level = data.find('.nav__points').next().text().replace('Level ', '');
+let avatar = data.find('.nav__avatar-inner-wrap').attr('style'),
+username = data.find('input[name=username]').val(),
+value = data.find('.nav__points').text(),
+level = data.find('.nav__points').next().text();
+if (level !== undefined) {
+userData.level = level.replace('Level ', '');
+}
+if (value !== undefined) {
+userData.value = value;
+}
+if (username !== undefined) {
+userData.username = username;
+}
+if (avatar !== undefined) {
+userData.avatar = avatar.replace('background-image:url(', '').replace(');', '');
+}
 })
 .finally(() => {
 callback(userData);

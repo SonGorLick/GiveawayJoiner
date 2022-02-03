@@ -293,12 +293,12 @@ entered = raff.indexOf('<i class="fa fa-sign-out"></i> Leave Raffle</button>') >
 btn1 = raff.indexOf('<div class="col-xs-7 enter-raffle-btns">') >= 0,
 btn2 = raff.indexOf('<button  rel="tooltip-free" data-placement="top" title="This public raffle is free to enter by anyone" data-loading-text="Entering..." class="btn btn-embossed btn-info btn-lg" onclick="ScrapTF.Raffles.EnterRaffle(') >= 0,
 spown = 0,
-spcheck = $(raff).find('.raffle-well .raffle-message').text().trim();
+spcheck = $(raff).find('.raffle-well .raffle-message').text();
 if (spcheck === null || spcheck === undefined) {
 spcheck = '';
 }
 else {
-spcheck = spcheck.toLowerCase();
+spcheck = spcheck.trim().toLowerCase();
 }
 if (!btn1 || !btn2) {
 spown = 2;
@@ -325,7 +325,7 @@ case 1:
 _this.log(Lang.get('service.already_joined'), 'jnd');
 break;
 case 2:
-_this.log(Lang.get('service.cant_join'), 'black');
+_this.log(Lang.get('service.cant_join') + ' (bad_raffle)', 'black');
 break;
 case 3:
 _this.log(Lang.get('service.cant_join'), 'cant');

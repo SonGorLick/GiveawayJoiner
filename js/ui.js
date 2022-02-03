@@ -37,7 +37,7 @@ updateTrial();
 if (!Config.get('skipdlc_local', false) && Config.get('skipdlc_date', 0) < Date.now()) {
 setTimeout(() => {
 updateSkipdlc();
-}, 2000);
+}, 3000);
 }
 profileSection();
 lastWin();
@@ -163,16 +163,19 @@ $('.content-item .devmode').html('DevTools: ' + Lang.get('profile.on'));
 }
 });
 $(document).on('click', '.open-website[steam_login]', function () {
-Browser.setTitle(Lang.get('service.browser_loading'));
+Browser.setTitle(Lang.get('service.browser_loading') + ' https://store.steampowered.com/login');
 Browser.loadURL('https://store.steampowered.com/login');
 Browser.show();
 Browser.once('close', () => {
+Browser.setTitle(Lang.get('service.browser_loading') + ' https://steamcommunity.com/login');
+Browser.loadURL('https://steamcommunity.com/login');
+Browser.show();
 renderUser(GJuser);
 if (!Config.get('steam_local', false)) {
 updateSteam();
 setTimeout(() => {
 updateSkipdlc();
-}, 2000);
+}, 3000);
 }
 });
 });
@@ -422,7 +425,7 @@ if (
 (name.includes('alpha key')) || (name.includes('beta key')) || (name.includes('demo key')) || (name.includes('trial key')) ||
 (name.includes('closed alpha')) || (name.includes('closed beta')) || (name.includes('closed demo')) ||
 (name.includes('early access')) || (name.includes('early alpha')) || (name.includes('early demo')) || (name.includes('early trial')) ||
-(name.includes('alpha steam key')) || (name.includes('beta steam key')) || (name.includes('demo steam key')) || (name.includes('final beta')) || 
+(name.includes('alpha steam key')) || (name.includes('beta steam key')) || (name.includes('demo steam key')) || (name.includes('final beta')) ||
 (info.includes(' alpha key')) || (info.includes(' beta key')) || (info.includes(' demo key')) || (info.includes(' trial key'))
 )
 {

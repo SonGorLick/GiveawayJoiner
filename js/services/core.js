@@ -245,8 +245,10 @@ if (GJuser.waitAuth && Browser.getURL().indexOf(this.website) >= 0) {
 Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML')
 .then((body) => {
 if (GJuser.waitAuth && body.indexOf(this.authContent) >= 0) {
+setTimeout(() => {
 Browser.close();
 GJuser.waitAuth = false;
+}, 1000);
 }
 });
 }

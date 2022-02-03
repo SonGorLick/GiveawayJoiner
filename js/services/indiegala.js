@@ -47,20 +47,31 @@ username: 'IndieGala User',
 value: 0,
 level: 0
 };
-$.ajax({
-url: 'https://www.indiegala.com/library',
-success: function (html) {
-html = $(html.replace(/<img/gi, '<noload'));
-userData.value = html.find('.settings-galasilver').attr('value');
 if (fs.existsSync(dirdata + 'indiegala.txt')) {
 let lvl = parseInt(fs.readFileSync(dirdata + 'indiegala.txt').toString());
 userData.level = lvl;
 }
-userData.avatar = html.find('.profile-private-page-avatar > noload').attr('src');
-if (userData.avatar.includes('profile_backend')) {
-userData.avatar = 'https://www.indiegala.com' + userData.avatar;
+$.ajax({
+url: 'https://www.indiegala.com/library',
+success: function (html) {
+html = $(html.replace(/<img/gi, '<noload'));
+let value = html.find('.settings-galasilver').attr('value'),
+username = html.find('.profile-private-page-user-row').text(),
+avatar = html.find('.profile-private-page-avatar > noload').attr('src');
+if (value !== undefined) {
+userData.value = value;
 }
-userData.username = html.find('.profile-private-page-user-row').text();
+if (username !== undefined) {
+userData.username = username.trim();
+}
+if (avatar !== undefined) {
+if (avatar.includes('https://')) {
+userData.avatar = avatar;
+}
+else {
+userData.avatar = 'https://www.indiegala.com' + avatar;
+}
+}
 },
 complete: function () {
 callback(userData);
@@ -455,7 +466,7 @@ if (GJuser.card.includes(',' + igapp + ',')) {
 iglog = '♦ ' + iglog;
 }
 if (_this.getConfig('log', true)) {
-if (entered) {
+if (entered && single) {
 iglog = '|' + page + '#|' + (igcurr + 1) + '№|  ' + iglog;
 }
 else {
@@ -539,6 +550,10 @@ igown = 4;
 if (entered) {
 igown = 3;
 }
+if (!single && !_this.getConfig('multi_join', false)) {
+igown = 5;
+single = true;
+}
 if (igown > 0) {
 switch (igown) {
 case 1:
@@ -592,11 +607,14 @@ $.ajax({
 url: _this.url + link,
 success: function (iggas) {
 igga = $(iggas.replace(/<img/gi, '<noload'));
-igga = igga.find('.card-description').text().trim();
+igga = igga.find('.card-description').text();
 },
 complete: function () {
-if (igga !== 'err') {
-igga = igga.toLowerCase();
+if (igga === undefined || igga === null) {
+igga = '';
+}
+else {
+igga = igga.trim().toLowerCase();
 //_this.log(igga);
 }
 if (_this.getConfig('skip_trial', false)) {
@@ -605,6 +623,8 @@ if (
 (igga.includes('closed alpha')) || (igga.includes('closed beta')) || (igga.includes('closed demo')) ||
 (igga.includes('early access')) || (igga.includes('early alpha')) || (igga.includes('early demo')) || (igga.includes('early trial')) ||
 (igga.includes('alpha steam key')) || (igga.includes('beta steam key')) || (igga.includes('demo steam key')) || (igga.includes('final beta')) ||
+(igga.includes(' beta access')) || (igga.includes(' alpha access')) || (igga.includes(' demo access')) || (igga.includes(' trial access')) ||
+(igga.includes(name.toLowerCase() + ' alpha')) || (igga.includes(name.toLowerCase() + ' beta')) || (igga.includes(name.toLowerCase() + ' demo')) ||
 (igga.includes(' this beta'))
 )
 {
