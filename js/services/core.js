@@ -182,11 +182,12 @@ this.panel.addClass('active');
 }
 authCheck(callback) {
 let authContent = this.authContent,
-authService = this.constructor.name.toLowerCase(),
+websiteUrl = this.websiteUrl,
+getTimeout = this.getTimeout,
 html = 'err';
 $.ajax({
-url: this.websiteUrl,
-timeout: this.getTimeout,
+url: websiteUrl,
+timeout: getTimeout,
 success: function (htmls) {
 htmls = htmls.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 html = htmls;
