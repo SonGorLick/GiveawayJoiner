@@ -41,10 +41,11 @@ this.settings.steam_only = { type: 'checkbox', trans: this.transPath('steam_only
 super.init();
 }
 getUserInfo(callback) {
+this.setValue(240);
 let userData = {
 avatar: '../app.asar/images/IndieGala.png',
 username: 'IndieGala User',
-value: 0,
+value: 240,
 level: 0
 };
 if (fs.existsSync(dirdata + 'indiegala.txt')) {
@@ -57,11 +58,11 @@ success: function (html) {
 html = $(html.replace(/<img/gi, '<noload'));
 let value = html.find('.settings-galasilver').attr('value'),
 username = html.find('.profile-private-page-user-row').text(),
-avatar = html.find('.profile-private-page-avatar > noload').attr('src');
+avatar = html.find('.profile-private-page-avatar .img-fit').attr('src');
 if (value !== undefined) {
 userData.value = value;
 }
-if (username !== undefined) {
+if (username !== undefined && username !== '') {
 userData.username = username.trim();
 }
 if (avatar !== undefined) {
@@ -72,8 +73,9 @@ else {
 userData.avatar = 'https://www.indiegala.com' + avatar;
 }
 }
+callback(userData);
 },
-complete: function () {
+error: function () {
 callback(userData);
 }
 });
@@ -85,6 +87,7 @@ _this.stimer = igtimer;
 let page = 1;
 _this.igprtry = 0;
 _this.dload = 0;
+_this.wait = false;
 _this.lvlmax = _this.getConfig('max_level', 0);
 _this.lvlmin = _this.getConfig('min_level', 0);
 _this.entmin = _this.getConfig('min_entries', 0);
@@ -153,9 +156,6 @@ fs.writeFile(dirdata + 'indiegala.txt', _this.lvlmax, (err) => { });
 }
 if (_this.curr_level === 0) {
 _this.sort = false;
-}
-if (_this.curr_value === undefined || _this.curr_value === 0) {
-_this.setValue(240);
 }
 if (_this.ending_first && _this.ending !== 0 && _this.sort) {
 _this.sort = false;
@@ -239,10 +239,10 @@ _this.totalTicks = 1;
 }
 if (tickets.length < 20 && _this.igprtry === 0 || _this.curr_value === 0 || !_this.started) {
 _this.pagemax = page;
-if (tickets.length > 0 && _this.curr_value !== 0 && _this.started) {
+if (tickets.length > 0 && _this.curr_value !== 0 && _this.started && _this.igprtry === 0) {
 _this.dload = 1;
 }
-if (_this.curr_value === 0) {
+if (_this.curr_value === 0 && _this.igprtry === 0) {
 _this.dload = 2;
 }
 }
@@ -482,10 +482,10 @@ iglog = '[w] ' + iglog;
 else if (_this.getConfig('whitelist_only', false)) {
 igown = 5;
 }
-if (igrtry === 0 && single) {
+if (igrtry === 0 && single && !_this.wait) {
 _this.log(Lang.get('service.checking') + iglog + _this.logWhite(igid) + _this.logBlack(igid), 'chk');
 }
-if (igrtry === 0 && Times === 0 && !single) {
+if (igrtry === 0 && Times === 0 && !single && !_this.wait) {
 _this.log('[m] ' + Lang.get('service.checking') + iglog + _this.logWhite(igid) + _this.logBlack(igid), 'chk');
 }
 if (_this.curr_value < price) {
@@ -554,6 +554,9 @@ if (!single && !_this.getConfig('multi_join', false)) {
 igown = 5;
 single = true;
 }
+if (_this.wait) {
+igown = -1;
+}
 if (igown > 0) {
 switch (igown) {
 case 1:
@@ -600,7 +603,8 @@ igrtry = 0;
 Times = 0;
 igcurr++;
 }
-else {
+else if (igown === 0) {
+_this.wait = true;
 igrtry++;
 let igga = 'err';
 $.ajax({
@@ -663,6 +667,7 @@ ignext = 100;
 igrtry = 0;
 Times = 0;
 igcurr++;
+_this.wait = false;
 }
 else {
 let resp = 'err';
@@ -696,10 +701,12 @@ _this.setValue(resp.silver_tot);
 if (Times === 0 && single) {
 igcurr++;
 _this.log(Lang.get('service.entered_in') + iglog, 'enter');
+_this.wait = false;
 }
 else {
 Times++;
 _this.log('[' + (Times) + '] ' + Lang.get('service.entered_in') + iglog, 'enter');
+_this.wait = false;
 if (_this.getConfig('multi_join', false) && Times < _this.getConfig('join_qty', 1)) {
 ignext = (Math.floor(Math.random() * 500)) + 1000;
 }
@@ -714,6 +721,7 @@ Times = 0;
 igcurr++;
 igrtry = 0;
 _this.log(Lang.get('service.cant_join') + ' (' + resp.status + ')' , 'cant');
+_this.wait = false;
 }
 else if (resp.status === 'level') {
 Times = 0;
@@ -730,26 +738,29 @@ _this.lvlmin = newlvl;
 }
 }
 _this.log(Lang.get('service.cant_join') + ' (' + Lang.get('service.level_label') + ' - ' + newlvl + '?)', 'cant');
+_this.wait = false;
 }
 else if (resp.status === 'silver') {
+if (_this.curr_value >= price) {
 _this.setValue(price - 1);
+}
 Times = 0;
 igcurr++;
 igrtry = 0;
 _this.log(Lang.get('service.cant_join') + ' (' + Lang.get('service.value_label') + ' - ' + (price - 1) + '?)', 'cant');
+_this.wait = false;
 }
 else if (resp.status === 'duplicate') {
 igcurr++;
 igrtry = 0;
 _this.log(Lang.get('service.entered_in') + iglog, 'enter');
+_this.wait = false;
 }
 else if (resp.status === 'login') {
-_this.fail_restart = true;
 igrtry = 0;
 igcurr = 200;
 ignext = 100;
 _this.pagemax = page;
-_this.setConfig('auth_date', 0);
 _this.setStatus('net');
 _this.log(Lang.get('service.err_join'), 'cant');
 _this.log(Lang.get('service.session_expired'), 'err');
@@ -761,12 +772,10 @@ ignext = (Math.floor(Math.random() * 1000)) + 3000;
 }
 }
 if (igrtry >= 12) {
-_this.fail_restart = true;
 igrtry = 0;
 igcurr = 200;
 ignext = 100;
 _this.pagemax = page;
-_this.setConfig('auth_date', 0);
 _this.setStatus('net');
 _this.log(Lang.get('service.err_join'), 'cant');
 _this.log(Lang.get('service.connection_lost'), 'err');

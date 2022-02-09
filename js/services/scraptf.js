@@ -19,8 +19,6 @@ delete this.settings.blacklist_on;
 super.init();
 }
 authCheck(callback) {
-if (this.getConfig('auth_date', 0) < Date.now()) {
-this.setConfig('auth_date', Date.now() + 15000);
 let call = -1;
 rq({
 method: 'GET',
@@ -40,21 +38,69 @@ responseType: 'document'
 let html = htmls.data;
 html = html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 if (html.indexOf('My Auctions') >= 0) {
-this.setConfig('auth_date', Date.now() + 20000);
 call = 1;
 }
 else {
-this.setConfig('auth_date', 0);
 call = 0;
 }
 })
 .finally(() => {
+if (call === 1) {
+callback(1);
+}
+else if (call === -1) {
+callback(-1);
+}
+else if (!GJuser.waitAuth) {
+GJuser.waitAuth = true;
+call = -1;
+Browser.webContents.on('did-finish-load', () => {
+if (Browser.getURL().indexOf('https://steamcommunity.com/openid/login?openid.ns') >= 0) {
+Browser.webContents.executeJavaScript('document.getElementById("imageLogin").click()');
+}
+if (Browser.getURL().indexOf('https://scrap.tf') >= 0) {
+Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML')
+.then((body) => {
+if (body.indexOf('My Auctions') >= 0) {
+Browser.webContents.removeAllListeners('did-finish-load');
+setTimeout(() => {
+call = 1;
+Browser.close();
+}, 1000);
+}
+setTimeout(() => {
+call = 0;
+Browser.close();
+}, 10000);
+});
+setTimeout(() => {
+call = -1;
+Browser.close();
+}, 30000);
+}
+else {
+setTimeout(() => {
+Browser.loadURL('https://scrap.tf');
+}, 5000);
+setTimeout(() => {
+call = -1;
+Browser.close();
+}, 30000);
+}
+});
+Browser.setTitle(Lang.get('service.browser_loading'));
+Browser.loadURL('https://scrap.tf/login');
+Browser.once('close', () => {
+Browser.webContents.removeAllListeners('did-finish-load');
+Browser.loadFile('blank.html');
+GJuser.waitAuth = false;
 callback(call);
 });
 }
 else {
-callback(1);
+callback(-2);
 }
+});
 }
 getUserInfo(callback) {
 let userData = {
@@ -82,6 +128,7 @@ else {
 _this.dload = 0;
 }
 _this.dcheck = '';
+_this.wait = false;
 _this.won = _this.getConfig('won', 0);
 _this.pagemax = _this.getConfig('pages', 1);
 let callback = function () {
@@ -238,13 +285,19 @@ let splog = _this.logLink(_this.url + splink, spname);
 if (_this.getConfig('log', true)) {
 splog = '|' + page + '#|' + (spcrr + 1) + '№|  ' + splog;
 }
-_this.log(Lang.get('service.checking') + splog, 'chk');
 if (spended.includes('Ended')) {
 spjoin = 1;
 }
 if (_this.dsave.includes(',' + id + ',')) {
 spjoin = 2;
 }
+if (_this.wait) {
+spjoin = -1;
+}
+else {
+_this.log(Lang.get('service.checking') + splog, 'chk');
+}
+if (spjoin > 0) {
 switch (spjoin) {
 case 1:
 _this.log(Lang.get('service.cant_join'), 'cant');
@@ -253,7 +306,11 @@ case 2:
 _this.log(Lang.get('service.already_joined'), 'jnd');
 break;
 }
-if (spjoin === 0) {
+spnext = 100;
+spcurr++;
+}
+else if (spjoin === 0) {
+_this.wait = true;
 spnext = spnext + Math.floor(spnext / 4) + 3200;
 let raff = 'err';
 rq({
@@ -279,9 +336,13 @@ spnext = 19000;
 if (sparray.filter(i => i === spcrr).length === 1) {
 sparray.push(spcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
+spcurr++;
+_this.wait = false;
 }
 else {
 _this.log(Lang.get('service.connection_error'), 'err');
+spcurr++;
+_this.wait = false;
 }
 }
 else {
@@ -320,6 +381,7 @@ spown = 3;
 if (entered) {
 spown = 1;
 }
+if (spown > 0) {
 switch (spown) {
 case 1:
 _this.log(Lang.get('service.already_joined'), 'jnd');
@@ -331,7 +393,10 @@ case 3:
 _this.log(Lang.get('service.cant_join'), 'cant');
 break;
 }
-if (spown === 0) {
+spcurr++;
+_this.wait = false;
+}
+else if (spown === 0) {
 let tmout = Math.floor(spnext / 4) + 3000,
 resp = 'err';
 setTimeout(() => {
@@ -359,24 +424,34 @@ spnext = 19000;
 if (sparray.filter(i => i === spcrr).length === 1) {
 sparray.push(spcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
+spcurr++;
+_this.wait = false;
 }
 else {
 _this.log(Lang.get('service.connection_error'), 'err');
+spcurr++;
+_this.wait = false;
 }
 }
 else {
 let spmess = JSON.stringify(resp.message);
 if (spmess === '"Entered raffle!"') {
 _this.log(Lang.get('service.entered_in') + splog, 'enter');
+spcurr++;
+_this.wait = false;
 }
 else {
 spnext = 19000;
 if (sparray.filter(i => i === spcrr).length === 1) {
 sparray.push(spcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
+spcurr++;
+_this.wait = false;
 }
 else {
 _this.log(Lang.get('service.connection_error'), 'err');
+spcurr++;
+_this.wait = false;
 }
 }
 }
@@ -386,10 +461,6 @@ _this.log(Lang.get('service.connection_error'), 'err');
 }
 });
 }
-else {
-spnext = 100;
-}
-spcurr++;
 setTimeout(giveawayEnter, spnext);
 }
 giveawayEnter();

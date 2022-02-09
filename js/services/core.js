@@ -184,8 +184,6 @@ authCheck(callback) {
 let authContent = this.authContent,
 authService = this.constructor.name.toLowerCase(),
 html = 'err';
-if (Config.get(authService + '_auth_date', 0) < Date.now()) {
-Config.set(authService + '_auth_date', Date.now() + 15000);
 $.ajax({
 url: this.websiteUrl,
 timeout: this.getTimeout,
@@ -195,27 +193,19 @@ html = htmls;
 },
 complete: function () {
 if (html === 'err') {
-Config.set(authService + '_auth_date', 0);
 callback(-1);
 }
 else if (html.indexOf(authContent) >= 0) {
-Config.set(authService + '_auth_date', Date.now() + 20000);
 callback(1);
 }
 else {
-Config.set(authService + '_auth_date', 0);
 callback(0);
 }
 },
 error: function () {
-Config.set(authService + '_auth_date', 0);
 callback(0);
 }
 });
-}
-else {
-callback(1);
-}
 }
 startJoiner(autostart) {
 if (this.started) {
@@ -406,17 +396,21 @@ if (authState === 1) {
 if (Browser.isVisible() && Browser.getURL().indexOf(this.website) >= 0) {
 Browser.hide();
 }
+this.updateCookies();
 this.setStatus('work');
 this.tries = 0;
-this.updateUserInfo();
 if (this.getConfig('log_autoclear', false)) {
 this.logField.html('<div></div>');
 }
 this.log(Lang.get('service.connection_good'), 'srch');
+setTimeout(() => {
+this.updateUserInfo();
+}, 3000);
+setTimeout(() => {
 this.joinService();
+}, 6000);
 }
 else if (authState === 0) {
-this.setConfig('auth_date', 0);
 if (this.tries < 3) {
 this.tries++;
 this.fail_restart = true;
@@ -433,7 +427,6 @@ this.stopJoiner(true);
 }
 }
 else if (authState === -1) {
-this.setConfig('auth_date', 0);
 if (this.tries < 12) {
 this.setStatus('net');
 this.tries++;
@@ -449,6 +442,13 @@ this.fail_restart = false;
 this.log(Lang.get('service.connection_error'), 'err');
 this.stopJoiner(true);
 }
+}
+else if (authState === -2) {
+this.setStatus('net');
+this.fail_restart = true;
+this.log(Lang.get('service.btn_awaiting') + ',' + Lang.get('service.session_expired').split(',')[1]);
+this.totalTicks = 1;
+this.stimer = 1;
 }
 });
 }
@@ -773,6 +773,11 @@ return Lang.get('service.' + this.constructor.name.toLowerCase() + '.' + key);
 }
 clearLog() {
 this.logField.html('<div><span class="time">' + timeStr() + '</span>' + Lang.get('service.log_cleared') + '</div>');
+}
+unlog() {
+if (this.getConfig('log', true)) {
+this.logField.children('div[class=chk]:last').remove();
+}
 }
 log(text, logType) {
 if (logType === '' || logType === undefined) {

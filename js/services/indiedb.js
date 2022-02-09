@@ -22,8 +22,6 @@ delete this.settings.blacklist_on;
 super.init();
 }
 authCheck(callback) {
-if (this.getConfig('auth_date', 0) < Date.now()) {
-this.setConfig('auth_date', Date.now() + 15000);
 let call = -1;
 rq({
 method: 'GET',
@@ -43,21 +41,74 @@ responseType: 'document'
 let auth = auths.data;
 auth = auth.replace(/<img/gi, '<noload');
 if (auth.indexOf('View your profile') >= 0) {
-this.setConfig('auth_date', Date.now() + 20000);
 call = 1;
 }
 else {
-this.setConfig('auth_date', 0);
 call = 0;
 }
 })
 .finally(() => {
+if (call === 1) {
+callback(1);
+}
+else if (call === -1) {
+callback(-1);
+}
+else if (!GJuser.waitAuth) {
+GJuser.waitAuth = true;
+call = -1;
+Browser.webContents.on('did-finish-load', () => {
+if (Browser.getURL().indexOf('https://steamcommunity.com/openid/login?openid.ns') >= 0) {
+Browser.webContents.executeJavaScript('document.getElementById("imageLogin").click()');
+}
+if (Browser.getURL().indexOf('https://www.indiedb.com') >= 0) {
+Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML')
+.then((body) => {
+if (body.indexOf('View your profile') >= 0) {
+Browser.webContents.removeAllListeners('did-finish-load');
+setTimeout(() => {
+call = 1;
+Browser.close();
+}, 1000);
+}
+setTimeout(() => {
+call = 0;
+Browser.close();
+}, 10000);
+});
+setTimeout(() => {
+call = -1;
+Browser.close();
+}, 30000);
+}
+else {
+setTimeout(() => {
+Browser.loadURL('https://www.indiedb.com');
+}, 5000);
+setTimeout(() => {
+call = -1;
+Browser.close();
+}, 30000);
+}
+});
+Browser.setTitle(Lang.get('service.browser_loading'));
+if (this.getConfig('login_steam', false)) {
+Browser.loadURL('https://www.indiedb.com/members/loginext/steam');
+}
+else {
+Browser.loadURL('https://www.indiedb.com/members/login');
+}
+Browser.once('close', () => {
+Browser.webContents.removeAllListeners('did-finish-load');
+Browser.loadFile('blank.html');
+GJuser.waitAuth = false;
 callback(call);
 });
 }
 else {
-callback(1);
+callback(-2);
 }
+});
 }
 getUserInfo(callback) {
 let userData = {

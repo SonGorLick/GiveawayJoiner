@@ -297,7 +297,14 @@ $(document.createElement('button'))
 .appendTo('.content-item .devmode');
 }
 function renderUser(userData) {
-$('.content-item .info .username').html('User').attr('title', dirdata.replace('giveawayjoinerdata/', ''));
+let localname = dirdata.replace('giveawayjoinerdata/', '');
+if (localname.includes('/')) {
+localname = localname.split('/').reverse()[1];
+}
+else if (localname.includes('\\')) {
+localname = localname.split('\\').reverse()[1];
+}
+$('.content-item .info .username').html(localname).attr('title', 'Local User');
 $('.content-item .info .avatar').css({'background-image': 'url("../app.asar/images/local.png")'});
 $.ajax({
 url: 'https://store.steampowered.com/account/languagepreferences',
@@ -311,7 +318,7 @@ $('.content-item .info .avatar').css({'background-image': 'url("' + userData.ava
 }
 if (name !== undefined && name.length > 0) {
 userData.username = name;
-$('.content-item .info .username').html(userData.username).attr('title', 'Steam');
+$('.content-item .info .username').html(userData.username).attr('title', 'Steam User');
 }
 }, error: () => {}
 });

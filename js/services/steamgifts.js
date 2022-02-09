@@ -46,8 +46,6 @@ this.settings.free_ga = { type: 'checkbox', trans: this.transPath('free_ga'), de
 super.init();
 }
 authCheck(callback) {
-if (this.getConfig('auth_date', 0) < Date.now()) {
-this.setConfig('auth_date', Date.now() + 15000);
 let call = -1;
 rq({
 method: 'GET',
@@ -72,21 +70,69 @@ responseType: 'document'
 let html = htmls.data;
 html = html.replace(/<img/gi, '<noload');
 if (html.indexOf('>Logout<') >= 0) {
-this.setConfig('auth_date', Date.now() + 20000);
 call = 1;
 }
 else {
-this.setConfig('auth_date', 0);
 call = 0;
 }
 })
 .finally(() => {
+if (call === 1) {
+callback(1);
+}
+else if (call === -1) {
+callback(-1);
+}
+else if (!GJuser.waitAuth) {
+GJuser.waitAuth = true;
+call = -1;
+Browser.webContents.on('did-finish-load', () => {
+if (Browser.getURL().indexOf('https://steamcommunity.com/openid/login?openid.ns') >= 0) {
+Browser.webContents.executeJavaScript('document.getElementById("imageLogin").click()');
+}
+if (Browser.getURL().indexOf('https://www.steamgifts.com') >= 0) {
+Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML')
+.then((body) => {
+if (body.indexOf('>Logout<') >= 0) {
+Browser.webContents.removeAllListeners('did-finish-load');
+setTimeout(() => {
+call = 1;
+Browser.close();
+}, 1000);
+}
+setTimeout(() => {
+call = 0;
+Browser.close();
+}, 10000);
+});
+setTimeout(() => {
+call = -1;
+Browser.close();
+}, 30000);
+}
+else {
+setTimeout(() => {
+Browser.loadURL('https://www.steamgifts.com');
+}, 5000);
+setTimeout(() => {
+call = -1;
+Browser.close();
+}, 30000);
+}
+});
+Browser.setTitle(Lang.get('service.browser_loading'));
+Browser.loadURL('https://www.steamgifts.com/?login');
+Browser.once('close', () => {
+Browser.webContents.removeAllListeners('did-finish-load');
+Browser.loadFile('blank.html');
+GJuser.waitAuth = false;
 callback(call);
 });
 }
 else {
-callback(1);
+callback(-2);
 }
+});
 }
 getUserInfo(callback) {
 let userData = {
@@ -120,16 +166,16 @@ let avatar = data.find('.nav__avatar-inner-wrap').attr('style'),
 username = data.find('input[name=username]').val(),
 value = data.find('.nav__points').text(),
 level = data.find('.nav__points').next().text();
-if (level !== undefined) {
+if (level !== undefined && level.includes('Level ')) {
 userData.level = level.replace('Level ', '');
 }
-if (value !== undefined) {
+if (value !== undefined && value !== '') {
 userData.value = value;
 }
-if (username !== undefined) {
+if (username !== undefined && username !== '') {
 userData.username = username;
 }
-if (avatar !== undefined) {
+if (avatar !== undefined && avatar.includes('background-image:url(')) {
 userData.avatar = avatar.replace('background-image:url(', '').replace(');', '');
 }
 })
@@ -143,6 +189,7 @@ this.stimer = sgtimer;
 let page = -1;
 this.token = '';
 this.dsave = ',';
+this.wait = false;
 this.giveaways = [];
 this.won = this.getConfig('won', 0);
 this.url = 'https://www.steamgifts.com';
@@ -513,7 +560,12 @@ sglog = '[w] ' + sglog;
 if (_this.dsave.includes(',' + sgid + ',') && sgown !== 6) {
 sgown = 1;
 }
+if (_this.wait) {
+sgown = -1;
+}
+else {
 _this.log(Lang.get('service.checking') + sglog + sgblack, 'chk');
+}
 if (sgown > 0) {
 switch (sgown) {
 case 1:
@@ -541,8 +593,9 @@ case 8:
 _this.log(Lang.get('service.skipped'), 'skip');
 break;
 }
-}
+sgnext = 50;
 if (sgown === 6 && _this.getConfig('remove_ga', true)) {
+sgnext = 2000;
 rq({
 method: 'POST',
 url: _this.url + '/ajax.php',
@@ -572,6 +625,7 @@ GA.entered = false;
 });
 }
 if ((sgown === 1 || sgown === 6) && !_this.dsave.includes(',' + sgid + ',') && _this.getConfig('hide_ga', false)) {
+sgnext = 2000;
 sgown = 6;
 rq({
 method: 'POST',
@@ -597,7 +651,9 @@ _this.log(Lang.get('service.hided') + _this.logLink(GA.lnk, GA.nam), 'info');
 _this.dsave = _this.dsave + sgid + ',';
 });
 }
-if (
+sgcurr++;
+}
+else if (
 (sgown === 0) &&
 (GA.white || GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('max_level', 0) === 0 || GA.level >= _this.getConfig('min_level', 0) && GA.level <= _this.getConfig('max_level', 0) && _this.getConfig('max_level', 0) > 0) &&
 (GA.white || GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || GA.cost >= _this.getConfig('min_cost', 0) || GA.cost === 0 && _this.getConfig('free_ga', false)) &&
@@ -607,6 +663,7 @@ if (
 (GA.white || GA.type === 'w' && _this.getConfig('ignore_on_wish', false) || GA.type === 'g' && _this.getConfig('ignore_on_group', false) || _this.getConfig('min_entries', 0) === 0 || GA.entries >= _this.getConfig('min_entries', 0))
 )
 {
+_this.wait = true;
 rq({
 method: 'GET',
 url: GA.lnk,
@@ -632,6 +689,8 @@ ga = $(ga.replace(/<img/gi, '<noload'));
 let sgname = ga.find('.featured__heading__medium').text(),
 sgend = ga.find('.sidebar > form');
 sglog = sglog.replace(GA.nam, sgname);
+_this.unlog();
+_this.log(Lang.get('service.checking') + sglog + sgblack, 'chk');
 if (_this.getConfig('skip_ost', false) && !sgname.includes(' + Original Soundtrack')) {
 if (sgname.includes(' SoundTrack') || sgname.includes(' Soundtrack') || sgname.includes(' - OST')) {
 sgown = 1;
@@ -651,8 +710,10 @@ case 2:
 _this.log(Lang.get('service.time'), 'cant');
 break;
 }
+sgcurr++;
+_this.wait = false;
 }
-else {
+else if (sgown === 0) {
 rq({
 method: 'POST',
 url: _this.url + '/ajax.php',
@@ -678,23 +739,26 @@ if (data.type === 'success') {
 _this.log(Lang.get('service.entered_in') + sglog, 'enter');
 _this.setValue(data.points);
 GA.entered = true;
+sgcurr++;
+_this.wait = false;
 }
 else {
 _this.log(Lang.get('service.err_join'), 'cant');
+sgcurr++;
+_this.wait = false;
 }
 });
 }
 });
 }
-else {
+else if (sgown !== -1) {
 if (sgown === 0) {
 _this.log(Lang.get('service.skipped'), 'skip');
 }
-if (sgown !== 6) {
 sgnext = 50;
-}
-}
 sgcurr++;
+_this.wait = false;
+}
 setTimeout(processOne, sgnext);
 }
 processOne();

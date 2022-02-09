@@ -6,7 +6,7 @@ const storage = require('electron-json-storage');
 const fs = require('fs');
 const rq = require('axios').default;
 let devMode = false;
-let _ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4858.00 Safari/537.36';
+let _ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4878.0 Safari/537.36';
 let appLoaded = false;
 let mainWindow = null;
 let Browser = null;
@@ -83,6 +83,7 @@ Lang = new LanguageClass();
 _session = session.fromPartition('persist:GiveawayJoiner');
 _session.setUserAgent(_ua);
 Menu.setApplicationMenu(null);
+const remote = require("@electron/remote/main");
 mainWindow = new BrowserWindow({
 width: 876,
 height: 616,
@@ -104,10 +105,10 @@ backgroundThrottling: false,
 contextIsolation: false,
 nodeIntegration: true,
 webviewTag: true,
-webSecurity: false,
-enableRemoteModule: true
+webSecurity: false
 }
 });
+remote.enable(mainWindow.webContents);
 if (devMode) {
 mainWindow.webContents.openDevTools({ mode: 'detach' });
 }
@@ -115,8 +116,8 @@ Browser = new BrowserWindow({
 parent: mainWindow,
 icon: _icn,
 title: 'GiveawayJoiner',
-width: 1024,
-height: 768,
+width: 1280,
+height: 720,
 minWidth: 800,
 minHeight: 600,
 modal: _bmd,
@@ -132,10 +133,10 @@ allowRunningInsecureContent: true,
 backgroundThrottling: false,
 contextIsolation: false,
 webviewTag: true,
-webSecurity: false,
-enableRemoteModule: true
+webSecurity: false
 }
 });
+remote.enable(Browser.webContents);
 Browser.loadFile('blank.html');
 Browser.on('close', (e) => {
 e.preventDefault();

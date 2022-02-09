@@ -33,6 +33,10 @@ let userData = {
 avatar: '../app.asar/images/Madjoki.png',
 username: 'Madjoki'
 };
+if (GJuser.username !== 'User') {
+userData.avatar = GJuser.avatar;
+userData.username = GJuser.username;
+}
 callback(userData);
 }
 joinService() {

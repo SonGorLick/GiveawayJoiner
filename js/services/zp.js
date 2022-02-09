@@ -70,7 +70,7 @@ Browser.setTitle(Lang.get('service.browser_loading'));
 Browser.loadURL('https://www.zeepond.com');
 }
 else {
-callback(1);
+callback(-2);
 }
 }
 getUserInfo(callback) {
@@ -90,6 +90,7 @@ let zptimer = (Math.floor(Math.random() * (_this.getConfig('timer_to', 700) - _t
 _this.stimer = zptimer;
 _this.dsave = ',';
 _this.dload = ',';
+_this.wait = false;
 if (fs.existsSync(dirdata + 'zp.txt')) {
 let zpdata = fs.readFileSync(dirdata + 'zp.txt');
 if (zpdata.length > 1) {
@@ -130,7 +131,6 @@ zpcurr = 0,
 zpcrr = 0,
 zparray = Array.from(Array(comp.length).keys());
 if (data === 'err' || comp.length <= 0) {
-_this.fail_restart = true;
 _this.skip = true;
 _this.setStatus('net');
 _this.log(Lang.get('service.connection_lost'), 'err');
@@ -138,7 +138,7 @@ _this.totalTicks = 1;
 _this.stimer = 5;
 }
 function giveawayEnter() {
-if (zparray.length <= zpcurr || _this.skip || !_this.started || _this.fail_restart) {
+if (zparray.length <= zpcurr || _this.skip || !_this.started) {
 if (comp.length > 0 || _this.skip) {
 if ((new Date()).getDate() !== _this.dcheck && !_this.skip) {
 let win = 'err',
@@ -193,7 +193,6 @@ _this.log(Lang.get('service.data_saved'), 'info');
 }, _this.interval());
 }
 }
-if (!_this.fail_restart) {
 if (comp.length > 0) {
 if (_this.started && !_this.skip) {
 _this.log(Lang.get('service.reach_end'), 'skip');
@@ -206,7 +205,6 @@ if (_this.statusIcon.attr('data-status') === 'work') {
 _this.setStatus('good');
 }
 }, _this.interval());
-}
 }
 return;
 }
@@ -323,11 +321,16 @@ zpblack = _this.logWhite(zpblack) + _this.logBlack(zpblack);
 if (_this.getConfig('log', true)) {
 zplog = zplg + zplog;
 }
+if (_this.wait) {
+njoin = -1;
+}
+else {
+_this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
+}
 if (njoin > 0) {
 if (zpcurr > 0) {
 zpnext = 100;
 }
-_this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
 switch (njoin) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
@@ -345,8 +348,10 @@ case 5:
 _this.log(Lang.get('service.skipped'), 'skip');
 break;
 }
+zpcurr++;
 }
 else if (njoin === 0) {
+_this.wait = true;
 let html = 'err';
 rq({
 method: 'GET',
@@ -370,17 +375,22 @@ html = html.replace(/<img/gi, '<noload');
 .finally(() => {
 if (html === 'err') {
 zpnext = 50000;
-_this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
 if (zparray.filter(i => i === zpcrr).length < 3) {
 zparray.push(zpcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
+zpcurr++;
+_this.wait = false;
 }
 else {
 _this.log(Lang.get('service.connection_error'), 'err');
+zpcurr++;
+_this.wait = false;
 }
 }
 else if (html.indexOf('is using a security service for protection against online attacks.') >= 0) {
 zpnext = 50000;
+zparray.push(zpcrr);
+_this.log(Lang.get('service.err_join'), 'cant');
 if (!GJuser.waitAuth) {
 GJuser.waitAuth = true;
 Browser.show();
@@ -389,14 +399,12 @@ Browser.loadURL('https://www.zeepond.com/zeepond/giveaways/enter-a-competition')
 setTimeout(() => {
 Browser.hide();
 GJuser.waitAuth = false;
-}, 20000);
+zpcurr++;
+_this.wait = false;
+}, 40000);
 }
-_this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
-zparray.push(zpcrr);
-_this.log(Lang.get('service.err_join'), 'cant');
 }
 else if (html.indexOf('You must log in before you can see this view') >= 0) {
-_this.fail_restart = true;
 _this.skip = true;
 _this.setStatus('net');
 _this.log(Lang.get('service.err_join'), 'cant');
@@ -509,6 +517,7 @@ zplog = zplg + zplog;
 else {
 zplog = zplog + zpid;
 }
+_this.unlog();
 _this.log(Lang.get('service.checking') + zplog + zpid, 'chk');
 if (zpown > 0) {
 switch (zpown) {
@@ -534,6 +543,8 @@ case 7:
 _this.log(Lang.get('service.skipped'), 'skip');
 break;
 }
+zpcurr++;
+_this.wait = false;
 }
 else if (zpown === 0) {
 let resp = 'err';
@@ -561,13 +572,19 @@ if (resp === 'err') {
 if (zparray.filter(i => i === zpcrr).length < 3) {
 zparray.push(zpcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
+zpcurr++;
+_this.wait = false;
 }
 else {
 _this.log(Lang.get('service.connection_error'), 'err');
+zpcurr++;
+_this.wait = false;
 }
 }
-else if (html.indexOf('is using a security service for protection against online attacks.') >= 0) {
+else if (resp.indexOf('is using a security service for protection against online attacks.') >= 0) {
 zpnext = 50000;
+zparray.push(zpcrr);
+_this.log(Lang.get('service.err_join'), 'cant');
 if (!GJuser.waitAuth) {
 GJuser.waitAuth = true;
 Browser.show();
@@ -576,10 +593,10 @@ Browser.loadURL('https://www.zeepond.com/zeepond/giveaways/enter-a-competition')
 setTimeout(() => {
 Browser.hide();
 GJuser.waitAuth = false;
-}, 20000);
+zpcurr++;
+_this.wait = false;
+}, 40000);
 }
-zparray.push(zpcrr);
-_this.log(Lang.get('service.err_join'), 'cant');
 }
 else if (resp.indexOf('>You have successfully entered this competition<') >= 0) {
 let zpdtnew = new Date();
@@ -588,23 +605,28 @@ zpdtnew.setHours(zpdtnew.getUTCHours() + 10 + _this.month);
 let zpdnew = ('0' + zpdtnew.getDate().toString()).slice(-2);
 _this.dsave = _this.dsave + zpnam + '(z=' + zpdnew + '),';
 _this.log(Lang.get('service.entered_in') + zplog, 'enter');
+zpcurr++;
+_this.wait = false;
 }
 else {
 zpnext = 50000;
 if (zparray.filter(i => i === zpcrr).length < 3) {
 zparray.push(zpcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
+zpcurr++;
+_this.wait = false;
 }
 else {
 _this.log(Lang.get('service.connection_error'), 'err');
-}
-}
-});
-}
-}
-});
-}
 zpcurr++;
+_this.wait = false;
+}
+}
+});
+}
+}
+});
+}
 setTimeout(giveawayEnter, zpnext);
 }
 giveawayEnter();

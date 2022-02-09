@@ -43,6 +43,7 @@ _this.url = 'https://astats.astats.nl';
 _this.pagemax = _this.getConfig('pages', 1);
 _this.dsave = ',';
 _this.dload = ',';
+_this.wait = false;
 if (fs.existsSync(dirdata + 'astats.txt')) {
 let adata = fs.readFileSync(dirdata + 'astats.txt');
 if (adata.length > 1) {
@@ -114,9 +115,19 @@ data = datas;
 },
 complete: function () {
 let afound = data.find('[style="text-align:right;"]'),
+alinkid = data.find('.navbar-nav.navbar-right > .dropdown > .dropdown-menu > li:nth-of-type(2) > a').attr('href'),
 acurr = 0,
 acrr = 0,
 aarray = Array.from(Array(afound.length).keys());
+if (alinkid === undefined) {
+alinkid = _this.url + '/astats/User_Info.php';
+}
+else if (alinkid.includes('User_Info.php?SteamID64=')) {
+alinkid = _this.url + alinkid;
+}
+else {
+alinkid = _this.url + '/astats/User_Info.php';
+}
 if (data === 'err') {
 _this.pagemax = page;
 _this.log(Lang.get('service.connection_error'), 'err');
@@ -137,12 +148,14 @@ if (!GJuser.waitAuth) {
 GJuser.waitAuth = true;
 _this.setConfig('check_date', Date.now() + 43200000);
 Browser.webContents.on('did-finish-load', () => {
+_this.log(Lang.get('service.done') + 'Visit Profile Page', 'info');
+setTimeout(() => {
 Browser.webContents.removeAllListeners('did-finish-load');
 GJuser.waitAuth = false;
-_this.log(Lang.get('service.done') + 'Visit Profile Page', 'info');
+}, 2000);
 });
 Browser.setTitle(Lang.get('service.browser_loading'));
-Browser.loadURL(_this.url + '/astats/User_Info.php');
+Browser.loadURL(alinkid);
 }
 }
 if (afound.length <= acurr && page === _this.pagemax) {
@@ -187,6 +200,7 @@ asjoin = alink.replace('/astats/Giveaway.php?GiveawayID=','');
 if (aname.includes('This giveaway has ended.') || ended === 'This giveaway has ended.') {
 _this.pagemax = page;
 asnext = 50;
+acurr++;
 }
 else {
 let ahave = data.find('[href="' + alink + '"] font').attr('color');
@@ -254,7 +268,13 @@ aslog = '|' + page + '#|' + (acrr + 1) + '№|  ' + aslog;
 else {
 aslog = aslog + _this.logWhite(asid) + _this.logBlack(asid);
 }
+if (_this.wait) {
+asown = -1;
+}
+else {
 _this.log(Lang.get('service.checking') + aslog + _this.logWhite(asid) + _this.logBlack(asid), 'chk');
+}
+if (asown > 0) {
 switch (asown) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
@@ -275,7 +295,11 @@ case 6:
 _this.log(Lang.get('service.skipped'), 'skip');
 break;
 }
-if (asown === 0) {
+asnext = 100;
+acurr++;
+}
+else if (asown === 0) {
+_this.wait = true;
 let html = 'err';
 $.ajax({
 url: _this.url + alink,
@@ -289,9 +313,13 @@ asnext = 59000;
 if (aarray.filter(i => i === acrr).length === 1) {
 aarray.push(acrr);
 _this.log(Lang.get('service.err_join'), 'cant');
+acurr++;
+_this.wait = false;
 }
 else {
 _this.log(Lang.get('service.connection_error'), 'err');
+acurr++;
+_this.wait = false;
 }
 }
 else {
@@ -312,6 +340,7 @@ asown = 3;
 else {
 asown = 2;
 }
+if (asown > 0) {
 switch (asown) {
 case 1:
 _this.log(Lang.get('service.already_joined'), 'jnd');
@@ -323,7 +352,10 @@ case 3:
 _this.log(Lang.get('service.points_low'), 'skip');
 break;
 }
-if (asown === 0) {
+acurr++;
+_this.wait = false;
+}
+else if (asown === 0) {
 let tmout = Math.floor(asnext / 2),
 resp = 'err';
 setTimeout(() => {
@@ -340,9 +372,13 @@ asnext = 59000;
 if (aarray.filter(i => i === acrr).length === 1) {
 aarray.push(acrr);
 _this.log(Lang.get('service.err_join'), 'cant');
+acurr++;
+_this.wait = false;
 }
 else {
 _this.log(Lang.get('service.connection_error'), 'err');
+acurr++;
+_this.wait = false;
 }
 }
 else {
@@ -350,27 +386,23 @@ if (!_this.dsave.includes(',' + asjoin + ',')) {
 _this.dsave = _this.dsave + asjoin + ',';
 }
 _this.log(Lang.get('service.entered_in') + aslog, 'enter');
+acurr++;
+_this.wait = false;
 }
 }
 });
 }, tmout);
 }
-else {
-asnext = 1000;
-}
 }
 }
 });
 }
-else {
-asnext = 100;
-}
 }
 }
 else {
 asnext = 100;
-}
 acurr++;
+}
 setTimeout(giveawayEnter, asnext);
 }
 giveawayEnter();

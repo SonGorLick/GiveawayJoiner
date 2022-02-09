@@ -34,10 +34,10 @@ html = $(html.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
 let username = html.find('.page-header__nav-func-user-wrapper a').text(),
 avatar = html.find('.input-group noload').attr('src'),
 value = html.find('.points-items li a').first().text();
-if (value !== undefined) {
+if (value !== undefined && value.includes('Points:')) {
 userData.value = value.replace('Points:', '').trim();
 }
-if (username !== undefined) {
+if (username !== undefined && username !== '') {
 userData.username = username.split('Account')[0].trim();
 }
 if (avatar !== undefined) {
@@ -56,6 +56,7 @@ _this.stimer = optimer;
 let page = 1;
 _this.dsave = ',';
 _this.dload = ',';
+_this.wait = false;
 if (fs.existsSync(dirdata + 'opiumpulses.txt')) {
 let opdata = fs.readFileSync(dirdata + 'opiumpulses.txt');
 if (opdata.length > 1) {
@@ -323,8 +324,13 @@ opblack = '';
 if (_this.getConfig('log', true)) {
 oplog = oplg + oplog;
 }
-if (njoin > 0) {
+if (_this.wait) {
+njoin = -1;
+}
+else {
 _this.log(Lang.get('service.checking') + oplog + opblack, 'chk');
+}
+if (njoin > 0) {
 switch (njoin) {
 case 1:
 _this.log(Lang.get('service.cant_join') + ', ' + Lang.get('service.data_have'), 'cant');
@@ -352,8 +358,10 @@ _this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.blacklist
 break;
 }
 opnext = 100;
+opcurr++;
 }
-else {
+else if (njoin === 0) {
+_this.wait = true;
 let html = 'err';
 $.ajax({
 url: _this.url + link,
@@ -366,11 +374,14 @@ if (html === 'err') {
 opnext = 59000;
 if (oparray.filter(i => i === opcrr).length === 1) {
 oparray.push(opcrr);
-_this.log(Lang.get('service.checking') + oplog + opblack, 'chk');
 _this.log(Lang.get('service.err_join'), 'cant');
+opcurr++;
+_this.wait = false;
 }
 else {
 _this.log(Lang.get('service.connection_error'), 'err');
+opcurr++;
+_this.wait = false;
 }
 }
 else {
@@ -500,7 +511,9 @@ oplog = oplg + oplog;
 else {
 oplog = oplog + opblack;
 }
+_this.unlog();
 _this.log(Lang.get('service.checking') + oplog + opblack, 'chk');
+if (opown > 0 && (opown < 8 || !_this.getConfig('remove_ga', false))) {
 switch (opown) {
 case 1:
 _this.log(Lang.get('service.have_on_steam'), 'steam');
@@ -530,7 +543,10 @@ case 9:
 _this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.blacklisted').split('-')[1], 'cant');
 break;
 }
-if (opown === 0) {
+opcurr++;
+_this.wait = false;
+}
+else if (opown === 0) {
 let tmout = Math.floor(opnext / 2);
 setTimeout(() => {
 if (check !== undefined) {
@@ -550,21 +566,35 @@ opnext = 59000;
 if (oparray.filter(i => i === opcrr).length === 1) {
 oparray.push(opcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
+opcurr++;
+_this.wait = false;
 }
 else {
 _this.log(Lang.get('service.connection_error'), 'err');
+opcurr++;
+_this.wait = false;
 }
 }
 else {
 _this.curr_value = _this.curr_value - cost;
 _this.setValue(_this.curr_value);
 _this.log(Lang.get('service.entered_in') + oplog, 'enter');
+opcurr++;
+_this.wait = false;
 }
 }
 });
 }, tmout);
 }
 else if (opown > 7 && _this.getConfig('remove_ga', false)) {
+switch (opown) {
+case 8:
+_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.have_on_steam').split('-')[1], 'cant');
+break;
+case 9:
+_this.log(Lang.get('service.already_joined') + ',' + Lang.get('service.blacklisted').split('-')[1], 'cant');
+break;
+}
 let pmout = Math.floor(opnext / 2);
 setTimeout(() => {
 if (check !== undefined) {
@@ -577,24 +607,27 @@ success: function () {
 respr = 'ok';
 },
 complete: function () {
-if (respr === 'ok') {
+if (respr === 'err') {
+_this.log(Lang.get('service.connection_error'), 'err');
+opcurr++;
+_this.wait = false;
+}
+else {
 _this.curr_value = _this.curr_value + cost;
 _this.setValue(_this.curr_value);
 _this.log(Lang.get('service.removed') + _this.logLink(_this.url + link, name), 'info');
+opcurr++;
+_this.wait = false;
 }
 }
 });
 }
 }, pmout);
 }
-else {
-opnext = 100;
-}
 }
 }
 });
 }
-opcurr++;
 setTimeout(giveawayEnter, opnext);
 }
 giveawayEnter();
