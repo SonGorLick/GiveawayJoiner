@@ -10,5 +10,33 @@
     "electron-json-storage": "latest"
   },
   "author": "pumPCin",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "14.2.5",
+    "electron-builder": "^22"
+  },
+  "scripts": {
+    "pack": "electron-builder --dir"
+  },
+  "build": {
+    "appId": "com.giveawayjoiner.app",
+    "files": [
+      "**/*",
+      "!giveawayjoinerdata/*",
+      "!.eslintrc",
+      "!.jshintrc"
+    ],
+    "linux": {
+      "target": "dir",
+      "icon": "icons/icon.png"
+    },
+    "mac": {
+      "target": "dir",
+      "icon": "icons/icon.icns"
+    },
+    "win": {
+      "target": "dir",
+      "icon": "icons/icon.ico"
+    }
+  }
 }
