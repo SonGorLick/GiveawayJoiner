@@ -757,6 +757,7 @@ _this.log(Lang.get('service.entered_in') + iglog, 'enter');
 _this.wait = false;
 }
 else if (resp.status === 'login') {
+_this.fail_restart = true;
 igrtry = 0;
 igcurr = 200;
 ignext = 100;
@@ -772,6 +773,7 @@ ignext = (Math.floor(Math.random() * 1000)) + 3000;
 }
 }
 if (igrtry >= 12) {
+_this.fail_restart = true;
 igrtry = 0;
 igcurr = 200;
 ignext = 100;
