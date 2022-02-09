@@ -50,14 +50,6 @@ Browser.webContents.removeAllListeners('did-finish-load');
 GJuser.waitAuth = false;
 callback(0);
 }
-else if (GJuser.waitAuth) {
-setTimeout(() => {
-Browser.webContents.removeAllListeners('did-finish-load');
-GJuser.waitAuth = false;
-Browser.loadFile('blank.html');
-callback(1);
-}, 20000);
-}
 });
 }
 else {
@@ -131,7 +123,6 @@ zpcurr = 0,
 zpcrr = 0,
 zparray = Array.from(Array(comp.length).keys());
 if (data === 'err' || comp.length <= 0) {
-_this.fail_restart = true;
 _this.skip = true;
 _this.setStatus('net');
 _this.log(Lang.get('service.connection_lost'), 'err');
@@ -139,7 +130,7 @@ _this.totalTicks = 1;
 _this.stimer = 5;
 }
 function giveawayEnter() {
-if (zparray.length <= zpcurr || _this.skip || !_this.started || _this.fail_restart) {
+if (zparray.length <= zpcurr || _this.skip || !_this.started) {
 if (comp.length > 0 || _this.skip) {
 if ((new Date()).getDate() !== _this.dcheck && !_this.skip) {
 let win = 'err',
@@ -194,7 +185,6 @@ _this.log(Lang.get('service.data_saved'), 'info');
 }, _this.interval());
 }
 }
-if (!_this.fail_restart) {
 if (comp.length > 0) {
 if (_this.started && !_this.skip) {
 _this.log(Lang.get('service.reach_end'), 'skip');
@@ -207,7 +197,6 @@ if (_this.statusIcon.attr('data-status') === 'work') {
 _this.setStatus('good');
 }
 }, _this.interval());
-}
 }
 return;
 }
@@ -408,7 +397,6 @@ _this.wait = false;
 }
 }
 else if (html.indexOf('You must log in before you can see this view') >= 0) {
-_this.fail_restart = true;
 _this.skip = true;
 _this.setStatus('net');
 _this.log(Lang.get('service.err_join'), 'cant');
