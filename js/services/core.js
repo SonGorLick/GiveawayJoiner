@@ -189,8 +189,7 @@ $.ajax({
 url: websiteUrl,
 timeout: getTimeout,
 success: function (htmls) {
-htmls = htmls.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
-html = htmls;
+html = htmls.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 },
 complete: function () {
 if (html.indexOf(authContent) >= 0) {
@@ -245,9 +244,6 @@ callback(call);
 else {
 callback(-2);
 }
-},
-error: function () {
-callback(-1);
 }
 });
 }

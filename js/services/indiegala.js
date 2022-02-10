@@ -213,31 +213,16 @@ _this.dload = 1;
 }
 }
 else {
-if (_this.igprtry < 3 && _this.igprtry !== -1) {
-_this.igprtry++;
-}
-else if (_this.igprtry !== -1) {
-_this.igprtry = -1;
-_this.pagemax = 1;
-_this.setStatus('net');
-_this.log(Lang.get('service.connection_lost').split(',')[0] + ',' + Lang.get('service.session_expired').split(',')[1], 'err');
-_this.totalTicks = 1;
-_this.stimer = 1;
-}
-else {
-if (callback) {
-callback();
-}
-return;
-}
+data = 'err';
 }
 },
 complete: function () {
 if (data === 'err') {
-if (_this.igprtry < 3) {
+if (_this.igprtry < 6 && _this.igprtry !== -1) {
 _this.igprtry++;
 }
-else if (_this.igprtry !== -1) {
+else {
+if (_this.igprtry !== -1) {
 _this.igprtry = -1;
 _this.pagemax = 0;
 _this.setStatus('net');
@@ -245,11 +230,17 @@ _this.log(Lang.get('service.connection_lost').split(',')[0] + ',' + Lang.get('se
 _this.totalTicks = 1;
 _this.stimer = 1;
 }
-else {
-if (callback) {
-callback();
+if (!GJuser.waitAuth) {
+GJuser.waitAuth = true;
+Browser.webContents.on('did-finish-load', () => {
+setTimeout(() => {
+Browser.webContents.removeAllListeners('did-finish-load');
+GJuser.waitAuth = false;
+}, 30000);
+});
+Browser.setTitle(Lang.get('service.browser_loading'));
+Browser.loadURL('https://www.indiegala.com');
 }
-return;
 }
 }
 let igcurr = 0,
@@ -628,7 +619,7 @@ igga = '';
 }
 else {
 igga = igga.trim().toLowerCase();
-_this.log(igga);
+//_this.log(igga);
 }
 if (_this.getConfig('skip_trial', false)) {
 if (
