@@ -400,7 +400,7 @@ _this.wait = false;
 }
 }
 else {
-asnext = 100;
+asnext = 50;
 acurr++;
 }
 setTimeout(giveawayEnter, asnext);

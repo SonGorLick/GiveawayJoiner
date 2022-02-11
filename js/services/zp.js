@@ -367,7 +367,7 @@ html = html.replace(/<img/gi, '<noload');
 .finally(() => {
 if (html === 'err') {
 zpnext = 50000;
-if (zparray.filter(i => i === zpcrr).length < 3) {
+if (zparray.filter(i => i === zpcrr).length < 4) {
 zparray.push(zpcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 zpcurr++;
@@ -561,7 +561,7 @@ resp = resp.replace(/<img/gi, '<noload');
 })
 .finally(() => {
 if (resp === 'err') {
-if (zparray.filter(i => i === zpcrr).length < 3) {
+if (zparray.filter(i => i === zpcrr).length < 4) {
 zparray.push(zpcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 zpcurr++;
@@ -602,7 +602,7 @@ _this.wait = false;
 }
 else {
 zpnext = 50000;
-if (zparray.filter(i => i === zpcrr).length < 3) {
+if (zparray.filter(i => i === zpcrr).length < 4) {
 zparray.push(zpcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 zpcurr++;

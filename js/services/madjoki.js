@@ -160,6 +160,8 @@ dataType: 'json',
 success : function (upd) {
 if (upd.message !== undefined) {
 _this.log(Lang.get('service.done') + upd.message, 'info');
+_this.totalTicks = 1;
+_this.stimer = 2;
 }
 }, error: () => {}
 });

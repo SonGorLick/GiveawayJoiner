@@ -645,7 +645,8 @@ if (_this.getConfig('steam_only', false)) {
 if (
 (igga.includes('gog key')) || (igga.includes('key gog')) || (igga.includes('key for gog')) || (igga.includes('gog.com')) ||
 (igga.includes('origin key')) || (igga.includes('key origin')) || (igga.includes('key for origin')) || (igga.includes('origin.com')) ||
-(igga.includes('epic key')) || (igga.includes('key epic')) || (igga.includes('key for epic')) || (igga.includes('epicgames.com'))
+(igga.includes('epic key')) || (igga.includes('key epic')) || (igga.includes('key for epic')) || (igga.includes('epicgames.com')) ||
+(igga.includes('bethesda.net')) || (igga.includes(' not for steam'))
 )
 {
 igown = 2;
