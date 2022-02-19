@@ -215,7 +215,7 @@ html = htmls;
 complete: function () {
 if (html === 'err') {
 fxnext = 59000;
-if (fxarray.filter(i => i === fxcrr).length === 1) {
+if (fxarray.filter(i => i === fxcrr).length < 4) {
 fxarray.push(fxcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 }
@@ -261,7 +261,7 @@ body = bodys;
 complete: function () {
 if (body === 'err' || !body.response) {
 fxnext = 59000;
-if (fxarray.filter(i => i === fxcrr).length === 1) {
+if (fxarray.filter(i => i === fxcrr).length < 4) {
 fxarray.push(fxcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 }

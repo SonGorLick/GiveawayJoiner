@@ -161,7 +161,7 @@ success : function (upd) {
 if (upd.message !== undefined) {
 _this.log(Lang.get('service.done') + upd.message, 'info');
 _this.totalTicks = 1;
-_this.stimer = 2;
+_this.stimer = 5;
 }
 }, error: () => {}
 });
@@ -343,7 +343,7 @@ complete: function () {
 _this.limit++;
 if (rp === 'err') {
 mjnext = 29000;
-if (mjarray.filter(i => i === mjcrr).length === 1) {
+if (mjarray.filter(i => i === mjcrr).length < 4) {
 mjarray.push(mjcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 }

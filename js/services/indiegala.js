@@ -614,7 +614,7 @@ igga = $(iggas.replace(/<img/gi, '<noload'));
 igga = igga.find('.card-description').text();
 },
 complete: function () {
-if (igga === undefined || igga === null) {
+if (igga === undefined || igga === null || igga === 'err') {
 igga = '';
 }
 else {
@@ -693,10 +693,9 @@ resp = resps.data;
 })
 .finally(() => {
 if (resp === 'err') {
-ignext = 29000;
+ignext = (Math.floor(Math.random() * 1000)) + 3000;
 }
-else {
-if (resp.status === 'ok') {
+else if (resp.status === 'ok') {
 igrtry = 0;
 _this.setValue(resp.silver_tot);
 if (Times === 0 && single) {
@@ -770,7 +769,6 @@ _this.stimer = 1;
 }
 else {
 ignext = (Math.floor(Math.random() * 1000)) + 3000;
-}
 }
 if (igrtry >= 12) {
 igrtry = 0;

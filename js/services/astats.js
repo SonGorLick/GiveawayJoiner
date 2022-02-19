@@ -310,7 +310,7 @@ html = htmls;
 complete: function () {
 if (html === 'err') {
 asnext = 59000;
-if (aarray.filter(i => i === acrr).length === 1) {
+if (aarray.filter(i => i === acrr).length < 4) {
 aarray.push(acrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 acurr++;
@@ -369,7 +369,7 @@ resp = 'ok';
 complete: function () {
 if (resp === 'err') {
 asnext = 59000;
-if (aarray.filter(i => i === acrr).length === 1) {
+if (aarray.filter(i => i === acrr).length < 4) {
 aarray.push(acrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 acurr++;

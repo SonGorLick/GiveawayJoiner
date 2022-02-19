@@ -1,6 +1,15 @@
 'use strict';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+process.env.NODE_OPTIONS = '--insecure-http-parser=true';
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
 const { app, nativeImage, shell, session, Tray, BrowserWindow, Menu, ipcMain, ipcRenderer } = require('electron');
+app.disableHardwareAcceleration();
+app.commandLine.appendSwitch('ignore-certificate-errors');
+app.commandLine.appendSwitch('allow-insecure-localhost', 'true');
+app.commandLine.appendSwitch('no-sandbox');
+app.commandLine.appendSwitch('disk-cache-size', 100);
+app.commandLine.appendSwitch('disable-site-isolation-trials');
+app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
 require('@electron/remote/main').initialize();
 const storage = require('electron-json-storage');
 const fs = require('fs');
@@ -20,11 +29,6 @@ let _bmd = 'true';
 let _bfr = 'false';
 let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
-app.commandLine.appendSwitch('no-sandbox');
-app.commandLine.appendSwitch('disk-cache-size', 100);
-app.commandLine.appendSwitch('disable-site-isolation-trials');
-app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
-app.disableHardwareAcceleration();
 if (process.platform === 'win32') {
 _itr = __dirname + '/icons/icon.ico';
 udata = (udata.slice(0, -4)).toLowerCase();

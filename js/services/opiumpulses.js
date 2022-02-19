@@ -372,7 +372,7 @@ html = htmls;
 complete: function () {
 if (html === 'err') {
 opnext = 59000;
-if (oparray.filter(i => i === opcrr).length === 1) {
+if (oparray.filter(i => i === opcrr).length < 4) {
 oparray.push(opcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 opcurr++;
@@ -563,7 +563,7 @@ resp = 'ok';
 complete: function () {
 if (resp === 'err') {
 opnext = 59000;
-if (oparray.filter(i => i === opcrr).length === 1) {
+if (oparray.filter(i => i === opcrr).length < 4) {
 oparray.push(opcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 opcurr++;

@@ -333,7 +333,7 @@ raff = raffs.data.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload');
 .finally(() => {
 if (raff === 'err') {
 spnext = 19000;
-if (sparray.filter(i => i === spcrr).length === 1) {
+if (sparray.filter(i => i === spcrr).length < 4) {
 sparray.push(spcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 spcurr++;
@@ -421,7 +421,7 @@ resp = resps.data;
 .finally(() => {
 if (resp === 'err') {
 spnext = 19000;
-if (sparray.filter(i => i === spcrr).length === 1) {
+if (sparray.filter(i => i === spcrr).length < 4) {
 sparray.push(spcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 spcurr++;
@@ -442,7 +442,7 @@ _this.wait = false;
 }
 else {
 spnext = 19000;
-if (sparray.filter(i => i === spcrr).length === 1) {
+if (sparray.filter(i => i === spcrr).length < 4) {
 sparray.push(spcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 spcurr++;

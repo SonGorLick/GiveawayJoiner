@@ -195,6 +195,9 @@ complete: function () {
 if (html.indexOf(authContent) >= 0) {
 callback(1);
 }
+else if (html.indexOf('>Origin is unreachable<') >= 0) {
+callback(-1);
+}
 else if (!GJuser.waitAuth) {
 GJuser.waitAuth = true;
 let call = -2;

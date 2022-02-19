@@ -132,7 +132,7 @@ html = $('<div>' + htmls + '</div>');
 complete: function () {
 if (html === 'err') {
 tfnext = 59000;
-if (tfarray.filter(i => i === tfcrr).length === 1) {
+if (tfarray.filter(i => i === tfcrr).length < 4) {
 tfarray.push(tfcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 }
@@ -168,7 +168,7 @@ body = 'err';
 .finally(() => {
 if (body === 'err') {
 tfnext = 59000;
-if (tfarray.filter(i => i === tfcrr).length === 1) {
+if (tfarray.filter(i => i === tfcrr).length < 4) {
 tfarray.push(tfcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 }
