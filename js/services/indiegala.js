@@ -38,6 +38,7 @@ this.settings.skip_skipdlc = { type: 'checkbox', trans: 'service.skip_skipdlc', 
 this.settings.skip_trial = { type: 'checkbox', trans: 'service.skip_trial', default: this.getConfig('skip_trial', false) };
 this.settings.whitelist_nocards = { type: 'checkbox', trans: 'service.whitelist_nocards', default: this.getConfig('whitelist_nocards', false) };
 this.settings.steam_only = { type: 'checkbox', trans: this.transPath('steam_only'), default: this.getConfig('steam_only', false) };
+this.settings.view_ga_info = { type: 'checkbox', trans: 'view_ga_info', default: this.getConfig('view_ga_info', false) };
 super.init();
 }
 getUserInfo(callback) {
@@ -619,7 +620,9 @@ igga = '';
 }
 else {
 igga = igga.trim().toLowerCase();
-//_this.log(igga);
+if (_this.getConfig('view_ga_info', false)) {
+_this.log(igga);
+}
 }
 if (_this.getConfig('skip_trial', false)) {
 if (

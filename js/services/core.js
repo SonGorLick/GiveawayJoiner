@@ -195,9 +195,6 @@ complete: function () {
 if (html.indexOf(authContent) >= 0) {
 callback(1);
 }
-else if (html.indexOf('>Origin is unreachable<') >= 0) {
-callback(-1);
-}
 else if (!GJuser.waitAuth) {
 GJuser.waitAuth = true;
 let call = -2;
@@ -214,6 +211,11 @@ setTimeout(() => {
 call = 1;
 Browser.close();
 }, 1000);
+}
+if (body.indexOf('>Origin is unreachable<') >= 0) {
+Browser.webContents.removeAllListeners('did-finish-load');
+call = -1;
+Browser.close();
 }
 setTimeout(() => {
 call = 0;
@@ -405,7 +407,7 @@ this.stopJoiner(true);
 }
 }
 else if (authState === -1) {
-if (this.tries < 12) {
+if (this.tries < 20) {
 this.setStatus('net');
 this.tries++;
 let minutes = 5 * this.tries;

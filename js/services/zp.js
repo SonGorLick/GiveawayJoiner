@@ -42,8 +42,15 @@ Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML'
 if (GJuser.waitAuth && body.indexOf('profile-pic') >= 0) {
 Browser.webContents.removeAllListeners('did-finish-load');
 GJuser.waitAuth = false;
-Browser.loadFile('blank.html');
 callback(1);
+}
+else if (GJuser.waitAuth && Browser.getURL().indexOf('https://www.zeepond.com/cb-login') < 0 && Browser.getURL().indexOf('https://steamcommunity.com') < 0 && body.indexOf('is using a security service for protection against online attacks.') < 0) {
+if (this.getConfig('login_steam', false)) {
+Browser.loadURL('https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=https%3A%2F%2Fwww.zeepond.com%2Fcomponents%2Fcom_comprofiler%2Fplugin%2Fuser%2Fplug_cbconnect%2Fendpoint.php%3Fprovider%3Dsteam&openid.realm=https%3A%2F%2Fwww.zeepond.com&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select');
+}
+else {
+Browser.loadURL('https://www.zeepond.com/cb-login');
+}
 }
 else if (GJuser.waitAuth && body.indexOf('is using a security service for protection against online attacks.') < 0) {
 Browser.webContents.removeAllListeners('did-finish-load');
@@ -89,7 +96,7 @@ if (zpdata.length > 1) {
 _this.dload = zpdata.toString();
 }
 }
-_this.skip = false;
+_this.skip = 0;
 _this.month = 1;
 let zpmonth = new Date().getMonth();
 if (zpmonth > 2 && zpmonth < 10) {
@@ -103,13 +110,12 @@ method: 'GET',
 url: _this.url + '/zeepond/giveaways/enter-a-competition',
 headers: {
 'authority': 'www.zeepond.com',
-'user-agent': _this.ua,
-'sec-fetch-site': 'same-origin',
-'sec-fetch-mode': 'navigate',
-'sec-fetch-user': '?1',
+'cookie': _this.cookies,
 'sec-fetch-dest': 'document',
-'referer': _this.url + '/',
-'cookie': _this.cookies
+'sec-fetch-mode': 'navigate',
+'sec-fetch-site': 'none',
+'sec-fetch-user': '?1',
+'user-agent': _this.ua
 },
 responseType: 'document'
 })
@@ -123,16 +129,17 @@ zpcurr = 0,
 zpcrr = 0,
 zparray = Array.from(Array(comp.length).keys());
 if (data === 'err' || comp.length <= 0) {
-_this.skip = true;
+comp = '';
+_this.skip = 1;
 _this.setStatus('net');
 _this.log(Lang.get('service.connection_lost'), 'err');
 _this.totalTicks = 1;
 _this.stimer = 5;
 }
 function giveawayEnter() {
-if (zparray.length <= zpcurr || _this.skip || !_this.started) {
-if (comp.length > 0 || _this.skip) {
-if ((new Date()).getDate() !== _this.dcheck && !_this.skip) {
+if (zparray.length <= zpcurr || _this.skip === 1 || !_this.started) {
+if (comp.length > 0) {
+if ((new Date()).getDate() !== _this.dcheck && _this.skip === 0) {
 let win = 'err',
 zpwon = '';
 rq({
@@ -140,12 +147,12 @@ method: 'GET',
 url: _this.url + '/my-account/my-prizes',
 headers: {
 'authority': 'www.zeepond.com',
-'user-agent': _this.ua,
-'sec-fetch-site': 'none',
-'sec-fetch-mode': 'navigate',
-'sec-fetch-user': '?1',
+'cookie': _this.cookies,
 'sec-fetch-dest': 'document',
-'cookie': _this.cookies
+'sec-fetch-mode': 'navigate',
+'sec-fetch-site': 'none',
+'sec-fetch-user': '?1',
+'user-agent': _this.ua
 },
 responseType: 'document'
 })
@@ -178,18 +185,18 @@ new Audio('../app.asar/sounds/won.wav').play();
 }
 });
 }
-if (comp.length > 0) {
+if (_this.skip !== 1) {
 setTimeout(() => {
 fs.writeFile(dirdata + 'zp.txt', _this.dsave, (err) => { });
 _this.log(Lang.get('service.data_saved'), 'info');
 }, _this.interval());
 }
-}
-if (comp.length > 0) {
-if (_this.started && !_this.skip) {
+if (_this.skip === 0) {
+if (_this.started) {
 _this.log(Lang.get('service.reach_end'), 'skip');
 }
 _this.log(Lang.get('service.checked') + 'Giveaways', 'srch');
+}
 }
 if (_this.started) {
 setTimeout(() => {
@@ -313,10 +320,13 @@ zpblack = _this.logWhite(zpblack) + _this.logBlack(zpblack);
 if (_this.getConfig('log', true)) {
 zplog = zplg + zplog;
 }
+if (_this.skip === 2) {
+njoin = 6;
+}
 if (_this.wait) {
 njoin = -1;
 }
-else {
+else if (njoin !== 6) {
 _this.log(Lang.get('service.checking') + zplog + zpblack, 'chk');
 }
 if (njoin > 0) {
@@ -350,13 +360,12 @@ method: 'GET',
 url: zplnk,
 headers: {
 'authority': 'www.zeepond.com',
-'user-agent': _this.ua,
-'sec-fetch-site': 'same-origin',
-'sec-fetch-mode': 'navigate',
-'sec-fetch-user': '?1',
+'cookie': _this.cookies,
 'sec-fetch-dest': 'document',
-'referer': _this.url + '/zeepond/giveaways/enter-a-competition',
-'cookie': _this.cookies
+'sec-fetch-mode': 'navigate',
+'sec-fetch-site': 'none',
+'sec-fetch-user': '?1',
+'user-agent': _this.ua
 },
 responseType: 'document'
 })
@@ -385,24 +394,34 @@ zparray.push(zpcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 if (!GJuser.waitAuth) {
 GJuser.waitAuth = true;
-Browser.show();
 Browser.setTitle(Lang.get('service.browser_loading'));
 Browser.loadURL('https://www.zeepond.com/zeepond/giveaways/enter-a-competition');
 setTimeout(() => {
-Browser.hide();
 GJuser.waitAuth = false;
 zpcurr++;
 _this.wait = false;
 }, 40000);
 }
 }
+else if (html.indexOf('Please try again in a few minutes.') >= 0) {
+_this.skip = 2;
+_this.setStatus('net');
+_this.log(Lang.get('service.err_join'), 'cant');
+_this.log(Lang.get('service.connection_lost').replace('5', 15), 'err');
+_this.totalTicks = 1;
+_this.stimer = 15;
+zpcurr++;
+_this.wait = false;
+}
 else if (html.indexOf('You must log in before you can see this view') >= 0) {
-_this.skip = true;
+_this.skip = 2;
 _this.setStatus('net');
 _this.log(Lang.get('service.err_join'), 'cant');
 _this.log(Lang.get('service.session_expired'), 'err');
 _this.totalTicks = 1;
 _this.stimer = 1;
+zpcurr++;
+_this.wait = false;
 }
 else {
 let won = html.indexOf('You have already won a prize in this competition') >= 0,
@@ -436,7 +455,7 @@ _this.dsave = _this.dsave + zpnam + '(z=' + zpdnow + '),';
 }
 zpown = 5;
 if (_this.getConfig('skip_after', true)) {
-_this.skip = true;
+_this.skip = 1;
 }
 }
 if (zpsteam !== undefined) {
@@ -545,13 +564,13 @@ method: 'GET',
 url: zplnk + '/enter_competition',
 headers: {
 'authority': 'www.zeepond.com',
-'user-agent': _this.ua,
-'sec-fetch-site': 'same-origin',
-'sec-fetch-mode': 'navigate',
-'sec-fetch-user': '?1',
-'sec-fetch-dest': 'document',
+'cookie': _this.cookies,
 'referer': zplnk,
-'cookie': _this.cookies
+'sec-fetch-dest': 'document',
+'sec-fetch-mode': 'navigate',
+'sec-fetch-site': 'same-origin',
+'sec-fetch-user': '?1',
+'user-agent': _this.ua
 },
 responseType: 'document'
 })
@@ -579,16 +598,34 @@ zparray.push(zpcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 if (!GJuser.waitAuth) {
 GJuser.waitAuth = true;
-Browser.show();
 Browser.setTitle(Lang.get('service.browser_loading'));
-Browser.loadURL('https://www.zeepond.com/zeepond/giveaways/enter-a-competition');
+Browser.loadURL('https://www.zeepond.com');
 setTimeout(() => {
-Browser.hide();
 GJuser.waitAuth = false;
 zpcurr++;
 _this.wait = false;
 }, 40000);
 }
+}
+else if (resp.indexOf('Please try again in a few minutes.') >= 0) {
+_this.skip = 2;
+_this.setStatus('net');
+_this.log(Lang.get('service.err_join'), 'cant');
+_this.log(Lang.get('service.connection_lost').replace('5', 15), 'err');
+_this.totalTicks = 1;
+_this.stimer = 15;
+zpcurr++;
+_this.wait = false;
+}
+else if (resp.indexOf('You must log in before you can see this view') >= 0) {
+_this.skip = 2;
+_this.setStatus('net');
+_this.log(Lang.get('service.err_join'), 'cant');
+_this.log(Lang.get('service.session_expired'), 'err');
+_this.totalTicks = 1;
+_this.stimer = 1;
+zpcurr++;
+_this.wait = false;
 }
 else if (resp.indexOf('>You have successfully entered this competition<') >= 0) {
 let zpdtnew = new Date();
