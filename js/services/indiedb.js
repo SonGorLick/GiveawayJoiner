@@ -159,6 +159,8 @@ name = cont.find('h2 a').text(),
 idbsteam = '',
 id = '',
 ga = '',
+adds = '',
+curradds = -1,
 entries = 1,
 copies = 1,
 idbown = 0,
@@ -178,7 +180,7 @@ enter = data.indexOf('"buttonenter buttongiveaway">Join Giveaway<') >= 0;
 entered = data.indexOf('"buttonenter buttonentered buttongiveaway">Success - Giveaway joined<') >= 0;
 if (entered) {
 idbown = 3;
-}
+adds = cont.find('#giveawaysjoined > div p');
 }
 let idblog = _this.logLink(link, name);
 if (_this.getConfig('log', true)) {
@@ -247,7 +249,7 @@ _this.log(Lang.get('service.skipped'), 'skip');
 break;
 }
 }
-else if (idbown === 0) {
+else if (idbown === 0 && enter) {
 entered = true;
 let eLink = cont.find('p a.buttonenter').attr('href');
 rq({
@@ -258,10 +260,6 @@ responseType: 'document'
 });
 _this.log(Lang.get('service.entered_in') + idblog, 'enter');
 }
-let adds = '',
-curradds = -1;
-if (idbown === 3) {
-adds = cont.find('#giveawaysjoined > div p');
 }
 function giveawayEnter() {
 if (adds.length <= curradds || !_this.started) {
