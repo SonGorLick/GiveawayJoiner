@@ -6,6 +6,7 @@ this.domain = 'indiedb.com';
 this.websiteUrl = 'https://www.indiedb.com';
 this.website = this.websiteUrl;
 this.authContent = 'View your profile';
+this.settings.steam_only = { type: 'checkbox', trans: 'service.steam_only', default: this.getConfig('steam_only', false) };
 this.settings.login_steam = { type: 'checkbox', trans: 'service.login_steam', default: this.getConfig('login_steam', false) };
 if (this.getConfig('login_steam', false)) {
 this.authLink = 'https://www.indiedb.com/members/loginext/steam';
@@ -17,8 +18,6 @@ this.setConfig('check_in_steam', false);
 delete this.settings.pages;
 delete this.settings.interval_from;
 delete this.settings.interval_to;
-delete this.settings.check_in_steam;
-delete this.settings.blacklist_on;
 super.init();
 }
 authCheck(callback) {
@@ -154,20 +153,101 @@ if (data === 'err') {
 _this.log(Lang.get('service.connection_error'), 'err');
 }
 let cont = $(data).find('#articlecontent'),
+info = $(data).find('#giveawaysprofilemenu > div.inner > div > div.table.tablemenu > div'),
 link = cont.find('h2 a').attr('href'),
 name = cont.find('h2 a').text(),
-id = '';
+idbsteam = '',
+id = '',
+ga = '',
+entries = 1,
+copies = 1,
+idbown = 0,
+idbapp = 0,
+idbsub = 0,
+idbbun = 0,
+idbid = '???';
+if (info !== undefined) {
+ga = info.eq(2).find('span').text().trim();
+copies = info.eq(3).find('span').text().trim();
+entries = info.eq(4).find('span').text().trim();
+}
 if (link !== undefined) {
 link = _this.url + link;
 id = data.substring(data.indexOf('<meta property="og:image" content="')+81).slice(0, 8).match(/[\d]+/)[0];
 enter = data.indexOf('"buttonenter buttongiveaway">Join Giveaway<') >= 0;
 entered = data.indexOf('"buttonenter buttonentered buttongiveaway">Success - Giveaway joined<') >= 0;
-_this.log(Lang.get('service.checking') + ' ' + _this.logLink(link, name), 'chk');
 if (entered) {
+idbown = 3;
+}
+}
+let idblog = _this.logLink(link, name);
+if (_this.getConfig('log', true)) {
+idblog = '|' + copies + 'x|' + entries + 'e|  ' + idblog;
+}
+if (ga === 'Steam') {
+idbsteam = info.eq(1).find('span > a').attr('href');
+if (idbsteam !== undefined && idbsteam.includes('https://store.steam')) {
+if (idbsteam.includes('app/')) {
+idbapp = parseInt(idbsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
+idbid = 'app/' + idbapp;
+}
+else if (idbsteam.includes('sub/')) {
+idbsub = parseInt(idbsteam.split('sub/')[1].split('/')[0].split('?')[0].split('#')[0]);
+idbid = 'sub/' + idbsub;
+}
+else if (idbsteam.includes('bundle/')) {
+idbbun = parseInt(idbsteam.split('bundle/')[1].split('/')[0].split('?')[0].split('#')[0]);
+idbid = 'bundle/' + idbbun;
+}
+}
+if (_this.getConfig('check_in_steam', true)) {
+if (GJuser.ownapps === '' && GJuser.ownsubs === '') {
+idbown = 2;
+}
+if (GJuser.ownapps.includes(',' + idbapp + ',') && idbapp > 0) {
+idbown = 1;
+}
+if (GJuser.ownsubs.includes(',' + idbsub + ',') && idbsub > 0) {
+idbown = 1;
+}
+}
+if (GJuser.black.includes(idbid + ',') && _this.getConfig('blacklist_on', false)) {
+idbown = 4;
+}
+if (GJuser.card.includes(',' + idbapp + ',')) {
+idblog = '♦ ' + idblog;
+}
+if (!_this.getConfig('log', true)) {
+idblog = idblog + _this.logBlack(idbid);
+}
+_this.log(Lang.get('service.checking') + ' ' + idblog + _this.logBlack(idbid), 'chk');
+}
+else {
+if (_this.getConfig('steam_only', false)) {
+idbown = 5;
+}
+_this.log(Lang.get('service.checking') + ' ' + idblog, 'chk');
+}
+if (idbown > 0) {
+switch (idbown) {
+case 1:
+_this.log(Lang.get('service.have_on_steam'), 'steam');
+break;
+case 2:
+_this.log(Lang.get('service.steam_error'), 'err');
+break;
+case 3:
 _this.log(Lang.get('service.already_joined'), 'jnd');
+break;
+case 4:
+_this.log(Lang.get('service.blacklisted'), 'black');
+break;
+case 5:
+_this.log(Lang.get('service.skipped'), 'skip');
+break;
 }
 }
-if (enter) {
+else if (idbown === 0) {
 entered = true;
 let eLink = cont.find('p a.buttonenter').attr('href');
 rq({
@@ -176,11 +256,11 @@ url: _this.url + eLink,
 headers: _this.dload,
 responseType: 'document'
 });
-_this.log(Lang.get('service.entered_in') + _this.logLink(link, name), 'enter');
+_this.log(Lang.get('service.entered_in') + idblog, 'enter');
 }
 let adds = '',
 curradds = -1;
-if (entered) {
+if (idbown === 3) {
 adds = cont.find('#giveawaysjoined > div p');
 }
 function giveawayEnter() {
@@ -241,7 +321,7 @@ _this.setStatus('good');
 }
 return;
 }
-let idbnext = 5000;
+let idbnext = 7000;
 if (curradds >= 0) {
 let addlink = adds.eq(curradds).find('a').attr('href'),
 finish = adds.eq(curradds).find('a').attr('class');

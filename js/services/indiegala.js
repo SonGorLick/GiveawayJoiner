@@ -37,7 +37,7 @@ this.settings.whitelist_only = { type: 'checkbox', trans: 'service.whitelist_onl
 this.settings.skip_skipdlc = { type: 'checkbox', trans: 'service.skip_skipdlc', default: this.getConfig('skip_skipdlc', false) };
 this.settings.skip_trial = { type: 'checkbox', trans: 'service.skip_trial', default: this.getConfig('skip_trial', false) };
 this.settings.whitelist_nocards = { type: 'checkbox', trans: 'service.whitelist_nocards', default: this.getConfig('whitelist_nocards', false) };
-this.settings.steam_only = { type: 'checkbox', trans: this.transPath('steam_only'), default: this.getConfig('steam_only', false) };
+this.settings.steam_only = { type: 'checkbox', trans: 'service.steam_only', default: this.getConfig('steam_only', false) };
 this.settings.view_ga_info = { type: 'checkbox', trans: 'view_ga_info', default: this.getConfig('view_ga_info', false) };
 super.init();
 }
@@ -756,7 +756,7 @@ _this.wait = false;
 else if (resp.status === 'duplicate') {
 igcurr++;
 igrtry = 0;
-_this.log(Lang.get('service.entered_in') + iglog, 'enter');
+_this.log(Lang.get('service.already_joined'), 'jnd');
 _this.wait = false;
 }
 else if (resp.status === 'login') {

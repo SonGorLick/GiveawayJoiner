@@ -25,23 +25,30 @@ let Lang = null;
 let tray = null;
 let user = null;
 let _icn = null;
-let _bmd = 'true';
+let _bmd = 'false';
 let _bfr = 'false';
 let _itr = __dirname + '/icons/tray.png';
 let udata = process.execPath;
 if (process.platform === 'win32') {
+_bmd = true;
 _itr = __dirname + '/icons/icon.ico';
 udata = (udata.slice(0, -4)).toLowerCase();
 }
 if (process.platform === 'darwin') {
-_bmd = false;
 _bfr = true;
 _itr = __dirname + '/icons/trayTemplate.png';
 udata = (udata.slice(0, -34)).toLowerCase();
 }
 _icn = _itr;
-app.setPath('userData', udata + 'data');
-storage.setDataPath(udata + 'data');
+if (process.argv[1] !== undefined && process.argv[1].includes('-userdata=')) {
+udata = udata + 'data';
+udata = udata.replace('giveawayjoinerdata', '') + process.argv[1].replace('-userdata=', '');
+}
+else {
+udata = udata + 'data';
+}
+app.setPath('userData', udata);
+storage.setDataPath(udata);
 if (fs.existsSync(storage.getDataPath() + '/user-agent.txt')) {
 let content = fs.readFileSync(storage.getDataPath() + '/user-agent.txt').toString().split('\n')[0];
 if (content.length > 50) {
@@ -84,7 +91,7 @@ callback(true);
 app.on('ready', () => {
 Config = new ConfigClass();
 Lang = new LanguageClass();
-_session = session.fromPartition('persist:GiveawayJoiner');
+_session = session.fromPartition('persist:user');
 _session.setUserAgent(_ua);
 Menu.setApplicationMenu(null);
 const remote = require("@electron/remote/main");
@@ -103,6 +110,7 @@ frame: false,
 hasShadow: false,
 webPreferences: {
 session: _session,
+disableDialogs: true,
 devTools: devMode,
 allowRunningInsecureContent: true,
 backgroundThrottling: false,
@@ -132,6 +140,7 @@ backgroundColor: '#263238',
 hasShadow: false,
 webPreferences: {
 session: _session,
+disableDialogs: true,
 devTools: false,
 allowRunningInsecureContent: true,
 backgroundThrottling: false,

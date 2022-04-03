@@ -297,12 +297,12 @@ $(document.createElement('button'))
 .appendTo('.content-item .devmode');
 }
 function renderUser(userData) {
-let localname = dirdata.replace('giveawayjoinerdata/', '');
-if (localname.includes('/')) {
-localname = localname.split('/').reverse()[1];
-}
-else if (localname.includes('\\')) {
+let localname = dirdata;
+if (localname.includes('\\')) {
 localname = localname.split('\\').reverse()[1];
+}
+else if (localname.includes('/')) {
+localname = localname.split('/').reverse()[1];
 }
 $('.content-item .info .username').html(localname).attr('title', 'Local User');
 $('.content-item .info .avatar').css({'background-image': 'url("../app.asar/images/local.png")'});
