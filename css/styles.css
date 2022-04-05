@@ -150,6 +150,7 @@ input-wrap.checkbox input[disabled] { cursor: default; }
 .input-wrap.checkbox input[disabled] + label { cursor: default; color: #2c383e; }
 .fa, .fab { -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: optimizeLegibility; line-height: 1; }
 .fa-chrome:before { content: '\f268'; }
+.fa-circle-stop:before { content: '\f28d'; }
 .fa-database:before { content: '\f1c0'; }
 .fa-dataupd:before { content: '\f2f9'; }
 .fa-history:before { content: '\f1da'; }

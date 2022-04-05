@@ -36,6 +36,9 @@ authCheck(callback) {
 if (!GJuser.waitAuth) {
 GJuser.waitAuth = true;
 Browser.webContents.on('did-finish-load', () => {
+if (Browser.getURL().indexOf('https://steamcommunity.com/openid/login?openid.ns') >= 0) {
+Browser.webContents.executeJavaScript('document.getElementById("imageLogin").click()');
+}
 if (GJuser.waitAuth && Browser.getURL().indexOf('https://www.zeepond.com') >= 0) {
 Browser.webContents.executeJavaScript('document.querySelector("body").innerHTML')
 .then((body) => {
@@ -60,9 +63,13 @@ callback(0);
 });
 }
 else {
+setTimeout(() => {
+if (GJuser.waitAuth) {
 Browser.webContents.removeAllListeners('did-finish-load');
 GJuser.waitAuth = false;
 callback(-1);
+}
+}, 40000);
 }
 });
 Browser.setTitle(Lang.get('service.browser_loading'));

@@ -53,6 +53,9 @@ if (fs.existsSync(dirdata + 'indiegala.txt')) {
 let lvl = parseInt(fs.readFileSync(dirdata + 'indiegala.txt').toString());
 userData.level = lvl;
 }
+else {
+fs.writeFile(dirdata + 'indiegala.txt', userData.level, (err) => { });
+}
 $.ajax({
 url: 'https://www.indiegala.com/library',
 success: function (html) {
@@ -99,27 +102,31 @@ _this.ending_first = _this.getConfig('ending_first', false);
 _this.reserve = _this.getConfig('points_reserve', 0);
 _this.sort_after = false;
 _this.url = 'https://www.indiegala.com';
+_this.enteredga = ',';
 _this.notsteam = ',';
+if (fs.existsSync(dirdata + 'indiegala.txt')) {
+let igl = parseInt(fs.readFileSync(dirdata + 'indiegala.txt').toString());
+_this.setLevel(igl);
+_this.curr_level = igl;
+}
+else {
+_this.setLevel(_this.lvlmax);
+_this.curr_level = _this.lvlmax;
+fs.writeFile(dirdata + 'indiegala.txt', _this.lvlmax, (err) => { });
+}
 if (fs.existsSync(dirdata + 'indiegala2.txt')) {
 let igdata = fs.readFileSync(dirdata + 'indiegala2.txt');
 if (igdata.length > 1 && igdata.length < 5000) {
 _this.notsteam = igdata.toString();
 }
 }
-if (fs.existsSync(dirdata + 'indiegala.txt')) {
-let igl = parseInt(fs.readFileSync(dirdata + 'indiegala.txt').toString());
-_this.setLevel(igl);
-if (_this.lvlmax > igl || _this.lvlmax === 0) {
-_this.lvlmax = igl;
-}
-if (_this.lvlmin > igl) {
-_this.lvlmin = igl;
+if (fs.existsSync(dirdata + 'indiegala3.txt')) {
+let igentered = fs.readFileSync(dirdata + 'indiegala3.txt');
+if (igentered.length > 1 && igentered.length < 5000) {
+_this.enteredga = igentered.toString();
 }
 }
-if (_this.getConfig('lvl_date', 0) < Date.now() || !fs.existsSync(dirdata + 'indiegala.txt')) {
-if (_this.lvlmax === 0) {
-_this.lvlmax = 8;
-}
+if (_this.getConfig('lvl_date', 0) < Date.now()) {
 rq({
 method: 'GET',
 url: _this.url + '/library/giveaways/user-level-and-coins',
@@ -140,18 +147,9 @@ iglevel = iglevel.data;
 if (iglevel.current_level !== null && iglevel.current_level !== undefined && iglevel.current_level !== '-') {
 iglevel = parseInt(iglevel.current_level);
 _this.setLevel(iglevel);
-if (_this.lvlmax > iglevel || _this.lvlmax === 0) {
-_this.lvlmax = iglevel;
-}
-if (_this.lvlmin > iglevel) {
-_this.lvlmin = iglevel;
-}
+_this.curr_level = iglevel;
 _this.setConfig('lvl_date', Date.now() + 86400000);
 fs.writeFile(dirdata + 'indiegala.txt', iglevel.toString(), (err) => { });
-}
-else if (!fs.existsSync(dirdata + 'indiegala.txt')) {
-_this.setLevel(_this.lvlmax);
-fs.writeFile(dirdata + 'indiegala.txt', _this.lvlmax, (err) => { });
 }
 });
 }
@@ -280,6 +278,7 @@ if (page === _this.pagemax) {
 igplog = igplog + page + '#-' + _this.getConfig('pages', 1) + '#';
 setTimeout(() => {
 fs.writeFile(dirdata + 'indiegala2.txt', _this.notsteam, (err) => { });
+fs.writeFile(dirdata + 'indiegala3.txt', _this.enteredga, (err) => { });
 _this.log(Lang.get('service.data_saved'), 'info');
 }, _this.interval());
 if (_this.getConfig('check_date', 0) < Date.now() && _this.started) {
@@ -548,8 +547,12 @@ igown = 1;
 if (GJuser.black.includes(igid + ',') && _this.getConfig('blacklist_on', false)) {
 igown = 4;
 }
-if (entered) {
+if (_this.enteredga.includes(',' + id + ',')) {
+igown = 12;
+}
+else if (entered) {
 igown = 3;
+_this.enteredga = _this.enteredga + id + ',';
 }
 if (!single && !_this.getConfig('multi_join', false)) {
 igown = 5;
@@ -597,6 +600,9 @@ _this.log(Lang.get('service.trial') + ', ' + Lang.get('service.data_have'), 'inf
 break;
 case 11:
 _this.log(Lang.get('service.not_steam') + ', ' + Lang.get('service.data_have'), 'info');
+break;
+case 12:
+_this.log(Lang.get('service.already_joined') + ', ' + Lang.get('service.data_have'), 'jnd');
 break;
 }
 ignext = 100;
@@ -705,6 +711,9 @@ if (Times === 0 && single) {
 igcurr++;
 _this.log(Lang.get('service.entered_in') + iglog, 'enter');
 _this.wait = false;
+if (!_this.enteredga.includes(',' + id + ',')) {
+_this.enteredga = _this.enteredga + id + ',';
+}
 }
 else {
 Times++;
@@ -758,6 +767,9 @@ igcurr++;
 igrtry = 0;
 _this.log(Lang.get('service.already_joined'), 'jnd');
 _this.wait = false;
+if (!_this.enteredga.includes(',' + id + ',')) {
+_this.enteredga = _this.enteredga + id + ',';
+}
 }
 else if (resp.status === 'login') {
 igrtry = 0;

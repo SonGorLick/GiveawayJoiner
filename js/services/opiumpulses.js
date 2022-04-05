@@ -10,6 +10,7 @@ this.withValue = true;
 this.card = true;
 this.dlc = true;
 this.settings.maxcost = { type: 'number', trans: this.transPath('maxcost'), min: 0, max: 1000, default: this.getConfig('maxcost', 0) };
+this.settings.min_entries = { type: 'ten_number', trans: 'service.min_entries', min: 0, max: 10000, default: this.getConfig('min_entries', 0) };
 this.settings.card_only = { type: 'checkbox', trans: 'service.card_only', default: this.getConfig('card_only', false) };
 this.settings.skip_dlc = { type: 'checkbox', trans: 'service.skip_dlc', default: this.getConfig('skip_dlc', false) };
 this.settings.check_all = { type: 'checkbox', trans: 'service.check_all', default: this.getConfig('check_all', false) };
@@ -314,7 +315,7 @@ oplog = '⊞ ' + oplog;
 if (GJuser.card.includes(',' + opblack.replace('app/', '') + ',')) {
 oplog = '♦ ' + oplog;
 }
-if (opstore === 'steam') {
+if (opstore === 'steam' && !opblack.includes('???')) {
 opblack = _this.logWhite(opblack) + _this.logBlack(opblack);
 }
 else {
@@ -385,7 +386,11 @@ _this.wait = false;
 }
 }
 else {
-let opsteam = html.find('.giveaways-single-sponsored h1 a').attr('href');
+let opsteam = html.find('.giveaways-single-sponsored h1 a').attr('href'),
+opentries = html.find('.giveaways-single-promo-content-item-icon').first().text();
+if (opentries !== undefined) {
+opentries = parseInt(opentries);
+}
 if (opsteam === undefined) {
 opsteam = html.find('.giveaways-single-sponsored h4 a').attr('href');
 }
@@ -490,7 +495,7 @@ opown = 7;
 }
 }
 oplog = _this.logLink(_this.url + link, name);
-if (opstore === 'steam') {
+if (opstore === 'steam' && !opid.includes('???')) {
 opblack = _this.logWhite(opid) + _this.logBlack(opid);
 }
 else {
@@ -504,6 +509,12 @@ oplog = '⊞ ' + oplog;
 }
 if (GJuser.card.includes(',' + opapp + ',')) {
 oplog = '♦ ' + oplog;
+}
+if (opentries !== undefined) {
+oplg = oplg.replace(optype, opentries + 'e|' + optype);
+if (opown === 0 && opentries < _this.getConfig('min_entries', 0)) {
+opown = 6;
+}
 }
 if (_this.getConfig('log', true)) {
 oplog = oplg + oplog;
