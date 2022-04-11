@@ -495,7 +495,7 @@ iglog = '[!bundle] ' + iglog;
 if (igrtry === 0 && !_this.wait && (single || Times === 0 && !single)) {
 _this.log(iglog + _this.logWhite(igid) + _this.logBlack(igid), 'chk');
 }
-iglog = iglog.replace(Lang.get('service.checking'), '').replace('[m] ', '');
+iglog = iglog.split(Lang.get('service.checking'))[1];
 if (_this.curr_value < price) {
 igown = 7;
 }
