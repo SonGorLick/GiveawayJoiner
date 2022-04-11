@@ -476,18 +476,26 @@ iglog = '|' + page + '#|' + (igcurr + 1) + '№|' + sold + 'e|' + igtime + level
 else {
 iglog = iglog + _this.logWhite(igid) + _this.logBlack(igid);
 }
+iglog = Lang.get('service.checking') + iglog;
+if (!single) {
+iglog = '[m] ' + iglog;
+}
 if (GJuser.white.includes(igid + ',')) {
 iglog = '[w] ' + iglog;
 }
 else if (_this.getConfig('whitelist_only', false)) {
 igown = 5;
 }
-if (igrtry === 0 && single && !_this.wait) {
-_this.log(Lang.get('service.checking') + iglog + _this.logWhite(igid) + _this.logBlack(igid), 'chk');
+if (igid.includes('sub/')) {
+iglog = '[!sub] ' + iglog;
 }
-if (igrtry === 0 && Times === 0 && !single && !_this.wait) {
-_this.log('[m] ' + Lang.get('service.checking') + iglog + _this.logWhite(igid) + _this.logBlack(igid), 'chk');
+else if (igid.includes('bundle/')) {
+iglog = '[!bundle] ' + iglog;
 }
+if (igrtry === 0 && !_this.wait && (single || Times === 0 && !single)) {
+_this.log(iglog + _this.logWhite(igid) + _this.logBlack(igid), 'chk');
+}
+iglog = iglog.replace(Lang.get('service.checking'), '').replace('[m] ', '');
 if (_this.curr_value < price) {
 igown = 7;
 }
@@ -547,12 +555,14 @@ igown = 1;
 if (GJuser.black.includes(igid + ',') && _this.getConfig('blacklist_on', false)) {
 igown = 4;
 }
+if (single) {
 if (_this.enteredga.includes(',' + id + ',')) {
 igown = 12;
 }
 else if (entered) {
 igown = 3;
 _this.enteredga = _this.enteredga + id + ',';
+}
 }
 if (!single && !_this.getConfig('multi_join', false)) {
 igown = 5;

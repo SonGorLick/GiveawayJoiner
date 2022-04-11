@@ -133,13 +133,12 @@ this.value_label = $(document.createElement('span'))
 $(document.createElement('button'))
 .addClass('open-website')
 .html('<div class="fab fa-chrome" data-lang-title="' + Lang.get('service.open_website') + this.constructor.name + ' (' + this.websiteUrl + ')"></div>')
-.css('margin-right', '40px')
 .attr('data-link', this.websiteUrl)
 .appendTo(this.userPanel);
 $(document.createElement('button'))
 .addClass('open-website')
 .html('<div class="fa fa-circle-stop" data-lang-title="' + Lang.get('service.btn_stop_all') + '"></div>')
-.css('margin-right', '-40px')
+.css('margin-right', '220px')
 .click(() => {
 window.services.astats.tries = 0;
 window.services.astats.stopJoiner();
@@ -170,6 +169,7 @@ window.services.zp.stopJoiner();
 $(document.createElement('button'))
 .addClass('open-website')
 .html('<div class="fa fa-user-circle" data-lang-title="' + this.auth + '"></div>')
+.css('margin-right', '-40px')
 .attr('data-link', this.authLink)
 .appendTo(this.userPanel);
 this.mainButton = $('<button>' + Lang.get('service.btn_start') + '</button>')
