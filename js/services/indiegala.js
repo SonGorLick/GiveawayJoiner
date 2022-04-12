@@ -53,8 +53,12 @@ if (fs.existsSync(dirdata + 'indiegala.txt')) {
 let lvl = parseInt(fs.readFileSync(dirdata + 'indiegala.txt').toString());
 userData.level = lvl;
 }
+else if (this.getConfig('max_level', 0) !== undefined) {
+userData.level = this.getConfig('max_level', 0);
+fs.writeFile(dirdata + 'indiegala.txt', this.getConfig('max_level', 0).toString(), (err) => { });
+}
 else {
-fs.writeFile(dirdata + 'indiegala.txt', userData.level, (err) => { });
+fs.writeFile(dirdata + 'indiegala.txt', '0', (err) => { });
 }
 $.ajax({
 url: 'https://www.indiegala.com/library',
