@@ -51,6 +51,7 @@ rq({
 method: 'GET',
 url: 'https://www.steamgifts.com',
 headers: {
+'connection': 'keep-alive',
 'authority': 'www.steamgifts.com',
 'from': 'esgst.extension@gmail.com',
 'user-agent': this.ua,
@@ -135,16 +136,36 @@ callback(-2);
 });
 }
 getUserInfo(callback) {
+this.setValue(500);
 let userData = {
 avatar: '../app.asar/images/SteamGifts.png',
 username: 'SteamGifts User',
-value: 0,
+value: 500,
 level: 0
 };
+if (GJuser.username !== 'User') {
+userData.avatar = GJuser.avatar;
+userData.username = GJuser.username;
+}
+if (fs.existsSync(dirdata + 'steamgifts.txt')) {
+let lvl = parseInt(fs.readFileSync(dirdata + 'steamgifts.txt').toString());
+userData.level = lvl;
+this.setLevel(lvl);
+}
+else if (this.getConfig('max_level', 0) !== undefined) {
+userData.level = this.getConfig('max_level', 0);
+this.setLevel(userData.level);
+fs.writeFile(dirdata + 'steamgifts.txt', userData.level.toString(), (err) => { });
+}
+else {
+this.setLevel(0);
+fs.writeFile(dirdata + 'steamgifts.txt', '0', (err) => { });
+}
 rq({
 method: 'GET',
 url: 'https://www.steamgifts.com/account/settings/profile',
 headers: {
+'connection': 'keep-alive',
 'authority': 'www.steamgifts.com',
 'from': 'esgst.extension@gmail.com',
 'user-agent': this.ua,
@@ -168,6 +189,7 @@ value = data.find('.nav__points').text(),
 level = data.find('.nav__points').next().text();
 if (level !== undefined && level.includes('Level ')) {
 userData.level = level.replace('Level ', '');
+fs.writeFile(dirdata + 'steamgifts.txt', userData.level.toString(), (err) => { });
 }
 if (value !== undefined && value !== '') {
 userData.value = value;
@@ -189,6 +211,7 @@ this.stimer = sgtimer;
 let page = -1;
 this.token = '';
 this.dsave = ',';
+this.sgretry = 0;
 this.wait = false;
 this.giveaways = [];
 this.won = this.getConfig('won', 0);
@@ -222,10 +245,12 @@ sgtype = 'g';
 else {
 sgurl = sgurl + 'page=' + sgpage;
 }
+let pdata = '';
 rq({
 method: 'GET',
 url: sgurl,
 headers: {
+'connection': 'keep-alive',
 'authority': 'www.steamgifts.com',
 'from': 'esgst.extension@gmail.com',
 'user-agent': this.ua,
@@ -241,16 +266,16 @@ headers: {
 },
 responseType: 'document'
 })
-.then((data) => {
-data = $('<div>' + data.data + '</div>');
-this.token = data.find('input[name="xsrf_token"]').val();
-if (this.token.length < 10) {
-this.log(this.trans('token_error'), 'err');
-this.stopJoiner(true);
-return;
+.then((pdatas) => {
+pdata = $('<div>' + pdatas.data + '</div>');
+})
+.finally(() => {
+let sgtoken = pdata.find('input[name="xsrf_token"]').val();
+if (sgtoken !== undefined && sgtoken.length > 9) {
+this.token = sgtoken;
 }
 if (sgpage === -1) {
-let sgwon = parseInt(data.find('.nav__button-container--active.nav__button-container--notification.nav__button-container:nth-of-type(2) > .nav__button > .nav__notification').text().trim());
+let sgwon = parseInt(pdata.find('.nav__button-container--active.nav__button-container--notification.nav__button-container:nth-of-type(2) > .nav__button > .nav__notification').text().trim());
 if (isNaN(sgwon)) {
 sgwon = 0;
 }
@@ -267,8 +292,8 @@ new Audio('../app.asar/sounds/won.wav').play();
 }
 }
 }
-data.find('.pinned-giveaways__outer-wrap').remove();
-data.find('.giveaway__row-outer-wrap').each((index, item) => {
+pdata.find('.pinned-giveaways__outer-wrap').remove();
+pdata.find('.giveaway__row-outer-wrap').each((index, item) => {
 let sgaway = $(item),
 copies = 1,
 link = this.url + sgaway.find('a.giveaway__heading__name').attr('href'),
@@ -355,8 +380,6 @@ if (
 )
 this.giveaways.push(GA);
 });
-})
-.finally(() => {
 if (callback) {
 callback();
 }
@@ -473,8 +496,8 @@ sgref = sgref + 'giveaways/search?type=group';
 else if (GA.page > 1) {
 sgref = sgref + 'giveaways/search?page=' + GA.page;
 }
-if (_this.getConfig('skip_ost', false) && !GA.nam.includes(' + Original Soundtrack')) {
-if (GA.nam.includes(' SoundTrack') || GA.nam.includes(' Soundtrack') || GA.nam.includes(' - OST')) {
+if (_this.getConfig('skip_ost', false) && !GA.nam.toLowerCase().includes(' + original soundtrack')) {
+if (GA.nam.toLowerCase().includes('soundtrack') || GA.nam.toLowerCase().includes(' - ost')) {
 sgown = 8;
 }
 }
@@ -554,6 +577,7 @@ sglog = '|' + GA.page + '#|' + GA.order + '№|'+ GA.copies + 'x|' + GA.entries 
 else {
 sglog = sglog + sgblack;
 }
+sglog = Lang.get('service.checking') + sglog;
 if (GA.white) {
 sglog = '[w] ' + sglog;
 }
@@ -563,9 +587,10 @@ sgown = 1;
 if (_this.wait) {
 sgown = -1;
 }
-else {
-_this.log(Lang.get('service.checking') + sglog + sgblack, 'chk');
+else if (_this.sgretry === 0) {
+_this.log(sglog + sgblack, 'chk');
 }
+sglog = sglog.replace(Lang.get('service.checking'), '');
 if (sgown > 0) {
 switch (sgown) {
 case 1:
@@ -668,6 +693,7 @@ rq({
 method: 'GET',
 url: GA.lnk,
 headers: {
+'connection': 'keep-alive',
 'authority': 'www.steamgifts.com',
 'from': 'esgst.extension@gmail.com',
 'user-agent': _this.ua,
@@ -687,13 +713,34 @@ responseType: 'document'
 ga = ga.data;
 ga = $(ga.replace(/<img/gi, '<noload'));
 let sgname = ga.find('.featured__heading__medium').text(),
-sgend = ga.find('.sidebar > form');
-sglog = sglog.replace(GA.nam, sgname);
+sgerr = ga.find('.sidebar__error').text(),
+sgend = ga.find('.sidebar__entry-insert');
+sglog = Lang.get('service.checking') + sglog.replace(GA.nam, sgname);
+if (_this.sgretry === 0) {
 _this.unlog();
-_this.log(Lang.get('service.checking') + sglog + sgblack, 'chk');
-if (_this.getConfig('skip_ost', false) && !sgname.includes(' + Original Soundtrack')) {
-if (sgname.includes(' SoundTrack') || sgname.includes(' Soundtrack') || sgname.includes(' - OST')) {
+_this.log(sglog + sgblack, 'chk');
+}
+sglog = sglog.replace(Lang.get('service.checking'), '');
+if (_this.getConfig('skip_ost', false) && !sgname.toLowerCase().includes(' + original soundtrack')) {
+if (sgname.toLowerCase().includes('soundtrack') || sgname.toLowerCase().includes(' - ost')) {
 sgown = 1;
+}
+}
+if (sgerr !== undefined) {
+if (sgerr === ' Not Enough Points') {
+_this.setValue(GA.cost - 1);
+sgown = 3;
+}
+else if (sgerr.includes('Level') && sgerr.includes('Required')) {
+_this.curr_level = parseInt(sgerr.replace(/\D/g, '')) - 1;
+_this.setLevel(parseInt(sgerr.replace(/\D/g, '')) - 1);
+sgown = 4;
+}
+else if (sgerr === ' Exists in Account') {
+sgown = 5;
+}
+else if (sgerr === ' Missing Base Game') {
+sgown = 6;
 }
 }
 if (sgend === undefined) {
@@ -709,11 +756,24 @@ break;
 case 2:
 _this.log(Lang.get('service.time'), 'cant');
 break;
+case 3:
+_this.log(Lang.get('service.points_low') + ' (' + Lang.get('service.value_label') + ' - ' + (GA.cost - 1) + '?)', 'skip');
+break;
+case 4:
+_this.log(Lang.get('service.cant_join') + ' (' + Lang.get('service.level_label') + ' - ' + _this.curr_level + '?)', 'skip');
+break;
+case 5:
+_this.log(Lang.get('service.cant_join') + ',' + Lang.get('service.have_on_steam').split('-')[1], 'cant');
+break;
+case 6:
+_this.log(Lang.get('service.cant_join') + ' (Missing Base Game)', 'cant');
+break;
 }
 sgcurr++;
 _this.wait = false;
 }
 else if (sgown === 0) {
+let sgdata = 'err';
 rq({
 method: 'POST',
 url: _this.url + '/ajax.php',
@@ -733,19 +793,63 @@ headers: {
 },
 data: 'xsrf_token=' + _this.token + '&do=entry_insert&code=' + GA.code
 })
-.then((data) => {
-data = data.data;
-if (data.type === 'success') {
+.then((sgenter) => {
+sgdata = sgenter.data;
+})
+.finally(() => {
+//_this.log(JSON.stringify(sgdata));
+if (sgdata === 'err') {
+if (_this.sgretry < 4) {
+_this.sgretry++;
+_this.wait = false;
+}
+else {
+_this.sgretry = 0;
+_this.log(Lang.get('service.err_join'), 'cant');
+sgcurr++;
+_this.wait = false;
+}
+}
+else if (sgdata.type === 'success') {
+_this.sgretry = 0;
 _this.log(Lang.get('service.entered_in') + sglog, 'enter');
-_this.setValue(data.points);
+_this.setValue(sgdata.points);
 GA.entered = true;
 sgcurr++;
 _this.wait = false;
 }
+else if (sgdata.type === 'error') {
+if (sgdata.msg === 'Not Enough Points') {
+_this.sgretry = 0;
+_this.log(Lang.get('service.cant_join') + ' (' + Lang.get('service.value_label') + ' - ' + (sgdata.points) + ')', 'cant');
+_this.setValue(sgdata.points);
+sgcurr++;
+_this.wait = false;
+}
 else {
+if (_this.sgretry < 4) {
+_this.sgretry++;
+_this.wait = false;
+}
+else {
+_this.sgretry = 0;
 _this.log(Lang.get('service.err_join'), 'cant');
 sgcurr++;
 _this.wait = false;
+}
+}
+}
+else {
+if (_this.sgretry < 4) {
+_this.sgretry++;
+_this.wait = false;
+}
+else {
+_this.sgretry = 0;
+_this.log(Lang.get('service.err_join'), 'cant');
+sgcurr++;
+_this.wait = false;
+}
 }
 });
 }

@@ -52,12 +52,15 @@ level: 0
 if (fs.existsSync(dirdata + 'indiegala.txt')) {
 let lvl = parseInt(fs.readFileSync(dirdata + 'indiegala.txt').toString());
 userData.level = lvl;
+this.setLevel(lvl);
 }
 else if (this.getConfig('max_level', 0) !== undefined) {
 userData.level = this.getConfig('max_level', 0);
-fs.writeFile(dirdata + 'indiegala.txt', this.getConfig('max_level', 0).toString(), (err) => { });
+this.setLevel(userData.level);
+fs.writeFile(dirdata + 'indiegala.txt', userData.level.toString(), (err) => { });
 }
 else {
+this.setLevel(0);
 fs.writeFile(dirdata + 'indiegala.txt', '0', (err) => { });
 }
 $.ajax({
@@ -396,8 +399,8 @@ igbun = 0,
 igid = '???',
 igtime = '',
 id = link.split('/')[4];
-if (_this.getConfig('skip_ost', false) && !name.includes(' + Original Soundtrack')) {
-if (name.includes(' SoundTrack') || name.includes(' Soundtrack') || name.includes(' - OST')) {
+if (_this.getConfig('skip_ost', false) && !name.toLowerCase().includes(' + original soundtrack')) {
+if (name.toLowerCase().includes('soundtrack') || name.toLowerCase().includes(' - ost')) {
 igown = 5;
 }
 }
