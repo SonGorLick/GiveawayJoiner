@@ -590,7 +590,7 @@ sgown = -1;
 else if (_this.sgretry === 0) {
 _this.log(sglog + sgblack, 'chk');
 }
-sglog = sglog.replace(Lang.get('service.checking'), '');
+sglog = sglog.replace(Lang.get('service.checking'), '').replace('[w] ', '');
 if (sgown > 0) {
 switch (sgown) {
 case 1:
@@ -716,11 +716,14 @@ let sgname = ga.find('.featured__heading__medium').text(),
 sgerr = ga.find('.sidebar__error').text(),
 sgend = ga.find('.sidebar__entry-insert');
 sglog = Lang.get('service.checking') + sglog.replace(GA.nam, sgname);
+if (GA.white) {
+sglog = '[w] ' + sglog;
+}
 if (_this.sgretry === 0) {
 _this.unlog();
 _this.log(sglog + sgblack, 'chk');
 }
-sglog = sglog.replace(Lang.get('service.checking'), '');
+sglog = sglog.replace(Lang.get('service.checking'), '').replace('[w] ', '');
 if (_this.getConfig('skip_ost', false) && !sgname.toLowerCase().includes(' + original soundtrack')) {
 if (sgname.toLowerCase().includes('soundtrack') || sgname.toLowerCase().includes(' - ost')) {
 sgown = 1;
@@ -742,6 +745,9 @@ sgown = 5;
 else if (sgerr === ' Missing Base Game') {
 sgown = 6;
 }
+else if (sgerr.length > 3) {
+_this.log(sgerr);
+}
 }
 if (sgend === undefined) {
 sgown = 2;
@@ -757,7 +763,7 @@ case 2:
 _this.log(Lang.get('service.time'), 'cant');
 break;
 case 3:
-_this.log(Lang.get('service.points_low') + ' (' + Lang.get('service.value_label') + ' - ' + (GA.cost - 1) + '?)', 'skip');
+_this.log(Lang.get('service.cant_join') + ' (' + Lang.get('service.value_label') + ' - ' + (GA.cost - 1) + '?)', 'skip');
 break;
 case 4:
 _this.log(Lang.get('service.cant_join') + ' (' + Lang.get('service.level_label') + ' - ' + _this.curr_level + '?)', 'skip');
@@ -797,7 +803,6 @@ data: 'xsrf_token=' + _this.token + '&do=entry_insert&code=' + GA.code
 sgdata = sgenter.data;
 })
 .finally(() => {
-//_this.log(JSON.stringify(sgdata));
 if (sgdata === 'err') {
 if (_this.sgretry < 4) {
 _this.sgretry++;
@@ -827,6 +832,7 @@ sgcurr++;
 _this.wait = false;
 }
 else {
+_this.log(JSON.stringify(sgdata));
 if (_this.sgretry < 4) {
 _this.sgretry++;
 _this.wait = false;

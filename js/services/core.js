@@ -295,6 +295,7 @@ this.runTimer();
 stopJoiner(bad) {
 let status = bad ? 'bad' : 'normal';
 if (!this.started) {
+this.setStatus('normal');
 return false;
 }
 this.started = false;
