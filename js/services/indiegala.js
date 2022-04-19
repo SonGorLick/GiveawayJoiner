@@ -672,7 +672,7 @@ if (
 (igga.includes('gog key')) || (igga.includes('key gog')) || (igga.includes('key for gog')) || (igga.includes('gog.com')) ||
 (igga.includes('origin key')) || (igga.includes('key origin')) || (igga.includes('key for origin')) || (igga.includes('origin.com')) ||
 (igga.includes('epic key')) || (igga.includes('key epic')) || (igga.includes('key for epic')) || (igga.includes('epicgames.com')) ||
-(igga.includes('bethesda.net')) || (igga.includes(' not for steam'))
+(igga.includes('bethesda.net')) || (igga.includes('legacygames.com')) || (igga.includes(' not for steam')) || (igga.includes('(not steam)'))
 )
 {
 igown = 2;
@@ -719,7 +719,21 @@ resp = resps.data;
 })
 .finally(() => {
 if (resp === 'err') {
+if (igrtry < 12) {
 ignext = (Math.floor(Math.random() * 1000)) + 3000;
+_this.wait = false;
+}
+else {
+igrtry = 0;
+igcurr = 200;
+ignext = 100;
+_this.pagemax = page;
+_this.setStatus('net');
+_this.log(Lang.get('service.err_join'), 'cant');
+_this.log(Lang.get('service.connection_lost'), 'err');
+_this.totalTicks = 1;
+_this.stimer = 5;
+}
 }
 else if (resp.status === 'ok') {
 igrtry = 0;
@@ -800,9 +814,11 @@ _this.totalTicks = 1;
 _this.stimer = 1;
 }
 else {
+if (igrtry < 12) {
 ignext = (Math.floor(Math.random() * 1000)) + 3000;
+_this.wait = false;
 }
-if (igrtry >= 12) {
+else {
 igrtry = 0;
 igcurr = 200;
 ignext = 100;
@@ -812,6 +828,7 @@ _this.log(Lang.get('service.err_join'), 'cant');
 _this.log(Lang.get('service.connection_lost'), 'err');
 _this.totalTicks = 1;
 _this.stimer = 5;
+}
 }
 });
 }
