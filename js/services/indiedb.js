@@ -159,17 +159,25 @@ name = cont.find('h2 a').text(),
 idbsteam = '',
 id = '',
 ga = '',
-entries = 1,
-copies = 1,
+entries = '?',
+copies = '?',
 idbown = 0,
 idbapp = 0,
 idbsub = 0,
 idbbun = 0,
 idbid = '???';
 if (info !== undefined) {
+if (info.length === 6) {
+idbsteam = info.eq(1).find('span > a').attr('href');
 ga = info.eq(2).find('span').text().trim();
 copies = info.eq(3).find('span').text().trim();
 entries = info.eq(4).find('span').text().trim();
+}
+else {
+ga = info.eq(1).find('span').text().trim();
+copies = info.eq(2).find('span').text().trim();
+entries = info.eq(3).find('span').text().trim();
+}
 }
 if (link !== undefined) {
 link = _this.url + link;
@@ -184,7 +192,6 @@ if (_this.getConfig('log', true)) {
 idblog = '|' + copies + 'x|' + entries + 'e|  ' + idblog;
 }
 if (ga === 'Steam') {
-idbsteam = info.eq(1).find('span > a').attr('href');
 if (idbsteam !== undefined && idbsteam.includes('https://store.steam')) {
 if (idbsteam.includes('app/')) {
 idbapp = parseInt(idbsteam.split('app/')[1].split('/')[0].split('?')[0].split('#')[0]);
@@ -217,14 +224,16 @@ if (GJuser.card.includes(',' + idbapp + ',')) {
 idblog = '♦ ' + idblog;
 }
 if (!_this.getConfig('log', true)) {
-idblog = idblog + _this.logBlack(idbid);
+idblog = idblog + _this.logWhite(idbid) + _this.logBlack(idbid);
 }
-_this.log(Lang.get('service.checking') + ' ' + idblog + _this.logBlack(idbid), 'chk');
 }
-else {
-if (_this.getConfig('steam_only', false)) {
+else if (_this.getConfig('steam_only', false)) {
 idbown = 5;
 }
+if (idbid !== '???') {
+_this.log(Lang.get('service.checking') + ' ' + idblog + _this.logWhite(idbid) + _this.logBlack(idbid), 'chk');
+}
+else {
 _this.log(Lang.get('service.checking') + ' ' + idblog, 'chk');
 }
 if (idbown > 0) {
