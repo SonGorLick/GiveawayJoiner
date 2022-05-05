@@ -140,6 +140,7 @@ $(document.createElement('button'))
 .html('<div class="fa fa-circle-stop" data-lang-title="' + Lang.get('service.btn_stop_all') + '"></div>')
 .css('margin-right', '220px')
 .click(() => {
+GJuser.waitAuth = false;
 window.services.astats.tries = 0;
 window.services.astats.stopJoiner();
 window.services.fgl.tries = 0;
@@ -362,6 +363,9 @@ if (!this.started) {
 clearInterval(this.intervalVar);
 }
 if (this.totalTicks % this.doTimer() === 0) {
+if (Config.get('autoswitch')) {
+this.setActive();
+}
 this.totalTicks = 1;
 this.updateCookies();
 GJuser.white = loadFile('whitelist');

@@ -110,6 +110,7 @@ _this.reserve = _this.getConfig('points_reserve', 0);
 _this.sort_after = false;
 _this.url = 'https://www.indiegala.com';
 _this.enteredga = ',';
+_this.cantga = ',';
 _this.notsteam = ',';
 if (fs.existsSync(dirdata + 'indiegala.txt')) {
 let igl = parseInt(fs.readFileSync(dirdata + 'indiegala.txt').toString());
@@ -131,6 +132,12 @@ if (fs.existsSync(dirdata + 'indiegala3.txt')) {
 let igentered = fs.readFileSync(dirdata + 'indiegala3.txt');
 if (igentered.length > 1 && igentered.length < 5000) {
 _this.enteredga = igentered.toString();
+}
+}
+if (fs.existsSync(dirdata + 'indiegala4.txt')) {
+let igcant = fs.readFileSync(dirdata + 'indiegala4.txt');
+if (igcant.length > 1 && igcant.length < 5000) {
+_this.cantga = igcant.toString();
 }
 }
 if (_this.getConfig('lvl_date', 0) < Date.now()) {
@@ -235,17 +242,10 @@ _this.setStatus('net');
 _this.log(Lang.get('service.connection_lost').split(',')[0] + ',' + Lang.get('service.session_expired').split(',')[1], 'err');
 _this.totalTicks = 1;
 _this.stimer = 1;
-}
 if (!GJuser.waitAuth) {
-GJuser.waitAuth = true;
-Browser.webContents.on('did-finish-load', () => {
-setTimeout(() => {
-Browser.webContents.removeAllListeners('did-finish-load');
-GJuser.waitAuth = false;
-}, 30000);
-});
 Browser.setTitle(Lang.get('service.browser_loading'));
 Browser.loadURL('https://www.indiegala.com');
+}
 }
 }
 }
@@ -270,9 +270,12 @@ if (!_this.started) {
 _this.setConfig('lvl_date', 0);
 _this.setConfig('check_date', 0);
 }
-if (_this.igprtry === 0) {
+if (_this.igprtry === 0 && igcurr < 200) {
 if (_this.curr_value === 0 && _this.dload === 2) {
 _this.log(Lang.get('service.value_label') + ' - 0', 'skip');
+}
+if (_this.dload === 3) {
+_this.log(Lang.get('service.indiegala.ending') + ' > ' + _this.ending, 'skip');
 }
 if (_this.dload === 1 && !_this.sort && _this.started) {
 _this.log(Lang.get('service.reach_end'), 'skip');
@@ -286,6 +289,7 @@ igplog = igplog + page + '#-' + _this.getConfig('pages', 1) + '#';
 setTimeout(() => {
 fs.writeFile(dirdata + 'indiegala2.txt', _this.notsteam, (err) => { });
 fs.writeFile(dirdata + 'indiegala3.txt', _this.enteredga, (err) => { });
+fs.writeFile(dirdata + 'indiegala4.txt', _this.cantga, (err) => { });
 _this.log(Lang.get('service.data_saved'), 'info');
 }, _this.interval());
 if (_this.getConfig('check_date', 0) < Date.now() && _this.started) {
@@ -322,7 +326,6 @@ headers: {
 })
 .then((win) => {
 let igwin = win.data;
-_this.setConfig('check_date', Date.now() + 43200000);
 iw = igwin.won;
 il = igwin.checked;
 if (igwin.status === 'server_error: 500') {
@@ -331,6 +334,8 @@ iw = 0;
 }
 })
 .finally(() => {
+if (il !== undefined) {
+_this.setConfig('check_date', Date.now() + 43200000);
 _this.log(Lang.get('service.done') + 'Completed To Check - ' + il + ' checked', 'info');
 if (iw > 0) {
 _this.log(_this.logLink(_this.url + '/library', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + iw + ')'), 'win');
@@ -339,6 +344,10 @@ _this.setStatus('win');
 if (_this.getConfig('sound', true)) {
 new Audio('../app.asar/sounds/won.wav').play();
 }
+}
+}
+else {
+_this.log(Lang.get('service.done') + 'Completed To Check - check error', 'info');
 }
 });
 }
@@ -399,7 +408,7 @@ igbun = 0,
 igid = '???',
 igtime = '',
 id = link.split('/')[4];
-if (_this.getConfig('skip_ost', false) && !name.toLowerCase().includes(' + original soundtrack')) {
+if (_this.getConfig('skip_ost', false) && !name.toLowerCase().includes(' + original soundtrack') && !name.toLowerCase().includes(' + ost')) {
 if (name.toLowerCase().includes('soundtrack') || name.toLowerCase().includes(' - ost')) {
 igown = 5;
 }
@@ -536,6 +545,13 @@ if (
 {
 igown = 6;
 }
+if (time > _this.ending && _this.ending !== 0 && !_this.sort && igsort === 'expiry/asc') {
+igown = 6;
+igrtry = 0;
+_this.pagemax = page;
+igcurr = 100;
+_this.dload = 3;
+}
 if (_this.getConfig('skip_trial', false) && _this.notsteam.includes(',' + id + 't,')) {
 igown = 10;
 }
@@ -561,6 +577,9 @@ igown = 1;
 }
 if (GJuser.black.includes(igid + ',') && _this.getConfig('blacklist_on', false)) {
 igown = 4;
+}
+if (_this.cantga.includes(',' + id + ',')) {
+igown = 13;
 }
 if (single) {
 if (_this.enteredga.includes(',' + id + ',')) {
@@ -621,6 +640,9 @@ break;
 case 12:
 _this.log(Lang.get('service.already_joined') + ', ' + Lang.get('service.data_have'), 'jnd');
 break;
+case 13:
+_this.log(Lang.get('service.cant_join') + ', ' + Lang.get('service.data_have'), 'cant');
+break;
 }
 ignext = 100;
 igrtry = 0;
@@ -655,7 +677,7 @@ if (
 (igga.includes('alpha steam key')) || (igga.includes('beta steam key')) || (igga.includes('demo steam key')) || (igga.includes('final beta')) ||
 (igga.includes(' beta access')) || (igga.includes(' alpha access')) || (igga.includes(' demo access')) || (igga.includes(' trial access')) ||
 (igga.includes(name.toLowerCase() + ' alpha')) || (igga.includes(name.toLowerCase() + ' beta')) || (igga.includes(name.toLowerCase() + ' demo')) ||
-(igga.includes(' this beta'))
+(igga.includes(' this beta')) || (igga.includes(' playtest'))
 )
 {
 igown = 1;
@@ -672,7 +694,8 @@ if (
 (igga.includes('gog key')) || (igga.includes('key gog')) || (igga.includes('key for gog')) || (igga.includes('gog.com')) ||
 (igga.includes('origin key')) || (igga.includes('key origin')) || (igga.includes('key for origin')) || (igga.includes('origin.com')) ||
 (igga.includes('epic key')) || (igga.includes('key epic')) || (igga.includes('key for epic')) || (igga.includes('epicgames.com')) ||
-(igga.includes('bethesda.net')) || (igga.includes('legacygames.com')) || (igga.includes(' not for steam')) || (igga.includes('(not steam)'))
+(igga.includes('bethesda.net')) || (igga.includes('legacygames.com')) || (igga.includes(' not for steam')) || (igga.includes('(not steam)')) ||
+(igga.includes('in-game code')) || (igga.includes('in-game redeem')) || (igga.includes('redeem coupon'))
 )
 {
 igown = 2;
@@ -719,7 +742,7 @@ resp = resps.data;
 })
 .finally(() => {
 if (resp === 'err') {
-if (igrtry < 12) {
+if (igrtry < 3) {
 ignext = (Math.floor(Math.random() * 1000)) + 3000;
 _this.wait = false;
 }
@@ -763,8 +786,11 @@ else if (resp.status === 'owner' || resp.status === 'limit_reached' || resp.stat
 Times = 0;
 igcurr++;
 igrtry = 0;
-_this.log(Lang.get('service.cant_join') + ' (' + resp.status + ')' , 'cant');
+_this.log(Lang.get('service.cant_join') + ' (' + resp.status + ')', 'cant');
 _this.wait = false;
+if (!_this.cantga.includes(',' + id + ',')) {
+_this.cantga = _this.cantga + id + ',';
+}
 }
 else if (resp.status === 'level') {
 Times = 0;
@@ -814,7 +840,7 @@ _this.totalTicks = 1;
 _this.stimer = 1;
 }
 else {
-if (igrtry < 12) {
+if (igrtry < 3) {
 ignext = (Math.floor(Math.random() * 1000)) + 3000;
 _this.wait = false;
 }

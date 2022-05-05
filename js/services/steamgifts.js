@@ -496,7 +496,7 @@ sgref = sgref + 'giveaways/search?type=group';
 else if (GA.page > 1) {
 sgref = sgref + 'giveaways/search?page=' + GA.page;
 }
-if (_this.getConfig('skip_ost', false) && !GA.nam.toLowerCase().includes(' + original soundtrack')) {
+if (_this.getConfig('skip_ost', false) && !GA.nam.toLowerCase().includes(' + original soundtrack') && !GA.nam.toLowerCase().includes(' + ost')) {
 if (GA.nam.toLowerCase().includes('soundtrack') || GA.nam.toLowerCase().includes(' - ost')) {
 sgown = 8;
 }

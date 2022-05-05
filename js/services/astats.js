@@ -145,17 +145,12 @@ _this.setConfig('check_date', 0);
 }
 if (_this.getConfig('check_date', 0) < Date.now() && _this.started) {
 if (!GJuser.waitAuth) {
-GJuser.waitAuth = true;
 _this.setConfig('check_date', Date.now() + 43200000);
-Browser.webContents.on('did-finish-load', () => {
-_this.log(Lang.get('service.done') + 'Visit Profile Page', 'info');
-setTimeout(() => {
-Browser.webContents.removeAllListeners('did-finish-load');
-GJuser.waitAuth = false;
-}, 2000);
-});
 Browser.setTitle(Lang.get('service.browser_loading'));
 Browser.loadURL(alinkid);
+setTimeout(() => {
+_this.log(Lang.get('service.done') + 'Visit Profile Page', 'info');
+}, 8000);
 }
 }
 if (afound.length <= acurr && page === _this.pagemax) {

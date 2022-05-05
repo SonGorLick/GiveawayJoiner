@@ -434,7 +434,8 @@ if (
 (name.includes('closed alpha')) || (name.includes('closed beta')) || (name.includes('closed demo')) ||
 (name.includes('early access')) || (name.includes('early alpha')) || (name.includes('early demo')) || (name.includes('early trial')) ||
 (name.includes('alpha steam key')) || (name.includes('beta steam key')) || (name.includes('demo steam key')) || (name.includes('final beta')) ||
-(info.includes(' alpha key')) || (info.includes(' beta key')) || (info.includes(' demo key')) || (info.includes(' trial key'))
+(info.includes(' alpha key')) || (info.includes(' beta key')) || (info.includes(' demo key')) || (info.includes(' trial key')) ||
+(info.includes(' playtest'))
 )
 {
 let link = fsg.eq(i).find('a').text();
@@ -455,9 +456,19 @@ Config.set('trial_date', Date.now() + 10000);
 });
 }
 function openWebsite(url) {
+GJuser.waitAuth = true;
 Browser.setTitle(Lang.get('service.browser_loading'));
 Browser.loadURL(url);
 Browser.show();
+Browser.on('close', (e) => {
+GJuser.waitAuth = false;
+e.preventDefault();
+Browser.loadFile('blank.html');
+if (Browser.isVisible()) {
+Browser.hide();
+mainWindow.focus();
+}
+});
 }
 window.minimizeWindow = () => {
 if (process.platform !== 'darwin') {
@@ -468,5 +479,6 @@ remote.BrowserWindow.getFocusedWindow().minimize();
 }
 };
 window.closeWindow = () => {
+GJuser.waitAuth = false;
 window.close();
 };
