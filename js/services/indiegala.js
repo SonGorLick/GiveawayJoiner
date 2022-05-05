@@ -47,21 +47,15 @@ let userData = {
 avatar: '../app.asar/images/IndieGala.png',
 username: 'IndieGala User',
 value: 240,
-level: 0
+level: 8
 };
 if (fs.existsSync(dirdata + 'indiegala.txt')) {
 let lvl = parseInt(fs.readFileSync(dirdata + 'indiegala.txt').toString());
 userData.level = lvl;
 this.setLevel(lvl);
 }
-else if (this.getConfig('max_level', 0) !== undefined) {
-userData.level = this.getConfig('max_level', 0);
-this.setLevel(userData.level);
-fs.writeFile(dirdata + 'indiegala.txt', userData.level.toString(), (err) => { });
-}
 else {
-this.setLevel(0);
-fs.writeFile(dirdata + 'indiegala.txt', '0', (err) => { });
+this.setLevel(8);
 }
 $.ajax({
 url: 'https://www.indiegala.com/library',
@@ -117,10 +111,13 @@ let igl = parseInt(fs.readFileSync(dirdata + 'indiegala.txt').toString());
 _this.setLevel(igl);
 _this.curr_level = igl;
 }
-else {
+else if (_this.lvlmax > 0) {
 _this.setLevel(_this.lvlmax);
 _this.curr_level = _this.lvlmax;
-fs.writeFile(dirdata + 'indiegala.txt', _this.lvlmax, (err) => { });
+}
+else {
+_this.setLevel(8);
+_this.curr_level = 8;
 }
 if (fs.existsSync(dirdata + 'indiegala2.txt')) {
 let igdata = fs.readFileSync(dirdata + 'indiegala2.txt');
@@ -799,6 +796,7 @@ igrtry = 0;
 let newlvl = level - 1;
 if (_this.curr_level > newlvl) {
 _this.setLevel(newlvl);
+_this.curr_level = newlvl;
 if (_this.lvlmax > newlvl || _this.lvlmax === 0) {
 _this.lvlmax = newlvl;
 }
