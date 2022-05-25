@@ -117,7 +117,6 @@ rq({
 method: 'GET',
 url: _this.url + '/zeepond/giveaways/enter-a-competition',
 headers: {
-'connection': 'keep-alive',
 'authority': 'www.zeepond.com',
 'cookie': _this.cookies,
 'sec-fetch-dest': 'document',
@@ -155,7 +154,6 @@ rq({
 method: 'GET',
 url: _this.url + '/my-account/my-prizes',
 headers: {
-'connection': 'keep-alive',
 'authority': 'www.zeepond.com',
 'cookie': _this.cookies,
 'sec-fetch-dest': 'document',
@@ -369,7 +367,6 @@ rq({
 method: 'GET',
 url: zplnk,
 headers: {
-'connection': 'keep-alive',
 'authority': 'www.zeepond.com',
 'cookie': _this.cookies,
 'sec-fetch-dest': 'document',
@@ -403,6 +400,9 @@ else if (html.indexOf('is using a security service for protection against online
 zparray.push(zpcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 if (!GJuser.waitAuth) {
+Browser.webContents.on('did-finish-load', () => {
+Browser.webContents.removeAllListeners('did-finish-load');
+});
 Browser.setTitle(Lang.get('service.browser_loading'));
 Browser.loadURL('https://www.zeepond.com/zeepond/giveaways/enter-a-competition');
 }
@@ -571,7 +571,6 @@ rq({
 method: 'GET',
 url: zplnk + '/enter_competition',
 headers: {
-'connection': 'keep-alive',
 'authority': 'www.zeepond.com',
 'cookie': _this.cookies,
 'referer': zplnk,
@@ -606,6 +605,9 @@ else if (resp.indexOf('is using a security service for protection against online
 zparray.push(zpcrr);
 _this.log(Lang.get('service.err_join'), 'cant');
 if (!GJuser.waitAuth) {
+Browser.webContents.on('did-finish-load', () => {
+Browser.webContents.removeAllListeners('did-finish-load');
+});
 Browser.setTitle(Lang.get('service.browser_loading'));
 Browser.loadURL('https://www.zeepond.com');
 }

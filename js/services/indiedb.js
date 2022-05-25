@@ -95,7 +95,8 @@ if (this.getConfig('login_steam', false)) {
 Browser.loadURL('https://www.indiedb.com/members/loginext/steam');
 }
 else {
-Browser.loadURL('https://www.indiedb.com/members/login');
+call = 0;
+Browser.close();
 }
 Browser.once('close', () => {
 Browser.webContents.removeAllListeners('did-finish-load');

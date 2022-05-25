@@ -240,9 +240,15 @@ _this.log(Lang.get('service.connection_lost').split(',')[0] + ',' + Lang.get('se
 _this.totalTicks = 1;
 _this.stimer = 1;
 if (!GJuser.waitAuth) {
+Browser.webContents.on('did-finish-load', () => {
+Browser.webContents.removeAllListeners('did-finish-load');
+});
 Browser.setTitle(Lang.get('service.browser_loading'));
 Browser.loadURL('https://www.indiegala.com');
 }
+setTimeout(() => {
+Browser.webContents.removeAllListeners('did-finish-load');
+}, 49000);
 }
 }
 }
@@ -332,7 +338,9 @@ iw = 0;
 })
 .finally(() => {
 if (il !== undefined) {
+if (il > 0) {
 _this.setConfig('check_date', Date.now() + 43200000);
+}
 _this.log(Lang.get('service.done') + 'Completed To Check - ' + il + ' checked', 'info');
 if (iw > 0) {
 _this.log(_this.logLink(_this.url + '/library', Lang.get('service.win') + ' (' + Lang.get('service.qty') + ': ' + iw + ')'), 'win');
@@ -377,6 +385,13 @@ _this.sort_after = false;
 if (page === _this.pagemax && _this.started) {
 if (_this.statusIcon.attr('data-status') === 'work') {
 _this.setStatus('good');
+if (!GJuser.waitAuth) {
+Browser.webContents.on('did-finish-load', () => {
+Browser.webContents.removeAllListeners('did-finish-load');
+});
+Browser.setTitle(Lang.get('service.browser_loading'));
+Browser.loadURL('https://www.indiegala.com');
+}
 }
 }
 }
@@ -395,6 +410,7 @@ link = ticket.find('.items-list-item-title > a').attr('href'),
 time = ticket.find('.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-left > .items-list-item-data-left-bottom').text(),
 sold = ticket.find('.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-right > .items-list-item-data-right-bottom').text(),
 price = ticket.find('.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-button > a').attr('data-price'),
+slvr = ticket.find('.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-not-purchasable > a').text(),
 single = false,
 entered = false,
 enterTimes = 1,
@@ -511,6 +527,9 @@ _this.log(iglog + _this.logWhite(igid) + _this.logBlack(igid), 'chk');
 iglog = iglog.split(Lang.get('service.checking'))[1];
 if (_this.curr_value < price) {
 igown = 7;
+}
+else if (slvr !== '') {
+igown = 14;
 }
 if (
 (_this.entmin > sold) ||
@@ -640,6 +659,9 @@ break;
 case 13:
 _this.log(Lang.get('service.cant_join') + ', ' + Lang.get('service.data_have'), 'cant');
 break;
+case 14:
+_this.log(Lang.get('service.cant_join') + ' (' + Lang.get('service.value_label') + ' - ' + (price - 1) + '?)', 'skip');
+break;
 }
 ignext = 100;
 igrtry = 0;
@@ -664,7 +686,6 @@ else {
 igga = igga.trim().toLowerCase();
 if (_this.getConfig('view_ga_info', false)) {
 _this.log(igga);
-}
 }
 if (_this.getConfig('skip_trial', false)) {
 if (
@@ -691,13 +712,17 @@ if (
 (igga.includes('gog key')) || (igga.includes('key gog')) || (igga.includes('key for gog')) || (igga.includes('gog.com')) ||
 (igga.includes('origin key')) || (igga.includes('key origin')) || (igga.includes('key for origin')) || (igga.includes('origin.com')) ||
 (igga.includes('epic key')) || (igga.includes('key epic')) || (igga.includes('key for epic')) || (igga.includes('epicgames.com')) ||
-(igga.includes('bethesda.net')) || (igga.includes('legacygames.com')) || (igga.includes(' not for steam')) || (igga.includes('(not steam)')) ||
-(igga.includes('in-game code')) || (igga.includes('in-game redeem')) || (igga.includes('redeem coupon'))
+(igga.includes('uplay key')) || (igga.includes('ubisoft key')) || (igga.includes('ubisoft connect')) ||
+(igga.includes('bethesda.net')) || (igga.includes('legacygames.com')) || (igga.includes(' not for steam')) ||
+(igga.includes('rockstargames.com')) || (igga.includes('rockstar games launcher')) || (igga.includes('rockstar launcher')) ||
+(igga.includes('(not steam)')) || (igga.includes('in-game code')) || (igga.includes('in-game redeem')) || (igga.includes('redeem coupon')) ||
+(igga.includes('download the game')) || (igga.includes('.com/play'))
 )
 {
 igown = 2;
 if (!_this.notsteam.includes(',' + id + 'n,')) {
 _this.notsteam = _this.notsteam + id + 'n,';
+}
 }
 }
 }
@@ -740,7 +765,7 @@ resp = resps.data;
 .finally(() => {
 if (resp === 'err') {
 if (igrtry < 3) {
-ignext = (Math.floor(Math.random() * 1000)) + 3000;
+ignext = 51000;
 _this.wait = false;
 }
 else {
@@ -777,16 +802,6 @@ else {
 Times = 0;
 igcurr++;
 }
-}
-}
-else if (resp.status === 'owner' || resp.status === 'limit_reached' || resp.status === 'not_available' || resp.status === 'banned') {
-Times = 0;
-igcurr++;
-igrtry = 0;
-_this.log(Lang.get('service.cant_join') + ' (' + resp.status + ')', 'cant');
-_this.wait = false;
-if (!_this.cantga.includes(',' + id + ',')) {
-_this.cantga = _this.cantga + id + ',';
 }
 }
 else if (resp.status === 'level') {
@@ -826,20 +841,41 @@ if (!_this.enteredga.includes(',' + id + ',')) {
 _this.enteredga = _this.enteredga + id + ',';
 }
 }
-else if (resp.status === 'login') {
+else if (resp.status === 'owner' || resp.status === 'limit_reached' || resp.status === 'not_available' || resp.status === 'banned') {
+Times = 0;
+igcurr++;
+igrtry = 0;
+_this.log(Lang.get('service.cant_join') + ' (' + resp.status + ')', 'cant');
+_this.wait = false;
+if (!_this.cantga.includes(',' + id + ',')) {
+_this.cantga = _this.cantga + id + ',';
+}
+}
+else if (resp.status === 'login' || resp.status === 'not_logged') {
 igrtry = 0;
 igcurr = 200;
 ignext = 100;
 _this.pagemax = page;
 _this.setStatus('net');
-_this.log(Lang.get('service.err_join'), 'cant');
+_this.log(Lang.get('service.err_join') + ' (' + resp.status + ')', 'cant');
 _this.log(Lang.get('service.session_expired'), 'err');
 _this.totalTicks = 1;
 _this.stimer = 1;
 }
+else if (resp.status === 'server' || resp.status === 'server_error' || resp.status === 'too_fast') {
+igrtry = 0;
+igcurr = 200;
+ignext = 100;
+_this.pagemax = page;
+_this.setStatus('net');
+_this.log(Lang.get('service.err_join') + ' (' + resp.status + ')', 'cant');
+_this.log(Lang.get('service.connection_lost'), 'err');
+_this.totalTicks = 1;
+_this.stimer = 15;
+}
 else {
 if (igrtry < 3) {
-ignext = (Math.floor(Math.random() * 1000)) + 3000;
+ignext = 51000;
 _this.wait = false;
 }
 else {
