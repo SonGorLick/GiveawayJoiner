@@ -95,7 +95,7 @@ if (data.indexOf('li class="next"') === -1) {
 _this.pagemax = page;
 }
 if (page === 1) {
-let opwon = $(data).find('[href="/user/giveawaykeys"] > span').text().trim();
+let opwon = $(data).find('[href="https://www.opiumpulses.com/user/giveawaykeys"] > span').text().trim();
 if (opwon === undefined) {
 opwon = 0;
 }
@@ -153,7 +153,7 @@ let opdtnew = new Date();
 opdtnew.setDate(opdtnew.getUTCDate());
 opdtnew.setHours(opdtnew.getUTCHours() + 7);
 _this.dcheck = opdtnew.getDate();
-_this.log(Lang.get('service.done') + 'Play Game - ' + arlnk.split('/')[3].replace(/-/g, ' '), 'info');
+_this.log(Lang.get('service.done') + 'Play Game - ' + arlnk.split('/')[5].replace(/-/g, ' '), 'info');
 }, error: () => {}
 });
 }
@@ -198,7 +198,7 @@ entered = opway.find('.giveaways-page-item-img-btn-wrapper').text(),
 check = opway.find('.giveaways-page-item-img-btn-wrapper a').attr('onclick'),
 eLink = opway.find('.giveaways-page-item-img-btn-enter').attr('href'),
 cost = parseInt(opway.find('.giveaways-page-item-header-points').text().replace('points', '').trim()),
-code = link.slice(11, 16),
+code = link.slice(38, 43),
 njoin = 0,
 opstore = 'steam',
 optype ='?|',
@@ -277,7 +277,7 @@ if (_this.getConfig('check_in_steam', true) && opstore === 'steam') {
 if (GJuser.ownapps.includes(',' + opblack.replace('app/', '') + ',')) {
 njoin = 2;
 }
-if (GJuser.ownapps.includes(',' + opblack.replace('sub/', '') + ',')) {
+if (GJuser.ownsubs.includes(',' + opblack.replace('sub/', '') + ',')) {
 njoin = 2;
 }
 }

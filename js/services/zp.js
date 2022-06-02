@@ -259,7 +259,7 @@ if (_this.getConfig('check_in_steam', true)) {
 if (GJuser.ownapps.includes(',' + zpblack.replace('app/', '') + ',')) {
 njoin = 1;
 }
-if (GJuser.ownapps.includes(',' + zpblack.replace('sub/', '') + ',')) {
+if (GJuser.ownsubs.includes(',' + zpblack.replace('sub/', '') + ',')) {
 njoin = 1;
 }
 }
