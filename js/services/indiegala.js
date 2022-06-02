@@ -127,13 +127,13 @@ _this.notsteam = igdata.toString();
 }
 if (fs.existsSync(dirdata + 'indiegala3.txt')) {
 let igentered = fs.readFileSync(dirdata + 'indiegala3.txt');
-if (igentered.length > 1 && igentered.length < 5000) {
+if (igentered.length > 1 && igentered.length < 10000) {
 _this.enteredga = igentered.toString();
 }
 }
 if (fs.existsSync(dirdata + 'indiegala4.txt')) {
 let igcant = fs.readFileSync(dirdata + 'indiegala4.txt');
-if (igcant.length > 1 && igcant.length < 5000) {
+if (igcant.length > 1 && igcant.length < 10000) {
 _this.cantga = igcant.toString();
 }
 }
@@ -155,7 +155,7 @@ headers: {
 })
 .then((iglevel) => {
 iglevel = iglevel.data;
-if (iglevel.current_level !== null && iglevel.current_level !== undefined && iglevel.current_level !== '-') {
+if (iglevel.current_level !== undefined && iglevel.current_level !== null && iglevel.current_level !== '-') {
 iglevel = parseInt(iglevel.current_level);
 _this.setLevel(iglevel);
 _this.curr_level = iglevel;
@@ -432,14 +432,20 @@ single = true;
 if (price !== undefined && price !== '') {
 price = parseInt(price);
 }
+else {
+price = '?';
+}
 if (sold !== undefined && sold !== '') {
 sold = parseInt(sold);
 }
-if (level === undefined || level === '') {
-level = 0;
+else {
+sold = '?';
+}
+if (level !== undefined && level !== '') {
+level = parseInt((level.replace(/[^0-9]/g,'')));
 }
 else {
-level = parseInt((level.replace(/[^0-9]/g,'')));
+level = 0;
 }
 if (igsteam.includes('apps/')) {
 igapp = parseInt(igsteam.split('apps/')[1].split('/')[0].split('?')[0].split('#')[0]);
@@ -471,7 +477,7 @@ igtime = 'end|';
 time = 0;
 }
 if (single) {
-if (price === undefined || price === '') {
+if (price === '?') {
 entered = true;
 }
 enterTimes = 0;
@@ -525,14 +531,14 @@ if (igrtry === 0 && !_this.wait && (single || Times === 0 && !single)) {
 _this.log(iglog + _this.logWhite(igid) + _this.logBlack(igid), 'chk');
 }
 iglog = iglog.split(Lang.get('service.checking'))[1];
-if (_this.curr_value < price) {
+if (price !== '?' && _this.curr_value < price) {
 igown = 7;
 }
 else if (slvr !== '') {
 igown = 14;
 }
 if (
-(_this.entmin > sold) ||
+(sold !== '?' && _this.entmin > sold) ||
 (_this.lvlmin > level) ||
 (_this.lvlmax < level && _this.lvlmax !== 0) ||
 (_this.getConfig('skip_dlc', false) && GJuser.dlc.includes(',' + igapp + ',') && !_this.getConfig('whitelist_nocards', false)) ||
@@ -541,11 +547,11 @@ if (
 (_this.getConfig('skip_skipdlc', false) && GJuser.skip_dlc.includes(',' + igapp + ',') && !GJuser.white.includes(igid + ',') && _this.getConfig('whitelist_nocards', false)) ||
 (_this.getConfig('card_only', false) && !GJuser.card.includes(',' + igapp + ',') && !_this.getConfig('whitelist_nocards', false) && igid !== '???') ||
 (_this.getConfig('card_only', false) && !GJuser.card.includes(',' + igapp + ',') && !GJuser.white.includes(igid + ',') && _this.getConfig('whitelist_nocards', false) && igid !== '???') ||
-(price < _this.getConfig('min_cost', 0) && _this.getConfig('min_cost', 0) !== 0) ||
-(price > _this.getConfig('max_cost', 0) && _this.getConfig('max_cost', 0) !== 0) ||
-(_this.reserve !== 0 && _this.reserve > (_this.curr_value - price) && !single && enterTimes > 0 && _this.getConfig('reserve_no_multi', false)) ||
-(_this.reserve !== 0 && _this.reserve > (_this.curr_value - price) && !_this.sort && !_this.getConfig('reserve_for_smpl', false)) ||
-(_this.reserve !== 0 && _this.reserve > (_this.curr_value - price) && _this.sort && !_this.getConfig('reserve_on_sbl', false))
+(price !== '?' && price < _this.getConfig('min_cost', 0) && _this.getConfig('min_cost', 0) !== 0) ||
+(price !== '?' && price > _this.getConfig('max_cost', 0) && _this.getConfig('max_cost', 0) !== 0) ||
+(price !== '?' && _this.reserve !== 0 && _this.reserve > (_this.curr_value - price) && !single && enterTimes > 0 && _this.getConfig('reserve_no_multi', false)) ||
+(price !== '?' && _this.reserve !== 0 && _this.reserve > (_this.curr_value - price) && !_this.sort && !_this.getConfig('reserve_for_smpl', false)) ||
+(price !== '?' && _this.reserve !== 0 && _this.reserve > (_this.curr_value - price) && _this.sort && !_this.getConfig('reserve_on_sbl', false))
 )
 {
 igown = 5;
@@ -671,14 +677,25 @@ igcurr++;
 else if (igown === 0) {
 _this.wait = true;
 igrtry++;
-let igga = 'err';
+let igga = 'err',
+iggb = 'err';
 $.ajax({
 url: _this.url + link,
 success: function (iggas) {
-igga = $(iggas.replace(/<img/gi, '<noload'));
-igga = igga.find('.card-description').text();
+iggas = $(iggas.replace(/<img/gi, '<noload'));
+igga = iggas.find('.card-description').text();
+iggb = iggas.find('.card-join-disabled > a').text();
 },
 complete: function () {
+if (iggb === undefined || iggb === null || iggb === 'err') {
+iggb = '';
+}
+else {
+iggb = iggb.trim().toLowerCase();
+if (iggb === 'join') {
+igown = 4;
+}
+}
 if (igga === undefined || igga === null || igga === 'err') {
 igga = '';
 }
@@ -726,6 +743,12 @@ _this.notsteam = _this.notsteam + id + 'n,';
 }
 }
 }
+if (iggb === 'joined') {
+igown = 3;
+if (!_this.enteredga.includes(',' + id + ',')) {
+_this.enteredga = _this.enteredga + id + ',';
+}
+}
 if (igown > 0) {
 switch (igown) {
 case 1:
@@ -733,6 +756,12 @@ _this.log(Lang.get('service.trial'), 'info');
 break;
 case 2:
 _this.log(Lang.get('service.not_steam'), 'info');
+break;
+case 3:
+_this.log(Lang.get('service.already_joined'), 'jnd');
+break;
+case 4:
+_this.log(Lang.get('service.cant_join') + ' (' + Lang.get('service.value_label') + ' - ' + (price - 1) + '?)', 'skip');
 break;
 }
 ignext = 100;
@@ -862,7 +891,7 @@ _this.log(Lang.get('service.session_expired'), 'err');
 _this.totalTicks = 1;
 _this.stimer = 1;
 }
-else if (resp.status === 'server' || resp.status === 'server_error' || resp.status === 'too_fast') {
+else if (resp.status === 'server') {
 igrtry = 0;
 igcurr = 200;
 ignext = 100;
@@ -871,7 +900,7 @@ _this.setStatus('net');
 _this.log(Lang.get('service.err_join') + ' (' + resp.status + ')', 'cant');
 _this.log(Lang.get('service.connection_lost'), 'err');
 _this.totalTicks = 1;
-_this.stimer = 15;
+_this.stimer = 5;
 }
 else {
 if (igrtry < 3) {
@@ -884,7 +913,7 @@ igcurr = 200;
 ignext = 100;
 _this.pagemax = page;
 _this.setStatus('net');
-_this.log(Lang.get('service.err_join'), 'cant');
+_this.log(Lang.get('service.err_join') + ' (' + resp.status + ')', 'cant');
 _this.log(Lang.get('service.connection_lost'), 'err');
 _this.totalTicks = 1;
 _this.stimer = 5;

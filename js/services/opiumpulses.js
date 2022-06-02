@@ -147,7 +147,7 @@ let arfound = arc.find('.arcade-item-img-btn-wrapper'),
 arlnk = arfound.eq(Math.floor(Math.random() * 28)).find('a').attr('href');
 if (arlnk !== undefined) {
 $.ajax({
-url: _this.url + arlnk,
+url: arlnk,
 success: function () {
 let opdtnew = new Date();
 opdtnew.setDate(opdtnew.getUTCDate());
@@ -303,7 +303,7 @@ njoin = 6;
 if (njoin > 6 && _this.getConfig('remove_ga', false)) {
 njoin = 0;
 }
-let oplog = _this.logLink(_this.url + link, name),
+let oplog = _this.logLink(link, name),
 oplg = '|' + page + '#|' + (opcrr + 1) + '№|' + optype + cost + '$|  ';
 if (opblack !== '') {
 if (GJuser.skip_dlc.includes(',' + opblack.replace('app/', '') + ',')) {
@@ -365,7 +365,7 @@ else if (njoin === 0) {
 _this.wait = true;
 let html = 'err';
 $.ajax({
-url: _this.url + link,
+url: link,
 success: function (htmls) {
 htmls = $(htmls.replace(/<img/gi, '<noload').replace(/<audio/gi, '<noload'));
 html = htmls;
@@ -494,7 +494,7 @@ else {
 opown = 7;
 }
 }
-oplog = _this.logLink(_this.url + link, name);
+oplog = _this.logLink(link, name);
 if (opstore === 'steam' && !opid.includes('???')) {
 opblack = _this.logWhite(opid) + _this.logBlack(opid);
 }
@@ -567,7 +567,7 @@ mainWindow.webContents.session.cookies.set(opcookie, (error) => { });
 }
 let resp = 'err';
 $.ajax({
-url: _this.url + eLink,
+url: eLink,
 success: function () {
 resp = 'ok';
 },
@@ -626,7 +626,7 @@ _this.wait = false;
 else {
 _this.curr_value = _this.curr_value + cost;
 _this.setValue(_this.curr_value);
-_this.log(Lang.get('service.removed') + _this.logLink(_this.url + link, name), 'info');
+_this.log(Lang.get('service.removed') + _this.logLink(link, name), 'info');
 opcurr++;
 _this.wait = false;
 }

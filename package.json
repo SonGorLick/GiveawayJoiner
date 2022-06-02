@@ -1,7 +1,7 @@
 {
   "name": "GiveawayJoiner",
   "productName": "GiveawayJoiner",
-  "version": "1.5.4j",
+  "version": "1.5.4k",
   "description": "Autojoin to steam game giveaways",
   "main": "giveawayjoiner.js",
   "dependencies": {
