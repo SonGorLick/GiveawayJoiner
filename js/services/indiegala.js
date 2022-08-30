@@ -339,7 +339,7 @@ iw = 0;
 .finally(() => {
 if (il !== undefined) {
 if (il > 0) {
-_this.setConfig('check_date', Date.now() + 43200000);
+_this.setConfig('check_date', Date.now() + 21600000);
 }
 _this.log(Lang.get('service.done') + 'Completed To Check - ' + il + ' checked', 'info');
 if (iw > 0) {
@@ -360,11 +360,11 @@ else if (igcheck === 'err') {
 _this.log(Lang.get('service.done') + 'Completed To Check - check error', 'info');
 }
 else if (igcheck === 'cant') {
-_this.setConfig('check_date', Date.now() + 43200000);
+_this.setConfig('check_date', Date.now() + 21600000);
 _this.log(Lang.get('service.done') + 'Completed To Check - data not available at this moment', 'info');
 }
 else {
-_this.setConfig('check_date', Date.now() + 43200000);
+_this.setConfig('check_date', Date.now() + 21600000);
 _this.log(Lang.get('service.done') + 'Completed To Check - list empty', 'info');
 }
 }
@@ -411,6 +411,7 @@ time = ticket.find('.items-list-item-data-cont > .relative > .items-list-item-da
 sold = ticket.find('.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-right > .items-list-item-data-right-bottom').text(),
 price = ticket.find('.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-button > a').attr('data-price'),
 slvr = ticket.find('.items-list-item-data-cont > .relative > .items-list-item-data > .items-list-item-data-not-purchasable > a').text(),
+token = ticket.find('.items-list-item-data-cont > .relative > a').attr('onclick'),
 single = false,
 entered = false,
 enterTimes = 1,
@@ -574,13 +575,19 @@ _this.pagemax = page;
 igcurr = 100;
 _this.dload = 3;
 }
-if (_this.getConfig('skip_trial', false) && _this.notsteam.includes(',' + id + 't,')) {
+if (
+(_this.getConfig('skip_trial', false)) &&
+(!_this.getConfig('whitelist_nocards', false) || (!GJuser.white.includes(igid + ',') && _this.getConfig('whitelist_nocards', false)))
+)
+{
+if (_this.notsteam.includes(',' + id + 't,')) {
 igown = 10;
 }
-if (_this.getConfig('skip_trial', false) && GJuser.trial.includes(igid + ',') && igown !== 10) {
+if (GJuser.trial.includes(igid + ',') && igown !== 10) {
 igown = 9;
 if (!_this.notsteam.includes(',' + id + 't,')) {
 _this.notsteam = _this.notsteam + id + 't,';
+}
 }
 }
 if (_this.getConfig('steam_only', false) && _this.notsteam.includes(',' + id + 'n,')) {
@@ -715,12 +722,14 @@ if (
 (igga.includes(' this beta')) || (igga.includes(' playtest'))
 )
 {
+if(!_this.getConfig('whitelist_nocards', false) || (!GJuser.white.includes(igid + ',') && _this.getConfig('whitelist_nocards', false))) {
 igown = 1;
 if (!GJuser.trial.includes(igid + ',')) {
 GJuser.trial = GJuser.trial + igid + ',';
 }
 if (!_this.notsteam.includes(',' + id + 't,')) {
 _this.notsteam = _this.notsteam + id + 't,';
+}
 }
 }
 }
@@ -758,7 +767,16 @@ case 2:
 _this.log(Lang.get('service.not_steam'), 'info');
 break;
 case 3:
+if (igrtry === 0) {
 _this.log(Lang.get('service.already_joined'), 'jnd');
+}
+else {
+_this.log(Lang.get('service.entered_in') + iglog, 'enter');
+let newvalue = _this.curr_value - price;
+if (newvalue >= 0) {
+_this.setValue(newvalue);
+}
+}
 break;
 case 4:
 _this.log(Lang.get('service.cant_join') + ' (' + Lang.get('service.value_label') + ' - ' + (price - 1) + '?)', 'skip');
@@ -772,6 +790,7 @@ _this.wait = false;
 }
 else {
 let resp = 'err';
+token = (token.split(", '")[2]).replace("')", '');
 rq({
 method: 'POST',
 url: _this.url + '/giveaways/join',
@@ -786,7 +805,7 @@ headers: {
 'referer': _this.url + link,
 'cookie': _this.cookies
 },
-data: {id: id}
+data: {id: id, token: token}
 })
 .then((resps) => {
 resp = resps.data;
