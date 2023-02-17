@@ -210,14 +210,27 @@ igsort = 'price/asc';
 else if (_this.getConfig('sort_by_entries', false)) {
 igsort = 'participants/asc';
 }
-$.ajax({
+rq({
+method: 'GET',
 url: _this.url + '/giveaways/ajax/' + page + '/' + igsort + '/level/' + _this.lvl,
-success: function (datas) {
-data = datas.replace(/\n/g, "\\n").replace('"text/javascript" src="', "'text/javascript' src='").replace('"></script>', "'></script>");
-if (data.indexOf('"status": "ok"') >= 0 && data.indexOf('>0 items<') === -1 && _this.igprtry !== -1) {
+headers: {
+'authority': 'www.indiegala.com',
+'accept': 'application/json, text/javascript, */*; q=0.01',
+'origin': _this.url,
+'sec-fetch-site': 'same-origin',
+'sec-fetch-mode': 'cors',
+'x-requested-with': 'XMLHttpRequest',
+'user-agent': _this.ua,
+'referer': _this.url + '/giveaways',
+'cookie': _this.cookies
+}
+})
+.then((datas) => {
+data = datas.data;
+if (data.status === "ok" && data.html.indexOf('>0 items<') === -1 && _this.igprtry !== -1) {
 _this.igprtry = 0;
-tickets = $(JSON.parse(data).html).find('.items-list-item > .relative');
-if (igpage > 1 && data.indexOf('<i aria-hidden=\"true\" class=\"fa fa-angle-right\"></i>') >= 0) {
+tickets = $(data.html).find('.items-list-item > .relative');
+if (igpage > 1 && data.html.indexOf('<i aria-hidden=\"true\" class=\"fa fa-angle-right\"></i>') >= 0) {
 _this.pagemax = page;
 _this.dload = 1;
 }
@@ -225,8 +238,8 @@ _this.dload = 1;
 else {
 data = 'err';
 }
-},
-complete: function () {
+})
+.finally(() => {
 if (data === 'err') {
 if (_this.igprtry < 6 && _this.igprtry !== -1) {
 _this.igprtry++;
@@ -946,7 +959,6 @@ _this.stimer = 5;
 setTimeout(giveawayEnter, ignext);
 }
 giveawayEnter();
-}
 });
 }
 }
