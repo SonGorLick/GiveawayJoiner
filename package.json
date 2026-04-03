@@ -12,7 +12,7 @@
   "author": "pumPCin",
   "license": "MIT",
   "devDependencies": {
-    "electron": "35.7.5",
+    "electron": "41.1.1",
     "electron-builder": "^26"
   },
   "scripts": {
